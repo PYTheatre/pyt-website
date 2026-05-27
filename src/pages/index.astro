@@ -1,0 +1,371 @@
+---
+/*
+  HOME PAGE.
+
+  Reproduces the approved prototype's home page:
+   - Hero (eyebrow, headline, lede, two CTAs, show poster)
+   - "Find your way in" — 5 discovery cards
+   - "Our impact" — 3 stats
+   - Donation campaign teaser with progress bar
+
+  All content here is the prototype's PLACEHOLDER content,
+  which the client approved for the demo. In a later phase
+  this content moves into the CMS so staff can edit it.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const discoveryCards = [
+  {
+    eyebrow: "For families",
+    title: "Mainstage Productions",
+    body: "Three full-scale shows every year, performed by youth ages 6–18 at Mountain View's premier venue.",
+    meta: ["3 shows yearly", "All ages welcome"],
+    href: "/shows",
+  },
+  {
+    eyebrow: "For young performers",
+    title: "Classes & Summer Camps",
+    body: "From after-school drama to week-long summer intensives, our programs build skills, confidence, and friendships.",
+    meta: ["Ages 4–18", "Scholarships available"],
+    href: "/programs",
+  },
+  {
+    eyebrow: "For schools & theatres",
+    title: "Costume & Prop Rentals",
+    body: "Decades of theatrical inventory available to schools and community theatre at affordable rates.",
+    meta: ["800+ items", "By appointment"],
+    href: "/rentals",
+  },
+  {
+    eyebrow: "For young readers",
+    title: "Stories on Stage",
+    body: "Beloved children's books brought to life in short, lively performances designed for young audiences and school groups.",
+    meta: ["Ages 3–8", "Touring & in-house"],
+    href: "/programs",
+  },
+  {
+    eyebrow: "For serious performers",
+    title: "Studio Intensives",
+    body: "Focused, multi-week deep dives in voice, movement, scene study, and audition technique for committed teen performers.",
+    meta: ["Ages 13–18", "By audition"],
+    href: "/programs",
+  },
+];
+
+const stats = [
+  { figure: "30+", label: "Years serving Bay Area youth" },
+  { figure: "10,000+", label: "Children and families each year" },
+  { figure: "$45K", label: "In scholarships awarded" },
+];
+
+// Donation campaign demo numbers (from prototype).
+const goal = 200000;
+const raised = 76420;
+const pct = Math.round((raised / goal) * 100);
+---
+
+<BaseLayout title="Peninsula Youth Theatre — Outstanding youth theatre">
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">On stage now &middot; Spring 2026</p>
+        <h1>Outstanding youth <span class="accent-italic">theatre</span>.</h1>
+        <p class="hero-lede">
+          For more than 30 years, Peninsula Youth Theatre has been the Bay Area's
+          home for transformative theatre education and family-friendly productions.
+          From first auditions to opening nights, we believe every child deserves a stage.
+        </p>
+        <div class="hero-ctas">
+          <a href="/shows" class="btn btn-primary">See Upcoming Shows</a>
+          <a href="/programs" class="btn btn-outline">Browse Classes &amp; Camps</a>
+        </div>
+      </div>
+
+      <!-- Show "poster" panel (CSS placeholder, real poster comes via CMS) -->
+      <div class="poster">
+        <p class="poster-eyebrow">Now playing</p>
+        <p class="poster-title">Dragons<br />Love<br />Tacos</p>
+        <p class="poster-info">May 15–16, 2026<br />Mountain View Center for the Performing Arts</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DISCOVERY CARDS ============ -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Find your way in</p>
+      <h2 class="section-head">Whatever you're looking for, we've got it.</h2>
+
+      <div class="card-grid">
+        {discoveryCards.map((card) => (
+          <a href={card.href} class="card">
+            <p class="card-eyebrow">{card.eyebrow}</p>
+            <h3>{card.title}</h3>
+            <p class="card-body">{card.body}</p>
+            <div class="card-meta">
+              {card.meta.map((m) => <span>{m}</span>)}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ IMPACT STATS ============ -->
+  <section class="section impact">
+    <div class="container">
+      <p class="eyebrow">Our impact</p>
+      <h2 class="section-head">Three decades of young voices.</h2>
+
+      <div class="stat-grid">
+        {stats.map((stat) => (
+          <div class="stat">
+            <p class="stat-figure">{stat.figure}</p>
+            <p class="stat-label">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DONATION TEASER ============ -->
+  <section class="section donate-teaser">
+    <div class="container">
+      <p class="eyebrow">2026 Annual Campaign</p>
+      <h2 class="section-head">Help us reach $200,000.</h2>
+      <p class="donate-lede">
+        Ticket sales and tuition cover much of what we do. The rest — scholarships,
+        school touring, capital needs — comes from donors like you.
+      </p>
+
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" style={`width: ${pct}%`}></div>
+        </div>
+        <div class="progress-stats">
+          <span><strong>${raised.toLocaleString()}</strong> raised of ${goal.toLocaleString()} goal</span>
+          <span><strong>142</strong> donors &middot; <strong>{pct}%</strong> of goal</span>
+        </div>
+      </div>
+
+      <a href="/donate" class="btn btn-primary">Make a Gift</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-lg);
+  }
+
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .hero-copy h1 {
+    margin-block: 0.6rem 1rem;
+  }
+
+  .hero-lede {
+    font-size: 1.08rem;
+    max-width: 52ch;
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  /* Show poster placeholder */
+  .poster {
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: var(--shadow-lift);
+  }
+
+  .poster-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .poster-title {
+    font-family: var(--font-heading);
+    font-size: 2.6rem;
+    font-weight: 600;
+    line-height: 1.02;
+    margin-block: 0.5rem;
+    color: #fff;
+  }
+
+  .poster-info {
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* ---- Section heading ---- */
+  .section-head {
+    margin-block: 0.4rem var(--space-lg);
+    max-width: 20ch;
+  }
+
+  /* ---- Discovery cards ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .card {
+    display: block;
+    padding: var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+  }
+
+  .card-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .card h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .card-body {
+    font-size: 0.95rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .card-meta span {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-pill);
+  }
+
+  /* ---- Impact stats ---- */
+  .impact {
+    background: var(--paper-warm);
+    border-block: 1px solid var(--line);
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .stat-figure {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
+  }
+
+  /* ---- Donation teaser ---- */
+  .donate-lede {
+    max-width: 54ch;
+    margin-bottom: var(--space-lg);
+  }
+
+  .progress-wrap {
+    margin-bottom: var(--space-lg);
+  }
+
+  .progress-bar {
+    height: 14px;
+    background: var(--accent-soft);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: var(--radius-pill);
+  }
+
+  .progress-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+
+  /* ============ WIDER SCREENS ============ */
+  @media (min-width: 720px) {
+    .stat-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .card-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 920px) {
+    .hero-grid {
+      flex-direction: row;
+      align-items: center;
+    }
+    .hero-copy {
+      flex: 1.3;
+    }
+    .poster {
+      flex: 1;
+      min-height: 420px;
+    }
+    .poster-title {
+      font-size: 3.2rem;
+    }
+    .card-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

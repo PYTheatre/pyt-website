@@ -1,0 +1,162 @@
+---
+/*
+  FOOTER COMPONENT.
+
+  Matches the prototype: brand + tagline on the left, three
+  link columns, and a copyright line. The MailChimp email
+  signup form will be added here in a later phase.
+*/
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: "Experience",
+    links: [
+      { label: "Shows", href: "/shows" },
+      { label: "Classes & Camps", href: "/programs" },
+      { label: "Shop", href: "/shop" },
+    ],
+  },
+  {
+    title: "Community",
+    links: [
+      { label: "Cast Pages", href: "/cast" },
+      { label: "Rentals", href: "/rentals" },
+      { label: "Donate", href: "/donate" },
+    ],
+  },
+  {
+    title: "About",
+    links: [
+      { label: "Our Story", href: "/about" },
+      { label: "Contact", href: "/about#contact" },
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="footer-mark">P</span>
+      <p class="footer-name">Peninsula Youth Theatre</p>
+      <p class="footer-tagline">
+        A Bay Area home for young performers since 1989. 501(c)(3) nonprofit.
+      </p>
+    </div>
+
+    <div class="footer-cols">
+      {columns.map((col) => (
+        <div class="footer-col">
+          <h4>{col.title}</h4>
+          <ul>
+            {col.links.map((link) => (
+              <li><a href={link.href}>{link.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; {year} Peninsula Youth Theatre &middot; 501(c)(3) &middot; EIN 77-0335126</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-2xl);
+    background: var(--paper-warm);
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-xl);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .footer-mark {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .footer-name {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    max-width: 32ch;
+  }
+
+  .footer-cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .footer-col h4 {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.8rem;
+  }
+
+  .footer-col ul {
+    list-style: none;
+  }
+
+  .footer-col li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-col a {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+
+  .footer-col a:hover {
+    color: var(--accent-deep);
+  }
+
+  .footer-bottom {
+    margin-top: var(--space-lg);
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-bottom p {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 720px) {
+    .footer-inner {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .footer-cols {
+      grid-template-columns: repeat(3, auto);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

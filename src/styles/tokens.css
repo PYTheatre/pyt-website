@@ -1,0 +1,59 @@
+/* ============================================================
+   PYT DESIGN TOKENS  —  THE SINGLE SOURCE OF TRUTH
+   ------------------------------------------------------------
+   This file holds EVERY color, font, and brand value for the
+   whole website. Nothing else in the site should hardcode a
+   color or font — everything points back here.
+
+   WHY THIS MATTERS:
+   When PYT's real branding arrives (new logo, new colors,
+   maybe new fonts), you change the values in THIS ONE FILE
+   and the entire website re-skins itself. No other file
+   needs editing for a rebrand.
+
+   Everything below is a PLACEHOLDER pending real branding:
+   the pink accent, the Newsreader/Inter fonts, the "P" logo.
+   ============================================================ */
+
+:root {
+  /* ---- INK (text colors) ---- */
+  --ink: #111111;          /* near-black, main text            */
+  --ink-soft: #4a4a4a;     /* secondary text                   */
+  --ink-muted: #8a8a8a;    /* captions, hints                  */
+
+  /* ---- PAPER (background colors) ---- */
+  --paper: #ffffff;        /* main background                  */
+  --paper-warm: #faf8f4;   /* soft warm panel background       */
+
+  /* ---- LINE (borders & dividers) ---- */
+  --line: #e8e6e1;
+
+  /* ---- ACCENT (the one brand color — PINK placeholder) ---- */
+  --accent: #e85a8c;       /* primary accent                   */
+  --accent-deep: #c43d6f;  /* darker accent (hover, emphasis)  */
+  --accent-soft: #fce8f0;  /* very light accent (tints, fills) */
+
+  /* ---- NEUTRAL (was mustard/gold; now grey per decisions) ---- */
+  --neutral: #6a6a6a;
+
+  /* ---- TYPOGRAPHY ---- */
+  --font-heading: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* ---- SPACING SCALE (keeps rhythm consistent) ---- */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+
+  /* ---- LAYOUT ---- */
+  --max-width: 1140px;     /* max content width on big screens */
+  --radius: 12px;          /* standard rounded-corner size     */
+  --radius-pill: 999px;    /* fully-rounded (pills, buttons)   */
+
+  /* ---- SHADOWS ---- */
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lift: 0 8px 28px rgba(0, 0, 0, 0.10);
+}

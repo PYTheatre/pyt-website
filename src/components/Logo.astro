@@ -1,0 +1,55 @@
+---
+/*
+  LOGO COMPONENT — placeholder "P" mark.
+
+  WHEN THE REAL LOGO ARRIVES:
+  Replace the contents of the <a> below with the real logo
+  (an <img> pointing at /logo.svg, or inline SVG). Because
+  every page uses THIS component, swapping it here updates
+  the logo everywhere at once.
+*/
+---
+
+<a href="/" class="logo" aria-label="Peninsula Youth Theatre — home">
+  <span class="logo-mark">P</span>
+  <span class="logo-text">Peninsula Youth Theatre</span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .logo-mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 1.02rem;
+    color: var(--ink);
+    line-height: 1.1;
+    /* Hide the wordmark on very small screens to save space;
+       the "P" mark alone is enough on a phone. */
+    display: none;
+  }
+
+  @media (min-width: 520px) {
+    .logo-text {
+      display: inline;
+    }
+  }
+</style>
