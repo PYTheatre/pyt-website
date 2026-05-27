@@ -1,0 +1,58 @@
+# ============================================================
+# DECAP CMS CONFIGURATION
+# ============================================================
+# This file tells Decap CMS:
+#   - Where the content lives (the GitHub repo + branch).
+#   - How to log staff in (via our Cloudflare Functions OAuth endpoint).
+#   - What content "collections" staff can edit (forms they see).
+#
+# When real content goes into the CMS in Phase 2, we'll add
+# more collections here (Shows, Programs, Cast Pages, etc.).
+# For Phase 1 we keep it minimal: one safe "Site Settings"
+# entry so we can prove the editing loop works end-to-end.
+# ============================================================
+
+backend:
+  name: github
+  repo: PYTheatre/pyt-website
+  branch: main
+  # base_url is the address of OUR OAuth handler (Cloudflare Functions).
+  # It lives at the same domain as the site — the /api/* routes are
+  # served by Cloudflare Functions defined in /functions/api/.
+  base_url: https://pyt-website.pages.dev
+  auth_endpoint: /api/auth
+
+# Where uploaded images & files are stored in the repo.
+# We use the public folder so they're served directly.
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# Helpful, friendly commit messages so the GitHub history reads well.
+commit_messages:
+  create: "Create {{collection}} entry: {{slug}}"
+  update: "Update {{collection}} entry: {{slug}}"
+  delete: "Delete {{collection}} entry: {{slug}}"
+  uploadMedia: "Upload media: {{path}}"
+  deleteMedia: "Delete media: {{path}}"
+
+# ------------------------------------------------------------
+# COLLECTIONS — the editing forms staff see
+# ------------------------------------------------------------
+collections:
+  # --- Site settings: a single editable record (not a list) ---
+  - name: "settings"
+    label: "Site Settings"
+    label_singular: "Site Settings"
+    description: "Edit site-wide values like the donation campaign progress numbers."
+    delete: false   # safety: prevent accidentally deleting this record
+    editor:
+      preview: false
+    files:
+      - name: "donation-campaign"
+        label: "Donation Campaign"
+        file: "src/content/settings/donation-campaign.json"
+        fields:
+          - { name: "goal_amount", label: "Goal amount (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 200000 }
+          - { name: "raised_amount", label: "Amount raised so far (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 76420 }
+          - { name: "donor_count", label: "Number of donors", widget: "number", value_type: "int", min: 0, default: 142 }
+          - { name: "campaign_label", label: "Campaign name shown on the home page", widget: "string", default: "2026 Annual Campaign" }

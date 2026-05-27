@@ -58,9 +58,16 @@ const stats = [
   { figure: "$45K", label: "In scholarships awarded" },
 ];
 
-// Donation campaign demo numbers (from prototype).
-const goal = 200000;
-const raised = 76420;
+// Donation campaign numbers — read from the CMS-editable file at
+// src/content/settings/donation-campaign.json. Staff edit those
+// values in Decap CMS (Site Settings → Donation Campaign) and the
+// site rebuilds automatically. This is the proof-of-concept slice
+// showing the full edit-in-CMS → live-update loop end-to-end.
+import campaign from "../content/settings/donation-campaign.json";
+const goal = campaign.goal_amount;
+const raised = campaign.raised_amount;
+const donorCount = campaign.donor_count;
+const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
 ---
 
@@ -132,8 +139,8 @@ const pct = Math.round((raised / goal) * 100);
   <!-- ============ DONATION TEASER ============ -->
   <section class="section donate-teaser">
     <div class="container">
-      <p class="eyebrow">2026 Annual Campaign</p>
-      <h2 class="section-head">Help us reach $200,000.</h2>
+      <p class="eyebrow">{campaignLabel}</p>
+      <h2 class="section-head">Help us reach ${goal.toLocaleString()}.</h2>
       <p class="donate-lede">
         Ticket sales and tuition cover much of what we do. The rest — scholarships,
         school touring, capital needs — comes from donors like you.
@@ -145,7 +152,7 @@ const pct = Math.round((raised / goal) * 100);
         </div>
         <div class="progress-stats">
           <span><strong>${raised.toLocaleString()}</strong> raised of ${goal.toLocaleString()} goal</span>
-          <span><strong>142</strong> donors &middot; <strong>{pct}%</strong> of goal</span>
+          <span><strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal</span>
         </div>
       </div>
 

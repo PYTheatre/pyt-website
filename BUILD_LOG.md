@@ -1,12 +1,11 @@
 # PYT Website — Build Log
 
-This is the running record of the build. It is updated as work
-proceeds so the project never loses its thread. Newest entries
-are at the top.
+Newest entries at the top.
 
 - **Repo:** https://github.com/PYTheatre/pyt-website
+- **Live site (staging):** https://pyt-website.pages.dev
 - **Stack:** Astro (static) + Decap CMS + Cloudflare Pages
-- **Workflow:** Claude builds & tests files; client uploads to GitHub via web UI; Cloudflare auto-deploys.
+- **Workflow:** Claude builds & tests files; client uploads to GitHub web UI; Cloudflare auto-deploys.
 
 ---
 
@@ -14,47 +13,56 @@ are at the top.
 
 | Phase | What | Status |
 |---|---|---|
-| 0 | Prove the pipeline — minimal site, design tokens, mobile-first base, home page | ✅ Built & tested locally; awaiting first GitHub upload + Cloudflare connect |
-| 1 | Decap CMS login (the fragile bit) | ⬜ Not started |
-| 2 | Core pages (Shows, Show Detail, Programs, Donate, About) via CMS | ⬜ Not started |
-| 3 | Cast pages + password gate, Google Sheets embed, Rentals, Shop, MailChimp | ⬜ Not started |
-| 4 | Full EN/ES (Spanish) | ⬜ Not started |
+| 0 | Pipeline | ✅ Complete |
+| 1 | Decap CMS login | 🟡 **In progress — files built & sandbox-tested; awaiting client upload + OAuth setup** |
+| 2 | Core pages via CMS | ⬜ Not started |
+| 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started |
+| 4 | Full EN/ES | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 
 ---
 
-## Phase 0 — Prove the pipeline
+## Phase 1 — Decap CMS login (in progress)
 
-**Goal:** Get a small, correct, real PYT home page live on Cloudflare Pages to prove the whole files→GitHub→Cloudflare→live-URL chain works before building everything.
+**Goal:** Stand up the form-based CMS so PYT staff can edit content without code.
 
-### Built (all tested locally — clean builds, screenshotted at phone + desktop)
-- `src/styles/tokens.css` — THE single source of truth for all colors & fonts. Rebrand = edit this one file.
-- `src/styles/global.css` — mobile-first base styles, fonts, reusable buttons/pills/container. References tokens only.
-- `src/components/Logo.astro` — placeholder "P" logo, built as a single-file swap for the real logo later.
-- `src/components/Header.astro` — sticky header, pill nav, Donate button, mobile hamburger menu.
-- `src/components/Footer.astro` — brand, link columns, copyright.
-- `src/layouts/BaseLayout.astro` — shared page shell (head + header + content + footer).
-- `src/pages/index.astro` — full home page: hero, 5 discovery cards, 3 impact stats, donation teaser. Matches the approved prototype.
-- `astro.config.mjs` — static output, no server adapter (simplest/robust). `site` set to the Pages URL (update to pytnet.org at launch).
-- `.nvmrc` — pins Node 22 (avoids a known Cloudflare build failure).
-- `.gitignore` — keeps node_modules and build output OUT of GitHub.
+### Built (sandbox-tested)
+- `public/admin/index.html` — the page staff visit at `/admin` to log in.
+  Loads Decap CMS v3.10.1 (latest stable, Feb 2026).
+- `public/admin/config.yml` — Decap configuration: GitHub backend on
+  PYTheatre/pyt-website, custom OAuth endpoint at /api/auth, one
+  starter collection "Site Settings → Donation Campaign".
+- `functions/api/auth.js` — Cloudflare Pages Function: starts the
+  GitHub OAuth flow. Reads GITHUB_CLIENT_ID env var.
+- `functions/api/callback.js` — Cloudflare Pages Function: completes
+  the OAuth flow, exchanges code for token, returns token to Decap
+  popup via postMessage. Reads both env vars.
+- `src/content/settings/donation-campaign.json` — the first CMS-edited
+  file. Holds the donation campaign numbers (goal, raised, donors,
+  label) that the home page reads.
+- `src/pages/index.astro` — updated to import the JSON file and
+  render its values in the donation teaser, proving the CMS→site loop.
 
-### Tested
-- ✅ Clean `npm run build` (zero errors).
-- ✅ Rendered at 390px (phone) and 1280px (desktop) — both look right; fonts load.
-- ✅ **Rebrand test passed:** swapped tokens to green + a different heading font; entire site re-skinned from one file. Reverted to pink/Newsreader. This proves late branding is a small edit, as promised to the client.
+### Sandbox tests passed
+- ✅ `npm run build` zero errors with all new files in place.
+- ✅ Admin folder ships to `dist/admin/` correctly.
+- ✅ JSON values render correctly in the built home page HTML.
+- ✅ **CMS edit loop proven:** changed JSON to `goal=250000,
+  raised=187500, donors=287, label="Spring 2026 Push"`, rebuilt,
+  confirmed all four values propagated to the live HTML. Reverted.
 
-### Known things handled
-- Cloudflare "Workers vs Pages" UI trap (documented late 2025): must explicitly choose **Pages** during setup, or a static site can land on the wrong infrastructure. Will guide the client around this.
-- Internal nav links (/shows, /programs, etc.) intentionally 404 until those pages are built in later phases. Expected.
+### What I cannot fully test in the sandbox
+- The actual GitHub OAuth login flow needs:
+  - A real GitHub OAuth App (client creates on github.com)
+  - Real env vars set in Cloudflare Pages (client creates)
+  - The live `*.pages.dev` URL talking to GitHub
+  So login itself can only be tested after the client uploads the
+  files and completes the OAuth App setup. This is the known-fragile
+  part of Phase 1 — documented carefully in the upload instructions.
 
-### Pending (needs the client)
-- Create a free Cloudflare account.
-- First GitHub upload of the Phase 0 files.
-- Connect Cloudflare Pages to the repo (build command `npm run build`, output dir `dist`).
-- Confirm the live `*.pages.dev` URL works.
-
-### Decisions / notes
-- Org is **`PYTheatre`** (NOT `peninsula-youth-theatre` as the handoff notes said). Confirmed from the live repo URL.
-- Following the **decisions log** over the prototype's stale "Staff note" boxes (which still mention Cloudflare Access and Shopify Starter — both superseded).
-- EN/ES language toggle deliberately deferred to Phase 4; the header is built to accommodate it later.
+### Fallback plan
+If GitHub OAuth setup gets stuck after a serious troubleshooting
+attempt, fall back to Sveltia CMS — same config format, same editor
+look-and-feel staff were shown, simpler Cloudflare recipe. Most of
+the work above (admin folder, config, content file, home page wiring)
+carries over.
