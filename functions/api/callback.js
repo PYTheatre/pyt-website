@@ -16,15 +16,19 @@
 //      this step has to happen on a server, not in the browser).
 //
 //   3. We send the access token back to the Decap CMS popup window
-//      using a small HTML page that calls window.opener.postMessage.
-//      That's how Decap's main page receives the token and unlocks
-//      the editor.
+//      using a small HTML page that performs the postMessage
+//      handshake Decap expects:
 //
-// What lives in environment variables:
-//   - GITHUB_CLIENT_ID
-//   - GITHUB_CLIENT_SECRET
-//
-// This is a Cloudflare Pages Function at the URL path /api/callback.
+//        a) The popup adds a message listener.
+//        b) The popup posts "authorizing:github" to its opener.
+//        c) Decap's main window replies with a message echoing
+//           back the same string (this is how Decap signals it
+//           is now listening for the success payload).
+//        d) Only AFTER receiving that reply, the popup posts
+//           "authorization:github:success:<json>" back to the
+//           opener — at which point Decap reads the token and
+//           transitions into the dashboard.
+//        e) Popup closes itself.
 // ============================================================
 
 export async function onRequestGet(context) {
@@ -36,7 +40,6 @@ export async function onRequestGet(context) {
   const returnedState = url.searchParams.get("state");
 
   // Compare the returned state with the cookie we set earlier.
-  // If they don't match, something fishy happened — refuse to continue.
   const cookieHeader = request.headers.get("Cookie") || "";
   const stateCookie = cookieHeader
     .split(";")
@@ -86,36 +89,32 @@ export async function onRequestGet(context) {
     return htmlError(`GitHub refused to issue an access token: ${reason}`);
   }
 
-  // 4) Send the token back to the Decap window that opened this popup.
-  //    Decap listens for a message of the form:
-  //       "authorization:github:success:<json payload>"
-  //    via window.postMessage from this popup. We build a tiny HTML
-  //    page that posts that message and then closes itself.
+  // 4) Send the token back to Decap via the postMessage handshake.
   const payload = JSON.stringify({ token: accessToken, provider: "github" });
+
   const successHtml = `<!doctype html>
 <html>
 <head><meta charset="utf-8" /><title>Login complete</title></head>
-<body>
-  <p style="font-family: system-ui, sans-serif; padding: 2rem;">Login complete. You can close this window.</p>
+<body style="font-family: system-ui, sans-serif; padding: 2rem;">
+  <p>Login complete. You can close this window.</p>
   <script>
     (function () {
-      var receivedReady = false;
-      function send() {
-        window.opener && window.opener.postMessage(
-          'authorization:github:success:${payload.replace(/'/g, "\\'")}',
-          '*'
+      var payload = ${JSON.stringify(payload)};
+
+      function receiveMessage(e) {
+        // Decap echoes back "authorizing:github" to signal it's ready.
+        window.opener.postMessage(
+          'authorization:github:success:' + payload,
+          e.origin
         );
+        setTimeout(function () { window.close(); }, 800);
       }
-      // Decap sometimes sends a "ready" handshake message first; reply when it does.
-      window.addEventListener('message', function (e) {
-        if (e.data === 'authorizing:github' && !receivedReady) {
-          receivedReady = true;
-          send();
-        }
-      });
-      // Also send eagerly in case the parent missed the ready handshake.
-      send();
-      setTimeout(function () { window.close(); }, 1000);
+
+      // (a) Listen first.
+      window.addEventListener("message", receiveMessage, false);
+
+      // (b) Then announce ourselves to the opener.
+      window.opener.postMessage("authorizing:github", "*");
     })();
   </script>
 </body>
@@ -125,13 +124,11 @@ export async function onRequestGet(context) {
     status: 200,
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      // Clear the temporary state cookie now that we're done with it.
       "Set-Cookie": "oauth_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
     },
   });
 }
 
-// Tiny helper: render an error message as a friendly HTML page.
 function htmlError(message) {
   const body = `<!doctype html>
 <html>
