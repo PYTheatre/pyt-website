@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
     <title>Content Manager · Peninsula Youth Theatre</title>
     <!--
       DECAP CMS ADMIN PAGE
@@ -10,20 +11,14 @@
       This page loads the Decap CMS content editor. Staff visit
       /admin on the live site to use it.
 
-      How it works in plain terms:
-       1. Staff visits  https://pyt-website.pages.dev/admin
-       2. They see a "Login with GitHub" button.
-       3. After logging in, Decap reads the site's content files
-          from the GitHub repo and shows them as friendly forms.
-       4. Saving in Decap creates a Git commit. Cloudflare sees
-          the commit and rebuilds the site within a couple of minutes.
-
-      The version below is pinned to a known-good release.
+      Important: the Decap script MUST be inside <body>, not <head>.
+      If placed in <head> it runs before the body element exists,
+      causing a "Cannot read properties of null (reading 'appendChild')"
+      error. This file follows the official Decap CMS install example.
     -->
-    <script src="https://unpkg.com/decap-cms@3.10.1/dist/decap-cms.js"></script>
   </head>
   <body>
-    <!-- Decap CMS mounts its full interface into the element below. -->
-   <div id="nc-root"></div>
+    <!-- Include the script that builds the page and powers Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@3.10.1/dist/decap-cms.js"></script>
   </body>
 </html>
