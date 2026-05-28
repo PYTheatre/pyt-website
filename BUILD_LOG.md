@@ -17,51 +17,65 @@ Newest entries at the top.
 | 0 | Pipeline | ✅ Complete |
 | 1 | Decap CMS login | ✅ Complete |
 | 2 | Core pages (Shows, Programs, Donate, About, Casting) | ✅ Complete |
-| 2.5 | **Sponsorship feature** | 🟡 **Built & sandbox-tested; awaiting client upload** |
+| 2.5 | Sponsorship feature | 🟡 Awaiting client verification on live site |
+| 2.6 | **Stories on Stage section** | 🟡 **Built & sandbox-tested; awaiting client upload** |
 | 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started |
 | 4 | Full EN/ES | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 
 ---
 
-## Phase 2.5 — Sponsorship feature (sandbox complete)
+## Phase 2.6 — Stories on Stage (sandbox complete)
 
-**Goal:** Add sponsorship-as-a-product with two tier groups (per-show + per-season), surfaced from Shows list, individual show pages, and the Donate page.
+**Goal:** Promote Stories on Stage from one program-among-many to its own season-style presentation, reflecting how it actually works operationally (parallel to Mainstage, one annual audition, 6 productions per year, each actor in 1–3 shows).
 
 ### Decisions locked with client (2026-05-27)
-- Sponsor buttons lead to **a new on-site `/sponsor` page** with all tiers and benefits, not to external forms (Option 1).
-- "Sponsor This Show" buttons on individual show pages must **carry which show is being sponsored** through to the destination — handled via URL query parameter (`?show=<slug>`) and a small client-side script.
-- Sponsorship is **distinct from individual donations**. The two ladders are visually separated; the Donate page has a discrete pointer toward `/sponsor` rather than mixing the offerings.
-- Sponsorship tiers approved exactly as proposed:
-  - Show: Show Producer $10,000 / Show Sponsor $5,000 / Show Friend $2,500 / Show Supporter $1,000
-  - Season: Season Producer $25,000 / Season Sponsor $15,000 / Season Friend $7,500
+- Stories on Stage is a **separate content type** from Mainstage Shows and from Classes & Camps. Different fields, different page layout.
+- **One page** at `/stories-on-stage` — no per-production detail pages. The lineup, auditions info, and explainer all live on this single URL.
+- **Each production has two CTAs**: Buy Tickets (public) and School Bookings (schools). Either can be blank per-production and that button hides.
+- **Production card eyebrow** = just performance dates, no slot label like "Production 1 of 6".
+- **Auditions section** has its own thin strip at the very top of the page linking down to the auditions block.
+- **Removed from Classes & Camps**: the old `stories-on-stage.md` program file is gone; the program_type enum no longer offers "Stories on Stage" as an option.
+- **Nav placement**: between Shows and Classes & Camps, reinforcing parallel-season framing.
+- **No cast pages** for Stories on Stage productions (each is cast from the annual roster, not per-show).
+- **Calendar conflicts collected via external Google Form** — the auditions section links out to it. URL is CMS-editable.
 
 ### Built (all sandbox-tested)
-- `src/content/settings/sponsorship-page.json` — full sponsorship copy and all seven tiers with benefits lists.
-- `public/admin/config.yml` — extended with a "Sponsorship Page" entry in Site Settings, with editable intro copy, contact info, and two nested list widgets (show tiers, season tiers) where each tier has name/amount/description/benefits-list/donation-URL fields.
-- `src/pages/sponsor.astro` — the new `/sponsor` page. Two tier sections, dark contact block at the bottom. Per-tier donation URLs supported (mailto fallback when blank). Show-aware via `?show=<slug>` URL param with client-side script.
-- `src/pages/shows/index.astro` — added "Sponsor a Show" and "Sponsor a Season" buttons in a CTA strip under the page hero.
-- `src/pages/shows/[slug].astro` — added "Sponsor This Show" button to the CTA row; links to `/sponsor?show=<slug>`.
-- `src/pages/donate.astro` — added a sponsorship pointer section at the bottom with its own eyebrow ("For businesses, foundations & major giving") and two CTAs.
+- `src/content/stories-on-stage/*.md` — two seeded example productions (Very Hungry Caterpillar, Where the Wild Things Are).
+- `src/content/settings/stories-on-stage-page.json` — page-level content: intro lede, audition strip text, lineup heading, full auditions section copy (dates, age range, what to prepare, fees, form blurb), and the "What is Stories on Stage?" explainer paragraphs.
+- `src/content.config.ts` — added `storiesOnStage` collection schema; removed "Stories on Stage" from the programs `program_type` enum (no longer needed).
+- `public/admin/config.yml` — added "Stories on Stage Productions" folder collection with form fields for each production; added "Stories on Stage Page" entry under Site Settings; updated Programs collection description and removed "Stories on Stage" from its program_type options.
+- `src/pages/stories-on-stage.astro` — the new page: top audition strip, hero, season lineup grid (2 cards seeded, expandable to 6 via CMS), auditions section with anchor target, explainer block.
+- `src/components/Header.astro` — Stories on Stage added to the nav between Shows and Classes & Camps.
+- `src/content/programs/stories-on-stage.md` — **deleted** (no longer needed; SoS lives in its own collection).
 
 ### Sandbox tests passed
-- ✅ `npm run build` zero errors. 10 pages generated.
-- ✅ All four affected pages render correctly at 390px and 1280px.
-- ✅ **Show-aware flow proven end-to-end** with headless browser test: clicking "Sponsor This Show" on Hello, Dolly! lands at `/sponsor?show=hello-dolly`, the context banner shows "Hello, Dolly!" with the comma preserved, and show-tier "Inquire" buttons' mailto subjects pick up the show name (`Sponsorship inquiry: Show Producer for Hello, Dolly!`). Season-tier links are correctly NOT modified.
-- ✅ Per-tier donation URLs: when `donation_url` is set, button becomes a primary "Give at this level" link. When blank (current state, since Soapbox not wired yet), button becomes an outline "Inquire about this level" mailto link.
+- ✅ `npm run build` zero errors. 11 pages generated (one more than Phase 2.5 — the new `/stories-on-stage`).
+- ✅ Stories on Stage page renders correctly at 390px and 1280px. Production grid is 1 column on phone, 2 on tablet, 3 on desktop.
+- ✅ Programs page now shows 6 programs (Stories on Stage removed); existing programs unaffected.
+- ✅ **CTA logic verified**: with both ticketing URLs blank, card shows a disabled "Tickets & bookings coming soon" pill. With URLs filled in, both Buy Tickets (primary) and School Bookings (outline) buttons render with proper links.
+- ✅ Audition strip anchors correctly to `#auditions` section.
 
-### When Soapbox is ready
-Staff will fill in the `donation_url` field on each tier through `/admin → Site Settings → Sponsorship Page`. The buttons automatically switch from "Inquire about this level" to "Give at this level". No code changes needed.
+### What staff will edit through the CMS
+- **Stories on Stage Productions** (in left sidebar, between "Classes & Camps" and "Site Settings"): add/edit/remove individual productions. Same form-pattern as Shows but with fewer fields and two ticketing URLs.
+- **Site Settings → Stories on Stage Page**: page intro, auditions section copy, Google Form URL, explainer paragraphs.
+
+### Pending follow-ups
+- **Casting page (created in Phase 2) still has the client-provided text and hero-image placeholder.** When the client provides the hero image, upload via CMS → Site Settings → Casting Page → Hero image. (Unchanged from previous phases — flagging again here as a project-level reminder.)
+- **Casting page text mentions Mainstage but not Stories on Stage**. When Stories on Stage is live, the client may want to revise the Casting page copy to clarify it's specifically about Mainstage auditioning (since Stories on Stage now has its own clearly-labeled audition section). Worth flagging to the client, but they should decide.
 
 ---
 
+## Phase 2.5 — Sponsorship feature 🟡 awaiting client verification
+
+(Built, packaged, presented to client. Client has not yet confirmed deployment to live site.)
+
 ## Phase 2 — Core pages ✅ COMPLETE (2026-05-27)
 
-Six new editable pages live: /shows, /shows/[slug], /programs, /donate, /about, /casting.
-Staff workflow verified via Test A (added a fake show via CMS, confirmed it appeared on live site, deleted it) and Test B (edited About page, confirmed change went live).
+(Six new editable pages live. Staff workflow verified via add-a-show and edit-About tests.)
 
 ## Phase 1 — Decap CMS login ✅ COMPLETE
 
 ## Phase 0 — Pipeline ✅ COMPLETE
 
-(See git history for full details of earlier phases.)
+(See git history for earlier-phase details.)

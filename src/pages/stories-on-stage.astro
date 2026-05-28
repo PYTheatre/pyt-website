@@ -1,0 +1,406 @@
+---
+/*
+  STORIES ON STAGE PAGE  ( /stories-on-stage )
+
+  A single-page presentation of PYT's parallel season:
+    - Thin strip at the very top linking down to auditions
+    - Page hero with title + lede
+    - Season lineup grid: cards for each production with
+      Buy Tickets (public) and School Bookings CTAs
+    - Auditions section (anchor target #auditions)
+    - "What is Stories on Stage?" explainer block
+
+  Productions come from the storiesOnStage content collection
+  (one Markdown file per production). Page-level content
+  (intro lede, auditions copy, explainer) comes from a single
+  Site Settings JSON file.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { getCollection } from "astro:content";
+import page from "../content/settings/stories-on-stage-page.json";
+
+// Load all productions, sorted by start date (earliest first).
+const productions = (await getCollection("storiesOnStage")).sort(
+  (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
+);
+---
+
+<BaseLayout
+  title={`${page.title} — Peninsula Youth Theatre`}
+  description="Stories on Stage — PYT's company of young performers brings beloved children's books to life. Six productions a year, one annual audition."
+>
+  <!-- ============ TOP AUDITION STRIP ============ -->
+  <!-- Thin strip at the very top inviting prospective company members
+       to jump to the auditions section lower on the page. -->
+  <section class="audition-strip">
+    <div class="container audition-strip-inner">
+      <p>
+        {page.auditions_strip_text}
+        <a href="#auditions" class="audition-strip-link">
+          {page.auditions_strip_link_text} →
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <PageHero
+    eyebrow={page.eyebrow}
+    title={page.title}
+    lede={page.intro_lede}
+  />
+
+  <!-- ============ SEASON LINEUP ============ -->
+  <section class="section lineup-section">
+    <div class="container">
+      <p class="eyebrow">This season</p>
+      <h2 class="section-head">{page.lineup_heading}</h2>
+      <p class="lineup-blurb">{page.lineup_blurb}</p>
+
+      {productions.length === 0 ? (
+        <p class="empty-state">
+          The next season hasn't been announced yet. Audition info is below.
+        </p>
+      ) : (
+        <ul class="production-list">
+          {productions.map((prod) => (
+            <li class="production-card">
+              <div
+                class="production-poster"
+                style={prod.data.poster ? `background-image: url(${prod.data.poster}); background-size: cover; background-position: center;` : ""}
+              >
+                {!prod.data.poster && (
+                  <span class="poster-placeholder">{prod.data.title}</span>
+                )}
+              </div>
+              <div class="production-info">
+                <p class="production-dates">{prod.data.date_display}</p>
+                <h3 class="production-title">{prod.data.title}</h3>
+                <p class="production-venue">{prod.data.venue}</p>
+                <p class="production-synopsis">{prod.data.synopsis}</p>
+                <div class="production-ctas">
+                  {prod.data.public_ticketing_url && (
+                    <a
+                      href={prod.data.public_ticketing_url}
+                      class="btn btn-primary"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Buy Tickets
+                    </a>
+                  )}
+                  {prod.data.school_bookings_url && (
+                    <a
+                      href={prod.data.school_bookings_url}
+                      class="btn btn-outline"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      School Bookings
+                    </a>
+                  )}
+                  {!prod.data.public_ticketing_url && !prod.data.school_bookings_url && (
+                    <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                      Tickets &amp; bookings coming soon
+                    </span>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  <!-- ============ AUDITIONS ============ -->
+  <section class="section auditions-section" id="auditions">
+    <div class="container auditions-inner">
+      <p class="eyebrow">Join the company</p>
+      <h2 class="section-head">{page.auditions_heading}</h2>
+      <p class="auditions-intro">{page.auditions_intro}</p>
+
+      <dl class="auditions-facts">
+        <div>
+          <dt>Audition dates</dt>
+          <dd>{page.auditions_dates}</dd>
+        </div>
+        <div>
+          <dt>Age range</dt>
+          <dd>{page.auditions_age_range}</dd>
+        </div>
+      </dl>
+
+      <h3 class="auditions-subhead">What to prepare</h3>
+      <p>{page.auditions_what_to_prepare}</p>
+
+      {page.auditions_fees && (
+        <>
+          <h3 class="auditions-subhead">Fees &amp; tuition</h3>
+          <p>{page.auditions_fees}</p>
+        </>
+      )}
+
+      <div class="auditions-cta">
+        {page.auditions_form_url ? (
+          <>
+            {page.auditions_form_blurb && (
+              <p class="auditions-form-blurb">{page.auditions_form_blurb}</p>
+            )}
+            <a
+              href={page.auditions_form_url}
+              class="btn btn-primary"
+              target="_blank"
+              rel="noopener"
+            >
+              Register for auditions →
+            </a>
+          </>
+        ) : (
+          <p class="auditions-form-pending">
+            Registration opens soon. Check back, or email
+            <a href="mailto:info@pytnet.org"> info@pytnet.org</a> with questions.
+          </p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPLAINER ============ -->
+  <section class="section explainer-section">
+    <div class="container explainer-inner">
+      <h2 class="section-head">{page.explainer_heading}</h2>
+      <div class="explainer-body">
+        {page.explainer_body.split("\n\n").map((para) => <p>{para}</p>)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---- Top audition strip ---- */
+  .audition-strip {
+    background: var(--accent-soft);
+    border-bottom: 1px solid var(--accent);
+    padding-block: var(--space-sm);
+  }
+  .audition-strip-inner p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--accent-deep);
+  }
+  .audition-strip-link {
+    font-weight: 600;
+    color: var(--accent-deep);
+    text-decoration: underline;
+    margin-left: 0.3rem;
+  }
+
+  /* ---- Lineup section ---- */
+  .section-head {
+    margin-block: 0.4rem var(--space-sm);
+  }
+  .lineup-blurb {
+    max-width: 60ch;
+    margin-bottom: var(--space-lg);
+    font-size: 1rem;
+  }
+
+  .production-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .production-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .production-poster {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: var(--space-md);
+  }
+
+  .poster-placeholder {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .production-info {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-grow: 1;
+  }
+
+  .production-dates {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  .production-title {
+    font-size: 1.3rem;
+    margin: 0.1rem 0 0.3rem;
+  }
+
+  .production-venue {
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    margin: 0 0 0.6rem;
+  }
+
+  .production-synopsis {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0 0 var(--space-md);
+    flex-grow: 1;
+  }
+
+  .production-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .production-ctas .btn {
+    flex: 1;
+    min-width: 130px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .empty-state {
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+  }
+
+  /* ---- Auditions section ---- */
+  .auditions-section {
+    background: var(--paper-warm);
+    border-block: 1px solid var(--line);
+  }
+
+  .auditions-inner {
+    max-width: 68ch;
+  }
+
+  .auditions-intro {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+
+  .auditions-facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    margin: var(--space-md) 0 var(--space-lg);
+    padding-block: var(--space-md);
+    border-block: 1px solid var(--line);
+  }
+
+  .auditions-facts dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .auditions-facts dd {
+    font-size: 1rem;
+    color: var(--ink);
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .auditions-subhead {
+    font-size: 1.1rem;
+    margin-top: var(--space-md);
+    margin-bottom: 0.4rem;
+  }
+
+  .auditions-section p {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .auditions-cta {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line);
+  }
+
+  .auditions-form-blurb {
+    margin-bottom: var(--space-md);
+    color: var(--ink-soft);
+  }
+
+  .auditions-form-pending {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  .auditions-form-pending a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+    font-style: normal;
+  }
+
+  /* ---- Explainer section ---- */
+  .explainer-inner {
+    max-width: 68ch;
+  }
+
+  .explainer-body p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  /* ---- Responsive ---- */
+  @media (min-width: 720px) {
+    .production-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .auditions-facts {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .production-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

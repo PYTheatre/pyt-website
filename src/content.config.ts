@@ -40,13 +40,15 @@ const shows = defineCollection({
 });
 
 // --- PROGRAMS ---
-// One Markdown file per program (class, camp, etc.).
+// One Markdown file per program (class, camp, intensive).
+// Note: "Stories on Stage" was previously a program type. It now
+// has its own dedicated section and collection — see below.
 const programs = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/programs" }),
   schema: z.object({
     name: z.string(),
     eyebrow: z.string().optional(),
-    program_type: z.enum(["Class", "Camp", "Stories on Stage", "Studio Intensive"]),
+    program_type: z.enum(["Class", "Camp", "Studio Intensive"]),
     age_range: z.string(),
     season: z.enum(["Fall", "Spring", "Summer", "Year-round"]),
     description: z.string(),
@@ -57,5 +59,27 @@ const programs = defineCollection({
   }),
 });
 
+// --- STORIES ON STAGE PRODUCTIONS ---
+// Stories on Stage is a parallel season to Mainstage: 6 productions
+// per year, all cast from a single annual audition. Each production
+// is short, often touring to schools as well as performing in-house.
+// Unlike Mainstage shows, productions live entirely on the
+// /stories-on-stage page (no per-production detail pages), so the
+// schema is intentionally smaller than the Shows schema.
+const storiesOnStage = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/stories-on-stage" }),
+  schema: z.object({
+    title: z.string(),
+    start_date: z.coerce.date(),
+    end_date: z.coerce.date(),
+    date_display: z.string(),
+    venue: z.string(),
+    synopsis: z.string(),
+    poster: z.string().optional(),
+    public_ticketing_url: z.string().optional(),
+    school_bookings_url: z.string().optional(),
+  }),
+});
+
 // Expose the collections so Astro can discover them.
-export const collections = { shows, programs };
+export const collections = { shows, programs, storiesOnStage };
