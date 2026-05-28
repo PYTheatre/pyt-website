@@ -1,12 +1,6 @@
 {
-  "title": "Sponsor a Show or a Season",
   "eyebrow": "Corporate & individual sponsorship",
-  "intro_heading": "Make youth theatre possible in the Bay Area.",
-  "intro_body": "Sponsorship is how community-minded businesses, foundations, and individual supporters help Peninsula Youth Theatre bring transformative theatre education to children across the Peninsula. Sponsors are recognized in programs, in lobbies, and on stage — and most importantly, they make scholarships, school touring, and our full production season possible.\n\nSponsorship is distinct from individual giving. Sponsors commit at one of two levels — a single Mainstage production, or the full three-show season — and receive recognition tied to the productions they support.",
-  "contact_email": "info@pytnet.org",
-  "contact_blurb": "Sponsorships of this size are usually a conversation, not a checkout. Reach out and we'll set up a call to discuss benefits, timing, and how your sponsorship can be tailored to your goals.",
-  "show_tiers_heading": "Sponsor a single Mainstage show",
-  "show_tiers_blurb": "Support one production from auditions through closing night. Show sponsorships run for the rehearsal period and full performance run of the show you choose (about 8–10 weeks).",
+  "show_tiers_blurb": "Support one production from auditions through closing night. Show sponsorships run for the rehearsal period and full performance run of the show you choose (about 9–12 weeks).",
   "show_tiers": [
     {
       "name": "Show Producer",
@@ -58,8 +52,9 @@
       "donation_url": ""
     }
   ],
-  "season_tiers_heading": "Sponsor the full 2026 season",
-  "season_tiers_blurb": "Support all three Mainstage productions across the year. Season sponsorships give the broadest recognition and the strongest signal of community partnership.",
+  "intro_heading": "Make youth theatre possible in the Bay Area.",
+  "season_tiers_blurb": "Support all productions across the year. Season sponsorships give the broadest recognition and the strongest signal of community partnership.",
+  "show_tiers_heading": "Sponsor a single show",
   "season_tiers": [
     {
       "name": "Season Producer",
@@ -99,5 +94,10 @@
       ],
       "donation_url": ""
     }
-  ]
+  ],
+  "intro_body": "Sponsorship is how community-minded businesses, foundations, and individual supporters help Peninsula Youth Theatre bring transformative theatre education to children across the Peninsula. Sponsors are recognized in programs, in lobbies, and on stage — and most importantly, they make scholarships, school shows, and our full production season possible.\n\nSponsorship is distinct from individual giving. Sponsors commit at one of two levels — a single Main Stage production, or the full season — and receive recognition tied to the productions they support.",
+  "season_tiers_heading": "Sponsor the full 2026-2027 season",
+  "title": "Sponsor a Show or a Season",
+  "contact_blurb": "Sponsorships of this size are usually a conversation, not a checkout. Reach out and we'll set up a call to discuss benefits, timing, and how your sponsorship can be tailored to your goals.",
+  "contact_email": "Loryn Hatten, Managing Director, lhatten@pytnet.org"
 }
