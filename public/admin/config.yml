@@ -260,6 +260,18 @@ collections:
           - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
           - { name: "email", label: "Email", widget: "string", default: "info@pytnet.org" }
           - { name: "ein", label: "EIN (tax ID)", widget: "string", default: "77-0335126" }
+          - { name: "board_section_heading", label: "Board section heading", widget: "string", required: false, default: "Board of Directors" }
+          - { name: "board_section_blurb", label: "Board section description (optional)", widget: "text", required: false, hint: "Optional short text under the section heading. Leave blank to omit." }
+          - name: "board_members"
+            label: "Board members"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.pyt_title}}"
+            fields:
+              - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
+              - { name: "pyt_title", label: "PYT title", widget: "string", hint: "Example: Board President, Board Member" }
+              - { name: "outside_title", label: "Job title outside PYT", widget: "string", required: false, hint: "Example: Partner at Acme Law LLP" }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the member's initials are shown in a colored placeholder." }
 
       # --- Casting page ---
       - name: "casting-page"

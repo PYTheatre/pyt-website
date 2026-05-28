@@ -10,6 +10,24 @@ import about from "../content/settings/about-page.json";
 
 // Split the story into paragraphs at blank lines.
 const paragraphs = about.story.split("\n\n").filter((p) => p.trim().length > 0);
+
+// Board members (optional — may not exist on older versions of the file).
+// If the field is missing or the list is empty, the whole section is hidden.
+const boardMembers = (about as any).board_members || [];
+const boardHeading = (about as any).board_section_heading || "Board of Directors";
+const boardBlurb = (about as any).board_section_blurb || "";
+
+// Build initials for the placeholder avatar (when a member has no photo yet).
+function getInitials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 ---
 
 <BaseLayout title={`${about.title} — Peninsula Youth Theatre`}>
@@ -47,6 +65,36 @@ const paragraphs = about.story.split("\n\n").filter((p) => p.trim().length > 0);
       </aside>
     </div>
   </section>
+
+  {boardMembers.length > 0 && (
+    <section class="section board-section">
+      <div class="container">
+        <p class="eyebrow">Leadership</p>
+        <h2 class="section-head">{boardHeading}</h2>
+        {boardBlurb && <p class="board-blurb">{boardBlurb}</p>}
+
+        <ul class="board-grid">
+          {boardMembers.map((m: any) => (
+            <li class="board-card">
+              <div
+                class="board-photo"
+                style={m.photo ? `background-image: url(${m.photo}); background-size: cover; background-position: center;` : ""}
+              >
+                {!m.photo && (
+                  <span class="board-initials">{getInitials(m.name)}</span>
+                )}
+              </div>
+              <p class="board-pyt-title">{m.pyt_title}</p>
+              <p class="board-name">{m.name}</p>
+              {m.outside_title && (
+                <p class="board-outside-title">{m.outside_title}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
@@ -111,6 +159,88 @@ const paragraphs = about.story.split("\n\n").filter((p) => p.trim().length > 0);
     border-top: 1px solid var(--line);
     font-size: 0.85rem;
     color: var(--ink-muted);
+  }
+
+  /* ---- Board of Directors section ---- */
+  .board-section {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--line);
+  }
+
+  .board-blurb {
+    max-width: 60ch;
+    margin-bottom: var(--space-lg);
+    font-size: 1rem;
+  }
+
+  .board-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .board-card {
+    text-align: left;
+  }
+
+  .board-photo {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-bottom: var(--space-sm);
+    overflow: hidden;
+  }
+
+  .board-initials {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .board-pyt-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.2rem;
+  }
+
+  .board-name {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 0.15rem;
+    line-height: 1.2;
+  }
+
+  .board-outside-title {
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  @media (min-width: 720px) {
+    .board-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .board-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
   @media (min-width: 920px) {

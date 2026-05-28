@@ -7,6 +7,7 @@ Newest entries at the top.
 - **CMS:** https://pyt-website.pages.dev/admin
 - **Stack:** Astro 6 (static) + Decap CMS 3.10.1 + Cloudflare Pages
 - **Workflow:** Claude builds & tests in sandbox; client uploads to GitHub web UI OR edits via Decap CMS; Cloudflare auto-deploys.
+- **Source of truth for content:** The LIVE site (GitHub repo) is authoritative for all CMS-managed content files (`src/content/**`). Claude's sandbox copies are reference-only and may be stale. **Upload batches must never include `src/content/**` files unless we explicitly intend to overwrite live content.** Schema changes to a collection require explicit confirmation that existing live entries match the new schema.
 
 ---
 
@@ -20,8 +21,9 @@ Newest entries at the top.
 | 2.5 | Sponsorship feature | ✅ Complete |
 | 2.6 | Stories on Stage section | ✅ Complete |
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
-| 2.8 | **Editable page content (home + page furniture)** | 🟡 **Built & sandbox-tested; awaiting client upload** |
-| 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started (3.1 MailChimp is next) |
+| 2.8 | Editable page content (home + page furniture) | ✅ Complete |
+| 2.9 | **Remove Cast Pages from nav + add Board of Directors to About** | 🟡 **Built & sandbox-tested; awaiting client upload** |
+| 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started (3.1 MailChimp is next \u2014 awaiting embed code) |
 | 4 | Full EN/ES | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 
@@ -39,7 +41,30 @@ These are items the client has flagged for later, with enough decision-context t
 
 ---
 
-## Phase 2.8 — Editable page content (sandbox complete)
+## Phase 2.9 — Cast Pages nav removal + Board of Directors (sandbox complete)
+
+### Decisions locked with client (2026-05-28)
+- **Cast Pages removed from main nav** (header and footer). The feature is still planned for Phase 3.4 — pages will be linked from newsletters, not navigated to from the site. This is a redefinition: cast pages become "back-channel" pages reachable only by direct URL.
+- **Board of Directors section added to the About page** (not its own page). Lives inside the existing About Page Site Settings record as a list field. Each member has: name, PYT title, outside job title (optional), headshot (optional, square; falls back to colored initials placeholder).
+- **Board section starts empty on live deployment.** Sandbox seeding was done only to screenshot the design for client approval, then reverted. The client will populate real board members through the CMS.
+
+### Built
+- `src/components/Header.astro` — removed "Cast Pages" from nav.
+- `src/components/Footer.astro` — removed "Cast Pages" from Community column.
+- `public/admin/config.yml` — added to About Page form: `board_section_heading`, `board_section_blurb` (optional), `board_members` list (each with name, pyt_title, outside_title, photo).
+- `src/pages/about.astro` — renders the Board section conditionally (only shown when board_members has entries). Falls back to colored initials placeholder when a member has no photo. Section sits below the about-grid on a warm cream background to distinguish it from the story.
+
+### Important: NO src/content files in upload
+Live About page JSON does NOT have the new fields yet. The page renders gracefully without them (section hidden). Client will fill in board members through the CMS using the new fields. This aligns with the source-of-truth rule (live content is canonical).
+
+### Sandbox tests passed
+- ✅ Clean build with NO board_members field present (the live state). 11 pages.
+- ✅ Cast Pages confirmed absent from rendered header and footer nav.
+- ✅ Board section design previewed with 3 seeded members (then reverted). Screenshotted at 390px and 1280px; layout works: 2 columns on phone, 3 on tablet, 4 on desktop. Initials placeholder displays correctly when no photo is provided.
+
+---
+
+
 
 **Goal:** Client wants all copy, words, images, links, and numbers editable through the CMS on every page (structure/layout stays in code, can't be broken). The home page was almost entirely hardcoded; Shows/Programs had hardcoded hero text. This phase closes that gap.
 
