@@ -7,7 +7,7 @@ date_display: July 23-26, 2026
 venue: Mountain View Center for the Performing Arts, Main Stage
 runtime_minutes: 60
 ages: All ages
-poster: /uploads/frog-toad-logo.png
+poster: /uploads/screenshot-2026-05-28-at-10.05.28.png
 synopsis: >-
   Based on Arnold Lobel’s well-loved books, A Year with Frog and Toad follows
   two great friends – the cheerful, popular Frog and the rather grumpy Toad –
