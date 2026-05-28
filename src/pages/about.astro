@@ -1,0 +1,132 @@
+---
+/*
+  ABOUT PAGE  ( /about )
+
+  All content from src/content/settings/about-page.json.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import about from "../content/settings/about-page.json";
+
+// Split the story into paragraphs at blank lines.
+const paragraphs = about.story.split("\n\n").filter((p) => p.trim().length > 0);
+---
+
+<BaseLayout title={`${about.title} — Peninsula Youth Theatre`}>
+  <PageHero eyebrow={about.eyebrow} title={about.title} />
+
+  <section class="section about-section">
+    <div class="container about-grid">
+      <div class="about-story">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+
+      <aside class="contact-card" id="contact">
+        <h2>Get in touch</h2>
+        <dl>
+          <div>
+            <dt>Address</dt>
+            <dd>{about.address}</dd>
+          </div>
+          <div>
+            <dt>Phone</dt>
+            <dd><a href={`tel:${about.phone.replace(/[^+\d]/g, "")}`}>{about.phone}</a></dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><a href={`mailto:${about.email}`}>{about.email}</a></dd>
+          </div>
+          <div>
+            <dt>Tax ID (EIN)</dt>
+            <dd>{about.ein}</dd>
+          </div>
+        </dl>
+        <p class="nonprofit-note">
+          Peninsula Youth Theatre is a 501(c)(3) nonprofit corporation.
+        </p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .about-story p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-card {
+    padding: var(--space-lg);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .contact-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-card dl {
+    margin: 0;
+  }
+
+  .contact-card div {
+    margin-bottom: var(--space-sm);
+  }
+
+  .contact-card dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-card dd {
+    font-size: 0.98rem;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .contact-card a {
+    color: var(--accent-deep);
+  }
+
+  .contact-card a:hover {
+    text-decoration: underline;
+  }
+
+  .nonprofit-note {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 920px) {
+    .about-grid {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-2xl);
+    }
+    .about-story {
+      flex: 2;
+    }
+    .contact-card {
+      flex: 1;
+      position: sticky;
+      top: 80px;
+      min-width: 280px;
+    }
+  }
+</style>

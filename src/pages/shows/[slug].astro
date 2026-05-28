@@ -1,0 +1,207 @@
+---
+/*
+  SHOW DETAIL PAGE  ( /shows/<slug> )
+
+  This is a dynamic page: Astro builds one HTML page for each
+  file in src/content/shows/ at build time. The list of pages
+  comes from getStaticPaths() below.
+*/
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const shows = await getCollection("shows");
+  return shows.map((show) => ({
+    params: { slug: show.id },
+    props: { show },
+  }));
+}
+
+const { show } = Astro.props;
+const { Content } = await render(show);
+const data = show.data;
+---
+
+<BaseLayout
+  title={`${data.title} — Peninsula Youth Theatre`}
+  description={data.synopsis?.split("\n")[0] || `${data.title} at Peninsula Youth Theatre`}
+>
+  <article class="show-detail">
+    <div class="container show-grid">
+      <!-- Poster column -->
+      <div
+        class="show-poster-large"
+        style={data.poster ? `background-image: url(${data.poster}); background-size: cover; background-position: center;` : ""}
+      >
+        {!data.poster && (
+          <span class="poster-placeholder-large">{data.title}</span>
+        )}
+      </div>
+
+      <!-- Info column -->
+      <div class="show-content">
+        {data.eyebrow && <p class="eyebrow">{data.eyebrow}</p>}
+        <h1>{data.title}</h1>
+
+        <dl class="show-info-grid">
+          <div>
+            <dt>Dates</dt>
+            <dd>{data.date_display}</dd>
+          </div>
+          <div>
+            <dt>Venue</dt>
+            <dd>{data.venue}</dd>
+          </div>
+          {data.runtime_minutes && (
+            <div>
+              <dt>Runtime</dt>
+              <dd>About {data.runtime_minutes} minutes</dd>
+            </div>
+          )}
+          {data.ages && (
+            <div>
+              <dt>Ages</dt>
+              <dd>{data.ages}</dd>
+            </div>
+          )}
+        </dl>
+
+        <div class="show-ctas">
+          {data.ticketing_url ? (
+            <a href={data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
+              Buy Tickets
+            </a>
+          ) : (
+            <span class="btn btn-outline btn-disabled" aria-disabled="true">
+              Tickets coming soon
+            </span>
+          )}
+          {data.cast_page_url && (
+            <a href={data.cast_page_url} class="btn btn-outline">
+              Cast Page
+            </a>
+          )}
+        </div>
+
+        <div class="show-synopsis">
+          {data.synopsis.split("\n\n").map((para) => (
+            <p>{para}</p>
+          ))}
+        </div>
+
+        <p class="back-link"><a href="/shows">← Back to all shows</a></p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .show-detail {
+    padding-block: var(--space-xl);
+  }
+
+  .show-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .show-poster-large {
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .poster-placeholder-large {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.05;
+  }
+
+  .show-content h1 {
+    margin-block: 0.4rem var(--space-md);
+  }
+
+  .show-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .show-info-grid div {
+    min-width: 0;
+  }
+
+  .show-info-grid dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .show-info-grid dd {
+    font-size: 1rem;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .show-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .show-synopsis p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .back-link {
+    margin-top: var(--space-xl);
+    font-size: 0.95rem;
+  }
+
+  .back-link a {
+    color: var(--accent-deep);
+  }
+
+  /* Wider screens: poster beside content */
+  @media (min-width: 920px) {
+    .show-grid {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-2xl);
+    }
+    .show-poster-large {
+      flex: 1;
+      position: sticky;
+      top: 80px;
+      max-width: 380px;
+    }
+    .show-content {
+      flex: 1.4;
+    }
+  }
+</style>

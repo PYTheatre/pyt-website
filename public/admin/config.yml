@@ -6,24 +6,18 @@
 #   - How to log staff in (via our Cloudflare Functions OAuth endpoint).
 #   - What content "collections" staff can edit (forms they see).
 #
-# When real content goes into the CMS in Phase 2, we'll add
-# more collections here (Shows, Programs, Cast Pages, etc.).
-# For Phase 1 we keep it minimal: one safe "Site Settings"
-# entry so we can prove the editing loop works end-to-end.
+# Phase 2 adds: Shows, Programs, Donor Tiers, About, Casting,
+# plus a Donate Settings record for the Soapbox embed URL.
 # ============================================================
 
 backend:
   name: github
   repo: PYTheatre/pyt-website
   branch: main
-  # base_url is the address of OUR OAuth handler (Cloudflare Functions).
-  # It lives at the same domain as the site — the /api/* routes are
-  # served by Cloudflare Functions defined in /functions/api/.
   base_url: https://pyt-website.pages.dev
   auth_endpoint: /api/auth
 
 # Where uploaded images & files are stored in the repo.
-# We use the public folder so they're served directly.
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
@@ -39,15 +33,84 @@ commit_messages:
 # COLLECTIONS — the editing forms staff see
 # ------------------------------------------------------------
 collections:
-  # --- Site settings: a single editable record (not a list) ---
+
+  # ============================================================
+  # SHOWS — one entry per Mainstage production.
+  # Folder collection: each show becomes its own file under
+  # src/content/shows/, and the site generates a detail page
+  # at /shows/<slug> automatically.
+  # ============================================================
+  - name: "shows"
+    label: "Shows"
+    label_singular: "Show"
+    description: "Mainstage productions. Each show gets its own page at /shows/<slug>."
+    folder: "src/content/shows"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{start_date}}"
+    sortable_fields: ["start_date", "title"]
+    fields:
+      - { name: "title", label: "Show title", widget: "string", hint: "Example: Dragons Love Tacos" }
+      - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, hint: "Small text above the title on the show page. Example: Spring 2026 Mainstage" }
+      - { name: "start_date", label: "First performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "date_display", label: "Date display text", widget: "string", hint: "How dates appear on the page. Example: May 15–16, 2026" }
+      - { name: "venue", label: "Venue", widget: "string", default: "Mountain View Center for the Performing Arts" }
+      - { name: "runtime_minutes", label: "Runtime (minutes)", widget: "number", value_type: "int", required: false, min: 0, hint: "Approximate. Leave blank if unknown." }
+      - { name: "ages", label: "Recommended ages", widget: "string", required: false, hint: "Example: Ages 5 and up" }
+      - { name: "poster", label: "Show poster image", widget: "image", required: false, hint: "Upload a poster image. If empty, a colored placeholder is used." }
+      - { name: "synopsis", label: "Synopsis", widget: "text", hint: "1–3 short paragraphs about the show." }
+      - { name: "ticketing_url", label: "Buy Tickets link (external URL)", widget: "string", required: false, hint: "Where to buy tickets. Leave blank if tickets aren't on sale yet." }
+      - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
+
+  # ============================================================
+  # PROGRAMS — Classes, Camps, Stories on Stage, Studio Intensives.
+  # One form covers all four, with a "Program type" dropdown.
+  # ============================================================
+  - name: "programs"
+    label: "Classes & Camps"
+    label_singular: "Program"
+    description: "Classes, camps, Stories on Stage, and Studio Intensives. Each program is a card on the Programs page that links out to Active.com for registration."
+    folder: "src/content/programs"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{name}} — {{program_type}}"
+    sortable_fields: ["name", "program_type", "season"]
+    fields:
+      - { name: "name", label: "Program name", widget: "string", hint: "Example: Drama Tots" }
+      - { name: "eyebrow", label: "Eyebrow text (audience)", widget: "string", required: false, hint: "Example: For Young Performers" }
+      - name: "program_type"
+        label: "Program type"
+        widget: "select"
+        options: ["Class", "Camp", "Stories on Stage", "Studio Intensive"]
+        default: "Class"
+      - { name: "age_range", label: "Age range", widget: "string", hint: "Example: Ages 4–6" }
+      - name: "season"
+        label: "Season"
+        widget: "select"
+        options: ["Fall", "Spring", "Summer", "Year-round"]
+        default: "Year-round"
+      - { name: "description", label: "Description", widget: "text" }
+      - { name: "schedule", label: "Schedule blurb", widget: "string", required: false, hint: "Example: Wednesdays 4–5pm, 8 weeks" }
+      - { name: "tuition", label: "Tuition / cost", widget: "string", required: false, hint: "Example: $240 per session" }
+      - { name: "registration_url", label: "Active.com registration link", widget: "string", required: false, hint: "Where families register. Leave blank if registration isn't open yet." }
+      - { name: "scholarships_available", label: "Scholarships available?", widget: "boolean", default: false }
+
+  # ============================================================
+  # SITE SETTINGS — single-record collections for site-wide values.
+  # The "Donation Campaign" record already exists from Phase 1.
+  # Phase 2 adds "Donor Tiers", "Donate Page", "About Page", "Casting Page".
+  # ============================================================
   - name: "settings"
     label: "Site Settings"
     label_singular: "Site Settings"
-    description: "Edit site-wide values like the donation campaign progress numbers."
-    delete: false   # safety: prevent accidentally deleting this record
+    description: "Edit site-wide values: donation campaign, donor tiers, donate page, about page, and casting page."
+    delete: false
     editor:
       preview: false
     files:
+
+      # --- Donation campaign progress numbers (from Phase 1) ---
       - name: "donation-campaign"
         label: "Donation Campaign"
         file: "src/content/settings/donation-campaign.json"
@@ -56,3 +119,56 @@ collections:
           - { name: "raised_amount", label: "Amount raised so far (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 76420 }
           - { name: "donor_count", label: "Number of donors", widget: "number", value_type: "int", min: 0, default: 142 }
           - { name: "campaign_label", label: "Campaign name shown on the home page", widget: "string", default: "2026 Annual Campaign" }
+
+      # --- Donor tiers shown on the Donate page ---
+      - name: "donor-tiers"
+        label: "Donor Tiers"
+        file: "src/content/settings/donor-tiers.json"
+        description: "The list of giving tiers shown on the Donate page (Friend, Supporter, etc.)."
+        fields:
+          - name: "tiers"
+            label: "Tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.range}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string" }
+              - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
+              - { name: "description", label: "Description", widget: "text" }
+
+      # --- Donate page settings (Soapbox embed URL, intro copy) ---
+      - name: "donate-page"
+        label: "Donate Page"
+        file: "src/content/settings/donate-page.json"
+        description: "The Donate page — intro text, employer matching note, and the Soapbox donation form embed URL."
+        fields:
+          - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
+          - { name: "intro_body", label: "Intro paragraph", widget: "text" }
+          - { name: "matching_note", label: "Employer matching note", widget: "text", required: false, hint: "Optional. Shown as a callout near the donate form." }
+          - { name: "soapbox_embed_url", label: "Soapbox donation form URL", widget: "string", required: false, hint: "Paste the Soapbox embed URL here when you have it. Leave blank to show a Coming Soon message." }
+
+      # --- About page ---
+      - name: "about-page"
+        label: "About Page"
+        file: "src/content/settings/about-page.json"
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "About Peninsula Youth Theatre" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our story" }
+          - { name: "story", label: "Story (multiple paragraphs)", widget: "text", hint: "The org's story. Use blank lines to separate paragraphs." }
+          - { name: "address", label: "Street address", widget: "string", default: "2500 Old Middlefield Way, Mountain View, CA 94043" }
+          - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
+          - { name: "email", label: "Email", widget: "string", default: "info@pytnet.org" }
+          - { name: "ein", label: "EIN (tax ID)", widget: "string", default: "77-0335126" }
+
+      # --- Casting page ---
+      - name: "casting-page"
+        label: "Casting Page"
+        file: "src/content/settings/casting-page.json"
+        description: "The Casting page — text content plus the hero image."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Casting" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Auditioning at PYT" }
+          - { name: "hero_image", label: "Hero image", widget: "image", required: false, hint: "Upload a wide image for the top of the page. If empty, a colored placeholder is used." }
+          - { name: "body", label: "Page body (Markdown supported)", widget: "markdown", hint: "Use blank lines between paragraphs. Bulleted lists with - work too." }
+          - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
+          - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
+          - { name: "cta_url", label: "Call-to-action button URL", widget: "string", default: "/shows" }

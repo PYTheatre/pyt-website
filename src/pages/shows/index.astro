@@ -1,0 +1,201 @@
+---
+/*
+  SHOWS LIST PAGE  ( /shows )
+
+  Reads every show file from src/content/shows/ via the CMS-managed
+  content collection, sorts them by start date, and renders each one
+  as a card linking to its detail page.
+*/
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import { getCollection } from "astro:content";
+
+// Load all shows, sort by start date (earliest first).
+const shows = (await getCollection("shows")).sort(
+  (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
+);
+---
+
+<BaseLayout
+  title="Shows — Peninsula Youth Theatre"
+  description="The Peninsula Youth Theatre season. Three Mainstage productions a year, performed by Bay Area youth."
+>
+  <PageHero
+    eyebrow="The 2026 season"
+    title="Our shows."
+    lede="Three full-scale Mainstage productions a year, performed by youth ages 6–18 at Mountain View Center for the Performing Arts. Family-friendly, ensemble-driven, joyful."
+  />
+
+  <section class="section show-list-section">
+    <div class="container">
+      {shows.length === 0 ? (
+        <p class="empty-state">No shows announced yet. Check back soon.</p>
+      ) : (
+        <ul class="show-list">
+          {shows.map((show) => (
+            <li class="show-row">
+              <a href={`/shows/${show.id}`} class="show-card">
+                <div
+                  class="show-poster"
+                  style={show.data.poster ? `background-image: url(${show.data.poster}); background-size: cover; background-position: center;` : ""}
+                >
+                  {!show.data.poster && (
+                    <span class="poster-placeholder">{show.data.title}</span>
+                  )}
+                </div>
+                <div class="show-info">
+                  {show.data.eyebrow && (
+                    <p class="show-eyebrow">{show.data.eyebrow}</p>
+                  )}
+                  <h2>{show.data.title}</h2>
+                  <p class="show-dates">{show.data.date_display}</p>
+                  {show.data.ages && (
+                    <p class="show-meta">{show.data.ages}</p>
+                  )}
+                  <p class="show-link-cta">See details →</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p class="staff-tip">
+        <strong>For staff:</strong> Add or edit shows in the CMS at
+        <a href="/admin/#/collections/shows">/admin → Shows</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .show-list-section {
+    padding-top: 0;
+  }
+
+  .show-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .show-row {
+    margin: 0;
+  }
+
+  .show-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--paper);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .show-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+  }
+
+  .show-poster {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: var(--space-md);
+  }
+
+  .poster-placeholder {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .show-info {
+    padding: var(--space-md);
+  }
+
+  .show-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .show-info h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .show-dates {
+    font-size: 1rem;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .show-meta {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .show-link-cta {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .empty-state {
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--ink-muted);
+  }
+
+  .staff-tip {
+    margin-top: var(--space-xl);
+    padding: var(--space-md);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  .staff-tip a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
+  /* Wider screens: cards become horizontal */
+  @media (min-width: 720px) {
+    .show-card {
+      flex-direction: row;
+    }
+    .show-poster {
+      flex: 1;
+      aspect-ratio: 3 / 4;
+      max-width: 280px;
+    }
+    .show-info {
+      flex: 2;
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .show-info h2 {
+      font-size: 1.9rem;
+    }
+  }
+</style>

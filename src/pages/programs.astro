@@ -1,0 +1,381 @@
+---
+/*
+  PROGRAMS PAGE  ( /programs )
+
+  Renders all programs (Classes, Camps, Stories on Stage, Studio
+  Intensives) as filterable cards. Filtering is done in the browser
+  with a tiny bit of vanilla JavaScript — no React/Vue needed.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { getCollection } from "astro:content";
+
+// Load all programs, alphabetical by name.
+const programs = (await getCollection("programs")).sort((a, b) =>
+  a.data.name.localeCompare(b.data.name)
+);
+
+// Build unique filter options from the actual data, so when staff
+// add new programs the filters update automatically.
+const programTypes = [...new Set(programs.map((p) => p.data.program_type))];
+const seasons = [...new Set(programs.map((p) => p.data.season))];
+---
+
+<BaseLayout
+  title="Classes & Camps — Peninsula Youth Theatre"
+  description="Year-round classes, summer camps, Stories on Stage, and Studio Intensives for ages 4–18."
+>
+  <PageHero
+    eyebrow="Education"
+    title="Classes &amp; Camps."
+    lede="From after-school drama to week-long summer intensives, our programs build skills, confidence, and friendships. Ages 4–18. Scholarships available for every program."
+  />
+
+  <section class="section programs-section">
+    <div class="container">
+      <!-- Filters -->
+      <form class="program-filters" id="program-filters" aria-label="Filter programs">
+        <div class="filter-group">
+          <label for="filter-type">Type</label>
+          <select id="filter-type" name="type">
+            <option value="">All types</option>
+            {programTypes.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-season">Season</label>
+          <select id="filter-season" name="season">
+            <option value="">All seasons</option>
+            {seasons.map((s) => <option value={s}>{s}</option>)}
+          </select>
+        </div>
+        <button type="button" id="filter-clear" class="filter-clear">Clear filters</button>
+      </form>
+
+      <p class="filter-count" id="filter-count" aria-live="polite">
+        Showing all {programs.length} programs
+      </p>
+
+      <!-- Program cards -->
+      <ul class="program-list" id="program-list">
+        {programs.map((program) => (
+          <li
+            class="program-card"
+            data-type={program.data.program_type}
+            data-season={program.data.season}
+          >
+            {program.data.eyebrow && (
+              <p class="program-eyebrow">{program.data.eyebrow}</p>
+            )}
+            <h2>{program.data.name}</h2>
+
+            <ul class="program-tags">
+              <li>{program.data.program_type}</li>
+              <li>{program.data.age_range}</li>
+              <li>{program.data.season}</li>
+              {program.data.scholarships_available && (
+                <li class="tag-scholarships">Scholarships available</li>
+              )}
+            </ul>
+
+            <p class="program-description">{program.data.description}</p>
+
+            {(program.data.schedule || program.data.tuition) && (
+              <dl class="program-meta">
+                {program.data.schedule && (
+                  <div>
+                    <dt>Schedule</dt>
+                    <dd>{program.data.schedule}</dd>
+                  </div>
+                )}
+                {program.data.tuition && (
+                  <div>
+                    <dt>Tuition</dt>
+                    <dd>{program.data.tuition}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
+            <div class="program-cta">
+              {program.data.registration_url ? (
+                <a
+                  href={program.data.registration_url}
+                  class="btn btn-primary"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Register on Active.com
+                </a>
+              ) : (
+                <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                  Registration coming soon
+                </span>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <p id="no-results" class="no-results" hidden>
+        No programs match those filters. Try clearing them.
+      </p>
+
+      <p class="staff-tip">
+        <strong>For staff:</strong> Add or edit programs in the CMS at
+        <a href="/admin/#/collections/programs">/admin → Classes &amp; Camps</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---- Filters ---- */
+  .program-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: flex-end;
+    padding: var(--space-md);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin-bottom: var(--space-md);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .filter-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .filter-group select {
+    padding: 0.55rem 0.8rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .filter-clear {
+    padding: 0.55rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .filter-clear:hover {
+    color: var(--accent-deep);
+    border-color: var(--accent);
+  }
+
+  .filter-count {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  /* ---- Program cards ---- */
+  .program-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .program-card {
+    padding: var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .program-card.hidden {
+    display: none;
+  }
+
+  .program-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .program-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .program-tags {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-sm);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .program-tags li {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .program-tags li.tag-scholarships {
+    color: var(--accent-deep);
+    border-color: var(--accent-soft);
+    background: var(--accent-soft);
+  }
+
+  .program-description {
+    font-size: 0.95rem;
+    margin-bottom: var(--space-sm);
+    flex-grow: 1;
+  }
+
+  .program-meta {
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .program-meta div {
+    margin-bottom: 0.5rem;
+  }
+
+  .program-meta dt {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .program-meta dd {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .program-cta {
+    margin-top: auto;
+  }
+
+  .program-cta .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .no-results {
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+  }
+
+  .staff-tip {
+    margin-top: var(--space-xl);
+    padding: var(--space-md);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  .staff-tip a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
+  /* Wider screens: 2 then 3 columns */
+  @media (min-width: 720px) {
+    .program-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .program-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+
+<script>
+  // Filter logic — purely client-side, no framework.
+  // Reads the data-type and data-season attributes on each card
+  // and shows/hides them based on the dropdown selections.
+  const typeSelect = document.getElementById("filter-type") as HTMLSelectElement | null;
+  const seasonSelect = document.getElementById("filter-season") as HTMLSelectElement | null;
+  const clearBtn = document.getElementById("filter-clear");
+  const list = document.getElementById("program-list");
+  const noResults = document.getElementById("no-results");
+  const countEl = document.getElementById("filter-count");
+
+  function applyFilters() {
+    if (!list || !typeSelect || !seasonSelect) return;
+    const type = typeSelect.value;
+    const season = seasonSelect.value;
+    const cards = Array.from(list.querySelectorAll<HTMLLIElement>(".program-card"));
+    let visible = 0;
+    cards.forEach((card) => {
+      const cardType = card.getAttribute("data-type") || "";
+      const cardSeason = card.getAttribute("data-season") || "";
+      const matches = (!type || cardType === type) && (!season || cardSeason === season);
+      card.classList.toggle("hidden", !matches);
+      if (matches) visible++;
+    });
+    if (noResults) noResults.hidden = visible !== 0;
+    if (countEl) {
+      const total = cards.length;
+      countEl.textContent =
+        visible === total
+          ? `Showing all ${total} programs`
+          : `Showing ${visible} of ${total} programs`;
+    }
+  }
+
+  typeSelect?.addEventListener("change", applyFilters);
+  seasonSelect?.addEventListener("change", applyFilters);
+  clearBtn?.addEventListener("click", () => {
+    if (typeSelect) typeSelect.value = "";
+    if (seasonSelect) seasonSelect.value = "";
+    applyFilters();
+  });
+</script>

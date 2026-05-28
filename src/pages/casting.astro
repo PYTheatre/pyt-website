@@ -1,0 +1,236 @@
+---
+/*
+  CASTING PAGE  ( /casting )
+
+  All content from src/content/settings/casting-page.json.
+  Image-only page (per client request) — hero image at top, then
+  body copy, then a pulled-out closing line, then a Shows CTA.
+
+  The body field is stored as Markdown-ish text in the CMS.
+  We parse it lightly here: blank lines = paragraph breaks,
+  lines starting with "- " become a bulleted list.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import casting from "../content/settings/casting-page.json";
+
+// Parse the body into a sequence of blocks: paragraphs and lists.
+// This keeps the rendering simple and doesn't pull in a Markdown library.
+type Block = { type: "paragraph"; text: string } | { type: "list"; items: string[] };
+
+const blocks: Block[] = [];
+const lines = casting.body.split("\n");
+let buffer: string[] = [];
+let listBuffer: string[] = [];
+
+function flushBuffer() {
+  if (buffer.length > 0) {
+    blocks.push({ type: "paragraph", text: buffer.join(" ").trim() });
+    buffer = [];
+  }
+}
+function flushList() {
+  if (listBuffer.length > 0) {
+    blocks.push({ type: "list", items: [...listBuffer] });
+    listBuffer = [];
+  }
+}
+
+for (const line of lines) {
+  const trimmed = line.trim();
+  if (trimmed === "") {
+    flushBuffer();
+    flushList();
+  } else if (trimmed.startsWith("- ")) {
+    flushBuffer();
+    listBuffer.push(trimmed.slice(2));
+  } else {
+    flushList();
+    buffer.push(trimmed);
+  }
+}
+flushBuffer();
+flushList();
+---
+
+<BaseLayout
+  title={`${casting.title} — Peninsula Youth Theatre`}
+  description="How Peninsula Youth Theatre approaches casting: ensemble-focused, equitable, and built around the experience of every young performer."
+>
+  <!-- Hero image (full-width) -->
+  <section class="casting-hero" aria-label="Casting hero image">
+    {casting.hero_image ? (
+      <img src={casting.hero_image} alt="" class="casting-hero-img" />
+    ) : (
+      <div class="casting-hero-placeholder">
+        <span>Image coming soon</span>
+      </div>
+    )}
+  </section>
+
+  <!-- Title block sits BELOW the hero image -->
+  <section class="casting-title">
+    <div class="container">
+      {casting.eyebrow && <p class="eyebrow">{casting.eyebrow}</p>}
+      <h1>{casting.title}</h1>
+    </div>
+  </section>
+
+  <!-- Body copy -->
+  <section class="section casting-body">
+    <div class="container casting-prose">
+      {blocks.map((block) =>
+        block.type === "paragraph" ? (
+          <p>{block.text}</p>
+        ) : (
+          <ul>
+            {block.items.map((item) => <li>{item}</li>)}
+          </ul>
+        )
+      )}
+    </div>
+  </section>
+
+  <!-- Pulled-out closing line -->
+  {casting.closing_quote && (
+    <section class="casting-quote-section">
+      <div class="container">
+        <blockquote class="casting-quote">
+          <p>{casting.closing_quote}</p>
+        </blockquote>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  {casting.cta_url && casting.cta_label && (
+    <section class="casting-cta-section">
+      <div class="container">
+        <a href={casting.cta_url} class="btn btn-primary">
+          {casting.cta_label} →
+        </a>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  /* ---- Hero image ---- */
+  .casting-hero {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    overflow: hidden;
+    background: var(--paper-warm);
+  }
+
+  .casting-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .casting-hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(150deg, var(--accent-soft) 0%, var(--paper-warm) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .casting-hero-placeholder span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    padding: 0.5rem 1.2rem;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius-pill);
+  }
+
+  /* ---- Title block ---- */
+  .casting-title {
+    padding-block: var(--space-lg) 0;
+  }
+
+  .casting-title h1 {
+    margin-top: 0.5rem;
+  }
+
+  /* ---- Body prose ---- */
+  .casting-body {
+    padding-block: var(--space-md) var(--space-lg);
+  }
+
+  .casting-prose {
+    max-width: 68ch;
+  }
+
+  .casting-prose p {
+    font-size: 1.08rem;
+    line-height: 1.75;
+    margin-bottom: var(--space-md);
+  }
+
+  .casting-prose ul {
+    margin: var(--space-md) 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .casting-prose li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: 0.7rem;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .casting-prose li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ---- Pulled-out closing line ---- */
+  .casting-quote-section {
+    padding-block: var(--space-lg) var(--space-xl);
+    background: var(--paper-warm);
+    border-block: 1px solid var(--line);
+  }
+
+  .casting-quote {
+    max-width: 56ch;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .casting-quote p {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    line-height: 1.35;
+    color: var(--ink);
+    font-style: italic;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ---- CTA ---- */
+  .casting-cta-section {
+    padding-block: var(--space-xl);
+    text-align: center;
+  }
+
+  @media (min-width: 720px) {
+    .casting-title {
+      padding-block: var(--space-xl) 0;
+    }
+  }
+</style>

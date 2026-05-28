@@ -1,0 +1,44 @@
+---
+/*
+  PAGE HERO — reusable top-of-page block.
+
+  Pattern: small eyebrow text, big heading, optional lede paragraph.
+  Used by Shows, Programs, Donate, About, Casting, etc., so they
+  all open with a consistent rhythm.
+*/
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+}
+
+const { eyebrow, title, lede } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lede && <p class="page-hero-lede">{lede}</p>}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-block: var(--space-xl) var(--space-lg);
+  }
+  .page-hero h1 {
+    margin-block: 0.6rem 0;
+  }
+  .page-hero-lede {
+    font-size: 1.08rem;
+    max-width: 58ch;
+    margin-top: var(--space-md);
+  }
+  @media (min-width: 720px) {
+    .page-hero {
+      padding-block: var(--space-2xl) var(--space-lg);
+    }
+  }
+</style>
