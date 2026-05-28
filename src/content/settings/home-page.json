@@ -1,59 +1,83 @@
 {
-  "hero_eyebrow": "On stage now · Spring 2026",
-  "hero_heading": "Outstanding youth theatre.",
-  "hero_heading_italic_word": "theatre",
-  "hero_lede": "For more than 30 years, Peninsula Youth Theatre has been the Bay Area's home for transformative theatre education and family-friendly productions. From first auditions to opening nights, we believe every child deserves a stage.",
-  "hero_primary_label": "See Upcoming Shows",
-  "hero_primary_url": "/shows",
+  "hero_eyebrow": "Spring 2026",
   "hero_secondary_label": "Browse Classes & Camps",
-  "hero_secondary_url": "/programs",
-  "now_playing_label": "Now playing",
+  "impact_heading": "Three decades of young voices.",
+  "donate_lede": "Ticket sales and tuition fees cover much of what we do. The rest comes from our wonderful donors - like you!",
+  "hero_primary_url": "/shows",
+  "impact_eyebrow": "Our impact",
+  "hero_primary_label": "Upcoming Shows",
   "discovery_heading": "Whatever you're looking for, we've got it.",
-  "discovery_eyebrow": "Find your way in",
   "discovery_cards": [
     {
-      "eyebrow": "For families",
-      "title": "Mainstage Productions",
-      "body": "Three full-scale shows every year, performed by youth ages 6–18 at Mountain View's premier venue.",
-      "meta": ["3 shows yearly", "All ages welcome"],
+      "eyebrow": "For young performers, schools and families",
+      "title": "Main Stage Productions",
+      "body": "Full-scale productions, performed by youth ages 6–18 at Mountain View's premier venue.",
+      "meta": [
+        "3 shows yearly",
+        "All ages welcome"
+      ],
       "url": "/shows"
+    },
+    {
+      "eyebrow": "For young performers, schools, families and readers",
+      "title": "Stories on Stage",
+      "body": "Beloved children's books brought to life in short, lively performances designed for young audiences and school groups.",
+      "meta": [
+        "Ages 3–8",
+        "Touring & in-house"
+      ],
+      "url": "/stories-on-stage"
     },
     {
       "eyebrow": "For young performers",
       "title": "Classes & Summer Camps",
-      "body": "From after-school drama to week-long summer intensives, our programs build skills, confidence, and friendships.",
-      "meta": ["Ages 4–18", "Scholarships available"],
+      "body": "From after-school drama and musical theatre, to summer camps, our programs build skills, confidence, and friendships.",
+      "meta": [
+        "Ages 4–18",
+        "Scholarships available"
+      ],
       "url": "/programs"
-    },
-    {
-      "eyebrow": "For young readers",
-      "title": "Stories on Stage",
-      "body": "Beloved children's books brought to life in short, lively performances designed for young audiences and school groups.",
-      "meta": ["Ages 3–8", "Touring & in-house"],
-      "url": "/stories-on-stage"
     },
     {
       "eyebrow": "For schools & theatres",
       "title": "Costume & Prop Rentals",
       "body": "Decades of theatrical inventory available to schools and community theatre at affordable rates.",
-      "meta": ["800+ items", "By appointment"],
+      "meta": [
+        "800+ items",
+        "By appointment"
+      ],
       "url": "/rentals"
     },
     {
       "eyebrow": "For serious performers",
       "title": "Studio Intensives",
       "body": "Focused, multi-week deep dives in voice, movement, scene study, and audition technique for committed teen performers.",
-      "meta": ["Ages 13–18", "By audition"],
+      "meta": [
+        "Ages 13–18",
+        "By audition"
+      ],
       "url": "/programs"
     }
   ],
-  "impact_eyebrow": "Our impact",
-  "impact_heading": "Three decades of young voices.",
+  "hero_heading_italic_word": "",
+  "donate_button_label": "Make a Gift",
+  "discovery_eyebrow": "Welcome to PYT!",
+  "now_playing_label": "Now playing",
+  "hero_heading": "Peninsula Youth Theatre",
+  "hero_secondary_url": "/programs",
   "stats": [
-    { "figure": "30+", "label": "Years serving Bay Area youth" },
-    { "figure": "10,000+", "label": "Children and families each year" },
-    { "figure": "$45K", "label": "In scholarships awarded" }
+    {
+      "figure": "30+",
+      "label": "Years serving Bay Area youth"
+    },
+    {
+      "figure": "10,000+",
+      "label": "Children and families each year"
+    },
+    {
+      "figure": "$45K",
+      "label": "In scholarships awarded"
+    }
   ],
-  "donate_lede": "Ticket sales and tuition cover much of what we do. The rest — scholarships, school touring, capital needs — comes from donors like you.",
-  "donate_button_label": "Make a Gift"
+  "hero_lede": "For more than 30 years, Peninsula Youth Theatre has been the Bay Area's home for community youth theatre. From first auditions to opening nights, we believe in the magic that happens when a young person steps on stage."
 }
