@@ -1,0 +1,103 @@
+{
+  "title": "Sponsor a Show or a Season",
+  "eyebrow": "Corporate & individual sponsorship",
+  "intro_heading": "Make youth theatre possible in the Bay Area.",
+  "intro_body": "Sponsorship is how community-minded businesses, foundations, and individual supporters help Peninsula Youth Theatre bring transformative theatre education to children across the Peninsula. Sponsors are recognized in programs, in lobbies, and on stage — and most importantly, they make scholarships, school touring, and our full production season possible.\n\nSponsorship is distinct from individual giving. Sponsors commit at one of two levels — a single Mainstage production, or the full three-show season — and receive recognition tied to the productions they support.",
+  "contact_email": "info@pytnet.org",
+  "contact_blurb": "Sponsorships of this size are usually a conversation, not a checkout. Reach out and we'll set up a call to discuss benefits, timing, and how your sponsorship can be tailored to your goals.",
+  "show_tiers_heading": "Sponsor a single Mainstage show",
+  "show_tiers_blurb": "Support one production from auditions through closing night. Show sponsorships run for the rehearsal period and full performance run of the show you choose (about 8–10 weeks).",
+  "show_tiers": [
+    {
+      "name": "Show Producer",
+      "amount": "$10,000",
+      "description": "Top of the show-level ladder. The most visible recognition we offer at this scale.",
+      "benefits": [
+        "Full back-cover program ad",
+        "Large lobby signage at every performance",
+        "On-stage thank-you at every performance",
+        "12 comped tickets across the run",
+        "Invitation to a private tech rehearsal",
+        "Name in the show's marketing"
+      ],
+      "donation_url": ""
+    },
+    {
+      "name": "Show Sponsor",
+      "amount": "$5,000",
+      "description": "Significant recognition for businesses and individuals who want their name on the show.",
+      "benefits": [
+        "Half-page program ad",
+        "Lobby signage",
+        "On-stage thank-you",
+        "8 comped tickets",
+        "Invitation to opening night reception"
+      ],
+      "donation_url": ""
+    },
+    {
+      "name": "Show Friend",
+      "amount": "$2,500",
+      "description": "A meaningful supporter of one PYT production.",
+      "benefits": [
+        "Quarter-page program ad",
+        "Lobby acknowledgement",
+        "4 comped tickets"
+      ],
+      "donation_url": ""
+    },
+    {
+      "name": "Show Supporter",
+      "amount": "$1,000",
+      "description": "An entry point into show-level sponsorship.",
+      "benefits": [
+        "Program listing",
+        "2 comped tickets",
+        "Thanks in the season newsletter"
+      ],
+      "donation_url": ""
+    }
+  ],
+  "season_tiers_heading": "Sponsor the full 2026 season",
+  "season_tiers_blurb": "Support all three Mainstage productions across the year. Season sponsorships give the broadest recognition and the strongest signal of community partnership.",
+  "season_tiers": [
+    {
+      "name": "Season Producer",
+      "amount": "$25,000",
+      "description": "Premier season-wide recognition. Includes a naming opportunity on one production of your choice.",
+      "benefits": [
+        "Cover-page program ad in all 3 shows",
+        "Dedicated lobby signage at every performance",
+        "On-stage thank-you on opening night of each show",
+        "20 comped tickets across the season",
+        "Named role on PYT's website donor list",
+        "Naming opportunity on one production (e.g. \"Dragons Love Tacos, produced with the support of…\")"
+      ],
+      "donation_url": ""
+    },
+    {
+      "name": "Season Sponsor",
+      "amount": "$15,000",
+      "description": "Full-season recognition for businesses or families committed to PYT's mission.",
+      "benefits": [
+        "Half-page program ad in all 3 shows",
+        "Season-long lobby signage",
+        "On-stage thank-you",
+        "14 comped tickets",
+        "Opening-night reception invitations"
+      ],
+      "donation_url": ""
+    },
+    {
+      "name": "Season Friend",
+      "amount": "$7,500",
+      "description": "Broad recognition across the whole season at a community-friendly level.",
+      "benefits": [
+        "Quarter-page program ad in all 3 shows",
+        "Lobby acknowledgement",
+        "8 comped tickets"
+      ],
+      "donation_url": ""
+    }
+  ]
+}

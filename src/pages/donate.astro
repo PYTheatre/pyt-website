@@ -106,6 +106,24 @@ const pct = Math.round((raised / goal) * 100);
       </p>
     </div>
   </section>
+
+  <!-- Sponsorship pointer — sponsorship is a separate giving path -->
+  <section class="section sponsor-pointer-section">
+    <div class="container sponsor-pointer-inner">
+      <p class="eyebrow">For businesses, foundations &amp; major giving</p>
+      <h2 class="section-head">Sponsor a show or a season.</h2>
+      <p class="sponsor-pointer-body">
+        Looking to sponsor a Mainstage production or the full season? Sponsors receive
+        public recognition tied to specific shows, including program advertising, lobby
+        signage, and on-stage thank-yous. Sponsorship is a separate giving path from
+        individual donations.
+      </p>
+      <div class="sponsor-pointer-buttons">
+        <a href="/sponsor#show" class="btn btn-primary">Sponsor a Show</a>
+        <a href="/sponsor#season" class="btn btn-outline">Sponsor a Season</a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
@@ -279,5 +297,24 @@ const pct = Math.round((raised / goal) * 100);
     .tier-list {
       grid-template-columns: repeat(4, 1fr);
     }
+  }
+
+  /* ---- Sponsorship pointer (bottom of Donate page) ---- */
+  .sponsor-pointer-section {
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+  }
+  .sponsor-pointer-inner {
+    max-width: 64ch;
+  }
+  .sponsor-pointer-body {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+  .sponsor-pointer-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
   }
 </style>

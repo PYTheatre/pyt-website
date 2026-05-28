@@ -172,3 +172,51 @@ collections:
           - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
           - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
           - { name: "cta_url", label: "Call-to-action button URL", widget: "string", default: "/shows" }
+
+      # --- Sponsorship page ---
+      # All tier definitions, intro copy, and contact info for /sponsor.
+      # Show tiers and season tiers are separate lists so staff can edit
+      # each independently. Each tier has its own donation_url so when
+      # Soapbox is wired up, every tier can deep-link to its own pre-filled
+      # donation form.
+      - name: "sponsorship-page"
+        label: "Sponsorship Page"
+        file: "src/content/settings/sponsorship-page.json"
+        description: "The /sponsor page — intro copy, show-level tiers, season-level tiers, and contact details."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Sponsor a Show or a Season" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Corporate & individual sponsorship" }
+          - { name: "intro_heading", label: "Intro heading", widget: "string" }
+          - { name: "intro_body", label: "Intro paragraph(s)", widget: "text", hint: "Use blank lines to separate paragraphs." }
+          - { name: "contact_email", label: "Sponsorship contact email", widget: "string", default: "info@pytnet.org" }
+          - { name: "contact_blurb", label: "Contact section text", widget: "text" }
+          - { name: "show_tiers_heading", label: "Show tiers — section heading", widget: "string", default: "Sponsor a single Mainstage show" }
+          - { name: "show_tiers_blurb", label: "Show tiers — section description", widget: "text" }
+          - name: "show_tiers"
+            label: "Show sponsorship tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.amount}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string", hint: "Example: Show Producer" }
+              - { name: "amount", label: "Amount (display text)", widget: "string", hint: "Example: $10,000" }
+              - { name: "description", label: "Tier description", widget: "text" }
+              - name: "benefits"
+                label: "Benefits"
+                widget: "list"
+                field: { name: "benefit", label: "Benefit", widget: "string" }
+              - { name: "donation_url", label: "Donation URL for this tier", widget: "string", required: false, hint: "Leave blank to show an 'Inquire' button that emails the contact address." }
+          - { name: "season_tiers_heading", label: "Season tiers — section heading", widget: "string", default: "Sponsor the full season" }
+          - { name: "season_tiers_blurb", label: "Season tiers — section description", widget: "text" }
+          - name: "season_tiers"
+            label: "Season sponsorship tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.amount}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string", hint: "Example: Season Producer" }
+              - { name: "amount", label: "Amount (display text)", widget: "string", hint: "Example: $25,000" }
+              - { name: "description", label: "Tier description", widget: "text" }
+              - name: "benefits"
+                label: "Benefits"
+                widget: "list"
+                field: { name: "benefit", label: "Benefit", widget: "string" }
+              - { name: "donation_url", label: "Donation URL for this tier", widget: "string", required: false, hint: "Leave blank to show an 'Inquire' button that emails the contact address." }

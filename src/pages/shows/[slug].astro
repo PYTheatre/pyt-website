@@ -76,6 +76,9 @@ const data = show.data;
               Tickets coming soon
             </span>
           )}
+          <a href={`/sponsor?show=${show.id}`} class="btn btn-outline">
+            Sponsor This Show
+          </a>
           {data.cast_page_url && (
             <a href={data.cast_page_url} class="btn btn-outline">
               Cast Page

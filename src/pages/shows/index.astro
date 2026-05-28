@@ -26,6 +26,21 @@ const shows = (await getCollection("shows")).sort(
     lede="Three full-scale Mainstage productions a year, performed by youth ages 6–18 at Mountain View Center for the Performing Arts. Family-friendly, ensemble-driven, joyful."
   />
 
+  <!-- Sponsor CTAs — appear under the hero, above the show list -->
+  <section class="sponsor-cta-strip">
+    <div class="container">
+      <div class="sponsor-cta-row">
+        <p class="sponsor-cta-label">
+          Help bring our shows to life:
+        </p>
+        <div class="sponsor-cta-buttons">
+          <a href="/sponsor#show" class="btn btn-outline">Sponsor a Show</a>
+          <a href="/sponsor#season" class="btn btn-outline">Sponsor a Season</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section show-list-section">
     <div class="container">
       {shows.length === 0 ? (
@@ -71,6 +86,37 @@ const shows = (await getCollection("shows")).sort(
 <style>
   .show-list-section {
     padding-top: 0;
+  }
+
+  /* ---- Sponsor CTA strip (between hero and show list) ---- */
+  .sponsor-cta-strip {
+    padding-block: var(--space-md);
+    background: var(--paper-warm);
+    border-block: 1px solid var(--line);
+    margin-bottom: var(--space-xl);
+  }
+  .sponsor-cta-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    align-items: flex-start;
+  }
+  .sponsor-cta-label {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .sponsor-cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  @media (min-width: 720px) {
+    .sponsor-cta-row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 
   .show-list {
