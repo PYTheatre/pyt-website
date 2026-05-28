@@ -1,16 +1,22 @@
 ---
-title: A Charlie Brown Christmas
-eyebrow: Winter 2026 Mainstage
-start_date: 2026-12-05
-end_date: 2026-12-14
-date_display: December 5–14, 2026
-venue: Mountain View Center for the Performing Arts
-runtime_minutes: 70
-ages: Ages 4 and up
-synopsis: |
-  Charles Schulz's beloved holiday classic comes to life in this faithful stage adaptation. When Charlie Brown is asked to direct the Christmas play, he sets out in search of the true meaning of the season — with a little help from Linus, a scraggly tree, and the rest of the Peanuts gang.
+title: "SIX:TEEN EDITION "
+eyebrow: 2026 Mainstage
+start_date: 2026-06-25
+end_date: 2026-06-28
+date_display: June 25–28, 2026
+venue: Mountain View Center for the Performing Arts, Second Stage
+runtime_minutes: 75
+ages: Ages 12 and up
+poster: /uploads/screenshot-2026-05-28-at-09.54.44.png
+synopsis: >-
+  Divorced, beheaded, died, divorced, beheaded, survived. From Tudor Queens to
+  Pop Icons, the SIX wives of Henry VIII take the mic to remix five hundred
+  years of historical heartbreak into a Euphoric Celebration of 21st-century
+  girl power! This version includes an expanded cast to include backup singers
+  and dancers of all gender identities.
 
-  A warm, intimate production with live music and original choreography. The perfect introduction to live theatre for young audiences.
-ticketing_url: ""
+
+  By Toby Marlow and Lucy Moss.
+ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=747
 cast_page_url: ""
 ---
