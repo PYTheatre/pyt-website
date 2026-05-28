@@ -5,5 +5,11 @@
   "address": "2500 Old Middlefield Way, Mountain View, CA 94043",
   "phone": "(650) 988-8798",
   "email": "info@pytnet.org",
-  "ein": "77-0335126"
+  "ein": "77-0335126",
+  "board_members": [
+    {
+      "name": "Mike Cobb",
+      "pyt_title": "Board Member"
+    }
+  ]
 }
