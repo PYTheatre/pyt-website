@@ -287,6 +287,53 @@ collections:
           - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
           - { name: "cta_url", label: "Call-to-action button URL", widget: "string", default: "/shows" }
 
+      # --- Employment page ---
+      # Two parallel lists: paid roles and volunteer opportunities.
+      # Each section's heading and intro are editable. If a section's
+      # list is empty, that section automatically hides on the page.
+      - name: "employment-page"
+        label: "Employment Page"
+        file: "src/content/settings/employment-page.json"
+        description: "The Employment page — paid roles and volunteer opportunities. Each section auto-hides if empty."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Work with us" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Careers & volunteering" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+
+          - { name: "roles_heading", label: "Paid roles — section heading", widget: "string", default: "Roles with PYT" }
+          - { name: "roles_intro", label: "Paid roles — section intro (optional)", widget: "text", required: false }
+          - name: "roles"
+            label: "Paid roles"
+            widget: "list"
+            required: false
+            summary: "{{fields.title}} — {{fields.type}}"
+            fields:
+              - { name: "title", label: "Position title", widget: "string", hint: "Example: Production Manager" }
+              - name: "type"
+                label: "Type"
+                widget: "select"
+                options: ["Full-time", "Part-time", "Seasonal", "Contract"]
+                default: "Part-time"
+              - { name: "compensation", label: "Compensation / salary (optional)", widget: "string", required: false, hint: "Example: $60,000–$75,000 / year. Leave blank to hide." }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "how_to_apply_label", label: "Apply button label", widget: "string", default: "Apply" }
+              - { name: "how_to_apply_url", label: "Apply button link", widget: "string", required: false, hint: "External URL or mailto: link. Leave blank to hide the button." }
+
+          - { name: "volunteer_heading", label: "Volunteer — section heading", widget: "string", default: "Volunteer with PYT" }
+          - { name: "volunteer_intro", label: "Volunteer — section intro (optional)", widget: "text", required: false }
+          - name: "volunteer_opportunities"
+            label: "Volunteer opportunities"
+            widget: "list"
+            required: false
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "title", label: "Opportunity title", widget: "string", hint: "Example: Front-of-house volunteer" }
+              - { name: "when_where", label: "When / where (optional)", widget: "string", required: false, hint: "Example: During Mainstage performance weekends" }
+              - { name: "time_commitment", label: "Time commitment (optional)", widget: "string", required: false, hint: "Example: About 4 hours per show" }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "how_to_apply_label", label: "Button label", widget: "string", default: "Get in touch" }
+              - { name: "how_to_apply_url", label: "Button link", widget: "string", required: false, hint: "External URL or mailto: link. Leave blank to hide the button." }
+
       # --- Sponsorship page ---
       # All tier definitions, intro copy, and contact info for /sponsor.
       # Show tiers and season tiers are separate lists so staff can edit

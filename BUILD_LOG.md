@@ -22,7 +22,8 @@ Newest entries at the top.
 | 2.6 | Stories on Stage section | ✅ Complete |
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
-| 2.9 | **Remove Cast Pages from nav + add Board of Directors to About** | 🟡 **Built & sandbox-tested; awaiting client upload** |
+| 2.9 | Remove Cast Pages from nav + add Board of Directors to About | 🟡 Built & tested (rolled into 2.10 batch below) |
+| 2.10 | **Employment page (paid roles + volunteer) + 2.9 carry-over** | 🟡 **Built & sandbox-tested; awaiting client upload** |
 | 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started (3.1 MailChimp is next \u2014 awaiting embed code) |
 | 4 | Full EN/ES | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
@@ -41,7 +42,34 @@ These are items the client has flagged for later, with enough decision-context t
 
 ---
 
-## Phase 2.9 — Cast Pages nav removal + Board of Directors (sandbox complete)
+## Phase 2.10 — Employment page (sandbox complete; also carries Phase 2.9)
+
+### Decisions locked with client (2026-05-28)
+- New `/employment` page, in main nav after About.
+- **Two parallel sections**: "Roles with PYT" (paid) and "Volunteer with PYT" (unpaid).
+- Each section supports 3–4 entries; auto-hides if its list is empty.
+- **Compensation is OPTIONAL per role** (some roles may show salary, others not; CA pay-transparency consideration noted but not enforced).
+- **Text-only listings** (no images, cleaner and easier to maintain).
+- Section-specific intros above each section, plus a page-level intro at the top.
+
+### Note: 2.9 carry-over
+The 2.9 batch (Cast Pages nav removal + Board of Directors) had not yet been uploaded when 2.10 was built. To keep things clean, the 2.10 batch INCLUDES the 2.9 changes — uploading 2.10 deploys both at once. Files in 2.10 batch contain both phases' modifications to Header.astro, Footer.astro, about.astro, and config.yml.
+
+### Built
+- `src/content/settings/employment-page.json` — page intro, two section headings/intros, two seeded paid roles (Production Manager, Teaching Artist) and two seeded volunteer opportunities (Front-of-house, Costume shop helper). All editable via CMS.
+- `src/pages/employment.astro` — page template with two sections that auto-hide when their list is empty. Friendly fallback message shown if both lists are empty.
+- `public/admin/config.yml` — added Employment Page form to Site Settings with: page intro, section headings/intros, two list fields. Paid roles have: title, type (Full-time/Part-time/Seasonal/Contract dropdown), optional compensation, description, apply button label + URL. Volunteer opportunities have: title, optional when/where, optional time commitment, description, button label + URL.
+- `src/components/Header.astro` — Employment added after About in main nav (and Cast Pages removed per 2.9).
+
+### Sandbox tests passed
+- ✅ Clean build, 12 pages, zero errors.
+- ✅ Employment page renders correctly at 390px and 1280px.
+- ✅ Auto-hide verified: setting roles=[] hides the Roles section but keeps Volunteer; original state restored before packaging.
+- ✅ Employment confirmed in nav.
+
+---
+
+
 
 ### Decisions locked with client (2026-05-28)
 - **Cast Pages removed from main nav** (header and footer). The feature is still planned for Phase 3.4 — pages will be linked from newsletters, not navigated to from the site. This is a redefinition: cast pages become "back-channel" pages reachable only by direct URL.
@@ -64,7 +92,7 @@ Live About page JSON does NOT have the new fields yet. The page renders graceful
 
 ---
 
-
+## Phase 2.8 — Editable page content ✅ COMPLETE (2026-05-28)
 
 **Goal:** Client wants all copy, words, images, links, and numbers editable through the CMS on every page (structure/layout stays in code, can't be broken). The home page was almost entirely hardcoded; Shows/Programs had hardcoded hero text. This phase closes that gap.
 
@@ -98,7 +126,7 @@ Home Page, Shows Page (intro), Classes & Camps Page (intro), Footer — in addit
 
 ---
 
-
+## Phase 2.7 — Soapbox donate popup wiring ✅ COMPLETE (2026-05-27)
 
 **Goal:** Wire the live Donate Now button on /donate to PYT's NonprofitSoapbox donation modal.
 

@@ -1,0 +1,233 @@
+---
+/*
+  EMPLOYMENT PAGE  ( /employment )
+
+  Two parallel sections — paid roles and volunteer opportunities —
+  each with its own intro and a list of cards.
+
+  Either section hides itself if its list is empty (so when PYT
+  isn't hiring, the page just shows volunteering, and vice versa).
+
+  All content is editable via the CMS at
+  /admin → Site Settings → Employment Page.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import page from "../content/settings/employment-page.json";
+
+const roles = page.roles || [];
+const volunteer = page.volunteer_opportunities || [];
+---
+
+<BaseLayout
+  title={`${page.title} — Peninsula Youth Theatre`}
+  description="Paid roles and volunteer opportunities at Peninsula Youth Theatre."
+>
+  <PageHero
+    eyebrow={page.eyebrow}
+    title={page.title}
+    lede={page.intro}
+  />
+
+  {/* ============ ROLES SECTION ============ */}
+  {roles.length > 0 && (
+    <section class="section roles-section">
+      <div class="container">
+        <p class="eyebrow">Paid positions</p>
+        <h2 class="section-head">{page.roles_heading}</h2>
+        {page.roles_intro && <p class="section-blurb">{page.roles_intro}</p>}
+
+        <ul class="listing-list">
+          {roles.map((role: any) => (
+            <li class="listing-card">
+              <div class="listing-header">
+                <h3>{role.title}</h3>
+                {role.type && <span class="listing-type">{role.type}</span>}
+              </div>
+              {role.compensation && (
+                <p class="listing-comp">{role.compensation}</p>
+              )}
+              <p class="listing-description">{role.description}</p>
+              {role.how_to_apply_url && (
+                <a
+                  href={role.how_to_apply_url}
+                  class="btn btn-primary"
+                  target={role.how_to_apply_url.startsWith("http") ? "_blank" : null}
+                  rel={role.how_to_apply_url.startsWith("http") ? "noopener" : null}
+                >
+                  {role.how_to_apply_label || "Apply"}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {/* ============ VOLUNTEER SECTION ============ */}
+  {volunteer.length > 0 && (
+    <section class="section volunteer-section">
+      <div class="container">
+        <p class="eyebrow">Ways to help</p>
+        <h2 class="section-head">{page.volunteer_heading}</h2>
+        {page.volunteer_intro && <p class="section-blurb">{page.volunteer_intro}</p>}
+
+        <ul class="listing-list">
+          {volunteer.map((opp: any) => (
+            <li class="listing-card">
+              <h3>{opp.title}</h3>
+              {opp.when_where && (
+                <p class="listing-when">{opp.when_where}</p>
+              )}
+              {opp.time_commitment && (
+                <p class="listing-time">{opp.time_commitment}</p>
+              )}
+              <p class="listing-description">{opp.description}</p>
+              {opp.how_to_apply_url && (
+                <a
+                  href={opp.how_to_apply_url}
+                  class="btn btn-outline"
+                  target={opp.how_to_apply_url.startsWith("http") ? "_blank" : null}
+                  rel={opp.how_to_apply_url.startsWith("http") ? "noopener" : null}
+                >
+                  {opp.how_to_apply_label || "Get in touch"}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {/* When BOTH sections are empty, show a friendly fallback */}
+  {roles.length === 0 && volunteer.length === 0 && (
+    <section class="section">
+      <div class="container">
+        <p class="empty-state">
+          No openings or opportunities posted right now. Please check back, or email
+          <a href="mailto:info@pytnet.org"> info@pytnet.org</a>.
+        </p>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .section-head {
+    margin-block: 0.4rem var(--space-sm);
+  }
+
+  .section-blurb {
+    max-width: 62ch;
+    margin-bottom: var(--space-lg);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ---- Volunteer section gets the warm background so the two sections
+          read as distinct halves of the page ---- */
+  .volunteer-section {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--line);
+  }
+
+  /* ---- Listing cards (shared between roles and volunteer) ---- */
+  .listing-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .listing-card {
+    padding: var(--space-md);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* In the volunteer section, cards sit on the warm background, so
+     keep them on plain paper for contrast — already set above. */
+
+  .listing-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .listing-card h3 {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  .listing-type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    background: var(--accent-soft);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+
+  .listing-comp {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .listing-when,
+  .listing-time {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin: 0 0 0.3rem;
+  }
+
+  .listing-time {
+    margin-bottom: var(--space-sm);
+  }
+
+  .listing-description {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin: var(--space-sm) 0 var(--space-md);
+    flex-grow: 1;
+  }
+
+  .listing-card .btn {
+    align-self: flex-start;
+  }
+
+  .empty-state {
+    padding: var(--space-lg);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--ink-muted);
+  }
+
+  .empty-state a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
+  /* Two-column grid on wider screens for both sections.
+     With 3–4 cards each, two columns reads better than three. */
+  @media (min-width: 720px) {
+    .listing-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
