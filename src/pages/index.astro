@@ -2,73 +2,57 @@
 /*
   HOME PAGE.
 
-  Reproduces the approved prototype's home page:
-   - Hero (eyebrow, headline, lede, two CTAs, show poster)
-   - "Find your way in" — 5 discovery cards
-   - "Our impact" — 3 stats
-   - Donation campaign teaser with progress bar
+  Content comes from two CMS-managed sources:
+   - src/content/settings/home-page.json — all the editable copy
+     (hero, discovery cards, impact stats, section headings, etc.)
+   - the shows collection — the "Now Playing" poster automatically
+     features the next upcoming show, so staff never have to update
+     the home page when the season changes; they just keep the Shows
+     list current.
+   - donation-campaign.json — the campaign progress numbers.
 
-  All content here is the prototype's PLACEHOLDER content,
-  which the client approved for the demo. In a later phase
-  this content moves into the CMS so staff can edit it.
+  Layout/structure lives here in code (not editable via CMS, by
+  design — so the page can't be visually broken). All words, links,
+  images, and numbers are editable through the CMS.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const discoveryCards = [
-  {
-    eyebrow: "For families",
-    title: "Mainstage Productions",
-    body: "Three full-scale shows every year, performed by youth ages 6–18 at Mountain View's premier venue.",
-    meta: ["3 shows yearly", "All ages welcome"],
-    href: "/shows",
-  },
-  {
-    eyebrow: "For young performers",
-    title: "Classes & Summer Camps",
-    body: "From after-school drama to week-long summer intensives, our programs build skills, confidence, and friendships.",
-    meta: ["Ages 4–18", "Scholarships available"],
-    href: "/programs",
-  },
-  {
-    eyebrow: "For schools & theatres",
-    title: "Costume & Prop Rentals",
-    body: "Decades of theatrical inventory available to schools and community theatre at affordable rates.",
-    meta: ["800+ items", "By appointment"],
-    href: "/rentals",
-  },
-  {
-    eyebrow: "For young readers",
-    title: "Stories on Stage",
-    body: "Beloved children's books brought to life in short, lively performances designed for young audiences and school groups.",
-    meta: ["Ages 3–8", "Touring & in-house"],
-    href: "/programs",
-  },
-  {
-    eyebrow: "For serious performers",
-    title: "Studio Intensives",
-    body: "Focused, multi-week deep dives in voice, movement, scene study, and audition technique for committed teen performers.",
-    meta: ["Ages 13–18", "By audition"],
-    href: "/programs",
-  },
-];
-
-const stats = [
-  { figure: "30+", label: "Years serving Bay Area youth" },
-  { figure: "10,000+", label: "Children and families each year" },
-  { figure: "$45K", label: "In scholarships awarded" },
-];
-
-// Donation campaign numbers — read from the CMS-editable file at
-// src/content/settings/donation-campaign.json. Staff edit those
-// values in Decap CMS (Site Settings → Donation Campaign) and the
-// site rebuilds automatically. This is the proof-of-concept slice
-// showing the full edit-in-CMS → live-update loop end-to-end.
+import { getCollection } from "astro:content";
+import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
+
+// --- Now Playing: pick the next upcoming show automatically ---
+// "Upcoming" = the show whose end_date is the soonest one that
+// hasn't passed yet. If all shows are in the past (off-season),
+// fall back to the most recent one so the poster is never empty.
+const allShows = (await getCollection("shows")).sort(
+  (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
+);
+const now = new Date();
+const upcoming = allShows.find((s) => s.data.end_date.getTime() >= now.getTime());
+const featuredShow = upcoming || allShows[allShows.length - 1] || null;
+
+// --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
 const donorCount = campaign.donor_count;
 const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
+
+// --- Hero heading with optional italic word ---
+// The CMS lets staff pick one word in the heading to italicize
+// (the accent style). If that word appears in the heading, we
+// split around it; otherwise the heading renders plain.
+const heading = home.hero_heading;
+const italicWord = home.hero_heading_italic_word?.trim();
+let headingBefore = heading;
+let headingItalic = "";
+let headingAfter = "";
+if (italicWord && heading.includes(italicWord)) {
+  const idx = heading.indexOf(italicWord);
+  headingBefore = heading.slice(0, idx);
+  headingItalic = italicWord;
+  headingAfter = heading.slice(idx + italicWord.length);
+}
 ---
 
 <BaseLayout title="Peninsula Youth Theatre — Outstanding youth theatre">
@@ -76,37 +60,39 @@ const pct = Math.round((raised / goal) * 100);
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">On stage now &middot; Spring 2026</p>
-        <h1>Outstanding youth <span class="accent-italic">theatre</span>.</h1>
-        <p class="hero-lede">
-          For more than 30 years, Peninsula Youth Theatre has been the Bay Area's
-          home for transformative theatre education and family-friendly productions.
-          From first auditions to opening nights, we believe every child deserves a stage.
-        </p>
+        <p class="eyebrow">{home.hero_eyebrow}</p>
+        <h1>{headingBefore}{headingItalic && <span class="accent-italic">{headingItalic}</span>}{headingAfter}</h1>
+        <p class="hero-lede">{home.hero_lede}</p>
         <div class="hero-ctas">
-          <a href="/shows" class="btn btn-primary">See Upcoming Shows</a>
-          <a href="/programs" class="btn btn-outline">Browse Classes &amp; Camps</a>
+          <a href={home.hero_primary_url} class="btn btn-primary">{home.hero_primary_label}</a>
+          <a href={home.hero_secondary_url} class="btn btn-outline">{home.hero_secondary_label}</a>
         </div>
       </div>
 
-      <!-- Show "poster" panel (CSS placeholder, real poster comes via CMS) -->
-      <div class="poster">
-        <p class="poster-eyebrow">Now playing</p>
-        <p class="poster-title">Dragons<br />Love<br />Tacos</p>
-        <p class="poster-info">May 15–16, 2026<br />Mountain View Center for the Performing Arts</p>
-      </div>
+      <!-- Show "poster" panel — auto-features the next upcoming show -->
+      {featuredShow && (
+        <a
+          href={`/shows/${featuredShow.id}`}
+          class="poster"
+          style={featuredShow.data.poster ? `background-image: url(${featuredShow.data.poster}); background-size: cover; background-position: center;` : ""}
+        >
+          <p class="poster-eyebrow">{home.now_playing_label}</p>
+          <p class="poster-title">{featuredShow.data.title}</p>
+          <p class="poster-info">{featuredShow.data.date_display}<br />{featuredShow.data.venue}</p>
+        </a>
+      )}
     </div>
   </section>
 
   <!-- ============ DISCOVERY CARDS ============ -->
   <section class="section">
     <div class="container">
-      <p class="eyebrow">Find your way in</p>
-      <h2 class="section-head">Whatever you're looking for, we've got it.</h2>
+      <p class="eyebrow">{home.discovery_eyebrow}</p>
+      <h2 class="section-head">{home.discovery_heading}</h2>
 
       <div class="card-grid">
-        {discoveryCards.map((card) => (
-          <a href={card.href} class="card">
+        {home.discovery_cards.map((card) => (
+          <a href={card.url} class="card">
             <p class="card-eyebrow">{card.eyebrow}</p>
             <h3>{card.title}</h3>
             <p class="card-body">{card.body}</p>
@@ -122,11 +108,11 @@ const pct = Math.round((raised / goal) * 100);
   <!-- ============ IMPACT STATS ============ -->
   <section class="section impact">
     <div class="container">
-      <p class="eyebrow">Our impact</p>
-      <h2 class="section-head">Three decades of young voices.</h2>
+      <p class="eyebrow">{home.impact_eyebrow}</p>
+      <h2 class="section-head">{home.impact_heading}</h2>
 
       <div class="stat-grid">
-        {stats.map((stat) => (
+        {home.stats.map((stat) => (
           <div class="stat">
             <p class="stat-figure">{stat.figure}</p>
             <p class="stat-label">{stat.label}</p>
@@ -141,10 +127,7 @@ const pct = Math.round((raised / goal) * 100);
     <div class="container">
       <p class="eyebrow">{campaignLabel}</p>
       <h2 class="section-head">Help us reach ${goal.toLocaleString()}.</h2>
-      <p class="donate-lede">
-        Ticket sales and tuition cover much of what we do. The rest — scholarships,
-        school touring, capital needs — comes from donors like you.
-      </p>
+      <p class="donate-lede">{home.donate_lede}</p>
 
       <div class="progress-wrap">
         <div class="progress-bar">
@@ -156,7 +139,7 @@ const pct = Math.round((raised / goal) * 100);
         </div>
       </div>
 
-      <a href="/donate" class="btn btn-primary">Make a Gift</a>
+      <a href="/donate" class="btn btn-primary">{home.donate_button_label}</a>
     </div>
   </section>
 </BaseLayout>
@@ -194,6 +177,7 @@ const pct = Math.round((raised / goal) * 100);
   .poster {
     background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
     color: #fff;
+    text-decoration: none;
     border-radius: var(--radius);
     padding: var(--space-lg);
     min-height: 320px;
@@ -201,6 +185,12 @@ const pct = Math.round((raised / goal) * 100);
     flex-direction: column;
     justify-content: flex-end;
     box-shadow: var(--shadow-lift);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .poster:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift), var(--shadow-soft);
   }
 
   .poster-eyebrow {

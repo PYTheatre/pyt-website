@@ -9,6 +9,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import { getCollection } from "astro:content";
+import pageContent from "../../content/settings/shows-page.json";
 
 // Load all shows, sort by start date (earliest first).
 const shows = (await getCollection("shows")).sort(
@@ -21,9 +22,9 @@ const shows = (await getCollection("shows")).sort(
   description="The Peninsula Youth Theatre season. Three Mainstage productions a year, performed by Bay Area youth."
 >
   <PageHero
-    eyebrow="The 2026 season"
-    title="Our shows."
-    lede="Three full-scale Mainstage productions a year, performed by youth ages 6–18 at Mountain View Center for the Performing Arts. Family-friendly, ensemble-driven, joyful."
+    eyebrow={pageContent.eyebrow}
+    title={pageContent.title}
+    lede={pageContent.lede}
   />
 
   <!-- Sponsor CTAs — appear under the hero, above the show list -->
@@ -74,11 +75,6 @@ const shows = (await getCollection("shows")).sort(
           ))}
         </ul>
       )}
-
-      <p class="staff-tip">
-        <strong>For staff:</strong> Add or edit shows in the CMS at
-        <a href="/admin/#/collections/shows">/admin → Shows</a>.
-      </p>
     </div>
   </section>
 </BaseLayout>

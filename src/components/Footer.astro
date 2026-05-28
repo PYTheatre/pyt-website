@@ -8,6 +8,8 @@
 */
 const year = new Date().getFullYear();
 
+import footer from "../content/settings/footer.json";
+
 const columns = [
   {
     title: "Experience",
@@ -41,7 +43,7 @@ const columns = [
       <span class="footer-mark">P</span>
       <p class="footer-name">Peninsula Youth Theatre</p>
       <p class="footer-tagline">
-        A Bay Area home for young performers since 1989. 501(c)(3) nonprofit.
+        {footer.tagline}
       </p>
     </div>
 
@@ -60,7 +62,7 @@ const columns = [
   </div>
 
   <div class="container footer-bottom">
-    <p>&copy; {year} Peninsula Youth Theatre &middot; 501(c)(3) &middot; EIN 77-0335126</p>
+    <p>&copy; {year} Peninsula Youth Theatre &middot; {footer.copyright_extra}</p>
   </div>
 </footer>
 

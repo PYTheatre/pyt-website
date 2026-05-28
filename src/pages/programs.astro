@@ -9,6 +9,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import { getCollection } from "astro:content";
+import pageContent from "../content/settings/programs-page.json";
 
 // Load all programs, alphabetical by name.
 const programs = (await getCollection("programs")).sort((a, b) =>
@@ -26,9 +27,9 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
   description="Year-round classes, summer camps, Stories on Stage, and Studio Intensives for ages 4–18."
 >
   <PageHero
-    eyebrow="Education"
-    title="Classes &amp; Camps."
-    lede="From after-school drama to week-long summer intensives, our programs build skills, confidence, and friendships. Ages 4–18. Scholarships available for every program."
+    eyebrow={pageContent.eyebrow}
+    title={pageContent.title}
+    lede={pageContent.lede}
   />
 
   <section class="section programs-section">
@@ -119,11 +120,6 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
 
       <p id="no-results" class="no-results" hidden>
         No programs match those filters. Try clearing them.
-      </p>
-
-      <p class="staff-tip">
-        <strong>For staff:</strong> Add or edit programs in the CMS at
-        <a href="/admin/#/collections/programs">/admin → Classes &amp; Camps</a>.
       </p>
     </div>
   </section>

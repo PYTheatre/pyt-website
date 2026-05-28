@@ -19,14 +19,61 @@ Newest entries at the top.
 | 2 | Core pages (Shows, Programs, Donate, About, Casting) | ✅ Complete |
 | 2.5 | Sponsorship feature | ✅ Complete |
 | 2.6 | Stories on Stage section | ✅ Complete |
-| 2.7 | **Soapbox donate popup wiring** | 🟡 **Built & sandbox-tested; awaiting client upload + live verification** |
-| 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started |
+| 2.7 | Soapbox donate popup wiring | ✅ Complete |
+| 2.8 | **Editable page content (home + page furniture)** | 🟡 **Built & sandbox-tested; awaiting client upload** |
+| 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started (3.1 MailChimp is next) |
 | 4 | Full EN/ES | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 
 ---
 
-## Phase 2.7 — Soapbox donate popup wiring (sandbox complete)
+## Deferred / awaiting client input
+
+These are items the client has flagged for later, with enough decision-context to pick up without re-discussion:
+
+- **Body font swap to JAF Cupidus** (https://justanotherfoundry.com/cupidus). Client wants Cupidus for body copy across the whole site. Decided 2026-05-27. **Holding for license acquisition.** Three licensing paths considered: Adobe Fonts (subscription), direct license from JAF/I Love Typography (perpetual self-host), Fontstand (monthly rental). Variant question (Cupidus vs Cupidus Text vs both) also open and pending client decision. When client has the font files (or Adobe Fonts CSS link), wiring it in is roughly a 15-minute job: update `src/styles/tokens.css` to change `--font-body` (and optionally `--font-heading`), add the font-loading mechanism to `src/layouts/BaseLayout.astro`, ship a small upload batch. The whole site reads body type from one token so the change is genuinely one-file once the font is available.
+
+- **Casting page hero image** — placeholder still in place; client to upload via CMS when image is available.
+
+- **Casting page text revision (optional)** — copy currently reads as universal audition info, but with Stories on Stage now having its own clearly-labeled audition section, client may want to clarify the Casting page is about Mainstage. Client to decide.
+
+---
+
+## Phase 2.8 — Editable page content (sandbox complete)
+
+**Goal:** Client wants all copy, words, images, links, and numbers editable through the CMS on every page (structure/layout stays in code, can't be broken). The home page was almost entirely hardcoded; Shows/Programs had hardcoded hero text. This phase closes that gap.
+
+### Decisions locked with client (2026-05-28)
+- **Content-only editability**: all words/images/links/numbers editable; layout & structure stay in code.
+- **"Now Playing" poster on home page is AUTOMATIC** — pulls the next upcoming show from the Shows collection (the show whose end_date hasn't passed; falls back to most recent if all are past). No manual field. Staff just keep the Shows list current. The poster is now also clickable through to the show detail page.
+- **Page `<title>` and SEO meta tags stay in code** (not CMS-editable) — client's call.
+- **"For staff:" helper tips removed** from public Shows/Programs pages entirely. NOTE: this removes the only in-page pointers telling staff where to edit content, so the Phase 5 handoff docs MUST include a clear "where do I edit X" map.
+
+### Built (all sandbox-tested)
+- `src/content/settings/home-page.json` — all home page copy: hero (eyebrow, heading, italic-word, lede, two buttons), discovery cards (×5, each with eyebrow/title/body/tags/link), impact stats (×3), section headings, donation teaser text.
+- `src/content/settings/shows-page.json` — Shows page hero (eyebrow, title, lede).
+- `src/content/settings/programs-page.json` — Programs page hero (eyebrow, title, lede).
+- `src/content/settings/footer.json` — footer tagline + copyright extra text.
+- `src/pages/index.astro` — rewired to read all content from home-page.json; "Now Playing" poster auto-selects next upcoming show; hero heading supports an editable italic accent word (splits the heading around the chosen word).
+- `src/pages/shows/index.astro` — hero reads from shows-page.json; staff tip removed.
+- `src/pages/programs.astro` — hero reads from programs-page.json; staff tip removed.
+- `src/components/Footer.astro` — tagline + copyright read from footer.json. (Footer nav columns left in code — they're structure, and get wired correctly as Phase 3 adds pages.)
+- `public/admin/config.yml` — added Site Settings records: Home Page, Shows Page (intro), Classes & Camps Page (intro), Footer. Home Page record uses nested list widgets for discovery cards (with a nested tags list) and impact stats.
+
+### Sandbox tests passed
+- ✅ Clean build, 11 pages, zero errors.
+- ✅ Home page renders identically to before (layout preserved) but all content now from CMS.
+- ✅ "Now Playing" auto-selection verified: with Dragons Love Tacos closed (ended 2026-05-16) and today being later, the poster correctly features Hello, Dolly! (next upcoming). Will recompute against real current date on live site.
+- ✅ Hero italic-accent-word split verified: renders `Outstanding youth <span class="accent-italic">theatre</span>.` exactly as the original hardcoded design.
+- ✅ Staff tips confirmed gone from both Shows and Programs (0 matches in built HTML).
+- ✅ Footer tagline + copyright render from CMS.
+
+### What staff can now edit via CMS (Site Settings)
+Home Page, Shows Page (intro), Classes & Camps Page (intro), Footer — in addition to all the previously-editable records (About, Donate, Donor Tiers, Sponsorship, Casting, Stories on Stage Page, Donation Campaign).
+
+---
+
+
 
 **Goal:** Wire the live Donate Now button on /donate to PYT's NonprofitSoapbox donation modal.
 

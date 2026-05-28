@@ -138,6 +138,80 @@ collections:
       preview: false
     files:
 
+      # --- Home Page ---
+      # All editable copy on the home page. Layout/structure stays in
+      # code. The "Now Playing" poster is automatic (next upcoming show
+      # from the Shows collection), so there's no field for it here.
+      - name: "home-page"
+        label: "Home Page"
+        file: "src/content/settings/home-page.json"
+        description: "All the words, links, and numbers on the home page. The 'Now Playing' poster updates automatically from your Shows list."
+        fields:
+          - { name: "hero_eyebrow", label: "Hero — small eyebrow text", widget: "string", hint: "Example: On stage now · Spring 2026" }
+          - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Example: Outstanding youth theatre." }
+          - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
+          - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text" }
+          - { name: "hero_primary_label", label: "Hero — primary button label", widget: "string" }
+          - { name: "hero_primary_url", label: "Hero — primary button link", widget: "string" }
+          - { name: "hero_secondary_label", label: "Hero — secondary button label", widget: "string" }
+          - { name: "hero_secondary_url", label: "Hero — secondary button link", widget: "string" }
+          - { name: "now_playing_label", label: "Poster — 'Now playing' label", widget: "string", default: "Now playing" }
+          - { name: "discovery_eyebrow", label: "Discovery section — eyebrow", widget: "string", default: "Find your way in" }
+          - { name: "discovery_heading", label: "Discovery section — heading", widget: "string" }
+          - name: "discovery_cards"
+            label: "Discovery cards"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "eyebrow", label: "Card eyebrow", widget: "string", hint: "Example: For families" }
+              - { name: "title", label: "Card title", widget: "string" }
+              - { name: "body", label: "Card text", widget: "text" }
+              - name: "meta"
+                label: "Tags (small pills)"
+                widget: "list"
+                field: { name: "tag", label: "Tag", widget: "string" }
+              - { name: "url", label: "Card link", widget: "string", hint: "Example: /shows" }
+          - { name: "impact_eyebrow", label: "Impact section — eyebrow", widget: "string", default: "Our impact" }
+          - { name: "impact_heading", label: "Impact section — heading", widget: "string" }
+          - name: "stats"
+            label: "Impact stats"
+            widget: "list"
+            summary: "{{fields.figure}} — {{fields.label}}"
+            fields:
+              - { name: "figure", label: "Big number", widget: "string", hint: "Example: 30+ or $45K" }
+              - { name: "label", label: "Description", widget: "string" }
+          - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
+          - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
+
+      # --- Shows Page (hero text only; the shows themselves are their own collection) ---
+      - name: "shows-page"
+        label: "Shows Page (intro)"
+        file: "src/content/settings/shows-page.json"
+        description: "The heading and intro text at the top of the Shows page. (The shows themselves are edited under 'Shows'.)"
+        fields:
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "lede", label: "Intro paragraph", widget: "text" }
+
+      # --- Programs Page (hero text only) ---
+      - name: "programs-page"
+        label: "Classes & Camps Page (intro)"
+        file: "src/content/settings/programs-page.json"
+        description: "The heading and intro text at the top of the Classes & Camps page. (The programs themselves are edited under 'Classes & Camps'.)"
+        fields:
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "lede", label: "Intro paragraph", widget: "text" }
+
+      # --- Footer (tagline + copyright line) ---
+      - name: "footer"
+        label: "Footer"
+        file: "src/content/settings/footer.json"
+        description: "The tagline and copyright text in the site footer. (The footer link columns are part of the site structure.)"
+        fields:
+          - { name: "tagline", label: "Tagline", widget: "text", hint: "Short line under the PYT name in the footer." }
+          - { name: "copyright_extra", label: "Copyright extra text", widget: "string", hint: "Shown after the year. Example: 501(c)(3) · EIN 77-0335126" }
+
       # --- Donation campaign progress numbers (from Phase 1) ---
       - name: "donation-campaign"
         label: "Donation Campaign"
