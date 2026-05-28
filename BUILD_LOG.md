@@ -17,58 +17,60 @@ Newest entries at the top.
 | 0 | Pipeline | ✅ Complete |
 | 1 | Decap CMS login | ✅ Complete |
 | 2 | Core pages (Shows, Programs, Donate, About, Casting) | ✅ Complete |
-| 2.5 | Sponsorship feature | 🟡 Awaiting client verification on live site |
-| 2.6 | **Stories on Stage section** | 🟡 **Built & sandbox-tested; awaiting client upload** |
+| 2.5 | Sponsorship feature | ✅ Complete |
+| 2.6 | Stories on Stage section | ✅ Complete |
+| 2.7 | **Soapbox donate popup wiring** | 🟡 **Built & sandbox-tested; awaiting client upload + live verification** |
 | 3 | Cast pages + Sheets + Rentals + Shop + MailChimp | ⬜ Not started |
 | 4 | Full EN/ES | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 
 ---
 
-## Phase 2.6 — Stories on Stage (sandbox complete)
+## Phase 2.7 — Soapbox donate popup wiring (sandbox complete)
 
-**Goal:** Promote Stories on Stage from one program-among-many to its own season-style presentation, reflecting how it actually works operationally (parallel to Mainstage, one annual audition, 6 productions per year, each actor in 1–3 shows).
+**Goal:** Wire the live Donate Now button on /donate to PYT's NonprofitSoapbox donation modal.
 
 ### Decisions locked with client (2026-05-27)
-- Stories on Stage is a **separate content type** from Mainstage Shows and from Classes & Camps. Different fields, different page layout.
-- **One page** at `/stories-on-stage` — no per-production detail pages. The lineup, auditions info, and explainer all live on this single URL.
-- **Each production has two CTAs**: Buy Tickets (public) and School Bookings (schools). Either can be blank per-production and that button hides.
-- **Production card eyebrow** = just performance dates, no slot label like "Production 1 of 6".
-- **Auditions section** has its own thin strip at the very top of the page linking down to the auditions block.
-- **Removed from Classes & Camps**: the old `stories-on-stage.md` program file is gone; the program_type enum no longer offers "Stories on Stage" as an option.
-- **Nav placement**: between Shows and Classes & Camps, reinforcing parallel-season framing.
-- **No cast pages** for Stories on Stage productions (each is cast from the annual roster, not per-show).
-- **Calendar conflicts collected via external Google Form** — the auditions section links out to it. URL is CMS-editable.
+- Use Soapbox's **popup widget** (not iframe embed). Subdomain: `pyt.secure.nonprofitsoapbox.com`.
+- Trigger pattern: any link with `?sbxdonationsmodal=sbx1` opens the popup.
+- **Only wire the Donate page's button** (not the header Donate or home page Make a Gift). Reason: a donor who passes through /donate sees the campaign progress, donor tiers, and matching-gifts info before donating, which leads to better-informed and often larger gifts. Header & home buttons stay as entry points to /donate.
+- The `soapbox_embed_url` CMS field stays in place. If PYT ever obtains an inline iframe embed from Soapbox, that's pasted in the field and the Donate page swaps to inline mode automatically (Path B).
+- Soapbox loader script hardcoded in BaseLayout.astro (not CMS-editable), since a typo there would break every page.
 
-### Built (all sandbox-tested)
-- `src/content/stories-on-stage/*.md` — two seeded example productions (Very Hungry Caterpillar, Where the Wild Things Are).
-- `src/content/settings/stories-on-stage-page.json` — page-level content: intro lede, audition strip text, lineup heading, full auditions section copy (dates, age range, what to prepare, fees, form blurb), and the "What is Stories on Stage?" explainer paragraphs.
-- `src/content.config.ts` — added `storiesOnStage` collection schema; removed "Stories on Stage" from the programs `program_type` enum (no longer needed).
-- `public/admin/config.yml` — added "Stories on Stage Productions" folder collection with form fields for each production; added "Stories on Stage Page" entry under Site Settings; updated Programs collection description and removed "Stories on Stage" from its program_type options.
-- `src/pages/stories-on-stage.astro` — the new page: top audition strip, hero, season lineup grid (2 cards seeded, expandable to 6 via CMS), auditions section with anchor target, explainer block.
-- `src/components/Header.astro` — Stories on Stage added to the nav between Shows and Classes & Camps.
-- `src/content/programs/stories-on-stage.md` — **deleted** (no longer needed; SoS lives in its own collection).
+### Built (sandbox-tested as far as possible)
+- `src/layouts/BaseLayout.astro` — added the Soapbox loader script, loads on every page after window 'load' event fires. Subdomain hardcoded: pyt.secure.nonprofitsoapbox.com.
+- `src/pages/donate.astro` — replaced the "Donation form coming soon" placeholder with a proper Donate Now block: blurb + primary "Donate Now" button (href=`?sbxdonationsmodal=sbx1`) + secure-payment meta line.
 
-### Sandbox tests passed
-- ✅ `npm run build` zero errors. 11 pages generated (one more than Phase 2.5 — the new `/stories-on-stage`).
-- ✅ Stories on Stage page renders correctly at 390px and 1280px. Production grid is 1 column on phone, 2 on tablet, 3 on desktop.
-- ✅ Programs page now shows 6 programs (Stories on Stage removed); existing programs unaffected.
-- ✅ **CTA logic verified**: with both ticketing URLs blank, card shows a disabled "Tickets & bookings coming soon" pill. With URLs filled in, both Buy Tickets (primary) and School Bookings (outline) buttons render with proper links.
-- ✅ Audition strip anchors correctly to `#auditions` section.
+### What I could verify in sandbox
+- ✅ Clean build, no errors.
+- ✅ Soapbox loader script is present on every page (verified by grepping built HTML).
+- ✅ Donate Now button rendered with correct href and styling.
+- ✅ Donate page layout is unchanged in everything else (progress bar, matching note, donor tiers, sponsorship pointer all intact).
 
-### What staff will edit through the CMS
-- **Stories on Stage Productions** (in left sidebar, between "Classes & Camps" and "Site Settings"): add/edit/remove individual productions. Same form-pattern as Shows but with fewer fields and two ticketing URLs.
-- **Site Settings → Stories on Stage Page**: page intro, auditions section copy, Google Form URL, explainer paragraphs.
+### What only the live deployment can verify
+- Whether the Soapbox script actually loads from their server.
+- Whether the popup opens when clicked.
+- Whether Soapbox's account configuration on their side correctly shows PYT's campaign.
 
-### Pending follow-ups
-- **Casting page (created in Phase 2) still has the client-provided text and hero-image placeholder.** When the client provides the hero image, upload via CMS → Site Settings → Casting Page → Hero image. (Unchanged from previous phases — flagging again here as a project-level reminder.)
-- **Casting page text mentions Mainstage but not Stories on Stage**. When Stories on Stage is live, the client may want to revise the Casting page copy to clarify it's specifically about Mainstage auditioning (since Stories on Stage now has its own clearly-labeled audition section). Worth flagging to the client, but they should decide.
+This is the one feature where the only real test is "click it on the live site and see."
 
 ---
 
-## Phase 2.5 — Sponsorship feature 🟡 awaiting client verification
+## Phase 2.6 — Stories on Stage ✅ COMPLETE (2026-05-27)
 
-(Built, packaged, presented to client. Client has not yet confirmed deployment to live site.)
+(Verified live by client. /stories-on-stage works, nav updated, Programs page now shows 6 not 7. CMS has new "Stories on Stage Productions" collection plus "Stories on Stage Page" settings entry.)
+
+### Pending follow-ups (from earlier phases — flagging again)
+- **Casting page hero image** still placeholder. When client provides the image, upload via CMS → Site Settings → Casting Page → Hero image.
+- **Casting page text** mentions Mainstage casting only. With Stories on Stage now having its own clearly-labeled audition section, client may want to revise Casting page copy to clarify it's about Mainstage. Client to decide.
+
+---
+
+---
+
+## Phase 2.5 — Sponsorship feature ✅ COMPLETE (2026-05-27)
+
+(Verified live by client. /sponsor page works, show-aware flow works, all CTAs across Shows/show-detail/Donate work.)
 
 ## Phase 2 — Core pages ✅ COMPLETE (2026-05-27)
 

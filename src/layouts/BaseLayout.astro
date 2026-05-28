@@ -39,5 +39,29 @@ const {
       <slot />
     </main>
     <Footer />
+
+    <!--
+      SOAPBOX DONATION WIDGET LOADER
+      ------------------------------
+      This script loads the Soapbox donation modal on every page.
+      Once loaded, any link or button whose href ends with
+      `?sbxdonationsmodal=sbx1` will trigger the donation popup
+      instead of navigating. Currently used by the big "Donate Now"
+      button on /donate.
+
+      If PYT ever changes Soapbox subdomains, the only line to
+      update is the one inside the IIFE below.
+    -->
+    <script is:inline>
+      window.addEventListener("load", function () {
+        ((w, d, dm) => {
+          const b = d.querySelector("body");
+          const s = d.createElement("script");
+          s.src = `https://${dm}/component/donations/widget/?popupjs`;
+          s.type = "module";
+          b.append(s);
+        })(window, document, "pyt.secure.nonprofitsoapbox.com");
+      });
+    </script>
   </body>
 </html>

@@ -46,12 +46,13 @@ const pct = Math.round((raised / goal) * 100);
     </div>
   </section>
 
-  <!-- Donation form embed (Soapbox) -->
+  <!-- Donation form section (Soapbox) -->
   <section class="section donate-form-section">
     <div class="container">
       <h2 class="section-head">Make a gift</h2>
 
       {donatePage.soapbox_embed_url ? (
+        <!-- Path B: an inline iframe embed, if PYT ever gets one -->
         <div class="soapbox-embed">
           <iframe
             src={donatePage.soapbox_embed_url}
@@ -61,16 +62,27 @@ const pct = Math.round((raised / goal) * 100);
           ></iframe>
         </div>
       ) : (
-        <div class="embed-placeholder">
-          <p><strong>Donation form coming soon.</strong></p>
-          <p>
-            We're finalizing our donation platform. In the meantime, please email
-            <a href="mailto:info@pytnet.org">info@pytnet.org</a> or call
-            <a href="tel:+16509888798">(650) 988-8798</a> to make a gift.
+        <!--
+          Path A: the donate-now popup trigger.
+          Clicking this link triggers the Soapbox popup loaded
+          by the script in BaseLayout. The `?sbxdonationsmodal=sbx1`
+          parameter is the agreed Soapbox trigger pattern; the link's
+          href is `#` because we never want it to actually navigate
+          anywhere — the Soapbox script intercepts the click.
+        -->
+        <div class="donate-now-block">
+          <p class="donate-now-blurb">
+            Make a one-time gift or set up a recurring donation through our secure
+            donation form. Most gifts take less than two minutes.
           </p>
-          <p class="staff-only">
-            <strong>For staff:</strong> Once you have your Soapbox embed URL, paste it
-            into <a href="/admin/#/collections/settings/entries/donate-page">/admin → Donate Page</a>.
+          <a
+            href="?sbxdonationsmodal=sbx1"
+            class="btn btn-primary btn-donate-now"
+          >
+            Donate Now
+          </a>
+          <p class="donate-now-meta">
+            Powered by NonprofitSoapbox. Payments processed securely.
           </p>
         </div>
       )}
@@ -200,27 +212,32 @@ const pct = Math.round((raised / goal) * 100);
     display: block;
   }
 
-  .embed-placeholder {
+  /* ---- Donate Now block (Soapbox popup trigger) ---- */
+  .donate-now-block {
     padding: var(--space-lg);
-    border: 1px dashed var(--line);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--paper-warm);
+    text-align: center;
   }
 
-  .embed-placeholder p {
-    margin-bottom: var(--space-sm);
+  .donate-now-blurb {
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    margin-bottom: var(--space-md);
+    max-width: 48ch;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .embed-placeholder a {
-    color: var(--accent-deep);
-    text-decoration: underline;
+  .btn-donate-now {
+    font-size: 1.1rem;
+    padding: 0.85rem 2.2rem;
   }
 
-  .staff-only {
+  .donate-now-meta {
     margin-top: var(--space-md);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--line);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--ink-muted);
   }
 
