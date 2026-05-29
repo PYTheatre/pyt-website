@@ -1,6 +1,6 @@
 ---
 title: A Year with Frog and Toad
-eyebrow: July 2026
+eyebrow: 2026 MAINSTAGE
 start_date: 2026-07-23
 end_date: 2026-07-26
 date_display: July 23-26, 2026
