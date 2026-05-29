@@ -2,7 +2,8 @@
   "board_members": [
     {
       "name": "Mike Cobb",
-      "pyt_title": "Board Member"
+      "pyt_title": "Board Member",
+      "photo": "/uploads/mike.jpeg"
     }
   ],
   "banner_image": "/uploads/pyt-shrek.jpg",
