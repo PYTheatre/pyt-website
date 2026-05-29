@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#faf8f4"/>
+  <rect width="800" height="600" fill="#fce8f0" opacity="0.5"/>
+  <g fill="none" stroke="#e85a8c" stroke-width="2" opacity="0.45">
+    <circle cx="400" cy="270" r="54"/>
+    <path d="M346 270 q54 -90 108 0" />
+  </g>
+  <text x="400" y="380" font-family="Georgia, serif" font-size="30" fill="#c43d6f" text-anchor="middle" opacity="0.8">Photo coming soon</text>
+  <text x="400" y="418" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="18" fill="#8a8a8a" text-anchor="middle">furniture</text>
+</svg>

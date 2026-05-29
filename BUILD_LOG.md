@@ -18,8 +18,8 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
 | 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
-| 3.1 | MailChimp newsletter signup | ✅ Complete |
-| 3.2 | Rentals catalogue | ⬜ Not started |
+| 3.1 | MailChimp newsletter signup | ✅ Complete (verified live) |
+| 3.2 | Rentals page (categories + inquiry form) | 🟡 Built; awaiting upload + form test |
 | 3.3 | Shop (Shopify embed) | ⬜ Not started |
 | 3.4 | Cast Pages (smaller scope than originally planned) | ⬜ Not started |
 | 3.5 | Google Sheets embed | ⬜ Likely folds into 3.4 |
@@ -28,7 +28,34 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
-## Phase 3.1 — MailChimp newsletter signup — built 2026-05-29
+## Phase 3.2 — Rentals page — built 2026-05-29
+
+**Goal:** A `/rentals` page with an intro, a grid of rental categories (each with a photo, editable/expandable via CMS), and an inquiry form that emails PYT.
+
+**Built:**
+- New: `src/pages/rentals.astro` — hero intro, category grid (auto-hides if empty), and inquiry form.
+- New: `src/content/settings/rentals-page.json` — starter content with 4 placeholder categories (Costumes, Props, Set Pieces, Furniture).
+- New: 4 on-brand SVG placeholder images in `public/uploads/` (rental-placeholder-*.svg).
+- Updated: `public/admin/config.yml` — "Rentals Page" CMS form, including an editable/reorderable categories list with photo upload per category, and a field for the Formspree endpoint.
+
+**Key decisions:**
+- Inquiry form delivery: **Formspree** free tier (endpoint `xnjrrdkb`), chosen because Cloudflare-native email needs the `pytnet.org` domain verified, which isn't done until Phase 5. Formspree free tier allows exactly 2 recipient emails — matches `info@pytnet.org` + `lhatten@pytnet.org`. Can switch to Cloudflare-native in Phase 5 if desired.
+- Form fields: name, email, organization (optional), what they're looking for, preferred dates. Honeypot anti-spam included.
+- Photo treatment for uneven future photo quality: fixed 4:3 frame + object-fit cover + gradient overlay + soft shadow + lazy load, so mismatched/low-quality photos still look tidy.
+- Categories list is staff-expandable; section auto-hides when empty.
+- Form has a mailto fallback if the Formspree endpoint field is ever blank, so the page never shows a dead form.
+
+**Sandbox tests:** Clean build (13 pages). Verified in built output: Formspree endpoint wired, all 4 categories render, all placeholders present, all form fields present. Empty-categories case tested — section hides cleanly (0 cards), form remains. Screenshots at 390px and 1280px both look right.
+
+**Cannot verify in sandbox:** Whether form submissions actually reach both inboxes — requires the live site and a real test submission. Recommend testing after deployment.
+
+---
+
+## Phase 3.1 — MailChimp newsletter signup ✅ Complete (verified live 2026-05-29)
+
+Verified by client via a live test submission — MailChimp returned its "profile updated" confirmation, so the form is working end to end.
+
+
 
 **Goal:** Add a `/subscribe` page with PYT's MailChimp form embedded natively (styled with site tokens, not MailChimp's purple branding). Add a "Newsletter signup" pointer link in the footer's Community column.
 

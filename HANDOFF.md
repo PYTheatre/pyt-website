@@ -22,15 +22,16 @@ The Peninsula Youth Theatre (PYT) website rebuild. PYT is a non-profit youth the
 
 ## Where the project stands right now
 
-**Phases 0 through 3.1 are complete and verified live** (or built and awaiting upload — see below). The site is functional: home page, shows list with detail pages, Stories on Stage, Classes & Camps with filters, Donate (with working Soapbox popup), Sponsor (with show-aware buttons), Casting, About (with Board of Directors fields), Employment, and now a `/subscribe` newsletter signup page. The CMS lets staff edit every word, image, link, and number on every page through forms. The site accepts real donations through the Soapbox popup.
+**Phases 0 through 3.1 are complete and verified live, and Phase 3.2 (Rentals) is built and ready to upload.** The site is functional: home page, shows list with detail pages, Stories on Stage, Classes & Camps with filters, Donate (Soapbox popup — see open issue below), Sponsor, Casting, About (with Board of Directors fields), Employment, a `/subscribe` newsletter signup page (verified working), and a `/rentals` page with editable photo categories and an inquiry form.
 
-**Phase 3.1 (MailChimp) is built and ready to upload.** The zip includes `src/pages/subscribe.astro` and an updated `src/components/Footer.astro`. After upload, staff should do a test submission to confirm MailChimp actually receives it.
+**Phase 3.2 (Rentals) is built and ready to upload.** It adds `/rentals` with a staff-editable category grid and a Formspree-backed inquiry form. After upload, do a test submission to confirm inquiries reach both `info@pytnet.org` and `lhatten@pytnet.org`.
 
-**Phase 3 remaining sequence:** Rentals → Shop → Cast Pages → Google Sheets.
+**Phase 3 remaining sequence:** Shop → Cast Pages → Google Sheets.
 
-**One issue still open:**
+**Two issues open:**
 
-1. **Donate button on /donate requires multiple clicks** to trigger the Soapbox popup. See `IN_FLIGHT.md`. Has not been investigated yet — waiting on client to provide a browser console screenshot.
+1. **Donate button on /donate** — diagnosed. The button does a full page reload before the Soapbox popup appears (4–5 sec delay). Fix is identified (switch to Soapbox's `data-sbx` anchor trigger so no reload happens), but blocked on the client supplying the Soapbox donation-form `data-id` value. See `IN_FLIGHT.md`.
+2. **Rentals form test** — needs a live test submission after upload to confirm delivery to both inboxes. See `IN_FLIGHT.md`.
 
 ---
 

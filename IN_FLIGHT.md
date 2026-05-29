@@ -1,6 +1,6 @@
 # PYT Website — In-Flight Items
 
-**Last updated:** 2026-05-29
+**Last updated:** 2026-05-29 (later session)
 
 What is mid-stream right now, what's blocked on the client, what's deferred. Read this so you know what *not* to start fresh.
 
@@ -8,35 +8,31 @@ When an item here is resolved (either resolved, abandoned, or upgraded into a ph
 
 ---
 
-## 1. Donate button on /donate requires multiple clicks — diagnosis in progress
+## 1. Donate button on /donate requires multiple clicks + slow popup — fix identified, waiting on one value
 
-**State:** Client reported the issue. No fix attempted yet. Needs a browser console screenshot from the client before any fix is proposed.
+**State:** Diagnosed. Client provided screenshots showing the button causes a full page reload, then the Soapbox popup appears 4–5 seconds later. Root cause confirmed and a fix is identified; waiting on the client to supply one value before building.
 
-**The issue:** When a user clicks "Donate Now" on the live `/donate` page, the Soapbox popup does not open on the first click. They have to click "at least three times" before it opens.
+**Root cause:** The Donate Now button currently uses `href="?sbxdonationsmodal=sbx1"`, which is a real URL change — so clicking it *reloads the whole page*, and only after reload does the Soapbox script read the URL parameter and open the popup. That's the reload + delay. The earlier "multiple clicks" report was clicks landing before the page had finished loading.
 
-**Current hypothesis (NOT confirmed — do not act on it yet):** The Soapbox loader script (added to `BaseLayout.astro` in Phase 2.7) takes time to fetch from `pyt.secure.nonprofitsoapbox.com`. Until that script has loaded and installed its click handlers, the button does nothing. The first click(s) miss because the Soapbox script isn't ready; by the third click, enough time has passed.
+**The fix (per Soapbox's own docs):** Soapbox's supported trigger is a `#` anchor with `data-sbx` attributes, which opens the popup *without* a page reload:
+```
+<a href="#donate" data-sbx data-id="N" data-host="pyt.secure.nonprofitsoapbox.com">Donate Now</a>
+```
+The `data-sbx` attribute makes the already-loaded Soapbox script (loaded site-wide in BaseLayout) intercept the click and open the popup instantly — no reload.
 
-**What the new Claude should do:**
+**Blocked on:** the `data-id` value `N` — PYT's specific donation-form ID in Soapbox Engage. The client is retrieving it. It's found on the Donation form's Integration tab (Sample Link), or as the number at the end of the form's edit URL (e.g. `.../donations/edit/42`). Once the client provides it, this is a ~1-line change to `src/pages/donate.astro` (and likely a quick win across the header/home buttons too, though those intentionally route through /donate first — leave that behavior alone).
 
-1. **Do not propose a fix from memory.** Past Claude sessions have made this exact kind of mistake with third-party widgets. (See `PROJECT_RULES.md` Rule 1.)
-2. **Ask the client for the diagnostic data:** open `pyt-website.pages.dev/donate`, open browser dev tools → Console tab, clear console, wait 5 seconds, click "Donate Now" once, watch for console messages, click again if nothing happens, screenshot.
-3. **Then research.** Read what the client sends. Search the web for Soapbox-specific issues if needed. Only then propose a fix.
-
-**Possible fixes (don't apply blindly):**
-- Add a small "Loading payment form…" disabled state on the button until the Soapbox script signals ready (requires research into whether Soapbox emits such a signal).
-- Use the Soapbox embed iframe approach instead of the popup — but this requires asking Soapbox for an iframe embed URL.
-- Defer the script load earlier (try moving from `<body>` end to `<head>` with `async`/`defer`).
-- Wait until the user clicks, then load Soapbox on demand. Most invasive change, but eliminates the race.
-
-The Soapbox subdomain is confirmed: `pyt.secure.nonprofitsoapbox.com`. The trigger pattern is confirmed: any link with `?sbxdonationsmodal=sbx1`.
+**Do NOT** guess the data-id or ship without it — a wrong id would silently open the wrong (or no) form.
 
 ---
 
-## 2. Phase 3.1 (MailChimp) — built, awaiting upload and test submission
+## 2. Phase 3.2 (Rentals) — built, awaiting upload + form test
 
-**State:** Built on 2026-05-29. Zip ready to upload. After upload, staff should do one real test submission at `/subscribe` to confirm MailChimp actually receives it. If the submission succeeds, mark Phase 3.1 complete in the build log and remove this item.
+**State:** Built 2026-05-29. In the upload zip. After upload, do one real test submission at `/rentals` to confirm the inquiry reaches **both** `info@pytnet.org` and `lhatten@pytnet.org`.
 
-**If the submission doesn't work:** The most likely causes are (a) the form action URL got corrupted (check it matches the MailChimp embed code exactly) or (b) MailChimp's `mc-validate.js` has a conflict with the page. Do not guess — check the browser console for errors first.
+**If the test fails:** Check the Formspree dashboard first — the form may need its recipients confirmed, and Formspree often requires the very first submission to a new form to be confirmed via an email it sends to the form owner. Don't guess at code changes before checking Formspree's dashboard for the form's status.
+
+**Decided:** Formspree free tier is a stopgap because Cloudflare-native email needs the `pytnet.org` domain verified (a Phase 5 task). Revisit switching to Cloudflare-native in Phase 5 if the client still wants full first-party control.
 
 ---
 
@@ -47,10 +43,11 @@ The Soapbox subdomain is confirmed: `pyt.secure.nonprofitsoapbox.com`. The trigg
 **Cast page security approach (locked):** Option A — soft client-side password gate. The client accepted the limitation that this is *easily bypassed* by anyone who views page source. Threat model: cast info (names, rehearsal times, production notes) is not legally sensitive but isn't meant to be public-facing.
 
 **Phase 3 sequence reminder:**
-1. **3.2 Rentals catalogue** (next)
-2. **3.3 Shop (Shopify embed)**
-3. **3.4 Cast Pages** (as redefined above)
-4. **3.5 Google Sheets embed** (almost certainly merges into 3.4)
+1. **3.1 MailChimp** ✅ complete (verified live)
+2. **3.2 Rentals catalogue** 🟡 built; awaiting upload + form test
+3. **3.3 Shop (Shopify embed)** — next
+4. **3.4 Cast Pages** (as redefined above)
+5. **3.5 Google Sheets embed** (almost certainly merges into 3.4)
 
 ---
 

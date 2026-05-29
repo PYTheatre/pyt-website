@@ -334,6 +334,35 @@ collections:
               - { name: "how_to_apply_label", label: "Button label", widget: "string", default: "Get in touch" }
               - { name: "how_to_apply_url", label: "Button link", widget: "string", required: false, hint: "External URL or mailto: link. Leave blank to hide the button." }
 
+      # --- Rentals page ---
+      # Intro copy, a list of rental categories (each with a photo),
+      # and the inquiry section text. The category list can grow over
+      # time — staff add, remove, and reorder categories and swap
+      # photos here. The Formspree endpoint that delivers the inquiry
+      # form to PYT's inboxes is also set here.
+      - name: "rentals-page"
+        label: "Rentals Page"
+        file: "src/content/settings/rentals-page.json"
+        description: "The /rentals page — intro copy, rental categories (with photos), and the inquiry form settings. Add or reorder categories anytime; the section hides if the list is empty."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Costume & Prop Rentals" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "For schools & theatres" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          - { name: "categories_heading", label: "Categories — section heading", widget: "string", default: "What we rent" }
+          - { name: "categories_blurb", label: "Categories — section description (optional)", widget: "text", required: false }
+          - name: "categories"
+            label: "Rental categories"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}}"
+            fields:
+              - { name: "name", label: "Category name", widget: "string", hint: "Example: Costumes" }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "A landscape (wide) photo works best — it's cropped to a 4:3 frame. If empty, a 'Photo coming soon' placeholder is shown." }
+          - { name: "inquiry_heading", label: "Inquiry — section heading", widget: "string", default: "Request a rental" }
+          - { name: "inquiry_blurb", label: "Inquiry — section description (optional)", widget: "text", required: false }
+          - { name: "form_endpoint", label: "Inquiry form delivery URL (Formspree)", widget: "string", required: false, hint: "The Formspree endpoint that emails inquiries to PYT. Looks like https://formspree.io/f/xxxxxxx. If blank, the form is replaced by an email link." }
+
       # --- Sponsorship page ---
       # All tier definitions, intro copy, and contact info for /sponsor.
       # Show tiers and season tiers are separate lists so staff can edit
