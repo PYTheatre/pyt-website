@@ -18,6 +18,7 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
 | 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
+| 2.12 | Judy Robe Awards page + About staff/banner + Casting banner resize | 🟡 Built; awaiting upload |
 | 3.1 | MailChimp newsletter signup | ✅ Complete (verified live) |
 | 3.2 | Rentals page (categories + inquiry form) | 🟡 Built; awaiting upload + form test |
 | 3.3 | Shop (Shopify embed) | ⬜ Not started |
@@ -25,6 +26,33 @@ Phase-by-phase history of work completed. Newest at the top.
 | 3.5 | Google Sheets embed | ⬜ Likely folds into 3.4 |
 | 4 | EN/ES bilingual | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
+
+---
+
+## Phase 2.12 — Judy Robe Awards page + About/Casting changes — built 2026-05-29
+
+A batch of client-requested content changes:
+
+**1. Judy Robe & Spirits Awards page (new).** `/judy-robe-spirits-awards`, NOT in the main nav. Linked from both the About page (in the story column) and the Casting page (under the CTA). Has editable intro/description (placeholder copy for now), one optional photo (banner-style, hidden when empty), and a winners list (year + name) that scales cleanly to 30+ entries.
+- New: `src/pages/judy-robe-spirits-awards.astro`, `src/content/settings/judy-robe-spirits-awards.json`
+
+**2. Staff section on About page.** Mirrors the Board of Directors pattern (name, PYT title, optional extra detail, optional headshot with initials fallback). Sits ABOVE the Board section. Auto-hides if empty. (Note: per client, this lives on About, NOT Employment.)
+
+**3. About page banner image.** New optional `banner_image` field — a short wide banner under the title. Hidden when empty.
+
+**4. Casting page photo resized.** Changed from a full-width 16:7 hero that dominated the top to a contained, short banner strip (shown only when a photo exists). Title now leads the page.
+
+**Files affected:**
+- New: `src/pages/judy-robe-spirits-awards.astro`, `src/content/settings/judy-robe-spirits-awards.json`
+- Updated: `src/pages/about.astro`, `src/pages/casting.astro`, `public/admin/config.yml`
+
+**NOT included in upload (Rule 2 — CMS-managed, live is source of truth):** `about-page.json`, `casting-page.json`. The page templates handle the new fields being absent, so they render fine against the live JSON; staff add banner/staff via CMS when ready.
+
+**Sandbox tests:** Clean build (14 pages). Verified: both Judy Robe links present; Judy Robe page renders with 3 placeholder winners and handles a 30-entry list; About staff section and banner render when populated and hide when empty; Board still renders; old full-width Casting hero removed; new contained banner shows only when a photo exists. Screenshots at 390px and 1280px checked.
+
+**Still pending (NOT built — need info from client):**
+- Sponsorship tiers → direct Soapbox popups (#5): needs per-tier Soapbox data-ids / donation URLs. Same Soapbox-info dependency as the Donate button fix.
+- Matching-gifts search embed on Donate (#6): needs the third-party embed code (likely Double the Donation / 360MatchPro).
 
 ---
 
