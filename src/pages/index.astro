@@ -4,11 +4,8 @@
 
   Content comes from two CMS-managed sources:
    - src/content/settings/home-page.json — all the editable copy
-     (hero, discovery cards, impact stats, section headings, etc.)
-   - the shows collection — the "Now Playing" poster automatically
-     features the next upcoming show, so staff never have to update
-     the home page when the season changes; they just keep the Shows
-     list current.
+     (hero, optional hero banner photo, discovery cards, impact
+     stats, section headings, etc.)
    - donation-campaign.json — the campaign progress numbers.
 
   Layout/structure lives here in code (not editable via CMS, by
@@ -16,20 +13,8 @@
   images, and numbers are editable through the CMS.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
-
-// --- Now Playing: pick the next upcoming show automatically ---
-// "Upcoming" = the show whose end_date is the soonest one that
-// hasn't passed yet. If all shows are in the past (off-season),
-// fall back to the most recent one so the poster is never empty.
-const allShows = (await getCollection("shows")).sort(
-  (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
-);
-const now = new Date();
-const upcoming = allShows.find((s) => s.data.end_date.getTime() >= now.getTime());
-const featuredShow = upcoming || allShows[allShows.length - 1] || null;
 
 // --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
@@ -81,23 +66,6 @@ const heroImage = (home as any).hero_image || "";
       </div>
     )}
   </section>
-
-  <!-- ============ NOW PLAYING (own section, just below hero) ============ -->
-  {featuredShow && (
-    <section class="section now-playing-section">
-      <div class="container">
-        <a
-          href={`/shows/${featuredShow.id}`}
-          class="poster"
-          style={featuredShow.data.poster ? `background-image: url(${featuredShow.data.poster}); background-size: cover; background-position: center;` : ""}
-        >
-          <p class="poster-eyebrow">{home.now_playing_label}</p>
-          <p class="poster-title">{featuredShow.data.title}</p>
-          <p class="poster-info">{featuredShow.data.date_display}<br />{featuredShow.data.venue}</p>
-        </a>
-      </div>
-    </section>
-  )}
 
   <!-- ============ DISCOVERY CARDS ============ -->
   <section class="section">
@@ -192,53 +160,6 @@ const heroImage = (home as any).hero_image || "";
     margin-top: var(--space-lg);
     box-shadow: var(--shadow-soft);
     max-height: 520px;
-  }
-
-  /* ---- Now Playing section ---- */
-  .now-playing-section {
-    padding-top: 0;
-  }
-
-  /* Show poster — now a wide landscape feature card */
-  .poster {
-    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
-    color: #fff;
-    text-decoration: none;
-    border-radius: var(--radius);
-    padding: var(--space-lg);
-    min-height: 260px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    box-shadow: var(--shadow-lift);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-  }
-
-  .poster:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift), var(--shadow-soft);
-  }
-
-  .poster-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.85);
-  }
-
-  .poster-title {
-    font-family: var(--font-heading);
-    font-size: 2.6rem;
-    font-weight: 600;
-    line-height: 1.02;
-    margin-block: 0.5rem;
-    color: #fff;
-  }
-
-  .poster-info {
-    font-size: 0.92rem;
-    color: rgba(255, 255, 255, 0.9);
   }
 
   /* ---- Section heading ---- */
@@ -373,13 +294,6 @@ const heroImage = (home as any).hero_image || "";
   }
 
   @media (min-width: 920px) {
-    .poster {
-      min-height: 300px;
-    }
-    .poster-title {
-      font-size: 3.2rem;
-      max-width: 18ch;
-    }
     .card-grid {
       grid-template-columns: repeat(3, 1fr);
     }

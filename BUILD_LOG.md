@@ -42,7 +42,7 @@ A batch of client-requested content changes:
 
 **4. Casting page photo resized.** Changed from a full-width 16:7 hero that dominated the top to a contained, short banner strip (shown only when a photo exists). Title now leads the page.
 
-**5. Home page redesign.** Added an optional `hero_image` field — a wide photo banner under the intro text (hidden when empty). Moved the auto-selecting "Now Playing" show feature out of the hero (where it sat beside the text) into its own section directly below the hero, restyled as a wide landscape feature card. The auto-show logic (next upcoming show) is unchanged. Rest of the page (Join us cards, Impact, Donation teaser) unchanged.
+**5. Home page redesign.** Added an optional `hero_image` field — a wide photo banner under the intro text (hidden when empty). The auto-selecting "Now Playing" show feature was first relocated below the hero, but the wide-stretched treatment looked poor; per client decision (2026-05-29) the Now Playing feature was **removed from the home page entirely**. Home page now flows: hero (intro + optional photo banner) → Join us cards → Impact → Donation teaser. The show-selection logic and poster styles were removed from index.astro. (`now_playing_label` CMS field is now unused but left in config harmlessly.)
 
 **Files affected:**
 - New: `src/pages/judy-robe-spirits-awards.astro`, `src/content/settings/judy-robe-spirits-awards.json`
