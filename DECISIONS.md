@@ -50,7 +50,10 @@ Every decision the client has explicitly made about how the site works. These ar
 
 ## Cast lists and schedules
 
-- **Embedded Google Sheets** for cast lists and rehearsal schedules. Inside cast pages. Phase 3.5 (probably folds into 3.4).
+- **Rehearsal schedule: EMBEDDED Google Sheet** inside the cast page. Must be ROLE-NAMES-ONLY (no child's name anywhere, including notes column), because an embedded sheet is delivered into a page behind only a soft gate.
+- **Cast list (full names → roles): NOT embedded.** It's a roster of identifiable minors, so it stays PRIVATE in Google (shared only with specific cast-family accounts / a cast Google Group) and the cast page only LINKS to it ("View the cast list" button, opens in a new tab). Google enforces real login-based access.
+- **Decision changed 2026-05-29:** Originally both sheets were to be embedded. When the sample rehearsal/cast sheet turned out to contain 100+ children's full legal names mapped to roles, dates, and venues, embedding the cast list behind a soft client-side gate was judged inappropriate (the gate doesn't actually protect content delivered to the browser). Split into embed-schedule / link-private-castlist. The soft gate remains acceptable for the role-only schedule.
+- Phase 3.5 (sheets) is now folded into 3.4.
 
 ## Email and newsletter
 

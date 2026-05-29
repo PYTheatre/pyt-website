@@ -1,0 +1,284 @@
+---
+/*
+  CAST PAGE  ( /cast/<slug> )
+
+  Dynamic page: Astro builds one page per file in
+  src/content/cast-pages/. These pages are NOT in the site nav —
+  staff share the URL directly with the cast (e.g. via newsletter).
+
+  PASSWORD GATE — IMPORTANT, READ THIS:
+  This is a SOFT, client-side gate. The page content is still
+  delivered to the browser; the gate only hides it visually until
+  the right password is typed. Anyone who knows how to view page
+  source can bypass it. This is acceptable ONLY for non-sensitive
+  info (role names, general rehearsal times, production notes). Do
+  NOT put children's full names, addresses, medical info, or other
+  sensitive data into content that gets EMBEDDED or typed on this
+  page.
+
+  TWO DIFFERENT TREATMENTS FOR THE TWO SHEETS:
+  - Rehearsal schedule: EMBEDDED. Must be ROLE-NAMES-ONLY (e.g.
+    "Jack, Crutchie, Newsies") and free of any child's name in the
+    notes. It's embedded because it isn't a roster of named minors.
+  - Cast list (full names → roles): NOT embedded. It is a roster of
+    identifiable children, so it must stay PRIVATE in Google (shared
+    with specific cast-family accounts), and this page only LINKS to
+    it. Google then enforces real login-based access — the names are
+    never delivered into this public page's source.
+*/
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const pages = await getCollection("castPages");
+  return pages.map((page) => ({
+    params: { slug: page.id },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const data = page.data;
+
+// Convert a Google Sheets share URL into an embeddable /preview URL.
+// Used ONLY for the rehearsal schedule (role-names-only).
+function toSheetEmbed(url: string | undefined): string {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (trimmed.includes("/pubhtml") || trimmed.includes("/preview")) return trimmed;
+  const m = trimmed.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  if (m) {
+    const gidMatch = trimmed.match(/[#&?]gid=([0-9]+)/);
+    const gid = gidMatch ? `?gid=${gidMatch[1]}` : "";
+    return `https://docs.google.com/spreadsheets/d/${m[1]}/preview${gid}`;
+  }
+  return trimmed;
+}
+
+const rehearsalEmbed = toSheetEmbed(data.rehearsal_sheet_url);
+// Cast list is a LINK, not an embed — used as-is (opens in a new tab).
+const castListLink = (data.cast_list_sheet_url || "").trim();
+
+// Split optional intro/body into paragraphs at blank lines.
+const introParas = (data.intro || "").split("\n\n").filter((p) => p.trim().length > 0);
+const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length > 0);
+---
+
+<BaseLayout
+  title={`${data.show_title} — Cast Page — Peninsula Youth Theatre`}
+  description="Cast information for Peninsula Youth Theatre."
+>
+  {/* ---- PASSWORD GATE (shown first; hidden once unlocked) ---- */}
+  <section class="gate" id="cast-gate">
+    <div class="container gate-inner">
+      <p class="eyebrow">Cast page</p>
+      <h1>{data.show_title}</h1>
+      <p class="gate-lede">This page is for the cast and their families. Please enter the password shared with you.</p>
+
+      <form class="gate-form" id="gate-form" autocomplete="off">
+        <label for="gate-input" class="sr-only">Password</label>
+        <input type="password" id="gate-input" placeholder="Password" />
+        <button type="submit" class="btn btn-primary">View page</button>
+      </form>
+      <p class="gate-error" id="gate-error" hidden>That password didn't match. Please try again.</p>
+    </div>
+  </section>
+
+  {/* ---- PROTECTED CONTENT (hidden until unlocked) ---- */}
+  <div id="cast-content" hidden>
+    <section class="section cast-head">
+      <div class="container">
+        <p class="eyebrow">Cast page</p>
+        <h1>{data.show_title}</h1>
+        {introParas.length > 0 && (
+          <div class="cast-intro">
+            {introParas.map((p) => <p>{p}</p>)}
+          </div>
+        )}
+      </div>
+    </section>
+
+    {castListLink && (
+      <section class="section sheet-section">
+        <div class="container">
+          <h2 class="section-head">Cast list</h2>
+          <p class="sheet-note">The cast list is kept private. You'll need to be signed in to the Google account it was shared with to view it.</p>
+          <a href={castListLink} class="btn btn-primary" target="_blank" rel="noopener">View the cast list →</a>
+        </div>
+      </section>
+    )}
+
+    {rehearsalEmbed && (
+      <section class="section sheet-section">
+        <div class="container">
+          <h2 class="section-head">Rehearsal schedule</h2>
+          <p class="sheet-note">This schedule is updated through the run — check back for the latest.</p>
+          <div class="sheet-frame">
+            <iframe src={rehearsalEmbed} title="Rehearsal schedule" loading="lazy"></iframe>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {bodyParas.length > 0 && (
+      <section class="section cast-body-section">
+        <div class="container cast-body">
+          {bodyParas.map((p) => <p>{p}</p>)}
+        </div>
+      </section>
+    )}
+  </div>
+
+  {/*
+    The password is embedded here for the client-side check. This is
+    intentionally a SOFT gate (see file header). Not real security.
+  */}
+  <script type="application/json" id="cast-pw" set:html={JSON.stringify({ p: data.password })}></script>
+
+  <script is:inline>
+    (function () {
+      const gate = document.getElementById("cast-gate");
+      const content = document.getElementById("cast-content");
+      const form = document.getElementById("gate-form");
+      const input = document.getElementById("gate-input");
+      const errorMsg = document.getElementById("gate-error");
+      const pw = JSON.parse(document.getElementById("cast-pw").textContent).p;
+
+      // Remember unlock for this page within the browser session, so a
+      // refresh doesn't force re-entry.
+      const key = "cast-unlocked:" + location.pathname;
+
+      function unlock() {
+        gate.hidden = true;
+        content.hidden = false;
+      }
+
+      try {
+        if (sessionStorage.getItem(key) === "1") unlock();
+      } catch (e) { /* sessionStorage may be unavailable; ignore */ }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value === pw) {
+          try { sessionStorage.setItem(key, "1"); } catch (e) {}
+          errorMsg.hidden = true;
+          unlock();
+        } else {
+          errorMsg.hidden = false;
+          input.value = "";
+          input.focus();
+        }
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  /* ---- Password gate ---- */
+  .gate {
+    padding-block: var(--space-2xl);
+  }
+
+  .gate-inner {
+    max-width: 460px;
+  }
+
+  .gate-inner h1 {
+    margin-block: 0.5rem var(--space-md);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+  }
+
+  .gate-lede {
+    margin-bottom: var(--space-lg);
+    color: var(--ink-soft);
+  }
+
+  .gate-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .gate-form input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .gate-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .gate-error {
+    margin-top: var(--space-sm);
+    color: var(--accent-deep);
+    font-size: 0.92rem;
+  }
+
+  /* ---- Protected content ---- */
+  .cast-head {
+    padding-bottom: var(--space-md);
+  }
+
+  .cast-head h1 {
+    margin-block: 0.5rem var(--space-md);
+  }
+
+  .cast-intro p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-sm);
+    max-width: 64ch;
+  }
+
+  .sheet-section {
+    padding-block: var(--space-md) var(--space-lg);
+  }
+
+  .section-head {
+    margin-bottom: var(--space-sm);
+  }
+
+  .sheet-note {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  /* Responsive sheet frame */
+  .sheet-frame {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--paper-warm);
+  }
+
+  .sheet-frame iframe {
+    width: 100%;
+    height: 480px;
+    border: 0;
+    display: block;
+  }
+
+  .cast-body p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-sm);
+    max-width: 64ch;
+  }
+
+  @media (min-width: 720px) {
+    .sheet-frame iframe {
+      height: 560px;
+    }
+  }
+</style>

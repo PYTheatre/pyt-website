@@ -125,6 +125,33 @@ collections:
       - { name: "school_bookings_url", label: "School Bookings link", widget: "string", required: false, hint: "Leave blank to hide the School Bookings button." }
 
   # ============================================================
+  # CAST PAGES — one entry per show's cast page.
+  # These live at /cast/<slug> and are NOT in the site nav. Share the
+  # URL directly with the cast (e.g. by newsletter).
+  #
+  # IMPORTANT — the password is a SOFT gate, not real security. The
+  # page content is still sent to the browser and can be viewed by
+  # someone who knows how to look. Only put NON-SENSITIVE info here
+  # (first names, roles, general rehearsal times, notes). Never put
+  # addresses, medical info, or other sensitive data on a cast page.
+  # ============================================================
+  - name: "cast-pages"
+    label: "Cast Pages"
+    label_singular: "Cast Page"
+    description: "Password-protected cast pages, one per show. Not in the site menu — share the link with your cast. The password is a light gate for non-sensitive info only (see the note on each field)."
+    folder: "src/content/cast-pages"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{show_title}}"
+    fields:
+      - { name: "show_title", label: "Show title", widget: "string", hint: "Example: Matilda — Spring 2026" }
+      - { name: "password", label: "Page password", widget: "string", hint: "The password you'll share with the cast. Keep it simple to share, but not obvious. NOTE: this is a light gate, not strong security — never put sensitive personal info on this page." }
+      - { name: "intro", label: "Intro text (optional)", widget: "text", required: false, hint: "Shown at the top, above the sheets. Use blank lines between paragraphs." }
+      - { name: "cast_list_sheet_url", label: "Cast list — LINK to a private Google Sheet (optional)", widget: "string", required: false, hint: "Paste the link to your cast list sheet. This is shown as a 'View the cast list' button — it is NOT embedded. IMPORTANT: keep this sheet PRIVATE in Google (share it only with specific cast-family accounts or a cast Google Group — NOT 'anyone with the link'), because it contains children's full names. Leave blank to hide the button." }
+      - { name: "rehearsal_sheet_url", label: "Rehearsal schedule — EMBEDDED Google Sheet (optional)", widget: "string", required: false, hint: "Paste the share link for the rehearsal schedule. This IS embedded on the page, so it must use ROLE NAMES ONLY (e.g. 'Jack, Crutchie, Newsies') and must NOT contain any child's name (including in the notes column). This is the sheet you'll update through the run. Leave blank to hide it." }
+      - { name: "body", label: "Notes (optional)", widget: "text", required: false, hint: "Any extra notes for the cast — contacts, what to bring, parking, reminders. Shown below the sheets." }
+
+  # ============================================================
   # SITE SETTINGS — single-record collections for site-wide values.
   # The "Donation Campaign" record already exists from Phase 1.
   # Phase 2 adds "Donor Tiers", "Donate Page", "About Page", "Casting Page".

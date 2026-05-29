@@ -20,10 +20,9 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
 | 2.12 | Judy Robe Awards page + About staff/banner + Casting banner + Home redesign | 🟡 Built; awaiting upload |
 | 3.1 | MailChimp newsletter signup | ✅ Complete (verified live) |
-| 3.2 | Rentals page (categories + inquiry form) | 🟡 Built; awaiting upload + form test |
-| 3.3 | Shop (Shopify embed) | ⬜ Not started |
-| 3.4 | Cast Pages (smaller scope than originally planned) | ⬜ Not started |
-| 3.5 | Google Sheets embed | ⬜ Likely folds into 3.4 |
+| 3.2 | Rentals page (categories + inquiry form) | ✅ Complete (verified live) |
+| 3.3 | Shop (Shopify embed) | ⬜ Blocked — no Shopify store yet |
+| 3.4 + 3.5 | Cast Pages (password gate + embedded schedule + linked private cast list) | 🟡 Built; awaiting upload + live test |
 | 4 | EN/ES bilingual | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 
@@ -55,6 +54,28 @@ A batch of client-requested content changes:
 **Still pending (NOT built — need info from client):**
 - Sponsorship tiers → direct Soapbox popups (#5): needs per-tier Soapbox data-ids / donation URLs. Same Soapbox-info dependency as the Donate button fix.
 - Matching-gifts search embed on Donate (#6): needs the third-party embed code (likely Double the Donation / 360MatchPro).
+
+---
+
+## Phase 3.4 + 3.5 — Cast Pages — built 2026-05-29
+
+**Goal:** Password-protected cast pages, one per show, not in the nav, linked from newsletters. Each holds an embedded rehearsal schedule and a link to a private cast list, plus typed notes.
+
+**Built:**
+- New: `src/pages/cast/[slug].astro` — dynamic page template with a soft client-side password gate.
+- New: `castPages` content collection (`src/content.config.ts`) and CMS "Cast Pages" folder collection.
+- New: sample entry `src/content/cast-pages/sample-delete-me.md` (password "demo", clearly marked for deletion).
+
+**How it works:**
+- Each cast page = one CMS entry (one reusable template, many pages). Fields: show title, password (per page), optional intro, cast-list LINK, rehearsal-schedule EMBED, optional notes.
+- URLs are `/cast/<slug>` — staff set an unguessable slug. Not in nav.
+- Soft client-side password gate: content hidden until correct password typed; unlock remembered for the browser session. **Explicitly NOT real security** — acceptable only for non-sensitive (role-only) content.
+
+**Key privacy decision (see DECISIONS.md):** The rehearsal schedule is embedded but must be role-names-only. The named cast list is NOT embedded — it's a private Google Sheet the page only links to, so Google enforces login-based access. This split was made after the sample sheet was found to contain 100+ children's full names + locations + times, which a soft gate cannot protect.
+
+**Sandbox tests:** Clean build (15 pages incl. /cast/sample-delete-me). Gate verified interactively: content hidden on load, wrong password rejected with error, correct password reveals content and hides gate, unlock persists for the session. Sheet-URL conversion verified across edit/gid/pubhtml/preview/empty formats. Cast list renders as a link button (not embedded); schedule renders as a single iframe. Screenshots of locked + unlocked states at 1280px checked.
+
+**Cannot verify in sandbox:** Whether the live Google Sheet embed actually displays its contents — that depends on the sheet's Google sharing setting and must be tested live. The sandbox is network-restricted so the embed area renders blank here.
 
 ---
 

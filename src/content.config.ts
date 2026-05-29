@@ -81,5 +81,30 @@ const storiesOnStage = defineCollection({
   }),
 });
 
+// --- CAST PAGES ---
+// One entry per show's cast page. These live at unguessable URLs
+// (/cast/<slug>) and are NOT in the site nav — they're linked only
+// from newsletters sent to the cast. A soft client-side password
+// gate keeps casual visitors out. IMPORTANT: this gate is NOT real
+// security — the content is still delivered to the browser. It is
+// only appropriate for non-sensitive info (first names, roles,
+// general rehearsal times, production notes). No addresses, medical
+// info, or other sensitive data should go here.
+//
+// Each page can embed up to two Google Sheets: a cast list (set once)
+// and a rehearsal schedule (updated through the run). Either is
+// optional; a page renders fine with one, both, or neither.
+const castPages = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/cast-pages" }),
+  schema: z.object({
+    show_title: z.string(),
+    password: z.string(),
+    intro: z.string().optional(),
+    cast_list_sheet_url: z.string().optional(),
+    rehearsal_sheet_url: z.string().optional(),
+    body: z.string().optional(),
+  }),
+});
+
 // Expose the collections so Astro can discover them.
-export const collections = { shows, programs, storiesOnStage };
+export const collections = { shows, programs, storiesOnStage, castPages };
