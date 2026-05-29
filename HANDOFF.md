@@ -1,6 +1,6 @@
 # PYT Website — Handoff (read first)
 
-**Last updated:** 2026-05-28
+**Last updated:** 2026-05-29
 
 If you are a new Claude session picking up this project, **read this file all the way through before doing anything else.** Then read the other markdown files (in the order at the bottom of this file). Only then start work.
 
@@ -22,9 +22,7 @@ The Peninsula Youth Theatre (PYT) website rebuild. PYT is a non-profit youth the
 
 ## Where the project stands right now
 
-**Phases 0 through 2.8 are complete and verified live.** The site is functional: home page, shows list with detail pages, Stories on Stage, Classes & Camps with filters, Donate (with working Soapbox popup), Sponsor (with show-aware buttons), Casting, About. The CMS lets staff edit every word, image, link, and number on every page through forms. The site accepts real donations through the Soapbox popup.
-
-**Phase 2.10 is built but not yet uploaded.** It contains the Employment page (paid roles + volunteer opportunities), Cast Pages removed from the nav, and Board of Directors fields added to the About page. The zip lives at `/mnt/user-data/outputs/employment-upload.zip` from the previous session, but if it has expired or the new session is fresh, the files must be rebuilt from the sandbox state.
+**Phases 0 through 2.10 are complete and verified live.** The site is functional: home page, shows list with detail pages, Stories on Stage, Classes & Camps with filters, Donate (with working Soapbox popup), Sponsor (with show-aware buttons), Casting, About (with Board of Directors fields available), Employment (paid roles + volunteer opportunities). The CMS lets staff edit every word, image, link, and number on every page through forms. The site accepts real donations through the Soapbox popup.
 
 **Phase 3 is queued but barely begun.** Sequence is locked: MailChimp → Rentals → Shop → Cast Pages → Google Sheets. The MailChimp work is blocked on the client finding the embed code from MailChimp's dashboard. See `IN_FLIGHT.md` for the current state of that thread.
 

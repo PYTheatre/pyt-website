@@ -17,7 +17,7 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.6 | Stories on Stage section | ✅ Complete |
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
-| 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | 🟡 Built; awaiting client upload (see IN_FLIGHT.md) |
+| 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
 | 3.1 | MailChimp newsletter signup | 🟡 Blocked on embed code (see IN_FLIGHT.md) |
 | 3.2 | Rentals catalogue | ⬜ Not started |
 | 3.3 | Shop (Shopify embed) | ⬜ Not started |
@@ -28,7 +28,7 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
-## Phase 2.10 — Employment page (also carries Phase 2.9) — built 2026-05-28
+## Phase 2.10 — Employment page (also carried Phase 2.9) ✅ Complete (2026-05-28)
 
 **Goal:** Add an Employment page with paid roles and volunteer opportunities. Also carries Phase 2.9 changes: remove Cast Pages from nav, add Board of Directors to About.
 
@@ -44,7 +44,7 @@ Phase-by-phase history of work completed. Newest at the top.
 
 **Sandbox tests:** Clean build (12 pages). Employment page renders at 390px and 1280px. Auto-hide verified. Cast Pages confirmed absent from nav. Board section rendering verified with seeded examples (reverted before packaging).
 
-**See `IN_FLIGHT.md` for upload status and the zip location.**
+**Verified live by client 2026-05-29:** Employment page renders correctly, Cast Pages absent from nav, Board fields visible in CMS.
 
 ---
 

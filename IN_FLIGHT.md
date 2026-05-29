@@ -1,6 +1,6 @@
 # PYT Website — In-Flight Items
 
-**Last updated:** 2026-05-28
+**Last updated:** 2026-05-29
 
 What is mid-stream right now, what's blocked on the client, what's deferred. Read this so you know what *not* to start fresh.
 
@@ -8,34 +8,7 @@ When an item here is resolved (either resolved, abandoned, or upgraded into a ph
 
 ---
 
-## 1. Phase 2.10 — Employment page (+ 2.9 carry-over) — awaiting upload
-
-**State:** Built, sandbox-tested, packaged into `/mnt/user-data/outputs/employment-upload.zip`. As of this handoff the client has not yet uploaded it.
-
-**What it contains:**
-- New `/employment` page with two sections: "Roles with PYT" (paid jobs) and "Volunteer with PYT" (volunteer opportunities). Each section auto-hides if its list is empty.
-- "Cast Pages" removed from header nav and footer columns.
-- "Board of Directors" fields added to the About page form in the CMS (renders a section on the About page when populated; hides when empty).
-
-**Files in the zip:**
-- `BUILD_LOG.md` (replaced)
-- `public/admin/config.yml` (replaced — adds Employment Page form + Board fields to About)
-- `src/components/Footer.astro` (replaced — removes Cast Pages from Community column)
-- `src/components/Header.astro` (replaced — removes Cast Pages, adds Employment)
-- `src/content/settings/employment-page.json` (new — seeded with 2 example roles + 2 volunteer opportunities)
-- `src/pages/about.astro` (replaced — renders Board section)
-- `src/pages/employment.astro` (new)
-
-**If the zip has expired or is missing,** rebuild it from the sandbox at `/home/claude/pyt-website`. The sandbox state contains all the necessary files in their final state. Just copy them with directory structure preserved into `/mnt/user-data/outputs/employment-upload/`, then zip and `present_files`.
-
-**Upload caveats to communicate to the client:**
-- GitHub will warn that 5 files are being replaced. All expected.
-- No deletions required (this batch is a clean superset of the never-uploaded "nav-and-board-upload.zip" — uploading this one supersedes that one).
-- Wait ~2 minutes for Cloudflare to rebuild.
-
----
-
-## 2. Donate button on /donate requires multiple clicks — diagnosis in progress
+## 1. Donate button on /donate requires multiple clicks — diagnosis in progress
 
 **State:** Client reported the issue. Claude was about to ask for a diagnostic console screenshot. No fix attempted yet.
 
@@ -59,7 +32,7 @@ The Soapbox subdomain is confirmed: `pyt.secure.nonprofitsoapbox.com`. The trigg
 
 ---
 
-## 3. MailChimp newsletter signup — Phase 3.1, blocked on embed code
+## 2. MailChimp newsletter signup — Phase 3.1, blocked on embed code
 
 **State:** Phase 3.1 is the next phase. The client's staff are trying to find the MailChimp embed code, but hit a conceptual block — they have a "hosted" form but didn't realize "embedded" is a different option in the same dashboard.
 
@@ -84,7 +57,7 @@ The Soapbox subdomain is confirmed: `pyt.secure.nonprofitsoapbox.com`. The trigg
 
 ---
 
-## 4. Phase 3.4 — Cast Pages redefined (smaller, simpler than original plan)
+## 3. Phase 3.4 — Cast Pages redefined (smaller, simpler than original plan)
 
 **State:** Original plan was password-gated cast pages with shared password per show. **Redefined on 2026-05-28** to: pages exist at unguessable URLs, linked only from newsletters, not navigable from the site. No nav link (Cast Pages removed from nav in Phase 2.9/2.10). Still need to be built — just smaller in scope than originally planned.
 
@@ -99,7 +72,7 @@ The Soapbox subdomain is confirmed: `pyt.secure.nonprofitsoapbox.com`. The trigg
 
 ---
 
-## 5. Deferred / awaiting client input (not blocking)
+## 4. Deferred / awaiting client input (not blocking)
 
 These don't block any current work, but a future Claude session should know they exist.
 
