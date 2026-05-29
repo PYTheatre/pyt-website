@@ -56,24 +56,22 @@ flushList();
   title={`${casting.title} — Peninsula Youth Theatre`}
   description="How Peninsula Youth Theatre approaches casting: ensemble-focused, equitable, and built around the experience of every young performer."
 >
-  <!-- Hero image (full-width) -->
-  <section class="casting-hero" aria-label="Casting hero image">
-    {casting.hero_image ? (
-      <img src={casting.hero_image} alt="" class="casting-hero-img" />
-    ) : (
-      <div class="casting-hero-placeholder">
-        <span>Image coming soon</span>
-      </div>
-    )}
-  </section>
-
-  <!-- Title block sits BELOW the hero image -->
+  <!-- Title block at top -->
   <section class="casting-title">
     <div class="container">
       {casting.eyebrow && <p class="eyebrow">{casting.eyebrow}</p>}
       <h1>{casting.title}</h1>
     </div>
   </section>
+
+  <!-- Banner image (contained width, short strip) -->
+  {casting.hero_image ? (
+    <section class="casting-banner" aria-label="Casting banner image">
+      <div class="container">
+        <img src={casting.hero_image} alt="" class="casting-banner-img" loading="lazy" />
+      </div>
+    </section>
+  ) : null}
 
   <!-- Body copy -->
   <section class="section casting-body">
@@ -108,54 +106,49 @@ flushList();
         <a href={casting.cta_url} class="btn btn-primary">
           {casting.cta_label} →
         </a>
+        <p class="casting-awards-link">
+          Each show, we celebrate our performers with the
+          <a href="/judy-robe-spirits-awards">Judy Robe &amp; Spirits Awards</a>.
+        </p>
       </div>
     </section>
   )}
 </BaseLayout>
 
 <style>
-  /* ---- Hero image ---- */
-  .casting-hero {
-    width: 100%;
-    aspect-ratio: 16 / 7;
-    overflow: hidden;
-    background: var(--paper-warm);
+  /* ---- Banner image (contained, short strip) ---- */
+  .casting-banner {
+    padding-top: var(--space-md);
   }
 
-  .casting-hero-img {
+  .casting-banner-img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 21 / 6;
     object-fit: cover;
+    border-radius: var(--radius);
     display: block;
-  }
-
-  .casting-hero-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(150deg, var(--accent-soft) 0%, var(--paper-warm) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .casting-hero-placeholder span {
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent-deep);
-    padding: 0.5rem 1.2rem;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-soft);
   }
 
   /* ---- Title block ---- */
   .casting-title {
-    padding-block: var(--space-lg) 0;
+    padding-block: var(--space-xl) 0;
   }
 
   .casting-title h1 {
     margin-top: 0.5rem;
+  }
+
+  /* ---- Awards link under the CTA ---- */
+  .casting-awards-link {
+    margin-top: var(--space-md);
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+  }
+
+  .casting-awards-link a {
+    color: var(--accent-deep);
+    text-decoration: underline;
   }
 
   /* ---- Body prose ---- */
@@ -229,8 +222,8 @@ flushList();
   }
 
   @media (min-width: 720px) {
-    .casting-title {
-      padding-block: var(--space-xl) 0;
+    .casting-banner-img {
+      aspect-ratio: 24 / 5;
     }
   }
 </style>

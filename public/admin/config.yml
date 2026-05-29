@@ -255,11 +255,24 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "About Peninsula Youth Theatre" }
           - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our story" }
+          - { name: "banner_image", label: "Banner image (wide strip near top)", widget: "image", required: false, hint: "Optional. A wide landscape image works best — it's shown as a short banner under the title. Leave empty to hide." }
           - { name: "story", label: "Story (multiple paragraphs)", widget: "text", hint: "The org's story. Use blank lines to separate paragraphs." }
           - { name: "address", label: "Street address", widget: "string", default: "2500 Old Middlefield Way, Mountain View, CA 94043" }
           - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
           - { name: "email", label: "Email", widget: "string", default: "info@pytnet.org" }
           - { name: "ein", label: "EIN (tax ID)", widget: "string", default: "77-0335126" }
+          - { name: "staff_section_heading", label: "Staff section heading", widget: "string", required: false, default: "Our Staff" }
+          - { name: "staff_section_blurb", label: "Staff section description (optional)", widget: "text", required: false, hint: "Optional short text under the Staff heading. Leave blank to omit." }
+          - name: "staff_members"
+            label: "Staff members"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.pyt_title}}"
+            fields:
+              - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
+              - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Artistic Director" }
+              - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line. Example: Joined PYT in 2015" }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
           - { name: "board_section_heading", label: "Board section heading", widget: "string", required: false, default: "Board of Directors" }
           - { name: "board_section_blurb", label: "Board section description (optional)", widget: "text", required: false, hint: "Optional short text under the section heading. Leave blank to omit." }
           - name: "board_members"
@@ -286,6 +299,30 @@ collections:
           - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
           - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
           - { name: "cta_url", label: "Call-to-action button URL", widget: "string", default: "/shows" }
+
+      # --- Judy Robe & Spirits Awards page ---
+      # A standalone page (not in the nav) linked from About and Casting.
+      # Editable intro copy, one optional photo, and a winners list that
+      # can grow to 30+ entries.
+      - name: "judy-robe-spirits-awards"
+        label: "Judy Robe & Spirits Awards Page"
+        file: "src/content/settings/judy-robe-spirits-awards.json"
+        description: "The Judy Robe & Spirits Awards page (/judy-robe-spirits-awards). Not in the main menu — linked from the About and Casting pages."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Judy Robe & Spirits Awards" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "A PYT tradition" }
+          - { name: "intro", label: "Description paragraph", widget: "text", hint: "A short description of the awards." }
+          - { name: "photo", label: "Photo (optional)", widget: "image", required: false, hint: "Optional. Shown as a banner under the description. Leave empty to hide." }
+          - { name: "winners_heading", label: "Winners — section heading", widget: "string", default: "Past winners" }
+          - { name: "winners_blurb", label: "Winners — section description (optional)", widget: "text", required: false }
+          - name: "winners"
+            label: "Winners"
+            widget: "list"
+            required: false
+            summary: "{{fields.year}} — {{fields.name}}"
+            fields:
+              - { name: "year", label: "Year", widget: "string", hint: "Example: 2025" }
+              - { name: "name", label: "Winner name(s)", widget: "string", hint: "Example: Jane Smith, or a list of names" }
 
       # --- Employment page ---
       # Two parallel lists: paid roles and volunteer opportunities.

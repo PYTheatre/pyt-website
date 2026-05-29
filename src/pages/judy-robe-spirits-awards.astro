@@ -1,0 +1,109 @@
+---
+/*
+  JUDY ROBE & SPIRITS AWARDS  ( /judy-robe-spirits-awards )
+
+  Not in the main nav. Linked from the About page and the Casting page.
+
+  Content from src/content/settings/judy-robe-spirits-awards.json:
+    - intro description (editable placeholder copy for now)
+    - one optional photo
+    - a list of past winners (year + name), expandable to 30+ entries
+
+  The photo and the winners list both degrade gracefully when empty.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import page from "../content/settings/judy-robe-spirits-awards.json";
+
+const winners = (page as any).winners || [];
+const photo = (page as any).photo || "";
+---
+
+<BaseLayout
+  title={`${page.title} — Peninsula Youth Theatre`}
+  description="The Judy Robe & Spirits Awards celebrate outstanding performers at Peninsula Youth Theatre each season."
+>
+  <PageHero eyebrow={page.eyebrow} title={page.title} lede={page.intro} />
+
+  {photo && (
+    <section class="jr-photo-section" aria-label="Awards photo">
+      <div class="container">
+        <img src={photo} alt="" class="jr-photo" loading="lazy" />
+      </div>
+    </section>
+  )}
+
+  {winners.length > 0 && (
+    <section class="section jr-winners-section">
+      <div class="container">
+        <h2 class="section-head">{(page as any).winners_heading || "Past winners"}</h2>
+        {(page as any).winners_blurb && (
+          <p class="jr-blurb">{(page as any).winners_blurb}</p>
+        )}
+
+        <ul class="jr-winners-list">
+          {winners.map((w: any) => (
+            <li class="jr-winner-row">
+              <span class="jr-year">{w.year}</span>
+              <span class="jr-name">{w.name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  /* ---- Photo (contained banner) ---- */
+  .jr-photo-section {
+    padding-top: var(--space-md);
+  }
+
+  .jr-photo {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+    box-shadow: var(--shadow-soft);
+    max-height: 460px;
+  }
+
+  /* ---- Winners list ---- */
+  .jr-blurb {
+    max-width: 60ch;
+    margin-bottom: var(--space-lg);
+    font-size: 1rem;
+  }
+
+  .jr-winners-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 640px;
+    border-top: 1px solid var(--line);
+  }
+
+  .jr-winner-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .jr-year {
+    flex-shrink: 0;
+    width: 4rem;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .jr-name {
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+</style>

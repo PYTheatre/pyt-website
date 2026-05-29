@@ -36,7 +36,27 @@ The `data-sbx` attribute makes the already-loaded Soapbox script (loaded site-wi
 
 ---
 
-## 3. Phase 3.4 — Cast Pages redefined (smaller, simpler than original plan)
+## 3. Sponsorship tiers → direct Soapbox popups (requested, NOT built)
+
+**State:** Client asked (2026-05-29) to change every sponsorship tier's "Inquire" button so it opens a Soapbox donation popup pre-set to that tier's amount, instead of sending a mailto inquiry.
+
+**Blocked on:** the same Soapbox info as item #1. Each tier needs either its own Soapbox `data-id` (a popup form configured for that amount) OR a tier-specific Soapbox donation URL. The CMS already has a per-tier `donation_url` field built for exactly this (see DECISIONS.md → Sponsorship). So once the client supplies per-tier Soapbox URLs/ids, this may be mostly a content edit plus a small template change to use the `data-sbx` trigger pattern.
+
+**Do NOT** fabricate tier ids/amounts — wrong values would route sponsors to the wrong donation amount.
+
+---
+
+## 4. Matching-gifts search embed on Donate page (requested, NOT built)
+
+**State:** Client asked (2026-05-29) to embed a company-matching-gift search tool on the Donate page, where the page already mentions employer matching.
+
+**Blocked on:** the embed code from the matching-gifts service. This is almost certainly a third-party widget (commonly Double the Donation / 360MatchPro, or similar). The embed snippet (a script tag + a target div) cannot be fabricated — need the real code from PYT's account with that service. Ask the client which matching service PYT uses and to retrieve the embed code from it.
+
+**Where it goes:** the Donate page already has a "Double your gift / employer matching" callout (`matching_note` in donate-page.json). The widget would slot in there.
+
+---
+
+## 5. Phase 3.4 — Cast Pages redefined (smaller, simpler than original plan)
 
 **State:** Original plan was password-gated cast pages with shared password per show. **Redefined on 2026-05-28** to: pages exist at unguessable URLs, linked only from newsletters, not navigable from the site. No nav link (Cast Pages removed from nav in Phase 2.9/2.10). Still need to be built — just smaller in scope than originally planned.
 
@@ -51,7 +71,7 @@ The `data-sbx` attribute makes the already-loaded Soapbox script (loaded site-wi
 
 ---
 
-## 4. Deferred / awaiting client input (not blocking)
+## 6. Deferred / awaiting client input (not blocking)
 
 ### Cupidus font swap
 **Status:** Client wants the body font changed to JAF Cupidus. **Holding for license acquisition.** When the client has the font files (or an Adobe Fonts CSS link), wiring it in is approximately a 15-minute job: update `src/styles/tokens.css` to change `--font-body`, add font-loading to `BaseLayout.astro`.

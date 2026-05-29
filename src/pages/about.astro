@@ -17,6 +17,15 @@ const boardMembers = (about as any).board_members || [];
 const boardHeading = (about as any).board_section_heading || "Board of Directors";
 const boardBlurb = (about as any).board_section_blurb || "";
 
+// Staff members (optional). Same shape and behavior as board members.
+// Section sits ABOVE the Board section and hides if empty.
+const staffMembers = (about as any).staff_members || [];
+const staffHeading = (about as any).staff_section_heading || "Our Staff";
+const staffBlurb = (about as any).staff_section_blurb || "";
+
+// Optional banner image at the top of the page.
+const bannerImage = (about as any).banner_image || "";
+
 // Build initials for the placeholder avatar (when a member has no photo yet).
 function getInitials(name: string): string {
   return name
@@ -33,10 +42,22 @@ function getInitials(name: string): string {
 <BaseLayout title={`${about.title} — Peninsula Youth Theatre`}>
   <PageHero eyebrow={about.eyebrow} title={about.title} />
 
+  {bannerImage && (
+    <section class="about-banner" aria-label="About banner image">
+      <div class="container">
+        <img src={bannerImage} alt="" class="about-banner-img" loading="lazy" />
+      </div>
+    </section>
+  )}
+
   <section class="section about-section">
     <div class="container about-grid">
       <div class="about-story">
         {paragraphs.map((p) => <p>{p}</p>)}
+        <p class="about-awards-link">
+          Learn about the <a href="/judy-robe-spirits-awards">Judy Robe &amp; Spirits Awards</a>,
+          our tradition of celebrating outstanding performers each season.
+        </p>
       </div>
 
       <aside class="contact-card" id="contact">
@@ -65,6 +86,36 @@ function getInitials(name: string): string {
       </aside>
     </div>
   </section>
+
+  {staffMembers.length > 0 && (
+    <section class="section staff-section">
+      <div class="container">
+        <p class="eyebrow">Our team</p>
+        <h2 class="section-head">{staffHeading}</h2>
+        {staffBlurb && <p class="board-blurb">{staffBlurb}</p>}
+
+        <ul class="board-grid">
+          {staffMembers.map((m: any) => (
+            <li class="board-card">
+              <div
+                class="board-photo"
+                style={m.photo ? `background-image: url(${m.photo}); background-size: cover; background-position: center;` : ""}
+              >
+                {!m.photo && (
+                  <span class="board-initials">{getInitials(m.name)}</span>
+                )}
+              </div>
+              <p class="board-pyt-title">{m.pyt_title}</p>
+              <p class="board-name">{m.name}</p>
+              {m.outside_title && (
+                <p class="board-outside-title">{m.outside_title}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
 
   {boardMembers.length > 0 && (
     <section class="section board-section">
@@ -102,6 +153,36 @@ function getInitials(name: string): string {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+  }
+
+  /* ---- Banner image (contained, short strip) ---- */
+  .about-banner {
+    padding-top: var(--space-md);
+  }
+
+  .about-banner-img {
+    width: 100%;
+    aspect-ratio: 21 / 6;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .about-awards-link {
+    margin-top: var(--space-sm);
+    font-size: 1.02rem;
+  }
+
+  .about-awards-link a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
+  /* ---- Staff section: plain paper so it reads distinct from the
+          warm-background Board section directly beneath it ---- */
+  .staff-section {
+    padding-bottom: var(--space-lg);
   }
 
   .about-story p {
@@ -240,6 +321,12 @@ function getInitials(name: string): string {
   @media (min-width: 1024px) {
     .board-grid {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 720px) {
+    .about-banner-img {
+      aspect-ratio: 24 / 5;
     }
   }
 
