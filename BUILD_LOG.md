@@ -18,13 +18,33 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
 | 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
-| 3.1 | MailChimp newsletter signup | 🟡 Blocked on embed code (see IN_FLIGHT.md) |
+| 3.1 | MailChimp newsletter signup | ✅ Complete |
 | 3.2 | Rentals catalogue | ⬜ Not started |
 | 3.3 | Shop (Shopify embed) | ⬜ Not started |
 | 3.4 | Cast Pages (smaller scope than originally planned) | ⬜ Not started |
 | 3.5 | Google Sheets embed | ⬜ Likely folds into 3.4 |
 | 4 | EN/ES bilingual | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
+
+---
+
+## Phase 3.1 — MailChimp newsletter signup — built 2026-05-29
+
+**Goal:** Add a `/subscribe` page with PYT's MailChimp form embedded natively (styled with site tokens, not MailChimp's purple branding). Add a "Newsletter signup" pointer link in the footer's Community column.
+
+**Built:**
+- New: `src/pages/subscribe.astro` — dedicated signup page with Email (required), First Name, Last Name, and all 7 interest checkboxes. Phone number intentionally omitted (client decision). MailChimp `mc-validate.js` and slim jQuery loaded only on this page.
+- Updated: `src/components/Footer.astro` — "Newsletter signup" link added to Community column, pointing to `/subscribe`.
+
+**Key decisions:**
+- Phone field omitted per client decision.
+- All 7 interest checkboxes included (the 7th, "Bringing PYT to Your School," was new in the embed code; client approved keeping all 7 as-is).
+- Form action URL, field names, interest group IDs, and honeypot input preserved verbatim — these cannot be changed without breaking MailChimp list sync.
+- jQuery loaded only on `/subscribe` (not site-wide); required by MailChimp's mc-validate.js.
+
+**Sandbox tests:** Clean build (12 pages). `/subscribe` confirmed in build output. All form fields, 7 checkboxes, honeypot, and correct form action URL verified in built HTML. Footer "Newsletter signup" link confirmed present on all pages.
+
+**Cannot verify in sandbox:** Actual MailChimp submission receipt — requires live site and real email. Recommend a test submission after deployment.
 
 ---
 

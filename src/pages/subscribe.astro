@@ -1,0 +1,355 @@
+---
+/*
+  NEWSLETTER SIGNUP PAGE  ( /subscribe )
+
+  Embeds PYT's MailChimp form natively — styled with site tokens,
+  not MailChimp's default purple branding.
+
+  Form fields (from the MailChimp embed code):
+  - Email (required)
+  - First Name
+  - Last Name
+  - 7 interest-group checkboxes (group ID 222749)
+
+  Phone number was intentionally omitted per client decision.
+
+  MailChimp's validation and success/error messaging is handled
+  by their mc-validate.js script (loaded at the bottom of this
+  page via is:inline script, scoped to this page only).
+
+  jQuery is loaded slimly here because mc-validate.js depends on it.
+  It is ONLY loaded on this page — not on every page — to keep
+  the rest of the site jQuery-free.
+
+  IMPORTANT: Do not touch the form `action` URL, field `name`
+  attributes, or the hidden honeypot input — these are tied to
+  PYT's real MailChimp audience and will break signup if changed.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+---
+
+<BaseLayout
+  title="Newsletter Signup — Peninsula Youth Theatre"
+  description="Sign up for PYT news: auditions, shows, camps, classes, and more."
+>
+  <PageHero
+    eyebrow="Stay in the loop"
+    title="Newsletter signup"
+    lede="Get PYT news delivered to your inbox — auditions, upcoming shows, class announcements, and more. Choose only the topics you care about."
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="form-card">
+
+        <form
+          action="https://pytnet.us18.list-manage.com/subscribe/post?u=a27714c10f41c3197b314b73e&amp;id=af5873e6cb&amp;f_id=001eade6f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          class="validate"
+          target="_blank"
+          novalidate
+        >
+          <div id="mc_embed_signup_scroll">
+
+            {/* ---- Contact fields ---- */}
+            <div class="field-group required">
+              <label for="mce-EMAIL">Email address <span class="required-mark" aria-label="required">*</span></label>
+              <input
+                type="email"
+                name="EMAIL"
+                class="required email"
+                id="mce-EMAIL"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="field-row">
+              <div class="field-group">
+                <label for="mce-FNAME">First name</label>
+                <input
+                  type="text"
+                  name="FNAME"
+                  id="mce-FNAME"
+                  autocomplete="given-name"
+                />
+              </div>
+              <div class="field-group">
+                <label for="mce-LNAME">Last name</label>
+                <input
+                  type="text"
+                  name="LNAME"
+                  id="mce-LNAME"
+                  autocomplete="family-name"
+                />
+              </div>
+            </div>
+
+            {/* ---- Interest checkboxes ---- */}
+            <fieldset class="interests-group">
+              <legend>What do you want to hear about?</legend>
+              <p class="interests-hint">Check everything that applies. We'll only send what's relevant to you.</p>
+
+              <ul class="interests-list">
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][1]" value="" />
+                    <span>Auditions</span>
+                  </label>
+                </li>
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][2]" value="" />
+                    <span>Camps and Classes at PYT</span>
+                  </label>
+                </li>
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][4]" value="" />
+                    <span>Upcoming Public Performances</span>
+                  </label>
+                </li>
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][8]" value="" />
+                    <span>Field Trip Opportunities</span>
+                  </label>
+                </li>
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][16]" value="" />
+                    <span>Alumni News</span>
+                  </label>
+                </li>
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][32]" value="" />
+                    <span>Giving to PYT</span>
+                  </label>
+                </li>
+                <li>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="group[222749][64]" value="" />
+                    <span>Bringing PYT to Your School</span>
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
+
+            {/* ---- MailChimp response containers (shown/hidden by mc-validate.js) ---- */}
+            <div id="mce-responses" class="mce-responses">
+              <div class="response" id="mce-error-response" style="display:none"></div>
+              <div class="response" id="mce-success-response" style="display:none"></div>
+            </div>
+
+            {/* ---- Anti-bot honeypot (do not remove) ---- */}
+            <div aria-hidden="true" style="position:absolute;left:-5000px;">
+              <input type="text" name="b_a27714c10f41c3197b314b73e_af5873e6cb" tabindex="-1" value="" />
+            </div>
+
+            <div class="submit-row">
+              <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary">
+                Subscribe
+              </button>
+              <p class="submit-note">You can unsubscribe at any time. We'll never share your email.</p>
+            </div>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  {/* ---- MailChimp validation scripts (scoped to this page only) ---- */}
+  {/* jQuery is required by mc-validate.js */}
+  <script is:inline src="//ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script is:inline src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+  <script is:inline>
+    (function($) {
+      window.fnames = new Array();
+      window.ftypes = new Array();
+      fnames[0] = 'EMAIL'; ftypes[0] = 'email';
+      fnames[1] = 'FNAME'; ftypes[1] = 'text';
+      fnames[2] = 'LNAME'; ftypes[2] = 'text';
+    }(jQuery));
+    var $mcj = jQuery.noConflict(true);
+  </script>
+
+</BaseLayout>
+
+<style>
+  /* ---- Form card wrapper ---- */
+  .form-card {
+    max-width: 600px;
+    margin-inline: auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* ---- Text inputs ---- */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .required-mark {
+    color: var(--accent);
+    margin-left: 0.15em;
+  }
+
+  input[type="email"],
+  input[type="text"] {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="email"]:focus,
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  /* ---- Interests fieldset ---- */
+  fieldset.interests-group {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--space-md);
+  }
+
+  fieldset.interests-group legend {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+
+  .interests-hint {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .interests-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    transition: background 0.12s ease;
+  }
+
+  .checkbox-label:hover {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--line);
+    border-radius: 4px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ---- Submit row ---- */
+  .submit-row {
+    margin-top: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .submit-note {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  /* ---- MailChimp success/error messages ---- */
+  .mce-responses {
+    margin-bottom: var(--space-sm);
+  }
+
+  .response {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.92rem;
+  }
+
+  #mce-error-response {
+    background: #fff0f3;
+    color: #c43d6f;
+    border: 1px solid #f5c6d3;
+  }
+
+  #mce-success-response {
+    background: #f0faf4;
+    color: #1a7a3f;
+    border: 1px solid #a8d9b8;
+  }
+
+  /* ---- Responsive: stack field-row on narrow phones ---- */
+  @media (max-width: 480px) {
+    .field-row {
+      grid-template-columns: 1fr;
+    }
+
+    .form-card {
+      padding: var(--space-md);
+    }
+  }
+
+  @media (min-width: 600px) {
+    .interests-list {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .submit-row {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+</style>

@@ -22,15 +22,15 @@ The Peninsula Youth Theatre (PYT) website rebuild. PYT is a non-profit youth the
 
 ## Where the project stands right now
 
-**Phases 0 through 2.10 are complete and verified live.** The site is functional: home page, shows list with detail pages, Stories on Stage, Classes & Camps with filters, Donate (with working Soapbox popup), Sponsor (with show-aware buttons), Casting, About (with Board of Directors fields available), Employment (paid roles + volunteer opportunities). The CMS lets staff edit every word, image, link, and number on every page through forms. The site accepts real donations through the Soapbox popup.
+**Phases 0 through 3.1 are complete and verified live** (or built and awaiting upload — see below). The site is functional: home page, shows list with detail pages, Stories on Stage, Classes & Camps with filters, Donate (with working Soapbox popup), Sponsor (with show-aware buttons), Casting, About (with Board of Directors fields), Employment, and now a `/subscribe` newsletter signup page. The CMS lets staff edit every word, image, link, and number on every page through forms. The site accepts real donations through the Soapbox popup.
 
-**Phase 3 is queued but barely begun.** Sequence is locked: MailChimp → Rentals → Shop → Cast Pages → Google Sheets. The MailChimp work is blocked on the client finding the embed code from MailChimp's dashboard. See `IN_FLIGHT.md` for the current state of that thread.
+**Phase 3.1 (MailChimp) is built and ready to upload.** The zip includes `src/pages/subscribe.astro` and an updated `src/components/Footer.astro`. After upload, staff should do a test submission to confirm MailChimp actually receives it.
 
-**Two issues are open as of this handoff:**
+**Phase 3 remaining sequence:** Rentals → Shop → Cast Pages → Google Sheets.
 
-1. **Donate button on /donate requires multiple clicks** to trigger the Soapbox popup. Likely cause: the Soapbox loader script takes time to download from `pyt.secure.nonprofitsoapbox.com`, and the first click(s) fire before its handlers are installed. The previous Claude was about to ask the client for a console screenshot to confirm. See `IN_FLIGHT.md`.
+**One issue still open:**
 
-2. **MailChimp embed code** — the client's staff are confused between "hosted" and "embedded" MailChimp forms and haven't yet found the embedded form in their dashboard. See `IN_FLIGHT.md` for explanation already drafted to send to them.
+1. **Donate button on /donate requires multiple clicks** to trigger the Soapbox popup. See `IN_FLIGHT.md`. Has not been investigated yet — waiting on client to provide a browser console screenshot.
 
 ---
 
@@ -40,7 +40,7 @@ In order:
 
 1. **`HANDOFF.md`** (this file) — what's true today, the broad map.
 2. **`PROJECT_RULES.md`** — non-negotiable operating rules. **These rules are not suggestions.** Every Claude session that has worked on this project has broken at least one of them on their first day. Read carefully and re-check before each significant action.
-3. **`IN_FLIGHT.md`** — what's mid-stream right now. Pending issues, awaiting-client items, the donate-click bug, the MailChimp situation.
+3. **`IN_FLIGHT.md`** — what's mid-stream right now. Pending issues, awaiting-client items, the donate-click bug.
 4. **`DECISIONS.md`** — every locked decision the client has made, with the reasoning. **Do not re-litigate these unless the client explicitly raises one.**
 5. **`BUILD_LOG.md`** — phase-by-phase history. Read for context on how we got here. Phase entries are reverse-chronological (newest at the top).
 
