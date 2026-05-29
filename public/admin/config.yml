@@ -151,6 +151,7 @@ collections:
           - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Example: Outstanding youth theatre." }
           - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
           - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text" }
+          - { name: "hero_image", label: "Hero — banner photo (wide, under the intro)", widget: "image", required: false, hint: "Optional. A wide landscape photo shown as a banner under the intro text. Leave empty to hide it." }
           - { name: "hero_primary_label", label: "Hero — primary button label", widget: "string" }
           - { name: "hero_primary_url", label: "Hero — primary button link", widget: "string" }
           - { name: "hero_secondary_label", label: "Hero — secondary button label", widget: "string" }

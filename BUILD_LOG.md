@@ -18,7 +18,7 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
 | 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
-| 2.12 | Judy Robe Awards page + About staff/banner + Casting banner resize | 🟡 Built; awaiting upload |
+| 2.12 | Judy Robe Awards page + About staff/banner + Casting banner + Home redesign | 🟡 Built; awaiting upload |
 | 3.1 | MailChimp newsletter signup | ✅ Complete (verified live) |
 | 3.2 | Rentals page (categories + inquiry form) | 🟡 Built; awaiting upload + form test |
 | 3.3 | Shop (Shopify embed) | ⬜ Not started |
@@ -42,11 +42,13 @@ A batch of client-requested content changes:
 
 **4. Casting page photo resized.** Changed from a full-width 16:7 hero that dominated the top to a contained, short banner strip (shown only when a photo exists). Title now leads the page.
 
+**5. Home page redesign.** Added an optional `hero_image` field — a wide photo banner under the intro text (hidden when empty). Moved the auto-selecting "Now Playing" show feature out of the hero (where it sat beside the text) into its own section directly below the hero, restyled as a wide landscape feature card. The auto-show logic (next upcoming show) is unchanged. Rest of the page (Join us cards, Impact, Donation teaser) unchanged.
+
 **Files affected:**
 - New: `src/pages/judy-robe-spirits-awards.astro`, `src/content/settings/judy-robe-spirits-awards.json`
-- Updated: `src/pages/about.astro`, `src/pages/casting.astro`, `public/admin/config.yml`
+- Updated: `src/pages/about.astro`, `src/pages/casting.astro`, `src/pages/index.astro`, `public/admin/config.yml`
 
-**NOT included in upload (Rule 2 — CMS-managed, live is source of truth):** `about-page.json`, `casting-page.json`. The page templates handle the new fields being absent, so they render fine against the live JSON; staff add banner/staff via CMS when ready.
+**NOT included in upload (Rule 2 — CMS-managed, live is source of truth):** `about-page.json`, `casting-page.json`, `home-page.json`. The page templates handle the new fields being absent, so they render fine against the live JSON; staff add banner/staff/hero photo via CMS when ready.
 
 **Sandbox tests:** Clean build (14 pages). Verified: both Judy Robe links present; Judy Robe page renders with 3 placeholder winners and handles a 30-entry list; About staff section and banner render when populated and hide when empty; Board still renders; old full-width Casting hero removed; new contained banner shows only when a photo exists. Screenshots at 390px and 1280px checked.
 
