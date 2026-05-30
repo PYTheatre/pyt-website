@@ -5,7 +5,7 @@
   Reads three CMS-managed files:
    - donation-campaign.json (progress numbers — also used on home)
    - donor-tiers.json (the tier cards)
-   - donate-page.json (intro copy + Soapbox embed URL)
+   - donate-page.json (intro copy + hosted Soapbox donation link)
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import campaign from "../content/settings/donation-campaign.json";
@@ -51,41 +51,31 @@ const pct = Math.round((raised / goal) * 100);
     <div class="container">
       <h2 class="section-head">Make a gift</h2>
 
-      {donatePage.soapbox_embed_url ? (
-        <!-- Path B: an inline iframe embed, if PYT ever gets one -->
-        <div class="soapbox-embed">
-          <iframe
-            src={donatePage.soapbox_embed_url}
-            title="Donation form"
-            loading="lazy"
-            allow="payment"
-          ></iframe>
-        </div>
-      ) : (
-        <!--
-          Path A: the donate-now popup trigger.
-          Clicking this link triggers the Soapbox popup loaded
-          by the script in BaseLayout. The `?sbxdonationsmodal=sbx1`
-          parameter is the agreed Soapbox trigger pattern; the link's
-          href is `#` because we never want it to actually navigate
-          anywhere — the Soapbox script intercepts the click.
-        -->
-        <div class="donate-now-block">
-          <p class="donate-now-blurb">
-            Make a one-time gift or set up a recurring donation through our secure
-            donation form. Most gifts take less than two minutes.
-          </p>
-          <a
-            href="?sbxdonationsmodal=sbx1"
-            class="btn btn-primary btn-donate-now"
-          >
-            Donate Now
-          </a>
-          <p class="donate-now-meta">
-            Powered by NonprofitSoapbox. Payments processed securely.
-          </p>
-        </div>
-      )}
+      <!--
+        Donate button links out to PYT's hosted Soapbox donation page.
+        Opens in a new tab. This is the simple, reliable approach
+        (like the MailChimp-hosted newsletter signup) — no on-page
+        popup or embed to load or break. The URL is editable in the
+        CMS (Donate Page → "Soapbox donation page link") and falls
+        back to the standard hosted donate URL if left blank.
+      -->
+      <div class="donate-now-block">
+        <p class="donate-now-blurb">
+          Make a one-time gift or set up a recurring donation through our secure
+          donation page. Most gifts take less than two minutes.
+        </p>
+        <a
+          href={donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate"}
+          class="btn btn-primary btn-donate-now"
+          target="_blank"
+          rel="noopener"
+        >
+          Donate Now
+        </a>
+        <p class="donate-now-meta">
+          Powered by NonprofitSoapbox. Payments processed securely.
+        </p>
+      </div>
 
       {donatePage.matching_note && (
         <aside class="matching-callout">
@@ -198,21 +188,7 @@ const pct = Math.round((raised / goal) * 100);
     margin-block: 0.4rem var(--space-lg);
   }
 
-  .soapbox-embed {
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--paper-warm);
-  }
-
-  .soapbox-embed iframe {
-    width: 100%;
-    min-height: 600px;
-    border: 0;
-    display: block;
-  }
-
-  /* ---- Donate Now block (Soapbox popup trigger) ---- */
+  /* ---- Donate Now block (links to hosted Soapbox page) ---- */
   .donate-now-block {
     padding: var(--space-lg);
     border: 1px solid var(--line);

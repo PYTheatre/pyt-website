@@ -8,21 +8,20 @@ When an item here is resolved (either resolved, abandoned, or upgraded into a ph
 
 ---
 
-## 1. Donate button on /donate requires multiple clicks + slow popup — fix identified, waiting on one value
+## 1. Donate button on /donate — RESOLVED 2026-05-29 (switched to hosted link)
 
-**State:** Diagnosed. Client provided screenshots showing the button causes a full page reload, then the Soapbox popup appears 4–5 seconds later. Root cause confirmed and a fix is identified; waiting on the client to supply one value before building.
+**State:** ✅ Fixed and built. After exploring the popup approach (which needed a `data-id` we couldn't reliably obtain), the client chose the simpler, more robust option: the Donate button now LINKS to PYT's hosted Soapbox donation page rather than opening an on-page popup. This mirrors the MailChimp-hosted newsletter pattern.
 
-**Root cause:** The Donate Now button currently uses `href="?sbxdonationsmodal=sbx1"`, which is a real URL change — so clicking it *reloads the whole page*, and only after reload does the Soapbox script read the URL parameter and open the popup. That's the reload + delay. The earlier "multiple clicks" report was clicks landing before the page had finished loading.
+**What was done:**
+- `/donate` page: the "Donate Now" button now links to `https://pyt.secure.nonprofitsoapbox.com/donate` (opens in a new tab). The old `?sbxdonationsmodal=sbx1` popup trigger and the inline-iframe embed path were both removed.
+- The site-wide Soapbox popup loader `<script>` was removed from `BaseLayout.astro` (no popup anymore = no need to load it on every page; slight perf win).
+- CMS: the old `soapbox_embed_url` field was replaced with `soapbox_donate_url` (the hosted page link). Template defaults to the hosted URL if the field is blank, so it works against the live JSON without shipping donate-page.json.
+- Header "Donate" button and home page button still route to `/donate` (unchanged, per client).
+- Sponsorship tier buttons left untouched (separate flow — see item 3).
 
-**The fix (per Soapbox's own docs):** Soapbox's supported trigger is a `#` anchor with `data-sbx` attributes, which opens the popup *without* a page reload:
-```
-<a href="#donate" data-sbx data-id="N" data-host="pyt.secure.nonprofitsoapbox.com">Donate Now</a>
-```
-The `data-sbx` attribute makes the already-loaded Soapbox script (loaded site-wide in BaseLayout) intercept the click and open the popup instantly — no reload.
+**Original problem (for reference):** The old button used `href="?sbxdonationsmodal=sbx1"`, a real URL change that reloaded the whole page before the popup appeared (the 4–5 sec lag + "multiple clicks" reports).
 
-**Blocked on:** the `data-id` value `N` — PYT's specific donation-form ID in Soapbox Engage. The client is retrieving it. It's found on the Donation form's Integration tab (Sample Link), or as the number at the end of the form's edit URL (e.g. `.../donations/edit/42`). Once the client provides it, this is a ~1-line change to `src/pages/donate.astro` (and likely a quick win across the header/home buttons too, though those intentionally route through /donate first — leave that behavior alone).
-
-**Do NOT** guess the data-id or ship without it — a wrong id would silently open the wrong (or no) form.
+**Live test after upload:** click Donate on /donate → should open the Soapbox donation page in a new tab. No lag, no reload-then-wait.
 
 ---
 

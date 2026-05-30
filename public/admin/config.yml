@@ -274,7 +274,7 @@ collections:
           - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
           - { name: "intro_body", label: "Intro paragraph", widget: "text" }
           - { name: "matching_note", label: "Employer matching note", widget: "text", required: false, hint: "Optional. Shown as a callout near the donate form." }
-          - { name: "soapbox_embed_url", label: "Soapbox donation form URL", widget: "string", required: false, hint: "Paste the Soapbox embed URL here when you have it. Leave blank to show a Coming Soon message." }
+          - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate button opens. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
 
       # --- About page ---
       - name: "about-page"
