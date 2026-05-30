@@ -1,14 +1,16 @@
 {
-  "title": "Costume & Prop Rentals",
+  "inquiry_blurb": "Tell us what your production needs and when you need it. We'll get back to you to talk availability, rates, and pickup. You can also reach us directly at info@pytnet.org.",
   "eyebrow": "For schools & theatres",
+  "inquiry_heading": "Request a rental",
   "intro": "Peninsula Youth Theatre maintains decades of theatrical inventory — over 800 costumes, props, set pieces, and furniture items — available to rent for schools, community theatres, and other nonprofit productions at affordable rates. Browse a few of our collections below, then send us an inquiry and we'll help you find what you need.",
-  "categories_heading": "What we rent",
+  "form_endpoint": "https://formspree.io/f/xnjrrdkb",
   "categories_blurb": "A sample of our collections. Inventory changes often — if you don't see what you're looking for, ask. Rentals are by appointment.",
+  "title": "Costume & Prop Rentals",
   "categories": [
     {
       "name": "Costumes",
       "description": "Period and character costumes across every era and genre — from Shakespearean gowns to mid-century suits, fairy-tale creatures to modern school uniforms. Sizes for children through adults.",
-      "photo": "/uploads/rental-placeholder-costumes.svg"
+      "photo": "/uploads/uglyduckling-pyt-.jpg"
     },
     {
       "name": "Props",
@@ -26,7 +28,5 @@
       "photo": "/uploads/rental-placeholder-furniture.svg"
     }
   ],
-  "inquiry_heading": "Request a rental",
-  "inquiry_blurb": "Tell us what your production needs and when you need it. We'll get back to you to talk availability, rates, and pickup. You can also reach us directly at info@pytnet.org.",
-  "form_endpoint": "https://formspree.io/f/xnjrrdkb"
+  "categories_heading": "What we rent"
 }
