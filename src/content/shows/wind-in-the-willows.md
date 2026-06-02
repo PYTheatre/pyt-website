@@ -9,5 +9,6 @@ runtime_minutes: 20
 ages: All ages
 poster: /uploads/81pgvjnqc7l._ac_uf1000-1000_ql80_.jpg
 synopsis: Animals doing things.
+audition_url: https://www.google.com/
 audition_date: 2026-06-30
 ---
