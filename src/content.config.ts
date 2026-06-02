@@ -35,6 +35,8 @@ const shows = defineCollection({
     poster: z.string().optional(),
     synopsis: z.string(),
     ticketing_url: z.string().optional(),
+    audition_url: z.string().optional(),
+    audition_date: z.coerce.date().optional(),
     cast_page_url: z.string().optional(),
   }),
 });
