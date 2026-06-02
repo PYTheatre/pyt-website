@@ -13,28 +13,28 @@
       "title": "Main Stage Productions",
       "body": "Full-scale productions, performed by youth ages 6–18 at Mountain View's premier venue.",
       "meta": [
-        "3 shows yearly",
-        "All ages welcome"
+        "Main Stage",
+        "Everyone cast, auditions"
       ],
       "url": "/shows"
     },
     {
       "eyebrow": "For young performers, schools, families & readers",
       "title": "Stories on Stage",
-      "body": "Beloved children's books brought to life in short, lively performances designed for young audiences and school groups.",
+      "body": "Beloved children's books brought to life in short, lively performances designed for young audiences and school groups. Actors aged 8-16 are cast in a small company each year.",
       "meta": [
-        "Ages 3–8",
-        "Touring & in-house"
+        "Second Stage",
+        "Select cast, by audition"
       ],
       "url": "/stories-on-stage"
     },
     {
       "eyebrow": "For young performers",
-      "title": "Classes & Summer Camps",
-      "body": "From after-school drama and musical theatre, to summer camps, our programs build skills, confidence, and friendships.",
+      "title": "Classes & Camps",
+      "body": "From after-school drama and musical theatre, to holiday camps, our programs build skills, confidence, and friendships. Ages 4–18.",
       "meta": [
-        "Ages 4–18",
-        "Scholarships available"
+        "Locations around the Bay Area",
+        "Everyone welcome"
       ],
       "url": "/programs"
     },
@@ -50,11 +50,11 @@
     },
     {
       "eyebrow": "For serious performers",
-      "title": "Studio Intensives",
-      "body": "Focused, multi-week deep dives in voice, movement, scene study, and audition technique for committed teen performers.",
+      "title": "Studio Shows",
+      "body": "A new space for older performers to do some of the most focused, meaningful work of their time at PYT. With smaller casts and a close-knit creative process, Studio Shows are designed to build strong bonds between performers while giving them the room to really hone their skills. Less about the spotlight, more about the craft and the community you build along the way.",
       "meta": [
-        "Ages 13–18",
-        "By audition"
+        "In Studio",
+        "Select cast, by audition"
       ],
       "url": "/programs"
     }
