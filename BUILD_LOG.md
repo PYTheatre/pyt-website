@@ -2,7 +2,7 @@
 
 Phase-by-phase history of work completed. Newest at the top.
 
-**For current project state, read `HANDOFF.md` and `IN_FLIGHT.md`. For rules, read `PROJECT_RULES.md`. For locked decisions, read `DECISIONS.md`.**
+**New Claude session: read `START_HERE.md` first.** For current state, read `START_HERE.md` and `IN_FLIGHT.md`. For rules, read `PROJECT_RULES.md`. For locked decisions, read `DECISIONS.md`. This build log is *history* — accurate for how we got here, but not the place to read off current state.
 
 ---
 
@@ -18,11 +18,12 @@ Phase-by-phase history of work completed. Newest at the top.
 | 2.7 | Soapbox donate popup wiring | ✅ Complete |
 | 2.8 | Editable page content (home + page furniture) | ✅ Complete |
 | 2.9 + 2.10 | Employment page + Cast Pages nav removal + Board of Directors | ✅ Complete |
-| 2.12 | Judy Robe Awards page + About staff/banner + Casting banner + Home redesign | 🟡 Built; awaiting upload |
+| 2.12 | Judy Robe Awards page + About staff/banner + Casting banner + Home redesign | 🟡 Built + handed over; confirm live |
+| 2.7→fix | Donate button — switched from laggy popup to hosted Soapbox link | 🟡 Built + handed over (v6); confirm live |
 | 3.1 | MailChimp newsletter signup | ✅ Complete (verified live) |
 | 3.2 | Rentals page (categories + inquiry form) | ✅ Complete (verified live) |
 | 3.3 | Shop (Shopify embed) | ⬜ Blocked — no Shopify store yet |
-| 3.4 + 3.5 | Cast Pages (password gate + embedded schedule + linked private cast list) | 🟡 Built; awaiting upload + live test |
+| 3.4 + 3.5 | Cast Pages (password gate + embedded schedule + linked private cast list) | ✅ Complete (verified live) |
 | 4 | EN/ES bilingual | ⬜ Not started |
 | 5 | Rebrand test, docs, handoff | ⬜ Not started |
 

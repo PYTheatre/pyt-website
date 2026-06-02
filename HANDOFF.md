@@ -1,6 +1,14 @@
 # PYT Website — Handoff (read first)
 
-**Last updated:** 2026-05-29
+> ⚠️ **SUPERSEDED — DO NOT TRUST AS CURRENT (as of 2026-05-29).**
+> This file predates the 2026-05-29 work session and is now inaccurate in several places
+> (it says Rentals is awaiting upload, the donate button is blocked on a data-id, and Cast
+> Pages are not started — all of which are now done or changed). **Read `START_HERE.md`
+> instead** for the current picture. The only part of this file still worth reading is the
+> "Working style the client appreciates" section near the bottom. Everything else: defer to
+> `START_HERE.md`, `DECISIONS.md`, and `IN_FLIGHT.md`.
+
+**Last updated:** 2026-05-29 (original content below is OUTDATED — kept for historical reference only)
 
 If you are a new Claude session picking up this project, **read this file all the way through before doing anything else.** Then read the other markdown files (in the order at the bottom of this file). Only then start work.
 

@@ -1,8 +1,8 @@
 # PYT Website — Locked Decisions
 
-**Last updated:** 2026-05-28
+**Last updated:** 2026-05-29
 
-Every decision the client has explicitly made about how the site works. These are *locked* — do not re-propose alternatives unless the client explicitly raises one. When a new question comes up, check this list first to see whether it's already been settled.
+**New Claude session: read `START_HERE.md` first.** Every decision the client has explicitly made about how the site works. These are *locked* — do not re-propose alternatives unless the client explicitly raises one. When a new question comes up, check this list first to see whether it's already been settled.
 
 ---
 
@@ -22,9 +22,9 @@ Every decision the client has explicitly made about how the site works. These ar
 ## Donations and payments
 
 - **Donations platform:** NonprofitSoapbox (retained from PYT's existing setup because of Salesforce sync). Subdomain: `pyt.secure.nonprofitsoapbox.com`.
-- **Donate trigger pattern:** Any link with `?sbxdonationsmodal=sbx1` opens the Soapbox popup. Loader script sits in `BaseLayout.astro` and runs on every page.
-- **Only the Donate page's button** triggers the popup. The header "Donate" button and the home page "Make a Gift" button link to `/donate` instead. Reason: passing through `/donate` first shows the donor the campaign progress, donor tiers, and matching-gifts info, which leads to better-informed and often larger gifts.
-- **The `soapbox_embed_url` CMS field is kept** even though we're using the popup approach. If PYT ever gets an iframe embed from Soapbox, pasting that URL in the CMS field switches the Donate page to inline-iframe mode automatically.
+- **Donate approach (CHANGED 2026-05-29):** The Donate button now **links to PYT's hosted Soapbox donation page** (`https://pyt.secure.nonprofitsoapbox.com/donate`), opening in a new tab. It is NOT an on-page popup and NOT an inline embed. This replaced the earlier popup approach (`?sbxdonationsmodal=sbx1` + a loader script in `BaseLayout.astro`), which caused a 4–5 second lag and a full page reload, and depended on a Soapbox `data-id` that proved unreliable to obtain. The hosted-link approach mirrors how the MailChimp newsletter signup works and is far more robust. The Soapbox loader `<script>` was removed from `BaseLayout.astro`.
+- **CMS field:** `soapbox_donate_url` on the Donate Page record holds the hosted link (defaults to the standard hosted URL if blank). This replaced the old `soapbox_embed_url` field.
+- **Only the Donate page's button** points to Soapbox. The header "Donate" button and the home page "Make a Gift" button link to `/donate` instead. Reason: passing through `/donate` first shows the donor the campaign progress, donor tiers, and matching-gifts info, which leads to better-informed and often larger gifts.
 
 ## Sponsorship
 
@@ -81,7 +81,9 @@ Every decision the client has explicitly made about how the site works. These ar
 
 ## Home page
 
-- **"Now Playing" poster is automatic.** Pulls the next upcoming show from the Shows collection (the show whose `end_date` hasn't passed; falls back to most recent if all are past). No manual field — staff just keep the Shows list current. The poster is clickable through to the show's detail page.
+- **"Now Playing" feature REMOVED (2026-05-29).** The home page originally had an auto-selecting "Now Playing" poster pulling the next upcoming show from the Shows collection. In the 2026-05-29 redesign it was first relocated to its own section below the hero, but the wide-stretched treatment looked poor, and the client chose to **remove it from the home page entirely.** The show-selection logic and poster styles were removed from `index.astro`. (Shows still have their own pages at `/shows` and `/shows/<slug>`; this only affects the home page.)
+- **Home page now flows:** hero (intro text + optional wide photo banner) → "Join us" discovery cards → Impact stats → Donation teaser.
+- **Optional hero banner photo (added 2026-05-29).** The home page hero has an optional `hero_image` CMS field — a wide photo banner shown under the intro text, hidden when empty.
 - **Hero headline supports an editable italic accent word.** The CMS has a field `hero_heading_italic_word`; if that word appears anywhere in the heading, it renders in italic. Allows the visual rhythm of "Outstanding youth *theatre*." to be preserved while the headline is fully editable.
 
 ## About page

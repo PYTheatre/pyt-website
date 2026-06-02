@@ -1,85 +1,80 @@
 # PYT Website — In-Flight Items
 
-**Last updated:** 2026-05-29 (later session)
+**Last updated:** 2026-05-29 (handoff reconciliation)
 
-What is mid-stream right now, what's blocked on the client, what's deferred. Read this so you know what *not* to start fresh.
+**New Claude session: read `START_HERE.md` first.**
 
-When an item here is resolved (either resolved, abandoned, or upgraded into a phase): remove it from this file and update `BUILD_LOG.md` accordingly.
-
----
-
-## 1. Donate button on /donate — RESOLVED 2026-05-29 (switched to hosted link)
-
-**State:** ✅ Fixed and built. After exploring the popup approach (which needed a `data-id` we couldn't reliably obtain), the client chose the simpler, more robust option: the Donate button now LINKS to PYT's hosted Soapbox donation page rather than opening an on-page popup. This mirrors the MailChimp-hosted newsletter pattern.
-
-**What was done:**
-- `/donate` page: the "Donate Now" button now links to `https://pyt.secure.nonprofitsoapbox.com/donate` (opens in a new tab). The old `?sbxdonationsmodal=sbx1` popup trigger and the inline-iframe embed path were both removed.
-- The site-wide Soapbox popup loader `<script>` was removed from `BaseLayout.astro` (no popup anymore = no need to load it on every page; slight perf win).
-- CMS: the old `soapbox_embed_url` field was replaced with `soapbox_donate_url` (the hosted page link). Template defaults to the hosted URL if the field is blank, so it works against the live JSON without shipping donate-page.json.
-- Header "Donate" button and home page button still route to `/donate` (unchanged, per client).
-- Sponsorship tier buttons left untouched (separate flow — see item 3).
-
-**Original problem (for reference):** The old button used `href="?sbxdonationsmodal=sbx1"`, a real URL change that reloaded the whole page before the popup appeared (the 4–5 sec lag + "multiple clicks" reports).
-
-**Live test after upload:** click Donate on /donate → should open the Soapbox donation page in a new tab. No lag, no reload-then-wait.
+What is mid-stream right now, what's blocked on the client, what's deferred. Read this so you know what *not* to start fresh. When an item here is resolved, remove it and update `BUILD_LOG.md`.
 
 ---
 
-## 2. Phase 3.2 (Rentals) — built, awaiting upload + form test
+## BLOCKED ON CLIENT INPUT (cannot build without external info)
 
-**State:** Built 2026-05-29. In the upload zip. After upload, do one real test submission at `/rentals` to confirm the inquiry reaches **both** `info@pytnet.org` and `lhatten@pytnet.org`.
+### 1. Phase 3.3 — Shop (Shopify)
+**State:** Blocked. No Shopify store exists yet. The client is setting one up using `docs/shopify-setup-guide.md` (a staff-facing guide the previous session wrote).
 
-**If the test fails:** Check the Formspree dashboard first — the form may need its recipients confirmed, and Formspree often requires the very first submission to a new form to be confirmed via an email it sends to the form owner. Don't guess at code changes before checking Formspree's dashboard for the form's status.
+**What you need from the client before you can build the Shop page:**
+- Confirmation the store is live on **Shopify Basic** with Shopify Payments on.
+- At least one **Collection** with a few real products.
+- The **Buy Button embed code** for each Collection (a chunk starting with `<div>` and `<script>`), pasted into chat, each labeled with which Collection it's for.
 
-**Decided:** Formspree free tier is a stopgap because Cloudflare-native email needs the `pytnet.org` domain verified (a Phase 5 task). Revisit switching to Cloudflare-native in Phase 5 if the client still wants full first-party control.
+**Locked decision:** Shopify Basic + Collections, embedded into the site via Shopify's Buy Button sales channel. Don't re-litigate the platform choice.
 
----
+**Do NOT** fabricate Shopify embed code or build an empty shell. Wait for the real code.
 
-## 3. Sponsorship tiers → direct Soapbox popups (requested, NOT built)
+### 2. Sponsorship tiers -> Soapbox giving
+**State:** The client (2026-05-29) wants each sponsorship tier's button to lead to Soapbox giving instead of the current mailto inquiry. Originally framed as "popups," but since the main Donate button moved to **hosted links** (not popups), this will most likely become simple per-tier links to Soapbox.
 
-**State:** Client asked (2026-05-29) to change every sponsorship tier's "Inquire" button so it opens a Soapbox donation popup pre-set to that tier's amount, instead of sending a mailto inquiry.
+**Blocked on:** per-tier Soapbox destination URLs from the client (e.g., a Soapbox donation link for each tier amount). The CMS already has a per-tier `donation_url` field built for exactly this (see `DECISIONS.md` -> Sponsorship: blank = mailto fallback, filled = "Give at this level" button). So once the client supplies the URLs, this may be mostly a content edit plus possibly a tiny template tweak.
 
-**Blocked on:** the same Soapbox info as item #1. Each tier needs either its own Soapbox `data-id` (a popup form configured for that amount) OR a tier-specific Soapbox donation URL. The CMS already has a per-tier `donation_url` field built for exactly this (see DECISIONS.md → Sponsorship). So once the client supplies per-tier Soapbox URLs/ids, this may be mostly a content edit plus a small template change to use the `data-sbx` trigger pattern.
+**Do NOT** fabricate tier URLs/amounts -- wrong values route sponsors to the wrong donation.
 
-**Do NOT** fabricate tier ids/amounts — wrong values would route sponsors to the wrong donation amount.
+### 3. Matching-gifts search embed on Donate page
+**State:** The client (2026-05-29) wants a company-matching-gift search tool embedded on the Donate page, where it already mentions employer matching.
 
----
+**Blocked on:** the embed code from PYT's matching service (commonly Double the Donation / 360MatchPro, or similar -- confirm which one PYT uses). The embed snippet (script + target div) cannot be fabricated.
 
-## 4. Matching-gifts search embed on Donate page (requested, NOT built)
-
-**State:** Client asked (2026-05-29) to embed a company-matching-gift search tool on the Donate page, where the page already mentions employer matching.
-
-**Blocked on:** the embed code from the matching-gifts service. This is almost certainly a third-party widget (commonly Double the Donation / 360MatchPro, or similar). The embed snippet (a script tag + a target div) cannot be fabricated — need the real code from PYT's account with that service. Ask the client which matching service PYT uses and to retrieve the embed code from it.
-
-**Where it goes:** the Donate page already has a "Double your gift / employer matching" callout (`matching_note` in donate-page.json). The widget would slot in there.
-
----
-
-## 5. Phase 3.4 — Cast Pages redefined (smaller, simpler than original plan)
-
-**State:** Original plan was password-gated cast pages with shared password per show. **Redefined on 2026-05-28** to: pages exist at unguessable URLs, linked only from newsletters, not navigable from the site. No nav link (Cast Pages removed from nav in Phase 2.9/2.10). Still need to be built — just smaller in scope than originally planned.
-
-**Cast page security approach (locked):** Option A — soft client-side password gate. The client accepted the limitation that this is *easily bypassed* by anyone who views page source. Threat model: cast info (names, rehearsal times, production notes) is not legally sensitive but isn't meant to be public-facing.
-
-**Phase 3 sequence reminder:**
-1. **3.1 MailChimp** ✅ complete (verified live)
-2. **3.2 Rentals catalogue** 🟡 built; awaiting upload + form test
-3. **3.3 Shop (Shopify embed)** — next
-4. **3.4 Cast Pages** (as redefined above)
-5. **3.5 Google Sheets embed** (almost certainly merges into 3.4)
+**Where it goes:** the Donate page already has a "Double your gift / employer matching" callout (`matching_note` in `donate-page.json`). The widget slots in there.
 
 ---
 
-## 6. Deferred / awaiting client input (not blocking)
+## SHIPPED THIS SESSION -- CONFIRM LIVE WITH CLIENT
+
+These were built and handed over as upload zips at the end of the 2026-05-29 session. Confirm with the client which actually reached the live site (uploads were error-prone). See `START_HERE.md` -> upload-status checklist.
+
+- **Home page redesign** (`PYT-upload-MAY29-v4-homepage.zip`): "Now Playing" removed; hero + optional photo banner. **Confirm live** (ask: is there no show box on the home page?).
+- **Donate button fix** (`PYT-upload-MAY29-v6-donatebutton.zip`): links to hosted Soapbox page, no popup. **Confirm live** (ask: does Donate open Soapbox in a new tab with no lag?).
+- **Cast Pages** (`PYT-upload-MAY29-v5-castpages.zip`): **client already confirmed LIVE.**
+- **Phase 2.12 batch** (Judy Robe Awards page, About staff + banner, Casting banner resize): structural parts confirmed live earlier in the session.
+
+If any aren't live, help the client upload the outstanding zip. (Those zip files lived in the PREVIOUS session's `/mnt/user-data/outputs/`, which you won't have. If a re-upload is needed, rebuild the relevant file from the cloned repo and repackage.)
+
+---
+
+## HOUSEKEEPING THE CLIENT SHOULD DO
+
+- **Delete the sample cast page.** The Cast Pages feature shipped with a sample entry `src/content/cast-pages/sample-delete-me.md` (password "demo"), clearly marked for deletion. The client should delete it via the CMS or GitHub when ready. (Rule 5: chat-and-upload can't delete files.)
+
+---
+
+## DEFERRED / AWAITING CLIENT (not blocking)
 
 ### Cupidus font swap
-**Status:** Client wants the body font changed to JAF Cupidus. **Holding for license acquisition.** When the client has the font files (or an Adobe Fonts CSS link), wiring it in is approximately a 15-minute job: update `src/styles/tokens.css` to change `--font-body`, add font-loading to `BaseLayout.astro`.
+**Status:** Client wants the body font changed to JAF Cupidus. **Holding for license acquisition.** When the client has the font files (or an Adobe Fonts link), it's ~15 min: update `--font-body` in `src/styles/tokens.css`, add font-loading to `BaseLayout.astro`. Slated for Phase 5.
 
 ### Casting page hero image
-**Status:** Page renders a "Image coming soon" placeholder. When the client provides the image, they upload via CMS → Site Settings → Casting Page → Hero image. No code change needed.
+**Status:** Page shows an "Image coming soon" placeholder until the client uploads an image via CMS -> Site Settings -> Casting Page. No code change needed.
 
-### Casting page text — potential revision
-**Status:** Client may want to revise Casting page copy to clarify it's about Mainstage auditioning specifically (now that Stories on Stage has its own auditions section). Flag only — client to decide.
+### Casting page text -- potential revision
+**Status:** Client may want to revise Casting copy to clarify it's about Mainstage auditioning specifically (now that Stories on Stage has its own auditions section). Flag only -- client decides.
 
-### Editable nav as a small future feature
-**Status:** Discussed but not approved. Not on current roadmap.
+### Editable nav as a future feature
+**Status:** Discussed, not approved, not on roadmap.
+
+---
+
+## REMAINING ROADMAP (big picture)
+
+- **Phase 3.3 Shop** -- blocked on Shopify (above).
+- **Phase 4 -- EN/ES bilingual** via Astro native i18n. Not started. Pages were built to bilingualize cleanly.
+- **Phase 5 -- rebrand + handoff.** Wire real domain `pytnet.org`; swap real brand colors/fonts/logo (tokens.css + Logo.astro); Cupidus font; **and produce a "where do I edit X in the CMS" staff guide** (important -- the on-page staff helper notes were removed earlier, so staff have no on-site guidance). Possibly revisit Formspree -> Cloudflare-native email once the domain is verified.
