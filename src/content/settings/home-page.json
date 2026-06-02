@@ -1,12 +1,12 @@
 {
   "hero_eyebrow": "Spring 2026",
-  "hero_secondary_label": "Browse Classes & Camps",
+  "hero_secondary_label": "Browse Programs",
   "impact_heading": "Three decades of young voices.",
   "donate_lede": "Ticket sales and tuition fees cover much of what we do. The rest comes from our wonderful donors - like you!",
   "hero_primary_url": "/shows",
   "impact_eyebrow": "Our impact",
   "hero_primary_label": "Upcoming Shows",
-  "discovery_heading": "Join us",
+  "discovery_heading": "Whatever you're looking for, we've got it",
   "discovery_cards": [
     {
       "eyebrow": "For young performers, schools & families",
@@ -80,5 +80,5 @@
       "label": "In scholarships awarded"
     }
   ],
-  "hero_lede": "PYT is the Bay Area's home for community youth theatre. From first auditions to opening nights, we believe in the magic that happens when a young person steps on stage."
+  "hero_lede": "PYT is the Bay Area's home for community youth theatre. From first auditions to opening nights, we believe in the magic that happens when a young person steps on stage!"
 }
