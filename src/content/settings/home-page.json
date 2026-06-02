@@ -2,9 +2,9 @@
   "hero_eyebrow": "Spring 2026",
   "hero_secondary_label": "Browse Programs",
   "impact_heading": "Three decades of Bay Area community theatre!",
-  "donate_lede": "Ticket sales and tuition fees cover much of what we do. The rest comes from our wonderful donors - like you!",
+  "donate_lede": "Ticket sales and participation fees cover much of what we do. The rest comes from our wonderful donors - like you!",
   "hero_primary_url": "/shows",
-  "impact_eyebrow": "Our impact",
+  "impact_eyebrow": "PYT's impact",
   "hero_primary_label": "Upcoming Shows",
   "discovery_heading": "Whatever you're looking for, we've got it",
   "discovery_cards": [
@@ -69,7 +69,7 @@
   "stats": [
     {
       "figure": "30+",
-      "label": "Years serving Bay Area youth"
+      "label": "Years serving youth across the peninsula"
     },
     {
       "figure": "10,000+",
