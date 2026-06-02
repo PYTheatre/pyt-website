@@ -61,6 +61,8 @@ collections:
       - { name: "poster", label: "Show poster image", widget: "image", required: false, hint: "Upload a poster image. If empty, a colored placeholder is used." }
       - { name: "synopsis", label: "Synopsis", widget: "text", hint: "1–3 short paragraphs about the show." }
       - { name: "ticketing_url", label: "Buy Tickets link (external URL)", widget: "string", required: false, hint: "Where to buy tickets. Leave blank if tickets aren't on sale yet." }
+      - { name: "audition_url", label: "Audition sign-up link (external URL)", widget: "string", required: false, hint: "Where people sign up to audition. Leave blank to hide the Auditions button entirely." }
+      - { name: "audition_date", label: "Audition date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "After this date passes, the Auditions button automatically greys out to 'Auditions closed'. Leave blank to keep the button active as long as there's a link." }
       - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
 
   # ============================================================
