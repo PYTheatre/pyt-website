@@ -28,10 +28,10 @@
   /* ---- LINE (borders & dividers) ---- */
   --line: #e8e6e1;
 
-  /* ---- ACCENT (the one brand color — PINK placeholder) ---- */
-  --accent: #e85a8c;       /* primary accent                   */
-  --accent-deep: #c43d6f;  /* darker accent (hover, emphasis)  */
-  --accent-soft: #fce8f0;  /* very light accent (tints, fills) */
+  /* ---- ACCENT (the one brand color — from PYT logo, PLACEHOLDER) ---- */
+  --accent: #c0287b;       /* primary accent (PYT logo pink)   */
+  --accent-deep: #97215f;  /* darker accent (hover, emphasis)  */
+  --accent-soft: #fbeaf3;  /* very light accent (tints, fills) */
 
   /* ---- NEUTRAL (was mustard/gold; now grey per decisions) ---- */
   --neutral: #6a6a6a;
