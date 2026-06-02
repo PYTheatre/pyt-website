@@ -15,6 +15,9 @@ import pageContent from "../../content/settings/shows-page.json";
 const shows = (await getCollection("shows")).sort(
   (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
 );
+
+// Used to decide whether a show's audition date has passed.
+const now = new Date();
 ---
 
 <BaseLayout
@@ -48,17 +51,22 @@ const shows = (await getCollection("shows")).sort(
         <p class="empty-state">No shows announced yet. Check back soon.</p>
       ) : (
         <ul class="show-list">
-          {shows.map((show) => (
+          {shows.map((show) => {
+            const auditionsClosed =
+              show.data.audition_date && show.data.audition_date.getTime() < now.getTime();
+            return (
             <li class="show-row">
-              <a href={`/shows/${show.id}`} class="show-card">
-                <div
+              <div class="show-card">
+                <a
+                  href={`/shows/${show.id}`}
                   class="show-poster"
+                  aria-label={`See details for ${show.data.title}`}
                   style={show.data.poster ? `background-image: url(${show.data.poster}); background-size: cover; background-position: center;` : ""}
                 >
                   {!show.data.poster && (
                     <span class="poster-placeholder">{show.data.title}</span>
                   )}
-                </div>
+                </a>
                 <div class="show-info">
                   {show.data.eyebrow && (
                     <p class="show-eyebrow">{show.data.eyebrow}</p>
@@ -68,11 +76,40 @@ const shows = (await getCollection("shows")).sort(
                   {show.data.ages && (
                     <p class="show-meta">{show.data.ages}</p>
                   )}
-                  <p class="show-link-cta">See details →</p>
+
+                  <div class="show-actions">
+                    {/* Audition button — hidden entirely when no link.
+                        When present: active if upcoming, greyed "closed" once the date passes. */}
+                    {show.data.audition_url && (
+                      auditionsClosed ? (
+                        <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                          Auditions closed
+                        </span>
+                      ) : (
+                        <a href={show.data.audition_url} class="btn btn-outline" target="_blank" rel="noopener">
+                          Auditions
+                        </a>
+                      )
+                    )}
+
+                    {/* Tickets button — greys out to "coming soon" when no link yet. */}
+                    {show.data.ticketing_url ? (
+                      <a href={show.data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
+                        Tickets
+                      </a>
+                    ) : (
+                      <span class="btn btn-primary btn-disabled" aria-disabled="true">
+                        Tickets coming soon
+                      </span>
+                    )}
+                  </div>
+
+                  <a href={`/shows/${show.id}`} class="show-link-cta">See details →</a>
                 </div>
-              </a>
+              </div>
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </div>
@@ -193,10 +230,29 @@ const shows = (await getCollection("shows")).sort(
     margin-bottom: var(--space-sm);
   }
 
+  .show-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   .show-link-cta {
+    display: inline-block;
     color: var(--accent);
     font-weight: 600;
     font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .show-link-cta:hover {
+    text-decoration: underline;
   }
 
   .empty-state {
