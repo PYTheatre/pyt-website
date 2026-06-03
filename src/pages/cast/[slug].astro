@@ -59,6 +59,11 @@ const rehearsalEmbed = toSheetEmbed(data.rehearsal_sheet_url);
 // Cast list is a LINK, not an embed — used as-is (opens in a new tab).
 const castListLink = (data.cast_list_sheet_url || "").trim();
 
+// Resource links (Google Drive folders etc.) — keep only complete entries.
+const resources = (data.resources || []).filter(
+  (r) => r && r.label && r.url
+);
+
 // Split optional intro/body into paragraphs at blank lines.
 const introParas = (data.intro || "").split("\n\n").filter((p) => p.trim().length > 0);
 const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length > 0);
@@ -115,6 +120,20 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
           <p class="sheet-note">This schedule is updated through the run — check back for the latest.</p>
           <div class="sheet-frame">
             <iframe src={rehearsalEmbed} title="Rehearsal schedule" loading="lazy"></iframe>
+          </div>
+        </div>
+      </section>
+    )}
+
+    {resources.length > 0 && (
+      <section class="section sheet-section">
+        <div class="container">
+          <h2 class="section-head">Rehearsal resources</h2>
+          <p class="sheet-note">Materials for the cast — opens in a new tab. You may need to be signed in to the right Google account to view some of these.</p>
+          <div class="resource-buttons">
+            {resources.map((r) => (
+              <a href={r.url} class="btn btn-outline" target="_blank" rel="noopener">{r.label}</a>
+            ))}
           </div>
         </div>
       </section>
@@ -267,6 +286,12 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
     height: 480px;
     border: 0;
     display: block;
+  }
+
+  .resource-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
   }
 
   .cast-body p {
