@@ -107,9 +107,9 @@ const now = new Date();
                     )}
                   </div>
 
-                  {/* Audition dates as text — shown only when there's a link and display text,
-                      and only while auditions are still open. */}
-                  {show.data.audition_url && show.data.audition_display && !auditionsClosed && (
+                  {/* Audition dates as text — shown whenever there's display text
+                      and auditions are still open, with or without a sign-up link. */}
+                  {show.data.audition_display && !auditionsClosed && (
                     <p class="show-audition-dates">Auditions: {show.data.audition_display}</p>
                   )}
 

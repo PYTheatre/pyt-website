@@ -68,7 +68,7 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
               <dd>{data.ages}</dd>
             </div>
           )}
-          {data.audition_url && data.audition_display && !auditionsClosed && (
+          {data.audition_display && !auditionsClosed && (
             <div>
               <dt>Auditions</dt>
               <dd>{data.audition_display}</dd>
