@@ -145,6 +145,7 @@ collections:
     description: "Password-protected cast pages, one per show. Not in the site menu — share the link with your cast. The password is a light gate for non-sensitive info only (see the note on each field)."
     folder: "src/content/cast-pages"
     create: true
+    identifier_field: "show_title"
     slug: "{{slug}}"
     summary: "{{show_title}}"
     fields:
