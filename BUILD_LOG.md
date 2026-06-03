@@ -6,6 +6,26 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Shows page — auditions as a date range, shown to families (2026-06-03)
+
+**Goal:** (1) Surface the existing Auditions button per show (it was already built but only appears when a show has an audition link). (2) Replace the single audition date with a date *range*, since auditions often run several days. (3) Show the audition dates to families as text, on both the listing cards and the detail page.
+
+**Built:**
+- **Schema (`src/content.config.ts`):** replaced single `audition_date` with three fields — `audition_start` (date), `audition_end` (date, drives auto-close), `audition_display` (free text shown to families, e.g. "August 3–7, 2026"). All optional and tolerant (`.catch(undefined)`). Legacy `audition_date` kept as an optional fallback so un-migrated show files don't break.
+- **CMS (`public/admin/config.yml`):** the one "Audition date" field became three — "Audition start date", "Audition end date (for auto-closing)", and "Audition dates (shown to families)". Plain-language hints; single-day auditions = set start and end to the same day.
+- **Listing (`src/pages/shows/index.astro`):** auto-close now keys off `audition_end` (falls back to legacy `audition_date`). New "Auditions: <text>" line under the button, shown only when there's a link + display text + auditions still open.
+- **Detail (`src/pages/shows/[slug].astro`):** added an Auditions button to the CTA row (matching the listing's open/closed behavior — it had none before) and an "Auditions" row in the details list showing the display text.
+
+**Design decision:** display text is a separate hand-typed field, not auto-generated from the two dates — mirrors how show `date_display` already works, gives staff wording control, avoids fiddly date-range formatting.
+
+**Files changed:** `src/content.config.ts`, `public/admin/config.yml`, `src/pages/shows/index.astro`, `src/pages/shows/[slug].astro`. No `src/content/**` touched.
+
+**Tested in sandbox (fully verified):** built clean (18 pages) across four scenarios using real show files — (A) new range fields, open → active button + date text on card and detail; (B) end date in the past → button greys to "Auditions closed", date text hidden, both pages; (C) legacy `audition_date` only, no display field → button still works via fallback, no date text; (D) no audition data → nothing shows. Phone (390px) + desktop (1280px) screenshots of listing and detail confirmed. Test data removed; final build clean on restored content.
+
+**Client action after upload:** existing shows won't have the new fields — staff re-enter audition info per show via the CMS (the old single date won't auto-migrate, but it keeps working as a fallback in the meantime). Hard-refresh `/admin` after the config change so the new fields appear.
+
+---
+
 ## Build hardening — runtime_minutes can no longer break the whole site (2026-06-03)
 
 **Goal:** A single bad value in a show's "Runtime (minutes)" field had taken the *entire* site build down (the 2026-06-02 deploy saga: text/blank in `runtime_minutes` on new shows → schema rejected it → nothing rebuilt → no new content went live). Make that class of failure impossible, and add a friendly form guard.
