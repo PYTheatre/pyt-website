@@ -6,6 +6,22 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Cast Pages — fixed broken slug generation in the CMS (2026-06-03)
+
+**Problem:** Cast pages created through the CMS were getting garbled filenames (the entire form dumped into the filename, e.g. `map-show_title-test-cast-page-password-demo-...md`). Because the filename is the URL slug in Astro, the page ended up at an unusable URL, and visiting the expected clean URL (`/cast/test-cast-page`) fell back to the home page (Cloudflare serving index for the missing route). Client couldn't get a testable cast-page URL.
+
+**Root cause (researched, not guessed — Rule 1):** Per Decap's Folder Collections docs, a folder collection must have a field named `title` to generate slugs, OR an explicit `identifier_field` pointing at the field to use. The cast-pages collection's first field is `show_title` (not `title`) and had no `identifier_field`, so Decap couldn't build a slug and fell back to dumping all fields into the filename. The Shows/Programs/Stories collections work because their field IS named `title`.
+
+**Fix:** added `identifier_field: "show_title"` to the cast-pages collection in `public/admin/config.yml`. New cast pages now get a clean slug from the show title ("Test Cast Page" -> `/cast/test-cast-page`).
+
+**Also:** created a correctly-named `src/content/cast-pages/test-cast-page.md` (same content the client had entered) so they get a working test URL without re-entering it. The old garbled file is deleted by the client on GitHub.
+
+**Files changed:** `public/admin/config.yml` (identifier_field), `src/content/cast-pages/test-cast-page.md` (new, replaces garbled file). 
+
+**Tested in sandbox:** config validates as YAML; build generates `/cast/test-cast-page`; rendered page has the password gate, the protected content block, the "View the cast list" LINK button, and the rehearsal-schedule EMBED iframe (the template correctly converts the Google `/edit` URL to `/preview`).
+
+**Note on the two sheets (for the client's live testing):** the EMBEDDED rehearsal sheet only displays if that Google Sheet is shared "anyone with the link can view" — otherwise the embed shows a Google sign-in wall. This is exactly why the locked decision requires the embedded sheet to be role-names-only. The LINKED cast list is the opposite: it should stay private (specific accounts only), so clicking it prompts a Google login for anyone not on the share list. Both behaviors are by design.
+
 ## Shop page — real minimal page created (2026-06-03)
 
 **Goal:** The `/shop` URL was showing the home page content (same "SPRING 2026 / Peninsula Youth Theatre" hero, lede, and buttons). Client wanted it clean — just the title "Shop" — until Shopify is set up.
