@@ -40,7 +40,16 @@ const shows = defineCollection({
     synopsis: z.string(),
     ticketing_url: z.string().optional(),
     audition_url: z.string().optional(),
-    audition_date: z.coerce.date().optional(),
+    // Audition window. start/end are real dates used for auto-close logic;
+    // display is the human-readable text families see. All optional and
+    // tolerant: bad values are ignored rather than failing the whole build.
+    audition_start: z.coerce.date().optional().catch(undefined),
+    audition_end: z.coerce.date().optional().catch(undefined),
+    audition_display: z.string().optional(),
+    // Legacy single-date field from before the range change. Kept so old
+    // content files that still have it don't break the build. Falls back to
+    // acting as the end date when the new fields are absent.
+    audition_date: z.coerce.date().optional().catch(undefined),
     cast_page_url: z.string().optional(),
   }),
 });
