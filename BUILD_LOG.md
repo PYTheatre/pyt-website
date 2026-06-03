@@ -6,6 +6,20 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Cast Pages — rehearsal resource links (Google Drive etc.) (2026-06-03)
+
+**Goal:** Each cast page should list links to rehearsal resources — Google Drive folders for choreography videos, costume lists, music tracks, etc.
+
+**Built:** a repeatable "Rehearsal resources" list on each cast page. Each entry = a button label + a link. They render as a row of buttons in their own "Rehearsal resources" section (same button style as the other cast-page actions), placed below the rehearsal schedule. Section hides entirely when empty. Links open in a new tab; not embedded (Drive folders don't embed cleanly, and a link keeps the content behind Google's real login rather than delivering it into the soft-gated page).
+
+**Decisions:** links, not embeds (consistent with the cast-list link). The CMS field hint warns that anyone with the page password can see these links, so each Drive folder should be shared deliberately in Google — "anyone with link" only for non-sensitive material, restricted to cast accounts for anything identifying.
+
+**Files changed:** `public/admin/config.yml` (new `resources` list field with label + url sub-fields), `src/content.config.ts` (tolerant `resources` array in the castPages schema), `src/pages/cast/[slug].astro` (new Rehearsal resources section + button-row style). No content files.
+
+**Tested in sandbox:** build clean (19 pages) across cases — no resources field (section hidden, existing pages unaffected); multiple resources (all render as buttons with correct labels/links); one incomplete item (it's dropped, the rest still render — schema item-fields are optional so a single bad entry can't discard the whole list, and the template filters incomplete items). Unlocked the password gate and screenshotted phone + desktop. (The schedule iframe shows a sandbox network message — that's the test environment blocking Google, not a site issue; it loads fine live.)
+
+**Client action after upload:** hard-refresh `/admin` so the new field appears, then add resources per cast page via the CMS.
+
 ## Cast Pages — fixed broken slug generation in the CMS (2026-06-03)
 
 **Problem:** Cast pages created through the CMS were getting garbled filenames (the entire form dumped into the filename, e.g. `map-show_title-test-cast-page-password-demo-...md`). Because the filename is the URL slug in Astro, the page ended up at an unusable URL, and visiting the expected clean URL (`/cast/test-cast-page`) fell back to the home page (Cloudflare serving index for the missing route). Client couldn't get a testable cast-page URL.
