@@ -13,8 +13,45 @@
   images, and numbers are editable through the CMS.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
+
+// --- Upcoming shows strip ---
+// Pulls live from BOTH the Mainstage Shows collection and the
+// Stories on Stage collection. A show counts as "upcoming" while
+// its end_date is today or later (so a currently-running show still
+// shows, and finished shows drop off automatically on the next
+// rebuild). Sorted soonest-first by start_date.
+//
+// Link behavior differs by type, by design:
+//  - Mainstage shows have their own detail page at /shows/<id>.
+//  - Stories on Stage productions have NO detail page (locked
+//    decision — they all live on /stories-on-stage), so those
+//    cards link to /stories-on-stage.
+const now = new Date();
+
+const mainstage = (await getCollection("shows")).map((s) => ({
+  title: s.data.title,
+  start: s.data.start_date,
+  end: s.data.end_date,
+  dateDisplay: s.data.date_display,
+  poster: s.data.poster || "",
+  url: `/shows/${s.id}`,
+}));
+
+const sos = (await getCollection("storiesOnStage")).map((s) => ({
+  title: s.data.title,
+  start: s.data.start_date,
+  end: s.data.end_date,
+  dateDisplay: s.data.date_display,
+  poster: s.data.poster || "",
+  url: "/stories-on-stage",
+}));
+
+const upcomingShows = [...mainstage, ...sos]
+  .filter((s) => s.end.getTime() >= now.getTime())
+  .sort((a, b) => a.start.getTime() - b.start.getTime());
 
 // --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
@@ -66,6 +103,36 @@ const heroImage = (home as any).hero_image || "";
       </div>
     )}
   </section>
+
+  <!-- ============ UPCOMING SHOWS STRIP ============ -->
+  <!-- A wide row of upcoming-show cards, soonest first. Pulls live
+       from the Shows + Stories on Stage collections. Hidden entirely
+       when there are no upcoming shows. -->
+  {upcomingShows.length > 0 && (
+    <section class="section shows-strip">
+      <div class="container">
+        <p class="eyebrow">On stage</p>
+        <h2 class="section-head">Upcoming shows</h2>
+
+        <div class="shows-row">
+          {upcomingShows.map((show) => (
+            <a href={show.url} class="show-tile">
+              <div
+                class="show-tile-poster"
+                style={show.poster ? `background-image: url(${show.poster});` : ""}
+              >
+                {!show.poster && <span class="show-tile-fallback">{show.title}</span>}
+              </div>
+              <div class="show-tile-body">
+                <h3 class="show-tile-title">{show.title}</h3>
+                <p class="show-tile-date">{show.dateDisplay}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- ============ DISCOVERY CARDS ============ -->
   <section class="section">
@@ -160,6 +227,61 @@ const heroImage = (home as any).hero_image || "";
     margin-top: var(--space-lg);
     box-shadow: var(--shadow-soft);
     max-height: 520px;
+  }
+
+  /* ---- Upcoming shows strip ---- */
+  .shows-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .show-tile {
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    overflow: hidden;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .show-tile:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+  }
+
+  .show-tile-poster {
+    aspect-ratio: 3 / 4;
+    background-color: var(--accent-soft);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .show-tile-fallback {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--accent);
+    text-align: center;
+    padding: var(--space-sm);
+    font-size: 1.05rem;
+  }
+
+  .show-tile-body {
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+  }
+
+  .show-tile-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .show-tile-date {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
   }
 
   /* ---- Section heading ---- */
@@ -290,6 +412,9 @@ const heroImage = (home as any).hero_image || "";
     }
     .card-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+    .shows-row {
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     }
   }
 
