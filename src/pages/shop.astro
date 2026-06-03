@@ -1,0 +1,22 @@
+---
+/*
+  SHOP PAGE  ( /shop )
+
+  Intentionally minimal for now: just the page title. The PYT online
+  store will live here once Shopify is set up (Phase 3.3). Until then
+  this page exists mainly so the "Shop" nav/footer link lands on a
+  clean, real page instead of falling back to the home page.
+
+  When Shopify is ready, the Buy Button embed (<div> + <script>) per
+  Collection goes inside the <section> below.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+---
+
+<BaseLayout
+  title="Shop — Peninsula Youth Theatre"
+  description="The Peninsula Youth Theatre online store."
+>
+  <PageHero title="Shop" />
+</BaseLayout>
