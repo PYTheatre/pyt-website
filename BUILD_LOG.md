@@ -6,6 +6,22 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Casting page — bold/lists/links now render from the Markdown field (2026-06-03)
+
+**Problem:** On the Casting page, text the client made bold via the CMS Bold button showed literal `**asterisks**` instead of bold. (Client clarified they clicked Bold, not typed asterisks — confirming the field is the CMS "markdown" widget, saving real Markdown.)
+
+**Root cause:** The Casting body field uses the `markdown` widget (it has a Bold button), so it stores real Markdown. But `casting.astro` had a hand-rolled "Markdown-ish" parser that only split paragraphs and `- ` bullets and printed the rest as raw text — it never rendered `**bold**`, didn't recognize the client's `* ` bullets, and dropped the `[link](...)`. So three things were broken, not just bold.
+
+**Investigation (scope):** Checked every body/description field in the CMS. The Casting body is the ONLY field using the `markdown` widget — every other body/description field uses the plain `text` widget (no Bold button, no Markdown to render). So this was a Casting-page rendering bug, not a site-wide content problem.
+
+**Fix:** added `marked` (markdown renderer) and a reusable helper `src/lib/markdown.ts` (`renderMarkdown()`). `casting.astro` now renders the body to HTML and injects it with `set:html`, replacing the hand-rolled parser. Because injected HTML doesn't carry Astro's scoped-style attribute, the `.casting-prose` styles were switched to `:global()` selectors (and bold/italic/link styles added). The helper is reusable: any field later switched to the markdown widget can render through it.
+
+**Files changed:** `src/pages/casting.astro` (render via helper + global prose styles), `src/lib/markdown.ts` (new), `package.json` + `package-lock.json` (marked dependency).
+
+**Tested in sandbox:** clean build (19 pages). Verified rendered HTML: 11 `<strong>` bolds, the 5-item bullet list as `<ul>/<li>`, and the Judy Robe `<a href>` link — no literal `**` remaining. Global prose styles confirmed emitted. Desktop screenshot confirms bold, styled bullet list, and the working link.
+
+**Note:** `package.json` and `package-lock.json` changed (new dependency). These must be uploaded too or the Cloudflare build won't have `marked` and will fail.
+
 ## Cast Pages — rehearsal resource links (Google Drive etc.) (2026-06-03)
 
 **Goal:** Each cast page should list links to rehearsal resources — Google Drive folders for choreography videos, costume lists, music tracks, etc.
