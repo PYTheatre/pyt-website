@@ -13,4 +13,5 @@ synopsis: Follow the yellow brick road to join Dorothy’s adventures with her
   and is a treat the whole family can enjoy.
 audition_start: 2026-08-29
 audition_end: 2026-08-30
+audition_display: August 29-30, 2026
 ---
