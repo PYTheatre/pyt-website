@@ -5,7 +5,7 @@ start_date: 2027-05-07
 end_date: 2027-05-08
 date_display: May 2027
 venue: PYT Studio, Old Middlefield Way
-runtime_minutes: ""
+runtime_minutes: 60
 poster: /uploads/midsummer.jpg
 synopsis: Shakespeare’s comedy of love, magic, and fairy mischief is a perfect
   fit for the Studio Show format — a small, tight-knit cast working together on
