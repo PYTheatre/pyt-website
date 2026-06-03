@@ -56,7 +56,7 @@ collections:
       - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { name: "date_display", label: "Date display text", widget: "string", hint: "How dates appear on the page. Example: May 15–16, 2026" }
       - { name: "venue", label: "Venue", widget: "string", default: "Mountain View Center for the Performing Arts" }
-      - { name: "runtime_minutes", label: "Runtime (minutes)", widget: "number", value_type: "int", required: false, min: 0, hint: "Approximate. Leave blank if unknown." }
+      - { name: "runtime_minutes", label: "Runtime (minutes)", widget: "number", value_type: "int", required: false, min: 1, max: 600, step: 1, pattern: ["^[0-9]*$", "Enter a whole number of minutes only (for example 90), or leave it blank."], hint: "Approximate, in minutes. Whole numbers only — for example 90. Leave blank if unknown." }
       - { name: "ages", label: "Recommended ages", widget: "string", required: false, hint: "Example: Ages 5 and up" }
       - { name: "poster", label: "Show poster image", widget: "image", required: false, hint: "Upload a poster image. If empty, a colored placeholder is used." }
       - { name: "synopsis", label: "Synopsis", widget: "text", hint: "1–3 short paragraphs about the show." }
