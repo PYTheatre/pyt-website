@@ -117,6 +117,20 @@ const castPages = defineCollection({
     intro: z.string().optional(),
     cast_list_sheet_url: z.string().optional(),
     rehearsal_sheet_url: z.string().optional(),
+    // Repeatable list of resource links (Google Drive folders etc.).
+    // Tolerant by design: missing/empty is fine. Item fields are optional at
+    // the schema level so one incomplete entry doesn't discard the whole list;
+    // the page template filters out any item missing a label or url before
+    // rendering. The outer catch guards against a wholly malformed value.
+    resources: z
+      .array(
+        z.object({
+          label: z.string().optional(),
+          url: z.string().optional(),
+        })
+      )
+      .optional()
+      .catch(undefined),
     body: z.string().optional(),
   }),
 });
