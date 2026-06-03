@@ -1,13 +1,22 @@
 {
   "title": "Judy Robe & Spirits Awards",
-  "eyebrow": "A PYT tradition",
+  "eyebrow": "AWARDS",
   "intro": "The Judy Robe & Spirits Awards celebrate the heart of every PYT production. Presented each season, they honor the performers whose dedication, generosity, and ensemble spirit make our shows possible. This page is a placeholder description — staff can edit this text and the list of past winners through the CMS.",
-  "photo": "",
+  "photo": "/uploads/pyt-shrek.jpg",
   "winners_heading": "Past winners",
-  "winners_blurb": "Three decades of outstanding young performers. (Placeholder entries below — edit, add, or remove winners through the CMS.)",
+  "winners_blurb": "",
   "winners": [
-    { "year": "2025", "name": "Winner Name" },
-    { "year": "2024", "name": "Winner Name" },
-    { "year": "2023", "name": "Winner Name" }
+    {
+      "year": "2025",
+      "name": "JUDY ROBE: XXXX XXXXX. SPIRIT AWARDS: XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXX XXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXX XXXX XXXXX XXXX XXXX XXX "
+    },
+    {
+      "year": "2024",
+      "name": "Winner Name"
+    },
+    {
+      "year": "2023",
+      "name": "Winner Name"
+    }
   ]
 }
