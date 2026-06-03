@@ -154,6 +154,16 @@ collections:
       - { name: "intro", label: "Intro text (optional)", widget: "text", required: false, hint: "Shown at the top, above the sheets. Use blank lines between paragraphs." }
       - { name: "cast_list_sheet_url", label: "Cast list — LINK to a private Google Sheet (optional)", widget: "string", required: false, hint: "Paste the link to your cast list sheet. This is shown as a 'View the cast list' button — it is NOT embedded. IMPORTANT: keep this sheet PRIVATE in Google (share it only with specific cast-family accounts or a cast Google Group — NOT 'anyone with the link'), because it contains children's full names. Leave blank to hide the button." }
       - { name: "rehearsal_sheet_url", label: "Rehearsal schedule — EMBEDDED Google Sheet (optional)", widget: "string", required: false, hint: "Paste the share link for the rehearsal schedule. This IS embedded on the page, so it must use ROLE NAMES ONLY (e.g. 'Jack, Crutchie, Newsies') and must NOT contain any child's name (including in the notes column). This is the sheet you'll update through the run. Leave blank to hide it." }
+      - name: "resources"
+        label: "Rehearsal resources (optional)"
+        label_singular: "Resource link"
+        widget: "list"
+        required: false
+        summary: "{{fields.label}}"
+        hint: "Links to rehearsal materials — Google Drive folders for choreography videos, costume lists, music tracks, etc. Each one shows as a button on the page. NOTE: anyone with the page password can see these links, so share each Drive folder deliberately in Google — use 'anyone with the link can view' only for non-sensitive material, and restrict to cast accounts for anything identifying. Leave empty to hide this section."
+        fields:
+          - { name: "label", label: "Button label", widget: "string", hint: "What the button says. Example: Choreography videos" }
+          - { name: "url", label: "Link (Google Drive folder or file)", widget: "string", hint: "Paste the Google Drive share link." }
       - { name: "body", label: "Notes (optional)", widget: "text", required: false, hint: "Any extra notes for the cast — contacts, what to bring, parking, reminders. Shown below the sheets." }
 
   # ============================================================
