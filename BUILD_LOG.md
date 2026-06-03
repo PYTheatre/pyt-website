@@ -24,6 +24,8 @@ Phase-by-phase history of work completed. Newest at the top.
 
 **Client action after upload:** existing shows won't have the new fields — staff re-enter audition info per show via the CMS (the old single date won't auto-migrate, but it keeps working as a fallback in the meantime). Hard-refresh `/admin` after the config change so the new fields appear.
 
+**Follow-up same day — audition date text decoupled from the link.** Initial version only showed the audition date text when a sign-up link was also present. Client wanted the dates to show to families even before a link exists (announce the window early, add the link later). Changed both pages so the date text shows whenever `audition_display` is filled and auditions are still open, independent of `audition_url`; the Auditions *button* still depends on the link. Files changed: `src/pages/shows/index.astro`, `src/pages/shows/[slug].astro` (config/schema unchanged). Tested all four combinations on real content: dates-only (text, no button), dates+link (text + button), closed (both hidden/greyed), nothing (nothing). Clean 18-page build, screenshot confirmed.
+
 ---
 
 ## Build hardening — runtime_minutes can no longer break the whole site (2026-06-03)
