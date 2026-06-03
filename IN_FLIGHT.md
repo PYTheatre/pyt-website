@@ -55,12 +55,26 @@ If any aren't live, help the client upload the outstanding zip. (Those zip files
 
 - **Delete the sample cast page.** The Cast Pages feature shipped with a sample entry `src/content/cast-pages/sample-delete-me.md` (password "demo"), clearly marked for deletion. The client should delete it via the CMS or GitHub when ready. (Rule 5: chat-and-upload can't delete files.)
 
+### Cast page with a corrupted (form-dump) filename — OPEN, needs a GitHub delete
+**State (2026-06-02):** There is ONE file in `src/content/cast-pages/` whose filename is the entire form contents mashed together: it begins `map-show_title-wind-in-the-willows-password-demo-intro-well-done-...`. Its contents are a valid cast page (show: Wind in the Willows, password: demo, a real-looking Google Sheets rehearsal link, intro "Well done in auditions you were all great"). It works but produces a grotesque URL and is untidy.
+
+**Why it's not a normal upload fix:** the fix is fundamentally a DELETE (bad filename), and chat-and-upload can only add/replace, never delete (Rule 5). So the client must delete it directly on GitHub.
+
+**Unresolved question (ask the client first):** Is this a REAL cast page to keep, or leftover test/sample junk? The "demo" password and intro suggest test content (possibly a re-save of the old sample-delete-me), but it has a real-looking Sheet link.
+- If **junk:** client deletes the file on GitHub. Done. Direct URL pattern: `https://github.com/PYTheatre/pyt-website/blob/main/src/content/cast-pages/<filename>` → trash-can icon → commit.
+- If **keep:** client deletes the bad file AND a NEW clean-named replacement is uploaded (e.g. `wind-in-the-willows.md` with the same frontmatter) so the page keeps working at a tidy `/cast/wind-in-the-willows` URL. (Recreate from the cloned repo — the contents are known and short.)
+
+**Was mid-discussion when the client stepped away.** Pick this up by asking the keep-or-junk question.
+
 ---
 
 ## DEFERRED / AWAITING CLIENT (not blocking)
 
 ### Cupidus font swap
-**Status:** Client wants the body font changed to JAF Cupidus. **Holding for license acquisition.** When the client has the font files (or an Adobe Fonts link), it's ~15 min: update `--font-body` in `src/styles/tokens.css`, add font-loading to `BaseLayout.astro`. Slated for Phase 5.
+**Status:** Client's eventual target is JAF Cupidus for the body font. **Interim step done 2026-06-02:** the site now uses **Nunito** for all text as a placeholder closer to the intended direction (see `BUILD_LOG.md` and `DECISIONS.md`). Still **holding for Cupidus license acquisition.** When the client has the font files (or an Adobe Fonts link), it's ~15 min: update the `@import` in `src/styles/global.css` and the `--font-body`/`--font-heading` values in `src/styles/tokens.css`. Slated for Phase 5.
+
+### Heading weight in Nunito (minor, optional)
+**Status:** Headings (`h1,h2,h3,h4` in `global.css`) use `font-weight: 500` with tight negative letter-spacing — originally tuned for the Newsreader serif. With Nunito they may read slightly light at large sizes. Client reviewed the live result 2026-06-02 and is happy as-is. Flag only: if a future request is to make headings bolder, change that rule to `font-weight: 600`. No action needed unless asked.
 
 ### Casting page hero image
 **Status:** Page shows an "Image coming soon" placeholder until the client uploads an image via CMS -> Site Settings -> Casting Page. No code change needed.

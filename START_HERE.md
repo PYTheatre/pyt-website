@@ -85,7 +85,21 @@ This is unusual and you must follow it exactly. The client cannot use git. So:
 
 ---
 
-## WHERE THE PROJECT STANDS RIGHT NOW (2026-05-29)
+## WHERE THE PROJECT STANDS RIGHT NOW (updated 2026-06-02)
+
+### ✅ Done and verified live (2026-06-02 session)
+- **Placeholder branding refresh:** PYT logo (3 colored serif letters) now in header AND footer; accent color changed to the logo's pink `#c0287b`; all fonts switched to **Nunito** (headings + body, no serif). All centralized in `tokens.css` / `global.css` / `Logo.astro` / `Footer.astro` + `public/uploads/pyt-logo.png`. Still placeholder — real brand swap is Phase 5. (See BUILD_LOG + DECISIONS.)
+- **Shows page Audition + Tickets buttons:** each `/shows` card now has Auditions + Tickets buttons + a "See details" link, with auto-grey/hide logic and two new CMS fields. (See BUILD_LOG + DECISIONS.)
+
+### ⚠️ OPEN ITEM when the client returns
+- **Cast-page cleanup (needs a GitHub delete):** a file in `src/content/cast-pages/` has a corrupted form-dump filename (`map-show_title-wind-in-the-willows-...`). Must be DELETED on GitHub (chat-upload can't delete). **First ask the client: keep or junk?** Full details in `IN_FLIGHT.md` → Housekeeping. This was mid-discussion when the client stepped away.
+
+### Note on docs
+The 2026-06-02 doc updates (this file, BUILD_LOG, DECISIONS, IN_FLIGHT) were packaged for upload. If the client confirms they uploaded the "docs-update" batch, the repo docs are current. If unsure, the live code reflects all the work; only the written context might lag.
+
+---
+
+## EARLIER STATE (pre-2026-06-02, still accurate)
 
 ### ✅ Done and verified live
 - Phases 0–2 (pipeline, CMS login + OAuth, core pages: Shows, Programs, Donate, About, Casting).

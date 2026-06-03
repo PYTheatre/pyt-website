@@ -37,6 +37,14 @@
 
 - **Class/camp registration:** External links to Active.com (per existing PYT setup). Each Program has a `registration_url` field.
 
+## Shows page buttons (decided 2026-06-02)
+
+- **Each show card on `/shows` has two action buttons + a details link:** Auditions, Tickets, and a small "See details →".
+- **Tickets:** active when the show's `ticketing_url` is filled; greys out to "Tickets coming soon" when blank (consistent across cards).
+- **Auditions:** HIDDEN entirely when `audition_url` is blank (client's choice — not greyed). When a link exists, the button is active ("Auditions") until the optional `audition_date` passes, after which it greys to "Auditions closed". Auto-close is evaluated at build time, not live.
+- **Two new CMS fields per show:** "Audition sign-up link" (`audition_url`) and "Audition date" (`audition_date`, optional).
+- **Note:** the show card is no longer a single wrapping link — it now holds real buttons, so the poster image and the "See details" link carry the click-through to the detail page.
+
 ## Merch and shop
 
 - **Shop platform:** Shopify Basic with Collections. Deferred to Phase 3.3. Will be a Shopify-embedded experience.
@@ -68,9 +76,9 @@
 ## Branding and design
 
 - **Design tokens** centralized in `src/styles/tokens.css`. Colors and font choices all read from CSS custom properties so a rebrand is a one-file edit.
-- **Current placeholders:** Pink accent (`#e85a8c`), Newsreader (serif headings) + Inter (sans body). Will be replaced in Phase 5 with PYT's final brand identity.
-- **Logo:** Placeholder `P` mark in `src/components/Logo.astro`. One-file swap when real logo arrives.
-- **Body font swap to JAF Cupidus** approved by client but deferred — see `IN_FLIGHT.md`.
+- **Current placeholders (updated 2026-06-02):** Pink accent `#c0287b` (sampled from PYT's interim logo), and **Nunito** for ALL text — both headings and body (client chose one font, distinguishing headings by size + capitalization rather than a separate serif). These replaced the earlier placeholders (pink `#e85a8c`, Newsreader + Inter). Still placeholders pending PYT's final brand identity in Phase 5.
+- **Logo (updated 2026-06-02):** Now the client's interim PYT wordmark image at `public/uploads/pyt-logo.png` (three colored serif letters), used in both `src/components/Logo.astro` (header) and `src/components/Footer.astro` (footer). **Note:** the footer renders its own mark separately — it does NOT use the shared Logo component, so both must be updated when the logo changes. The supplied image is a photo of artwork (slightly soft edges); a clean vector should replace it when the official brand arrives.
+- **Font font swap to JAF Cupidus** previously noted as the eventual target — Nunito is the current interim step toward that direction. Final font still deferred to Phase 5 pending license.
 
 ## Content editability (Phase 2.8 decisions)
 

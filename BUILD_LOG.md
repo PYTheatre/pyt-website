@@ -29,6 +29,53 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Shows page — Audition + Tickets buttons — built + verified live 2026-06-02
+
+Client request: on the `/shows` list page, replace the single "See details →" link on each show card with two action buttons — **Auditions** and **Tickets** — keeping a small "See details" link as well.
+
+**Behavior (client-approved decisions):**
+- **Tickets button:** active pink button when `ticketing_url` is set; greys out to "Tickets coming soon" when blank. (Mirrors the detail page.)
+- **Auditions button:** HIDDEN entirely when `audition_url` is blank. When set: shows "Auditions" if upcoming; greys out to "Auditions closed" (unclickable) once `audition_date` has passed.
+- **"See details →"** link kept beneath the buttons, still linking to the show detail page.
+- The card is no longer one big wrapping link (can't nest links). The poster image and the "See details" link both go to the detail page; the two buttons are independent.
+
+**Important caveat (told to client):** the audition auto-close happens at BUILD time, not live — the button flips to "closed" on the next site rebuild after the date passes, not at the stroke of midnight. Fine for audition dates.
+
+**Files changed (3):**
+- `src/content.config.ts` — added `audition_url` (string, optional) and `audition_date` (date, optional) to the shows schema.
+- `src/pages/shows/index.astro` — rebuilt the card markup + added `.show-actions` / `.btn-disabled` styles.
+- `public/admin/config.yml` — added "Audition sign-up link" and "Audition date" fields to the Shows form.
+
+**NOT changed (Rule 2):** no `src/content/shows/*.md` files. Existing shows render fine — Auditions button stays hidden until staff add a link via CMS. Reminder issued to client to hard-refresh/incognito the CMS to see the new fields.
+
+**Sandbox tests:** Clean build (16 pages). Verified all states via two throwaway test show files (active audition + tickets; closed audition + no tickets) screenshotted at 1280px and 390px, then deleted. Real states confirmed: SIX & Frog show Tickets only (no audition link); Wind shows "Tickets coming soon"; test shows showed active Auditions, "Auditions closed", and the greyed ticket state. **Could not verify:** that real audition sign-up URLs work (needs live click-test once entered). **Confirmed live by client 2026-06-02.**
+
+**Process note:** Briefly edited real show .md files to test states and hit a YAML error (duplicate `ticketing_url`); restored from backup immediately and switched to throwaway test files instead. Reinforces Rule 2 — don't touch `src/content/`.
+
+---
+
+## Placeholder branding refresh — built + verified live 2026-06-02
+
+Client-requested interim branding while awaiting PYT's official design. All placeholder, all centralized, trivially swappable when the real brand arrives.
+
+**1. Logo (header + footer).** Replaced the placeholder "P"-in-a-pink-box mark with the client's PYT wordmark image (three serif letters: P pink, Y green, T blue). The supplied file had a solid black background; processed it to transparent + tight-cropped, saved as `public/uploads/pyt-logo.png` (945×324). Used in BOTH `Logo.astro` (header — image beside the "Peninsula Youth Theatre" wordmark; mark-only on phones) and `Footer.astro` (footer — image stacked above the name). NOTE: the footer had its OWN separate `footer-mark` "P" — it does not use the shared Logo component, so it needed updating separately. Watch for this if the logo changes again.
+
+**2. Accent color.** Changed `--accent` from the old pink `#e85a8c` to the logo's pink `#c0287b` (deeper magenta), with `--accent-deep` `#97215f` and `--accent-soft` `#fbeaf3`. One-file edit in `tokens.css`; re-skins the whole site (buttons, links, etc.). Client chose the "safe" single-accent approach — did NOT spread green/blue across the site; the logo itself carries the three colors.
+
+**3. Fonts → Nunito (both heading & body).** Swapped Inter (body) + Newsreader (serif headings) for Nunito everywhere. Client's explicit decision: one font for everything, relying on size + capitalization to distinguish headings (no serif/sans contrast). Nunito is free via Google Fonts under SIL Open Font License (verified) — fine even for the eventual real launch if they stick with it. Two-file change: the `@import` line in `global.css` now loads Nunito (weights 400/500/600/700 + italics, matching what the site uses); `tokens.css` points both `--font-heading` and `--font-body` at Nunito.
+
+**Files affected:**
+- New: `public/uploads/pyt-logo.png`
+- Updated: `src/components/Logo.astro`, `src/components/Footer.astro`, `src/styles/tokens.css`, `src/styles/global.css`
+
+**Shipped as:** `PYT-upload-jun02-v7-branding.zip` (logo + color — confirmed live), then logo+fonts followed. Footer fix + Nunito ultimately uploaded as three loose files (Footer.astro, global.css, tokens.css) because the client's Mac would not unzip the v9 archive — loose-file upload via GitHub's folder-specific upload pages worked. (Lesson: loose-file upload to `/upload/main/<folder>` is a viable fallback when unzip fails on the client side.)
+
+**Sandbox tests:** Clean build (16 pages) at each step. Header + footer logo verified via Playwright screenshots at 1280px and 390px. **Could NOT verify Nunito's actual rendering in-sandbox** — the sandbox network blocks Google Fonts, so screenshots showed a fallback sans, not Nunito. Layout integrity with the change was confirmed; the font's true appearance was confirmed LIVE BY CLIENT 2026-06-02.
+
+**Open follow-up (minor):** Headings use weight 500 with tight negative letter-spacing, originally tuned for the Newsreader serif. With Nunito they may read a touch light at large sizes. Client reviewed live and is happy; if a future session is asked to make headings bolder, bump the `h1,h2,h3,h4` rule in `global.css` from `font-weight: 500` to `600`.
+
+---
+
 ## Phase 2.12 — Judy Robe Awards page + About/Casting changes — built 2026-05-29
 
 A batch of client-requested content changes:
