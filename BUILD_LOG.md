@@ -6,6 +6,18 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Shop page — real minimal page created (2026-06-03)
+
+**Goal:** The `/shop` URL was showing the home page content (same "SPRING 2026 / Peninsula Youth Theatre" hero, lede, and buttons). Client wanted it clean — just the title "Shop" — until Shopify is set up.
+
+**Root cause:** There was no `shop.astro` page in the repo at all. The Header and Footer both link to `/shop`, but with no page at that route, Cloudflare Pages was falling back to serving the home page (index) for the missing URL. So `/shop` wasn't "duplicating" home content — it WAS the home page leaking through.
+
+**Built:** new `src/pages/shop.astro` — a minimal page using the shared `PageHero` component with just `title="Shop"` and nothing else. Now that a real page exists at the route, Cloudflare serves it instead of the home fallback. The Buy Button embed per Collection goes inside this page when Shopify is ready (Phase 3.3).
+
+**Files changed:** `src/pages/shop.astro` (new). No content files, no other pages touched.
+
+**Tested in sandbox:** build went from 18 to 19 pages (the new `/shop` now generates). Verified the rendered page has the Shop heading and none of the home content (no lede, no "Upcoming Shows" button, no hero photo). Phone + desktop screenshots confirmed a clean title-only page.
+
 ## Shows page — auditions as a date range, shown to families (2026-06-03)
 
 **Goal:** (1) Surface the existing Auditions button per show (it was already built but only appears when a show has an audition link). (2) Replace the single audition date with a date *range*, since auditions often run several days. (3) Show the audition dates to families as text, on both the listing cards and the detail page.
