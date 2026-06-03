@@ -62,7 +62,9 @@ collections:
       - { name: "synopsis", label: "Synopsis", widget: "text", hint: "1–3 short paragraphs about the show." }
       - { name: "ticketing_url", label: "Buy Tickets link (external URL)", widget: "string", required: false, hint: "Where to buy tickets. Leave blank if tickets aren't on sale yet." }
       - { name: "audition_url", label: "Audition sign-up link (external URL)", widget: "string", required: false, hint: "Where people sign up to audition. Leave blank to hide the Auditions button entirely." }
-      - { name: "audition_date", label: "Audition date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "After this date passes, the Auditions button automatically greys out to 'Auditions closed'. Leave blank to keep the button active as long as there's a link." }
+      - { name: "audition_start", label: "Audition start date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "First day of auditions. For a single-day audition, set this and the end date to the same day. Leave blank if not scheduled yet." }
+      - { name: "audition_end", label: "Audition end date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "Last day of auditions. After this day passes, the Auditions button automatically greys out to 'Auditions closed'. For a single-day audition, use the same day as the start." }
+      - { name: "audition_display", label: "Audition dates (shown to families)", widget: "string", required: false, hint: "The audition dates as you want visitors to read them. Example: August 3–7, 2026. Shown next to the Auditions button. Leave blank to show no date text." }
       - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
 
   # ============================================================
