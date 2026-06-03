@@ -1,0 +1,507 @@
+# ============================================================
+# DECAP CMS CONFIGURATION
+# ============================================================
+# This file tells Decap CMS:
+#   - Where the content lives (the GitHub repo + branch).
+#   - How to log staff in (via our Cloudflare Functions OAuth endpoint).
+#   - What content "collections" staff can edit (forms they see).
+#
+# Phase 2 adds: Shows, Programs, Donor Tiers, About, Casting,
+# plus a Donate Settings record for the Soapbox embed URL.
+# ============================================================
+
+backend:
+  name: github
+  repo: PYTheatre/pyt-website
+  branch: main
+  base_url: https://pyt-website.pages.dev
+  auth_endpoint: /api/auth
+
+# Where uploaded images & files are stored in the repo.
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# Helpful, friendly commit messages so the GitHub history reads well.
+commit_messages:
+  create: "Create {{collection}} entry: {{slug}}"
+  update: "Update {{collection}} entry: {{slug}}"
+  delete: "Delete {{collection}} entry: {{slug}}"
+  uploadMedia: "Upload media: {{path}}"
+  deleteMedia: "Delete media: {{path}}"
+
+# ------------------------------------------------------------
+# COLLECTIONS — the editing forms staff see
+# ------------------------------------------------------------
+collections:
+
+  # ============================================================
+  # SHOWS — one entry per Mainstage production.
+  # Folder collection: each show becomes its own file under
+  # src/content/shows/, and the site generates a detail page
+  # at /shows/<slug> automatically.
+  # ============================================================
+  - name: "shows"
+    label: "Shows"
+    label_singular: "Show"
+    description: "Mainstage productions. Each show gets its own page at /shows/<slug>."
+    folder: "src/content/shows"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{start_date}}"
+    sortable_fields: ["start_date", "title"]
+    fields:
+      - { name: "title", label: "Show title", widget: "string", hint: "Example: Dragons Love Tacos" }
+      - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, hint: "Small text above the title on the show page. Example: Spring 2026 Mainstage" }
+      - { name: "start_date", label: "First performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "date_display", label: "Date display text", widget: "string", hint: "How dates appear on the page. Example: May 15–16, 2026" }
+      - { name: "venue", label: "Venue", widget: "string", default: "Mountain View Center for the Performing Arts" }
+      - { name: "runtime_minutes", label: "Runtime (minutes)", widget: "number", value_type: "int", required: false, min: 1, max: 600, step: 1, pattern: ["^[0-9]*$", "Enter a whole number of minutes only (for example 90), or leave it blank."], hint: "Approximate, in minutes. Whole numbers only — for example 90. Leave blank if unknown." }
+      - { name: "ages", label: "Recommended ages", widget: "string", required: false, hint: "Example: Ages 5 and up" }
+      - { name: "poster", label: "Show poster image", widget: "image", required: false, hint: "Upload a poster image. If empty, a colored placeholder is used." }
+      - { name: "synopsis", label: "Synopsis", widget: "text", hint: "1–3 short paragraphs about the show." }
+      - { name: "ticketing_url", label: "Buy Tickets link (external URL)", widget: "string", required: false, hint: "Where to buy tickets. Leave blank if tickets aren't on sale yet." }
+      - { name: "audition_url", label: "Audition sign-up link (external URL)", widget: "string", required: false, hint: "Where people sign up to audition. Leave blank to hide the Auditions button entirely." }
+      - { name: "audition_date", label: "Audition date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "After this date passes, the Auditions button automatically greys out to 'Auditions closed'. Leave blank to keep the button active as long as there's a link." }
+      - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
+
+  # ============================================================
+  # PROGRAMS — Classes, Camps, Stories on Stage, Studio Intensives.
+  # One form covers all four, with a "Program type" dropdown.
+  # ============================================================
+  - name: "programs"
+    label: "Classes & Camps"
+    label_singular: "Program"
+    description: "Classes, camps, and Studio Intensives. Each program is a card on the Programs page that links out to Active.com for registration. (Stories on Stage productions have their own section.)"
+    folder: "src/content/programs"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{name}} — {{program_type}}"
+    sortable_fields: ["name", "program_type", "season"]
+    fields:
+      - { name: "name", label: "Program name", widget: "string", hint: "Example: Drama Tots" }
+      - { name: "eyebrow", label: "Eyebrow text (audience)", widget: "string", required: false, hint: "Example: For Young Performers" }
+      - name: "program_type"
+        label: "Program type"
+        widget: "select"
+        options: ["Class", "Camp", "Studio Intensive"]
+        default: "Class"
+      - { name: "age_range", label: "Age range", widget: "string", hint: "Example: Ages 4–6" }
+      - name: "season"
+        label: "Season"
+        widget: "select"
+        options: ["Fall", "Spring", "Summer", "Year-round"]
+        default: "Year-round"
+      - { name: "description", label: "Description", widget: "text" }
+      - { name: "schedule", label: "Schedule blurb", widget: "string", required: false, hint: "Example: Wednesdays 4–5pm, 8 weeks" }
+      - { name: "tuition", label: "Tuition / cost", widget: "string", required: false, hint: "Example: $240 per session" }
+      - { name: "registration_url", label: "Active.com registration link", widget: "string", required: false, hint: "Where families register. Leave blank if registration isn't open yet." }
+      - { name: "scholarships_available", label: "Scholarships available?", widget: "boolean", default: false }
+
+  # ============================================================
+  # STORIES ON STAGE PRODUCTIONS — one entry per production.
+  # The annual SoS company performs 6 productions per year. Each
+  # production shows up as a card on the /stories-on-stage page,
+  # with its own Buy Tickets and School Bookings links.
+  # Unlike Mainstage shows, SoS productions do NOT have their own
+  # detail pages — they live entirely on the Stories on Stage page.
+  # ============================================================
+  - name: "stories-on-stage"
+    label: "Stories on Stage Productions"
+    label_singular: "Production"
+    description: "The 6 productions performed by the Stories on Stage company each year."
+    folder: "src/content/stories-on-stage"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{start_date}}"
+    sortable_fields: ["start_date", "title"]
+    fields:
+      - { name: "title", label: "Production title", widget: "string", hint: "Example: The Very Hungry Caterpillar" }
+      - { name: "start_date", label: "First performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
+      - { name: "date_display", label: "Date display text", widget: "string", hint: "How dates appear on the card. Example: October 10–25, 2026" }
+      - { name: "venue", label: "Venue", widget: "string", default: "PYT Studio Theatre + touring" }
+      - { name: "synopsis", label: "Short synopsis", widget: "text", hint: "2–3 sentences. Stories on Stage cards are smaller than Mainstage show cards." }
+      - { name: "poster", label: "Poster image", widget: "image", required: false, hint: "Upload an optional poster. If empty, a colored placeholder is used." }
+      - { name: "public_ticketing_url", label: "Buy Tickets link (public performances)", widget: "string", required: false, hint: "Leave blank to hide the Buy Tickets button." }
+      - { name: "school_bookings_url", label: "School Bookings link", widget: "string", required: false, hint: "Leave blank to hide the School Bookings button." }
+
+  # ============================================================
+  # CAST PAGES — one entry per show's cast page.
+  # These live at /cast/<slug> and are NOT in the site nav. Share the
+  # URL directly with the cast (e.g. by newsletter).
+  #
+  # IMPORTANT — the password is a SOFT gate, not real security. The
+  # page content is still sent to the browser and can be viewed by
+  # someone who knows how to look. Only put NON-SENSITIVE info here
+  # (first names, roles, general rehearsal times, notes). Never put
+  # addresses, medical info, or other sensitive data on a cast page.
+  # ============================================================
+  - name: "cast-pages"
+    label: "Cast Pages"
+    label_singular: "Cast Page"
+    description: "Password-protected cast pages, one per show. Not in the site menu — share the link with your cast. The password is a light gate for non-sensitive info only (see the note on each field)."
+    folder: "src/content/cast-pages"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{show_title}}"
+    fields:
+      - { name: "show_title", label: "Show title", widget: "string", hint: "Example: Matilda — Spring 2026" }
+      - { name: "password", label: "Page password", widget: "string", hint: "The password you'll share with the cast. Keep it simple to share, but not obvious. NOTE: this is a light gate, not strong security — never put sensitive personal info on this page." }
+      - { name: "intro", label: "Intro text (optional)", widget: "text", required: false, hint: "Shown at the top, above the sheets. Use blank lines between paragraphs." }
+      - { name: "cast_list_sheet_url", label: "Cast list — LINK to a private Google Sheet (optional)", widget: "string", required: false, hint: "Paste the link to your cast list sheet. This is shown as a 'View the cast list' button — it is NOT embedded. IMPORTANT: keep this sheet PRIVATE in Google (share it only with specific cast-family accounts or a cast Google Group — NOT 'anyone with the link'), because it contains children's full names. Leave blank to hide the button." }
+      - { name: "rehearsal_sheet_url", label: "Rehearsal schedule — EMBEDDED Google Sheet (optional)", widget: "string", required: false, hint: "Paste the share link for the rehearsal schedule. This IS embedded on the page, so it must use ROLE NAMES ONLY (e.g. 'Jack, Crutchie, Newsies') and must NOT contain any child's name (including in the notes column). This is the sheet you'll update through the run. Leave blank to hide it." }
+      - { name: "body", label: "Notes (optional)", widget: "text", required: false, hint: "Any extra notes for the cast — contacts, what to bring, parking, reminders. Shown below the sheets." }
+
+  # ============================================================
+  # SITE SETTINGS — single-record collections for site-wide values.
+  # The "Donation Campaign" record already exists from Phase 1.
+  # Phase 2 adds "Donor Tiers", "Donate Page", "About Page", "Casting Page".
+  # ============================================================
+  - name: "settings"
+    label: "Site Settings"
+    label_singular: "Site Settings"
+    description: "Edit site-wide values: donation campaign, donor tiers, donate page, about page, and casting page."
+    delete: false
+    editor:
+      preview: false
+    files:
+
+      # --- Home Page ---
+      # All editable copy on the home page. Layout/structure stays in
+      # code. The "Now Playing" poster is automatic (next upcoming show
+      # from the Shows collection), so there's no field for it here.
+      - name: "home-page"
+        label: "Home Page"
+        file: "src/content/settings/home-page.json"
+        description: "All the words, links, and numbers on the home page. The 'Now Playing' poster updates automatically from your Shows list."
+        fields:
+          - { name: "hero_eyebrow", label: "Hero — small eyebrow text", widget: "string", hint: "Example: On stage now · Spring 2026" }
+          - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Example: Outstanding youth theatre." }
+          - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
+          - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text" }
+          - { name: "hero_image", label: "Hero — banner photo (wide, under the intro)", widget: "image", required: false, hint: "Optional. A wide landscape photo shown as a banner under the intro text. Leave empty to hide it." }
+          - { name: "hero_primary_label", label: "Hero — primary button label", widget: "string" }
+          - { name: "hero_primary_url", label: "Hero — primary button link", widget: "string" }
+          - { name: "hero_secondary_label", label: "Hero — secondary button label", widget: "string" }
+          - { name: "hero_secondary_url", label: "Hero — secondary button link", widget: "string" }
+          - { name: "now_playing_label", label: "Poster — 'Now playing' label", widget: "string", default: "Now playing" }
+          - { name: "discovery_eyebrow", label: "Discovery section — eyebrow", widget: "string", default: "Find your way in" }
+          - { name: "discovery_heading", label: "Discovery section — heading", widget: "string" }
+          - name: "discovery_cards"
+            label: "Discovery cards"
+            widget: "list"
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "eyebrow", label: "Card eyebrow", widget: "string", hint: "Example: For families" }
+              - { name: "title", label: "Card title", widget: "string" }
+              - { name: "body", label: "Card text", widget: "text" }
+              - name: "meta"
+                label: "Tags (small pills)"
+                widget: "list"
+                field: { name: "tag", label: "Tag", widget: "string" }
+              - { name: "url", label: "Card link", widget: "string", hint: "Example: /shows" }
+          - { name: "impact_eyebrow", label: "Impact section — eyebrow", widget: "string", default: "Our impact" }
+          - { name: "impact_heading", label: "Impact section — heading", widget: "string" }
+          - name: "stats"
+            label: "Impact stats"
+            widget: "list"
+            summary: "{{fields.figure}} — {{fields.label}}"
+            fields:
+              - { name: "figure", label: "Big number", widget: "string", hint: "Example: 30+ or $45K" }
+              - { name: "label", label: "Description", widget: "string" }
+          - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
+          - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
+
+      # --- Shows Page (hero text only; the shows themselves are their own collection) ---
+      - name: "shows-page"
+        label: "Shows Page (intro)"
+        file: "src/content/settings/shows-page.json"
+        description: "The heading and intro text at the top of the Shows page. (The shows themselves are edited under 'Shows'.)"
+        fields:
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "lede", label: "Intro paragraph", widget: "text" }
+
+      # --- Programs Page (hero text only) ---
+      - name: "programs-page"
+        label: "Classes & Camps Page (intro)"
+        file: "src/content/settings/programs-page.json"
+        description: "The heading and intro text at the top of the Classes & Camps page. (The programs themselves are edited under 'Classes & Camps'.)"
+        fields:
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "lede", label: "Intro paragraph", widget: "text" }
+
+      # --- Footer (tagline + copyright line) ---
+      - name: "footer"
+        label: "Footer"
+        file: "src/content/settings/footer.json"
+        description: "The tagline and copyright text in the site footer. (The footer link columns are part of the site structure.)"
+        fields:
+          - { name: "tagline", label: "Tagline", widget: "text", hint: "Short line under the PYT name in the footer." }
+          - { name: "copyright_extra", label: "Copyright extra text", widget: "string", hint: "Shown after the year. Example: 501(c)(3) · EIN 77-0335126" }
+
+      # --- Donation campaign progress numbers (from Phase 1) ---
+      - name: "donation-campaign"
+        label: "Donation Campaign"
+        file: "src/content/settings/donation-campaign.json"
+        fields:
+          - { name: "goal_amount", label: "Goal amount (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 200000 }
+          - { name: "raised_amount", label: "Amount raised so far (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 76420 }
+          - { name: "donor_count", label: "Number of donors", widget: "number", value_type: "int", min: 0, default: 142 }
+          - { name: "campaign_label", label: "Campaign name shown on the home page", widget: "string", default: "2026 Annual Campaign" }
+
+      # --- Donor tiers shown on the Donate page ---
+      - name: "donor-tiers"
+        label: "Donor Tiers"
+        file: "src/content/settings/donor-tiers.json"
+        description: "The list of giving tiers shown on the Donate page (Friend, Supporter, etc.)."
+        fields:
+          - name: "tiers"
+            label: "Tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.range}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string" }
+              - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
+              - { name: "description", label: "Description", widget: "text" }
+
+      # --- Donate page settings (Soapbox embed URL, intro copy) ---
+      - name: "donate-page"
+        label: "Donate Page"
+        file: "src/content/settings/donate-page.json"
+        description: "The Donate page — intro text, employer matching note, and the Soapbox donation form embed URL."
+        fields:
+          - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
+          - { name: "intro_body", label: "Intro paragraph", widget: "text" }
+          - { name: "matching_note", label: "Employer matching note", widget: "text", required: false, hint: "Optional. Shown as a callout near the donate form." }
+          - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate button opens. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
+
+      # --- About page ---
+      - name: "about-page"
+        label: "About Page"
+        file: "src/content/settings/about-page.json"
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "About Peninsula Youth Theatre" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our story" }
+          - { name: "banner_image", label: "Banner image (wide strip near top)", widget: "image", required: false, hint: "Optional. A wide landscape image works best — it's shown as a short banner under the title. Leave empty to hide." }
+          - { name: "story", label: "Story (multiple paragraphs)", widget: "text", hint: "The org's story. Use blank lines to separate paragraphs." }
+          - { name: "address", label: "Street address", widget: "string", default: "2500 Old Middlefield Way, Mountain View, CA 94043" }
+          - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
+          - { name: "email", label: "Email", widget: "string", default: "info@pytnet.org" }
+          - { name: "ein", label: "EIN (tax ID)", widget: "string", default: "77-0335126" }
+          - { name: "staff_section_heading", label: "Staff section heading", widget: "string", required: false, default: "Our Staff" }
+          - { name: "staff_section_blurb", label: "Staff section description (optional)", widget: "text", required: false, hint: "Optional short text under the Staff heading. Leave blank to omit." }
+          - name: "staff_members"
+            label: "Staff members"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.pyt_title}}"
+            fields:
+              - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
+              - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Artistic Director" }
+              - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line. Example: Joined PYT in 2015" }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
+          - { name: "board_section_heading", label: "Board section heading", widget: "string", required: false, default: "Board of Directors" }
+          - { name: "board_section_blurb", label: "Board section description (optional)", widget: "text", required: false, hint: "Optional short text under the section heading. Leave blank to omit." }
+          - name: "board_members"
+            label: "Board members"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.pyt_title}}"
+            fields:
+              - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
+              - { name: "pyt_title", label: "PYT title", widget: "string", hint: "Example: Board President, Board Member" }
+              - { name: "outside_title", label: "Job title outside PYT", widget: "string", required: false, hint: "Example: Partner at Acme Law LLP" }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the member's initials are shown in a colored placeholder." }
+
+      # --- Casting page ---
+      - name: "casting-page"
+        label: "Casting Page"
+        file: "src/content/settings/casting-page.json"
+        description: "The Casting page — text content plus the hero image."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Casting" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Auditioning at PYT" }
+          - { name: "hero_image", label: "Hero image", widget: "image", required: false, hint: "Upload a wide image for the top of the page. If empty, a colored placeholder is used." }
+          - { name: "body", label: "Page body (Markdown supported)", widget: "markdown", hint: "Use blank lines between paragraphs. Bulleted lists with - work too." }
+          - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
+          - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
+          - { name: "cta_url", label: "Call-to-action button URL", widget: "string", default: "/shows" }
+
+      # --- Judy Robe & Spirits Awards page ---
+      # A standalone page (not in the nav) linked from About and Casting.
+      # Editable intro copy, one optional photo, and a winners list that
+      # can grow to 30+ entries.
+      - name: "judy-robe-spirits-awards"
+        label: "Judy Robe & Spirits Awards Page"
+        file: "src/content/settings/judy-robe-spirits-awards.json"
+        description: "The Judy Robe & Spirits Awards page (/judy-robe-spirits-awards). Not in the main menu — linked from the About and Casting pages."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Judy Robe & Spirits Awards" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "A PYT tradition" }
+          - { name: "intro", label: "Description paragraph", widget: "text", hint: "A short description of the awards." }
+          - { name: "photo", label: "Photo (optional)", widget: "image", required: false, hint: "Optional. Shown as a banner under the description. Leave empty to hide." }
+          - { name: "winners_heading", label: "Winners — section heading", widget: "string", default: "Past winners" }
+          - { name: "winners_blurb", label: "Winners — section description (optional)", widget: "text", required: false }
+          - name: "winners"
+            label: "Winners"
+            widget: "list"
+            required: false
+            summary: "{{fields.year}} — {{fields.name}}"
+            fields:
+              - { name: "year", label: "Year", widget: "string", hint: "Example: 2025" }
+              - { name: "name", label: "Winner name(s)", widget: "string", hint: "Example: Jane Smith, or a list of names" }
+
+      # --- Employment page ---
+      # Two parallel lists: paid roles and volunteer opportunities.
+      # Each section's heading and intro are editable. If a section's
+      # list is empty, that section automatically hides on the page.
+      - name: "employment-page"
+        label: "Employment Page"
+        file: "src/content/settings/employment-page.json"
+        description: "The Employment page — paid roles and volunteer opportunities. Each section auto-hides if empty."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Work with us" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Careers & volunteering" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+
+          - { name: "roles_heading", label: "Paid roles — section heading", widget: "string", default: "Roles with PYT" }
+          - { name: "roles_intro", label: "Paid roles — section intro (optional)", widget: "text", required: false }
+          - name: "roles"
+            label: "Paid roles"
+            widget: "list"
+            required: false
+            summary: "{{fields.title}} — {{fields.type}}"
+            fields:
+              - { name: "title", label: "Position title", widget: "string", hint: "Example: Production Manager" }
+              - name: "type"
+                label: "Type"
+                widget: "select"
+                options: ["Full-time", "Part-time", "Seasonal", "Contract"]
+                default: "Part-time"
+              - { name: "compensation", label: "Compensation / salary (optional)", widget: "string", required: false, hint: "Example: $60,000–$75,000 / year. Leave blank to hide." }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "how_to_apply_label", label: "Apply button label", widget: "string", default: "Apply" }
+              - { name: "how_to_apply_url", label: "Apply button link", widget: "string", required: false, hint: "External URL or mailto: link. Leave blank to hide the button." }
+
+          - { name: "volunteer_heading", label: "Volunteer — section heading", widget: "string", default: "Volunteer with PYT" }
+          - { name: "volunteer_intro", label: "Volunteer — section intro (optional)", widget: "text", required: false }
+          - name: "volunteer_opportunities"
+            label: "Volunteer opportunities"
+            widget: "list"
+            required: false
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "title", label: "Opportunity title", widget: "string", hint: "Example: Front-of-house volunteer" }
+              - { name: "when_where", label: "When / where (optional)", widget: "string", required: false, hint: "Example: During Mainstage performance weekends" }
+              - { name: "time_commitment", label: "Time commitment (optional)", widget: "string", required: false, hint: "Example: About 4 hours per show" }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "how_to_apply_label", label: "Button label", widget: "string", default: "Get in touch" }
+              - { name: "how_to_apply_url", label: "Button link", widget: "string", required: false, hint: "External URL or mailto: link. Leave blank to hide the button." }
+
+      # --- Rentals page ---
+      # Intro copy, a list of rental categories (each with a photo),
+      # and the inquiry section text. The category list can grow over
+      # time — staff add, remove, and reorder categories and swap
+      # photos here. The Formspree endpoint that delivers the inquiry
+      # form to PYT's inboxes is also set here.
+      - name: "rentals-page"
+        label: "Rentals Page"
+        file: "src/content/settings/rentals-page.json"
+        description: "The /rentals page — intro copy, rental categories (with photos), and the inquiry form settings. Add or reorder categories anytime; the section hides if the list is empty."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Costume & Prop Rentals" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "For schools & theatres" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          - { name: "categories_heading", label: "Categories — section heading", widget: "string", default: "What we rent" }
+          - { name: "categories_blurb", label: "Categories — section description (optional)", widget: "text", required: false }
+          - name: "categories"
+            label: "Rental categories"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}}"
+            fields:
+              - { name: "name", label: "Category name", widget: "string", hint: "Example: Costumes" }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "A landscape (wide) photo works best — it's cropped to a 4:3 frame. If empty, a 'Photo coming soon' placeholder is shown." }
+          - { name: "inquiry_heading", label: "Inquiry — section heading", widget: "string", default: "Request a rental" }
+          - { name: "inquiry_blurb", label: "Inquiry — section description (optional)", widget: "text", required: false }
+          - { name: "form_endpoint", label: "Inquiry form delivery URL (Formspree)", widget: "string", required: false, hint: "The Formspree endpoint that emails inquiries to PYT. Looks like https://formspree.io/f/xxxxxxx. If blank, the form is replaced by an email link." }
+
+      # --- Sponsorship page ---
+      # All tier definitions, intro copy, and contact info for /sponsor.
+      # Show tiers and season tiers are separate lists so staff can edit
+      # each independently. Each tier has its own donation_url so when
+      # Soapbox is wired up, every tier can deep-link to its own pre-filled
+      # donation form.
+      - name: "sponsorship-page"
+        label: "Sponsorship Page"
+        file: "src/content/settings/sponsorship-page.json"
+        description: "The /sponsor page — intro copy, show-level tiers, season-level tiers, and contact details."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Sponsor a Show or a Season" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Corporate & individual sponsorship" }
+          - { name: "intro_heading", label: "Intro heading", widget: "string" }
+          - { name: "intro_body", label: "Intro paragraph(s)", widget: "text", hint: "Use blank lines to separate paragraphs." }
+          - { name: "contact_email", label: "Sponsorship contact email", widget: "string", default: "info@pytnet.org" }
+          - { name: "contact_blurb", label: "Contact section text", widget: "text" }
+          - { name: "show_tiers_heading", label: "Show tiers — section heading", widget: "string", default: "Sponsor a single Mainstage show" }
+          - { name: "show_tiers_blurb", label: "Show tiers — section description", widget: "text" }
+          - name: "show_tiers"
+            label: "Show sponsorship tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.amount}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string", hint: "Example: Show Producer" }
+              - { name: "amount", label: "Amount (display text)", widget: "string", hint: "Example: $10,000" }
+              - { name: "description", label: "Tier description", widget: "text" }
+              - name: "benefits"
+                label: "Benefits"
+                widget: "list"
+                field: { name: "benefit", label: "Benefit", widget: "string" }
+              - { name: "donation_url", label: "Donation URL for this tier", widget: "string", required: false, hint: "Leave blank to show an 'Inquire' button that emails the contact address." }
+          - { name: "season_tiers_heading", label: "Season tiers — section heading", widget: "string", default: "Sponsor the full season" }
+          - { name: "season_tiers_blurb", label: "Season tiers — section description", widget: "text" }
+          - name: "season_tiers"
+            label: "Season sponsorship tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.amount}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string", hint: "Example: Season Producer" }
+              - { name: "amount", label: "Amount (display text)", widget: "string", hint: "Example: $25,000" }
+              - { name: "description", label: "Tier description", widget: "text" }
+              - name: "benefits"
+                label: "Benefits"
+                widget: "list"
+                field: { name: "benefit", label: "Benefit", widget: "string" }
+              - { name: "donation_url", label: "Donation URL for this tier", widget: "string", required: false, hint: "Leave blank to show an 'Inquire' button that emails the contact address." }
+
+      # --- Stories on Stage page ---
+      # Everything on the /stories-on-stage page that ISN'T per-production.
+      # The 6 productions themselves are in their own collection above.
+      # This record covers: page intro, audition section copy, and the
+      # "What is Stories on Stage?" explainer paragraphs.
+      - name: "stories-on-stage-page"
+        label: "Stories on Stage Page"
+        file: "src/content/settings/stories-on-stage-page.json"
+        description: "The /stories-on-stage page — intro copy, auditions section, and the explainer block. (The 6 productions themselves are edited in 'Stories on Stage Productions' above.)"
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Stories on Stage" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our second season" }
+          - { name: "intro_lede", label: "Intro paragraph (under the title)", widget: "text" }
+          - { name: "auditions_strip_text", label: "Audition strip — text at the top of the page", widget: "string", default: "Auditioning for the next Stories on Stage company?" }
+          - { name: "auditions_strip_link_text", label: "Audition strip — link text", widget: "string", default: "Jump to auditions" }
+          - { name: "lineup_heading", label: "Season lineup section heading", widget: "string", default: "This season's lineup" }
+          - { name: "lineup_blurb", label: "Season lineup section description", widget: "text" }
+          - { name: "auditions_heading", label: "Auditions section heading", widget: "string", default: "Auditions" }
+          - { name: "auditions_intro", label: "Auditions — intro paragraph", widget: "text" }
+          - { name: "auditions_dates", label: "Auditions — dates", widget: "string", hint: "Example: September 12–14, 2026" }
+          - { name: "auditions_age_range", label: "Auditions — age range", widget: "string", hint: "Example: Ages 8–14" }
+          - { name: "auditions_what_to_prepare", label: "Auditions — what to prepare", widget: "text" }
+          - { name: "auditions_fees", label: "Auditions — fees / tuition info", widget: "text", required: false }
+          - { name: "auditions_form_url", label: "Auditions registration Google Form URL", widget: "string", required: false, hint: "Paste the Google Form link here. Leave blank to hide the registration button until it's ready." }
+          - { name: "auditions_form_blurb", label: "Auditions form — short blurb next to the button", widget: "text", required: false }
+          - { name: "explainer_heading", label: "Explainer section heading", widget: "string", default: "What is Stories on Stage?" }
+          - { name: "explainer_body", label: "Explainer paragraphs", widget: "text", hint: "Use blank lines to separate paragraphs." }

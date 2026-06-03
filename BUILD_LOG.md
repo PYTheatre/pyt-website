@@ -6,6 +6,21 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Build hardening — runtime_minutes can no longer break the whole site (2026-06-03)
+
+**Goal:** A single bad value in a show's "Runtime (minutes)" field had taken the *entire* site build down (the 2026-06-02 deploy saga: text/blank in `runtime_minutes` on new shows → schema rejected it → nothing rebuilt → no new content went live). Make that class of failure impossible, and add a friendly form guard.
+
+**Built (two layers):**
+- **B — tolerant schema (the important one).** In `src/content.config.ts`, `runtime_minutes` changed from `z.number().int().optional()` to `z.coerce.number().int().positive().optional().catch(undefined)`. Now a bad value (text, empty string from a cleared field, 0, a decimal) is quietly treated as "no runtime" for that ONE show — the runtime row just doesn't render — and every other page still builds and deploys. One typo can never again take the whole site offline.
+- **A — CMS form guard.** In `public/admin/config.yml`, the `runtime_minutes` field gained `min: 1, max: 600, step: 1` and a `pattern` (`^[0-9]*$`) with a plain-language error ("Enter a whole number of minutes only…"). Decap shows this inline in the form before a bad value can be saved. Field was already a `number` widget; this tightens it.
+
+**Files changed:** `src/content.config.ts`, `public/admin/config.yml`. No `src/content/**` touched.
+
+**Tested in sandbox (B, fully verified):** injected `runtime_minutes: "about an hour"` into a real show file → clean build, 18 pages, affected page rendered with the runtime row correctly hidden. Repeated with `runtime_minutes: ""` → also clean. Restored real data → clean 18-page build. Phone (390px) + desktop (1280px) screenshots of a show page confirmed healthy.
+**Not verifiable in sandbox (A):** the Decap form's inline pattern error only runs live in the `/admin` editor. Config validated as well-formed YAML; live behavior needs a quick client check (try saving letters in the field). Decap's pattern validation has a flaky history, so B is the real safety net and A is the polish on top.
+
+---
+
 ## Phase status overview
 
 | Phase | What | Status |
