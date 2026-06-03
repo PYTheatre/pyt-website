@@ -53,18 +53,13 @@ If any aren't live, help the client upload the outstanding zip. (Those zip files
 
 ## HOUSEKEEPING THE CLIENT SHOULD DO
 
-- **Delete the sample cast page.** The Cast Pages feature shipped with a sample entry `src/content/cast-pages/sample-delete-me.md` (password "demo"), clearly marked for deletion. The client should delete it via the CMS or GitHub when ready. (Rule 5: chat-and-upload can't delete files.)
+_(Nothing outstanding here right now.)_
 
-### Cast page with a corrupted (form-dump) filename — OPEN, needs a GitHub delete
-**State (2026-06-02):** There is ONE file in `src/content/cast-pages/` whose filename is the entire form contents mashed together: it begins `map-show_title-wind-in-the-willows-password-demo-intro-well-done-...`. Its contents are a valid cast page (show: Wind in the Willows, password: demo, a real-looking Google Sheets rehearsal link, intro "Well done in auditions you were all great"). It works but produces a grotesque URL and is untidy.
-
-**Why it's not a normal upload fix:** the fix is fundamentally a DELETE (bad filename), and chat-and-upload can only add/replace, never delete (Rule 5). So the client must delete it directly on GitHub.
-
-**Unresolved question (ask the client first):** Is this a REAL cast page to keep, or leftover test/sample junk? The "demo" password and intro suggest test content (possibly a re-save of the old sample-delete-me), but it has a real-looking Sheet link.
-- If **junk:** client deletes the file on GitHub. Done. Direct URL pattern: `https://github.com/PYTheatre/pyt-website/blob/main/src/content/cast-pages/<filename>` → trash-can icon → commit.
-- If **keep:** client deletes the bad file AND a NEW clean-named replacement is uploaded (e.g. `wind-in-the-willows.md` with the same frontmatter) so the page keeps working at a tidy `/cast/wind-in-the-willows` URL. (Recreate from the cloned repo — the contents are known and short.)
-
-**Was mid-discussion when the client stepped away.** Pick this up by asking the keep-or-junk question.
+### ✅ RESOLVED 2026-06-02 — cast-pages folder cleanup
+Both former housekeeping items about cast pages are **done**:
+- The sample entry (`sample-delete-me.md`) and the corrupted form-dump-named file (the one beginning `map-show_title-wind-in-the-willows-...`) are **both gone**. The client confirmed that `https://github.com/PYTheatre/pyt-website/tree/main/src/content/cast-pages` returns a 404 — the folder is empty.
+- No GitHub delete is pending, and the earlier keep-or-junk question is moot (nothing there to keep or junk).
+- The Cast Pages CMS collection and the `/cast/<slug>` page template still exist and work normally; the content folder is just empty until staff create a real cast page through the CMS. An empty folder is the expected, correct state — not a bug.
 
 ---
 
