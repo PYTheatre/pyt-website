@@ -30,7 +30,11 @@ const shows = defineCollection({
     end_date: z.coerce.date(),
     date_display: z.string(),
     venue: z.string(),
-    runtime_minutes: z.number().int().optional(),
+    // Runtime is tolerant by design: if a staffer ever saves a bad value
+    // (text, blank-as-empty-string, a stray decimal), we quietly treat it as
+    // "no runtime" rather than failing the ENTIRE site build. coerce turns a
+    // numeric string into a number; catch() swallows anything uncoercible.
+    runtime_minutes: z.coerce.number().int().positive().optional().catch(undefined),
     ages: z.string().optional(),
     poster: z.string().optional(),
     synopsis: z.string(),
