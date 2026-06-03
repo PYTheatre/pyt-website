@@ -1,10 +1,25 @@
 # PYT Website — In-Flight Items
 
-**Last updated:** 2026-05-29 (handoff reconciliation)
+**Last updated:** 2026-06-03 (end of session)
 
-**New Claude session: read `START_HERE.md` first.**
+**New Claude session: read `START_HERE.md` first, then the `HANDOVER-2026-06-03.md` prompt if present.**
 
 What is mid-stream right now, what's blocked on the client, what's deferred. Read this so you know what *not* to start fresh. When an item here is resolved, remove it and update `BUILD_LOG.md`.
+
+---
+
+## ✅ COMPLETED 2026-06-03 (all confirmed live by client)
+
+Done and live — listed so you don't re-investigate. Full detail in `BUILD_LOG.md` (newest entries at top).
+
+1. **runtime_minutes can't break the build** — schema made tolerant (`z.coerce.number().int().positive().optional().catch(undefined)`); CMS field got whole-number validation. A bad value is ignored, not site-breaking.
+2. **Shows page — auditions as a date range** — replaced single `audition_date` with `audition_start` / `audition_end` (drives auto-close) / `audition_display` (free text shown to families). Auditions button + date text on both the listing cards and the detail page. Date text shows whenever `audition_display` is filled (independent of a sign-up link); the button needs `audition_url`. Legacy `audition_date` kept as a tolerant fallback.
+3. **Shop page** — created `src/pages/shop.astro` (minimal, title only). Previously `/shop` had no page, so Cloudflare served the home page as a fallback. Shopify embed goes here later (Phase 3.3).
+4. **Cast Pages — broken slug fixed** — added `identifier_field: "show_title"` to the cast-pages CMS collection. Without a field named `title`, Decap dumped the whole form into the filename (garbled URLs). New cast pages now get clean slugs (e.g. `/cast/test-cast-page`).
+5. **Cast Pages — rehearsal resources** — new repeatable `resources` list (label + url per item) rendering as buttons, for Google Drive folder links etc. Hides when empty.
+6. **Casting page — Markdown now renders** — the Casting body uses the CMS markdown widget; the template was printing raw text (literal `**`). Added `marked` + `src/lib/markdown.ts` helper; bold/italic/lists/links now render. NOTE: Casting body is the ONLY markdown-widget field — every other body/description field is the plain `text` widget. The helper is reusable if you later switch a field to the markdown widget.
+
+**`test-cast-page.md` is a real test page in the repo** (password: `demo`). Client may want it deleted before launch — confirm before removing.
 
 ---
 
@@ -38,28 +53,16 @@ What is mid-stream right now, what's blocked on the client, what's deferred. Rea
 
 ---
 
-## SHIPPED THIS SESSION -- CONFIRM LIVE WITH CLIENT
+## EARLIER WORK — all confirmed live (historical)
 
-These were built and handed over as upload zips at the end of the 2026-05-29 session. Confirm with the client which actually reached the live site (uploads were error-prone). See `START_HERE.md` -> upload-status checklist.
-
-- **Home page redesign** (`PYT-upload-MAY29-v4-homepage.zip`): "Now Playing" removed; hero + optional photo banner. **Confirm live** (ask: is there no show box on the home page?).
-- **Donate button fix** (`PYT-upload-MAY29-v6-donatebutton.zip`): links to hosted Soapbox page, no popup. **Confirm live** (ask: does Donate open Soapbox in a new tab with no lag?).
-- **Cast Pages** (`PYT-upload-MAY29-v5-castpages.zip`): **client already confirmed LIVE.**
-- **Phase 2.12 batch** (Judy Robe Awards page, About staff + banner, Casting banner resize): structural parts confirmed live earlier in the session.
-
-If any aren't live, help the client upload the outstanding zip. (Those zip files lived in the PREVIOUS session's `/mnt/user-data/outputs/`, which you won't have. If a re-upload is needed, rebuild the relevant file from the cloned repo and repackage.)
+The 2026-05-29 and 2026-06-02 batches (home redesign with "Now Playing" removed, Donate button as hosted Soapbox link, Cast Pages, Judy Robe Awards page, About staff + banner, Casting banner, upcoming-shows strip, Shows page audition/ticket buttons) are all confirmed live. See `BUILD_LOG.md` for detail. Nothing pending from those.
 
 ---
 
 ## HOUSEKEEPING THE CLIENT SHOULD DO
 
-_(Nothing outstanding here right now.)_
-
-### ✅ RESOLVED 2026-06-02 — cast-pages folder cleanup
-Both former housekeeping items about cast pages are **done**:
-- The sample entry (`sample-delete-me.md`) and the corrupted form-dump-named file (the one beginning `map-show_title-wind-in-the-willows-...`) are **both gone**. The client confirmed that `https://github.com/PYTheatre/pyt-website/tree/main/src/content/cast-pages` returns a 404 — the folder is empty.
-- No GitHub delete is pending, and the earlier keep-or-junk question is moot (nothing there to keep or junk).
-- The Cast Pages CMS collection and the `/cast/<slug>` page template still exist and work normally; the content folder is just empty until staff create a real cast page through the CMS. An empty folder is the expected, correct state — not a bug.
+### Cast Pages — test page may want removing before launch
+`src/content/cast-pages/test-cast-page.md` is a working demo cast page (password: `demo`) created 2026-06-03 to test the gate, the embedded schedule, the private cast-list link, and resource buttons. It's harmless but should probably be deleted via the CMS (or GitHub) before the site is public. Confirm with the client before deleting. The cast-pages slug bug is fixed (see BUILD_LOG 2026-06-03) — any new cast page made through the CMS now gets a clean URL.
 
 ---
 
