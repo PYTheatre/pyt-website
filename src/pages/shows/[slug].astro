@@ -20,6 +20,10 @@ export async function getStaticPaths() {
 const { show } = Astro.props;
 const { Content } = await render(show);
 const data = show.data;
+
+// Audition window: end date drives auto-close (legacy single date as fallback).
+const auditionEnd = data.audition_end ?? data.audition_date;
+const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTime();
 ---
 
 <BaseLayout
@@ -64,6 +68,12 @@ const data = show.data;
               <dd>{data.ages}</dd>
             </div>
           )}
+          {data.audition_url && data.audition_display && !auditionsClosed && (
+            <div>
+              <dt>Auditions</dt>
+              <dd>{data.audition_display}</dd>
+            </div>
+          )}
         </dl>
 
         <div class="show-ctas">
@@ -75,6 +85,17 @@ const data = show.data;
             <span class="btn btn-outline btn-disabled" aria-disabled="true">
               Tickets coming soon
             </span>
+          )}
+          {data.audition_url && (
+            auditionsClosed ? (
+              <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                Auditions closed
+              </span>
+            ) : (
+              <a href={data.audition_url} class="btn btn-outline" target="_blank" rel="noopener">
+                Auditions
+              </a>
+            )
           )}
           <a href={`/sponsor?show=${show.id}`} class="btn btn-outline">
             Sponsor This Show

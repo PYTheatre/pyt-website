@@ -52,8 +52,11 @@ const now = new Date();
       ) : (
         <ul class="show-list">
           {shows.map((show) => {
+            // Auto-close uses the audition end date. Fall back to the legacy
+            // single audition_date for any show not yet migrated to the range.
+            const auditionEnd = show.data.audition_end ?? show.data.audition_date;
             const auditionsClosed =
-              show.data.audition_date && show.data.audition_date.getTime() < now.getTime();
+              auditionEnd && auditionEnd.getTime() < now.getTime();
             return (
             <li class="show-row">
               <div class="show-card">
@@ -79,7 +82,7 @@ const now = new Date();
 
                   <div class="show-actions">
                     {/* Audition button — hidden entirely when no link.
-                        When present: active if upcoming, greyed "closed" once the date passes. */}
+                        When present: active if upcoming, greyed "closed" once the end date passes. */}
                     {show.data.audition_url && (
                       auditionsClosed ? (
                         <span class="btn btn-outline btn-disabled" aria-disabled="true">
@@ -103,6 +106,12 @@ const now = new Date();
                       </span>
                     )}
                   </div>
+
+                  {/* Audition dates as text — shown only when there's a link and display text,
+                      and only while auditions are still open. */}
+                  {show.data.audition_url && show.data.audition_display && !auditionsClosed && (
+                    <p class="show-audition-dates">Auditions: {show.data.audition_display}</p>
+                  )}
 
                   <a href={`/shows/${show.id}`} class="show-link-cta">See details →</a>
                 </div>
@@ -241,6 +250,12 @@ const now = new Date();
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+  }
+
+  .show-audition-dates {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-sm);
   }
 
   .show-link-cta {
