@@ -7,7 +7,7 @@ date_display: June 25–28, 2026
 venue: Mountain View Center for the Performing Arts, Second Stage
 runtime_minutes: 75
 ages: Ages 12 and up
-poster: /uploads/screenshot-2026-05-28-at-10.06.05.png
+poster: /uploads/pyt-six-tickets.jpg
 synopsis: >-
   Divorced, beheaded, died, divorced, beheaded, survived. From Tudor Queens to
   Pop Icons, the SIX wives of Henry VIII take the mic to remix five hundred
