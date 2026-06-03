@@ -12,44 +12,12 @@
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import casting from "../content/settings/casting-page.json";
+import { renderMarkdown } from "../lib/markdown";
 
-// Parse the body into a sequence of blocks: paragraphs and lists.
-// This keeps the rendering simple and doesn't pull in a Markdown library.
-type Block = { type: "paragraph"; text: string } | { type: "list"; items: string[] };
-
-const blocks: Block[] = [];
-const lines = casting.body.split("\n");
-let buffer: string[] = [];
-let listBuffer: string[] = [];
-
-function flushBuffer() {
-  if (buffer.length > 0) {
-    blocks.push({ type: "paragraph", text: buffer.join(" ").trim() });
-    buffer = [];
-  }
-}
-function flushList() {
-  if (listBuffer.length > 0) {
-    blocks.push({ type: "list", items: [...listBuffer] });
-    listBuffer = [];
-  }
-}
-
-for (const line of lines) {
-  const trimmed = line.trim();
-  if (trimmed === "") {
-    flushBuffer();
-    flushList();
-  } else if (trimmed.startsWith("- ")) {
-    flushBuffer();
-    listBuffer.push(trimmed.slice(2));
-  } else {
-    flushList();
-    buffer.push(trimmed);
-  }
-}
-flushBuffer();
-flushList();
+// The body field uses the CMS "markdown" widget, so it holds real Markdown
+// (bold, italic, bullet lists, links). Render it to HTML here and inject it
+// below with set:html, rather than printing the raw text.
+const bodyHtml = renderMarkdown(casting.body);
 ---
 
 <BaseLayout
@@ -75,17 +43,7 @@ flushList();
 
   <!-- Body copy -->
   <section class="section casting-body">
-    <div class="container casting-prose">
-      {blocks.map((block) =>
-        block.type === "paragraph" ? (
-          <p>{block.text}</p>
-        ) : (
-          <ul>
-            {block.items.map((item) => <li>{item}</li>)}
-          </ul>
-        )
-      )}
-    </div>
+    <div class="container casting-prose" set:html={bodyHtml} />
   </section>
 
   <!-- Pulled-out closing line -->
@@ -160,19 +118,35 @@ flushList();
     max-width: 68ch;
   }
 
-  .casting-prose p {
+  /* The body is injected via set:html (rendered Markdown), so its elements
+     don't carry Astro's scoped attribute. Target them with :global within
+     the scoped .casting-prose wrapper. */
+  .casting-prose :global(p) {
     font-size: 1.08rem;
     line-height: 1.75;
     margin-bottom: var(--space-md);
   }
 
-  .casting-prose ul {
+  .casting-prose :global(strong) {
+    font-weight: 700;
+  }
+
+  .casting-prose :global(em) {
+    font-style: italic;
+  }
+
+  .casting-prose :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .casting-prose :global(ul) {
     margin: var(--space-md) 0;
     padding-left: 0;
     list-style: none;
   }
 
-  .casting-prose li {
+  .casting-prose :global(li) {
     position: relative;
     padding-left: 1.6rem;
     margin-bottom: 0.7rem;
@@ -181,7 +155,7 @@ flushList();
     color: var(--ink-soft);
   }
 
-  .casting-prose li::before {
+  .casting-prose :global(li)::before {
     content: "";
     position: absolute;
     left: 0;
