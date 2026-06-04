@@ -174,7 +174,7 @@ collections:
   - name: "settings"
     label: "Site Settings"
     label_singular: "Site Settings"
-    description: "Edit site-wide values: donation campaign, donor tiers, donate page, about page, and casting page."
+    description: "Edit site-wide values: donation campaign, donor tiers, Support PYT page, about page, and casting page."
     delete: false
     editor:
       preview: false
@@ -282,7 +282,7 @@ collections:
 
       # --- Donate page settings (Soapbox embed URL, intro copy) ---
       - name: "donate-page"
-        label: "Donate Page"
+        label: "Support PYT"
         file: "src/content/settings/donate-page.json"
         description: "The Donate page — intro text, employer matching note, and the Soapbox donation form embed URL."
         fields:
