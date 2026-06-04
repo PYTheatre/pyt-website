@@ -9,12 +9,12 @@
   "discovery_heading": "Find your place with PYT",
   "discovery_cards": [
     {
-      "eyebrow": "For young performers, schools & families",
-      "title": "Main Stage Productions",
-      "body": "Full-scale productions, performed at Mountain View's premier venue.",
+      "eyebrow": "For performers, schools & families",
+      "title": "PYT Shows",
+      "body": "Full-scale Main Stage productions, performed at Mountain View's premier venue; focused small cast Studio Shows, performed at our studio on Old Middlefield Way. ",
       "meta": [
-        "Main Stage",
-        "Everyone cast, auditions"
+        "Shows",
+        "Studio"
       ],
       "url": "/shows"
     },
