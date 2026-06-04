@@ -18,64 +18,66 @@ const raised = campaign.raised_amount;
 const donorCount = campaign.donor_count;
 const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
+// Clamp the visible fill so an over-goal campaign can't overflow the tube.
+const fillPct = Math.min(100, Math.max(0, pct));
+
+const soapboxDonateUrl =
+  donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
+
+/*
+  SPONSORSHIP — Shopify (NOT Soapbox).
+  Decided 2026-06-03: sponsorship moves to Shopify (reverses earlier
+  Soapbox plan). No Shopify store exists yet, so these two links are
+  PLACEHOLDERS and the buttons are rendered DISABLED until the real
+  Shopify product/collection URLs are supplied. When they arrive:
+    1. paste the real URLs below,
+    2. set SPONSOR_LINKS_LIVE = true,
+  and the buttons activate (they also need the same two URLs swapped
+  into the site-wide "Sponsor" buttons — see shows/index.astro and
+  shows/[slug].astro).
+*/
+const SPONSOR_LINKS_LIVE = false;
+const SPONSOR_SHOW_URL = "#"; // TODO: Shopify "Sponsor a Show" product URL
+const SPONSOR_SEASON_URL = "#"; // TODO: Shopify "Sponsor a Season" product URL
 ---
 
 <BaseLayout
   title="Ways to Support — Peninsula Youth Theatre"
   description="Support the next generation of Bay Area performers. Your gift to Peninsula Youth Theatre funds scholarships, productions, and school touring."
 >
-  <!-- Dark hero with the campaign progress -->
-  <section class="donate-hero">
+  <!-- Light hero: campaign progress as a thermometer + Donate button -->
+  <section class="section campaign-hero">
     <div class="container">
-      <p class="eyebrow eyebrow-dark">{campaignLabel}</p>
+      <p class="eyebrow">{campaignLabel}</p>
       <h1>{donatePage.intro_heading}</h1>
-      <p class="donate-intro">{donatePage.intro_body}</p>
+      <p class="campaign-intro">{donatePage.intro_body}</p>
 
-      <div class="progress-wrap">
-        <div class="progress-bar">
-          <div class="progress-fill" style={`width: ${pct}%`}></div>
+      <div class="thermo-row">
+        <!-- Thermometer -->
+        <div class="thermo" role="img"
+             aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
+          <div class="thermo-tube">
+            <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
+          </div>
+          <div class="thermo-bulb"></div>
         </div>
-        <div class="progress-stats">
-          <span>
-            <strong>${raised.toLocaleString()}</strong> raised of ${goal.toLocaleString()} goal
-          </span>
-          <span>
+
+        <!-- Numbers + Donate button -->
+        <div class="thermo-stats">
+          <p class="thermo-raised">${raised.toLocaleString()}</p>
+          <p class="thermo-goal">raised of ${goal.toLocaleString()} goal</p>
+          <p class="thermo-meta">
             <strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal
-          </span>
+          </p>
+          <a
+            href={soapboxDonateUrl}
+            class="btn btn-primary thermo-donate"
+            target="_blank"
+            rel="noopener"
+          >
+            Donate
+          </a>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Donation form section (Soapbox) -->
-  <section class="section donate-form-section">
-    <div class="container">
-      <h2 class="section-head">Make a gift</h2>
-
-      <!--
-        Donate button links out to PYT's hosted Soapbox donation page.
-        Opens in a new tab. This is the simple, reliable approach
-        (like the MailChimp-hosted newsletter signup) — no on-page
-        popup or embed to load or break. The URL is editable in the
-        CMS (Donate Page → "Soapbox donation page link") and falls
-        back to the standard hosted donate URL if left blank.
-      -->
-      <div class="donate-now-block">
-        <p class="donate-now-blurb">
-          Make a one-time gift or set up a recurring donation through our secure
-          donation page. Most gifts take less than two minutes.
-        </p>
-        <a
-          href={donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate"}
-          class="btn btn-primary btn-donate-now"
-          target="_blank"
-          rel="noopener"
-        >
-          Donate Now
-        </a>
-        <p class="donate-now-meta">
-          Powered by NonprofitSoapbox. Payments processed securely.
-        </p>
       </div>
 
       {donatePage.matching_note && (
@@ -110,120 +112,170 @@ const pct = Math.round((raised / goal) * 100);
     </div>
   </section>
 
-  <!-- Sponsorship pointer — sponsorship is a separate giving path -->
-  <section class="section sponsor-pointer-section">
-    <div class="container sponsor-pointer-inner">
+  <!-- ============ SPONSORSHIP ============ -->
+  <!--
+    Sponsorship now routes to Shopify (not Soapbox). Two levels only.
+    Buttons are disabled until SPONSOR_LINKS_LIVE is true and real
+    Shopify URLs are set in the front matter above.
+  -->
+  <section class="section sponsor-section" id="sponsor">
+    <div class="container">
       <p class="eyebrow">For businesses, foundations &amp; major giving</p>
       <h2 class="section-head">Sponsor a show or a season.</h2>
-      <p class="sponsor-pointer-body">
-        Looking to sponsor a Mainstage production or the full season? Sponsors receive
-        public recognition tied to specific shows, including program advertising, lobby
-        signage, and on-stage thank-yous. Sponsorship is a separate giving path from
-        individual donations.
-      </p>
-      <div class="sponsor-pointer-buttons">
-        <a href="/sponsor#show" class="btn btn-primary">Sponsor a Show</a>
-        <a href="/sponsor#season" class="btn btn-outline">Sponsor a Season</a>
-      </div>
+
+      <ul class="tier-list sponsor-list">
+        <li class="tier-card">
+          <p class="tier-range">Show-level sponsorship</p>
+          <h3>Sponsor a Show</h3>
+          <p class="tier-description">
+            Back a single Mainstage production and receive recognition tied to that
+            show — program advertising, lobby signage, and on-stage thank-yous.
+          </p>
+          {SPONSOR_LINKS_LIVE ? (
+            <a href={SPONSOR_SHOW_URL} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+              Sponsor a Show
+            </a>
+          ) : (
+            <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
+              Coming soon
+            </span>
+          )}
+        </li>
+
+        <li class="tier-card">
+          <p class="tier-range">Season-level sponsorship</p>
+          <h3>Sponsor a Season</h3>
+          <p class="tier-description">
+            Support the full season of productions and education programs, with
+            recognition across the whole year of PYT performances.
+          </p>
+          {SPONSOR_LINKS_LIVE ? (
+            <a href={SPONSOR_SEASON_URL} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+              Sponsor a Season
+            </a>
+          ) : (
+            <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
+              Coming soon
+            </span>
+          )}
+        </li>
+      </ul>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  /* ---- Dark hero with progress bar ---- */
-  .donate-hero {
-    background: var(--ink);
-    color: #fff;
-    padding-block: var(--space-2xl) var(--space-xl);
+  /* ---- Light campaign hero with thermometer ---- */
+  .campaign-hero {
+    background: var(--paper);
   }
 
-  .donate-hero h1 {
-    color: #fff;
+  .campaign-hero h1 {
     margin-block: 0.6rem var(--space-md);
   }
 
-  .donate-intro {
-    color: rgba(255, 255, 255, 0.85);
+  .campaign-intro {
+    color: var(--ink-soft);
     max-width: 60ch;
     font-size: 1.08rem;
     margin-bottom: var(--space-lg);
-  }
-
-  .eyebrow-dark {
-    color: var(--accent);
-  }
-
-  .progress-wrap {
-    margin-top: var(--space-md);
-  }
-
-  .progress-bar {
-    height: 16px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: var(--radius-pill);
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: var(--radius-pill);
-  }
-
-  .progress-stats {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-top: 0.7rem;
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  /* ---- Donation form section ---- */
-  .donate-form-section {
-    background: var(--paper);
   }
 
   .section-head {
     margin-block: 0.4rem var(--space-lg);
   }
 
-  /* ---- Donate Now block (links to hosted Soapbox page) ---- */
-  .donate-now-block {
-    padding: var(--space-lg);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--paper-warm);
-    text-align: center;
-  }
-
-  .donate-now-blurb {
-    font-size: 1.02rem;
-    color: var(--ink-soft);
-    margin-bottom: var(--space-md);
-    max-width: 48ch;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .btn-donate-now {
-    font-size: 1.1rem;
-    padding: 0.85rem 2.2rem;
-  }
-
-  .donate-now-meta {
+  /* Thermometer + stats laid out side by side (stacks on phones) */
+  .thermo-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
     margin-top: var(--space-md);
-    font-size: 0.8rem;
-    color: var(--ink-muted);
+  }
+
+  .thermo {
+    position: relative;
+    width: 56px;
+    height: 250px;
+    flex-shrink: 0;
+  }
+
+  .thermo-tube {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 32px;
+    height: 210px;
+    border: 3px solid var(--accent);
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    overflow: hidden;
+  }
+
+  .thermo-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--accent);
+    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    transition: height 0.4s ease;
+  }
+
+  .thermo-bulb {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--accent);
+  }
+
+  .thermo-stats {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .thermo-raised {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .thermo-goal {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0.3rem 0 0;
+  }
+
+  .thermo-meta {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0.6rem 0 0;
+  }
+
+  .thermo-meta strong {
+    color: var(--accent);
+  }
+
+  .thermo-donate {
+    margin-top: var(--space-md);
+    font-size: 1.1rem;
+    padding: 0.85rem 2.4rem;
   }
 
   .matching-callout {
-    margin-top: var(--space-lg);
+    margin-top: var(--space-xl);
     padding: var(--space-md);
     background: var(--accent-soft);
     border-radius: var(--radius);
     border-left: 4px solid var(--accent);
+    max-width: 60ch;
   }
 
   .matching-eyebrow {
@@ -293,22 +345,40 @@ const pct = Math.round((raised / goal) * 100);
     }
   }
 
-  /* ---- Sponsorship pointer (bottom of Donate page) ---- */
-  .sponsor-pointer-section {
+  /* ---- Sponsorship section (Shopify) ---- */
+  .sponsor-section {
     background: var(--paper);
     border-top: 1px solid var(--line);
   }
-  .sponsor-pointer-inner {
-    max-width: 64ch;
+
+  /* Only two sponsorship cards — cap at 2 columns even on wide screens */
+  .sponsor-list {
+    max-width: 760px;
   }
-  .sponsor-pointer-body {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: var(--space-lg);
+
+  .tier-card .sponsor-btn {
+    margin-top: var(--space-md);
   }
-  .sponsor-pointer-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
+
+  /* Disabled "Coming soon" sponsor button */
+  .sponsor-btn.is-disabled {
+    background: var(--line);
+    color: var(--ink-muted);
+    cursor: not-allowed;
+    pointer-events: none;
+    display: inline-block;
+  }
+
+  @media (min-width: 1024px) {
+    .sponsor-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ---- Phone: stack thermometer above the stats ---- */
+  @media (max-width: 600px) {
+    .thermo-row {
+      gap: var(--space-lg);
+    }
   }
 </style>
