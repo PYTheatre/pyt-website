@@ -16,6 +16,8 @@ Phase-by-phase history of work completed. Newest at the top.
 
 **Files changed:** `src/components/Header.astro`.
 
+**Follow-up (same session):** also renamed the CMS sidebar label for this page's settings record from "Donate Page" to "Support PYT" (and tidied the Site Settings description) in `public/admin/config.yml`, so the staff-facing name matches. Underlying content file `donate-page.json` left unchanged (label is display-only; renaming the file would add risk for no benefit). Requires a hard-refresh of `/admin` to show.
+
 **Tested:** clean build, 19 pages; verified both desktop and mobile nav render "Support PYT" → `/ways-to-support` in the built HTML. (Screenshots still blocked by sandbox network limits, as last session.)
 
 ---
