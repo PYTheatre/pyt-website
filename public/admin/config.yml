@@ -284,12 +284,18 @@ collections:
       - name: "donate-page"
         label: "Support PYT"
         file: "src/content/settings/donate-page.json"
-        description: "The Donate page — intro text, employer matching note, and the Soapbox donation form embed URL."
+        description: "The Support PYT page — intro text, employer matching note, the Soapbox donation link, and the sponsorship section wording."
         fields:
           - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
           - { name: "intro_body", label: "Intro paragraph", widget: "text" }
           - { name: "matching_note", label: "Employer matching note", widget: "text", required: false, hint: "Optional. Shown as a callout near the donate form." }
           - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate button opens. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
+          - { name: "sponsor_eyebrow", label: "Sponsorship — small label above heading", widget: "string", required: false, default: "For businesses, foundations & major giving" }
+          - { name: "sponsor_heading", label: "Sponsorship — section heading", widget: "string", required: false, default: "Sponsor a show or a season." }
+          - { name: "sponsor_show_title", label: "Sponsorship — \"Show\" card title", widget: "string", required: false, default: "Sponsor a Show" }
+          - { name: "sponsor_show_description", label: "Sponsorship — \"Show\" card description", widget: "text", required: false }
+          - { name: "sponsor_season_title", label: "Sponsorship — \"Season\" card title", widget: "string", required: false, default: "Sponsor a Season" }
+          - { name: "sponsor_season_description", label: "Sponsorship — \"Season\" card description", widget: "text", required: false }
 
       # --- About page ---
       - name: "about-page"
