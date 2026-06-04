@@ -57,6 +57,12 @@
         "Select cast, by audition"
       ],
       "url": "/programs"
+    },
+    {
+      "eyebrow": "For everyone",
+      "title": "Support PYT",
+      "body": "Donations, show sponsorships, seasons sponsorships, donations-in-kind, stock, all of it helps PYT reach as many families and youth as possible. ",
+      "url": "https://pyt-website.pages.dev/ways-to-support/"
     }
   ],
   "hero_image": "/uploads/pyt-newsies-punch.jpg",
