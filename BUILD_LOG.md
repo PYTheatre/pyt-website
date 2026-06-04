@@ -6,6 +6,24 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Donate buttons → straight to Soapbox; Donate page renamed "Ways to Support" (2026-06-03, evening)
+
+**Goal (client request):** Make the Donate button everywhere a direct link to the hosted Soapbox page (`https://pyt.secure.nonprofitsoapbox.com/donate`, new tab), and rename the Donate page to "Ways to Support" with a matching URL.
+
+**Decisions made this session (with client):**
+- Considered fully removing the Donate page; client chose **Option A** — keep the page and its content (campaign progress bar, donor tiers, matching note, sponsorship pointer), only repoint the buttons. No content lost.
+- **This overrides a locked DECISIONS.md choice** (header/home buttons previously routed through `/donate` first so donors saw campaign progress before giving). Client explicitly chose to override for now. DECISIONS.md updated accordingly.
+- Page renamed: title **and** URL. `/donate` → `/ways-to-support`. Browser-tab title now "Ways to Support — Peninsula Youth Theatre". The visible H1 stays CMS-driven (`donatePage.intro_heading`) and was not hardcoded.
+- Consequence (accepted): with all buttons bypassing it, `/ways-to-support` is now an orphan page reachable only by direct URL. Fine as a temporary state; revisit later.
+
+**Files changed:** `src/components/Header.astro` (Donate button → Soapbox, new tab), `src/pages/index.astro` (home donate-teaser button → Soapbox, new tab), `src/components/Footer.astro` (Donate link → Soapbox + new-tab handling via an `external` flag on that link entry), `src/pages/ways-to-support.astro` (NEW — renamed copy of donate.astro, comment header + title updated).
+
+**Deletion required (client, on GitHub):** `src/pages/donate.astro` must be deleted directly on GitHub — uploads can't delete. Until deleted, both `/donate` and `/ways-to-support` are live (harmless, just untidy). No CMS/config change needed: the page still reads `src/content/settings/donate-page.json`, and `config.yml` only references that file path + field labels, no route.
+
+**Tested:** clean build, 19 pages (`/ways-to-support` present, no `/donate` in sandbox dist). Verified all four link changes in the built HTML. Screenshots NOT taken this session — Playwright's browser download is blocked by the sandbox network allowlist; change is link-target + title only, verified via rendered HTML instead.
+
+---
+
 ## Casting page — bold/lists/links now render from the Markdown field (2026-06-03)
 
 **Problem:** On the Casting page, text the client made bold via the CMS Bold button showed literal `**asterisks**` instead of bold. (Client clarified they clicked Bold, not typed asterisks — confirming the field is the CMS "markdown" widget, saving real Markdown.)
