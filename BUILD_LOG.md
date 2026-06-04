@@ -29,6 +29,8 @@ Phase-by-phase history of work completed. Newest at the top.
 
 **Still open:** real Shopify sponsorship URLs (blocked on store setup) — then flip `SPONSOR_LINKS_LIVE` and swap the two URLs in 3 files.
 
+**Follow-up (same session):** the sponsorship panel's *text* was wired into the CMS. New fields on the Support PYT record (`donate-page.json`): `sponsor_eyebrow`, `sponsor_heading`, `sponsor_show_title`, `sponsor_show_description`, `sponsor_season_title`, `sponsor_season_description`. The page reads each with a fallback to the original hardcoded wording, so the panel renders unchanged until staff fill the fields (verified: built with the current live JSON, which lacks the fields — fallbacks render correctly). Files: `public/admin/config.yml` (added fields), `src/pages/ways-to-support.astro` (read with fallbacks). The Shopify *links* stay code-set by design. NOTE: did NOT upload `donate-page.json` (CMS-owned, Rule 2) — staff populate the new fields via the CMS; they appear after a hard-refresh of `/admin`. (Aside: live `donate-page.json` still carries a legacy `soapbox_embed_url` key instead of `soapbox_donate_url` — harmless, the page falls back to the standard URL; left untouched.)
+
 ---
 
 ## "Support PYT" added to the main menu (2026-06-03, evening)
