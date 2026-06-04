@@ -20,5 +20,5 @@ synopsis: >-
 
   Music by Robert Reale. Book and Lyrics by Willie Reale. Based on the books by Arnold Lobel.
 ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=746
-audition_display: Auditions closed
+audition_display: Closed
 ---
