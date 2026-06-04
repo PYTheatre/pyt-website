@@ -6,6 +6,20 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## "Support PYT" added to the main menu (2026-06-03, evening)
+
+**Goal:** Add the renamed Ways to Support page to the user-facing nav.
+
+**Change:** added `{ label: "Support PYT", href: "/ways-to-support" }` to the `navItems` list in `Header.astro`, at the end (after Employment, per client). That one list feeds both the desktop pill nav and the mobile hamburger menu, so both got it. Label is "Support PYT" (shorter than the page's own "Ways to Support" title); URL is `/ways-to-support`.
+
+**Note:** the separate header "Donate" button (→ Soapbox, new tab) remains alongside this new menu item — they intentionally do different things (button gives directly; menu item opens the page).
+
+**Files changed:** `src/components/Header.astro`.
+
+**Tested:** clean build, 19 pages; verified both desktop and mobile nav render "Support PYT" → `/ways-to-support` in the built HTML. (Screenshots still blocked by sandbox network limits, as last session.)
+
+---
+
 ## Donate buttons → straight to Soapbox; Donate page renamed "Ways to Support" (2026-06-03, evening)
 
 **Goal (client request):** Make the Donate button everywhere a direct link to the hosted Soapbox page (`https://pyt.secure.nonprofitsoapbox.com/donate`, new tab), and rename the Donate page to "Ways to Support" with a matching URL.
