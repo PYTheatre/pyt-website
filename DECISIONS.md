@@ -29,10 +29,21 @@
 
 ## Sponsorship
 
+**CHANGED 2026-06-03 — sponsorship rebuilt around Shopify; the dedicated `/sponsor` page was deleted.** The bullets below the line describe the OLD model (kept for history). Current state:
+
+- **Sponsorship now lives as a section on the Support PYT page** (`/ways-to-support#sponsor`), not its own page. Same card design as Giving Levels.
+- **Two levels only:** "Sponsor a Show" and "Sponsor a Season." (The old 4-tier show ladder + 3-tier season ladder are gone.)
+- **Routes to Shopify, NOT Soapbox.** Each level links to its own Shopify product/collection. This reverses (a) the earlier decision that sponsorship used Soapbox/per-tier `donation_url`, and (b) the implicit split that kept Shopify for merch only. Client chose this 2026-06-03, accepting the tradeoffs (Shopify treats sponsorship as a product purchase — no Soapbox/Salesforce sync, standard Shopify fees).
+- **Blocked / interim state:** no Shopify store exists yet, so both sponsor buttons render **disabled ("Coming soon")**. In `ways-to-support.astro`: set `SPONSOR_LINKS_LIVE = true` and fill `SPONSOR_SHOW_URL` / `SPONSOR_SEASON_URL`. The same two URLs must also replace the site-wide "Sponsor" links currently pointing at `/ways-to-support#sponsor` in `shows/index.astro` and `shows/[slug].astro`.
+- **`/sponsor` page deleted** along with its show-aware "?show=" behavior. Its content file `sponsorship-page.json` remains in the repo (unused, harmless); its CMS editor block was removed from `config.yml`.
+
+<details><summary>OLD sponsorship model (pre-2026-06-03, historical — no longer true)</summary>
+
 - **Sponsorship is distinct from individual giving.** Two separate paths. Sponsorship page is `/sponsor`; individual giving is `/donate`. Visual styles separate them.
 - **Two sponsorship ladders:** Show-level (4 tiers: Show Producer $10K / Sponsor $5K / Friend $2,500 / Supporter $1,000) and Season-level (3 tiers: Season Producer $25K / Sponsor $15K / Friend $7,500).
 - **Show-aware sponsor flow:** Clicking "Sponsor This Show" on a show detail page lands on `/sponsor?show=<slug>`, displays "You're sponsoring: [Show Title]" as a banner, and updates the show-tier "Inquire about this level" buttons' mailto subjects to include the show name. Season-tier buttons are correctly not modified.
-- **Per-tier donation URL:** Each tier has an optional `donation_url` CMS field. When blank (current state), the tier shows an "Inquire about this level" mailto button. When filled (when Soapbox tier-specific URLs exist), the tier shows a "Give at this level" primary button.
+- **Per-tier donation URL:** Each tier has an optional `donation_url` CMS field. When blank, mailto "Inquire" button; when filled, "Give at this level" button.
+</details>
 
 ## Registration and class enrollment
 

@@ -6,6 +6,31 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Support PYT page redesign + sponsorship moved to Shopify; /sponsor deleted (2026-06-03, evening)
+
+**Goal (client):** rework the Support PYT page (`/ways-to-support`) and relocate sponsorship.
+
+**What changed on `/ways-to-support`:**
+- **Black campaign hero replaced** with a light-background section showing campaign progress as a **vertical thermometer** (accent-pink fill, bulb, driven by the live `donation-campaign.json` numbers — fill height = clamped raised/goal %). Numbers (raised / goal / donors / %) sit beside it.
+- **Donate Now panel removed** (the blurb, the "less than two minutes" line, the "powered by" meta). The Donate button moved up next to the thermometer, relabelled **"Donate"** (still → hosted Soapbox, new tab; still reads `soapbox_donate_url` with the standard fallback).
+- **"Double your gift" (matching) callout kept**; **Giving Levels kept** unchanged.
+- **New Sponsorship section** added below Giving Levels (same card design, `id="sponsor"`), **two cards only: "Sponsor a Show" / "Sponsor a Season."**
+
+**Sponsorship now routes to Shopify, NOT Soapbox (reverses two locked decisions — see DECISIONS.md update):**
+- Buttons are **DISABLED ("Coming soon")** until the real Shopify URLs exist. Front matter has `SPONSOR_LINKS_LIVE = false` + `SPONSOR_SHOW_URL` / `SPONSOR_SEASON_URL` placeholders; flip the flag and paste URLs to activate.
+- **The detailed `/sponsor` page was DELETED** (4-tier benefit lists + show-aware "?show=" behavior all gone). All site-wide "Sponsor" buttons repointed to **`/ways-to-support#sponsor`** (was `/sponsor#...` / `/sponsor?show=`): in `shows/index.astro` (Sponsor a Show / a Season) and `shows/[slug].astro` (Sponsor This Show).
+- The orphaned **"Sponsorship Page" CMS block was removed** from `config.yml` (it edited `sponsorship-page.json`, which nothing renders now). The JSON content file itself was left in the repo untouched (harmless; not a content file we manage).
+
+**Files changed:** `src/pages/ways-to-support.astro` (redesign + sponsorship section), `src/pages/shows/index.astro` (sponsor links), `src/pages/shows/[slug].astro` (sponsor link), `public/admin/config.yml` (removed sponsorship-page block).
+
+**Deletion required (client, on GitHub):** `src/pages/sponsor.astro` — uploads can't delete. Until deleted, `/sponsor` stays live but is fully orphaned (nothing links to it).
+
+**Tested:** clean build, **18 pages** (was 19; `/sponsor` gone). Verified in built HTML: thermometer fill 38%, Donate→Soapbox, both sponsor buttons disabled "Coming soon", `#sponsor` anchor, all three site-wide sponsor links → `/ways-to-support#sponsor`, config.yml valid. Screenshots NOT taken (Playwright browser download blocked by sandbox network allowlist) — thermometer proportions built from the client-approved mockup; needs a live look-check.
+
+**Still open:** real Shopify sponsorship URLs (blocked on store setup) — then flip `SPONSOR_LINKS_LIVE` and swap the two URLs in 3 files.
+
+---
+
 ## "Support PYT" added to the main menu (2026-06-03, evening)
 
 **Goal:** Add the renamed Ways to Support page to the user-facing nav.

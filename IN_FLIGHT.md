@@ -37,12 +37,14 @@ Done and live — listed so you don't re-investigate. Full detail in `BUILD_LOG.
 
 **Do NOT** fabricate Shopify embed code or build an empty shell. Wait for the real code.
 
-### 2. Sponsorship tiers -> Soapbox giving
-**State:** The client (2026-05-29) wants each sponsorship tier's button to lead to Soapbox giving instead of the current mailto inquiry. Originally framed as "popups," but since the main Donate button moved to **hosted links** (not popups), this will most likely become simple per-tier links to Soapbox.
+### 2. Sponsorship → Shopify (CHANGED 2026-06-03)
+**State:** Sponsorship was rebuilt 2026-06-03. The dedicated `/sponsor` page was deleted; sponsorship is now a two-level section on the Support PYT page (`/ways-to-support#sponsor`): "Sponsor a Show" and "Sponsor a Season." Both levels link to **Shopify** (not Soapbox — this reversed the earlier plan; see DECISIONS.md and BUILD_LOG.md).
 
-**Blocked on:** per-tier Soapbox destination URLs from the client (e.g., a Soapbox donation link for each tier amount). The CMS already has a per-tier `donation_url` field built for exactly this (see `DECISIONS.md` -> Sponsorship: blank = mailto fallback, filled = "Give at this level" button). So once the client supplies the URLs, this may be mostly a content edit plus possibly a tiny template tweak.
+**Interim state live now:** no Shopify store exists, so both sponsor buttons render **disabled ("Coming soon")**, and every site-wide "Sponsor" button (`shows/index.astro`, `shows/[slug].astro`) points to `/ways-to-support#sponsor`.
 
-**Do NOT** fabricate tier URLs/amounts -- wrong values route sponsors to the wrong donation.
+**Blocked on:** the two real Shopify product/collection URLs (one per level). When they arrive: in `src/pages/ways-to-support.astro` set `SPONSOR_LINKS_LIVE = true` and fill `SPONSOR_SHOW_URL` / `SPONSOR_SEASON_URL`; then put those same two URLs on the site-wide sponsor buttons in `shows/index.astro` and `shows/[slug].astro` (currently `/ways-to-support#sponsor`).
+
+**Do NOT** fabricate Shopify URLs.
 
 ### 3. Matching-gifts search embed on Donate page
 **State:** The client (2026-05-29) wants a company-matching-gift search tool embedded on the Donate page, where it already mentions employer matching.
