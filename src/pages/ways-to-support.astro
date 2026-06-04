@@ -39,6 +39,21 @@ const soapboxDonateUrl =
 const SPONSOR_LINKS_LIVE = false;
 const SPONSOR_SHOW_URL = "#"; // TODO: Shopify "Sponsor a Show" product URL
 const SPONSOR_SEASON_URL = "#"; // TODO: Shopify "Sponsor a Season" product URL
+
+// Sponsorship panel text — CMS-editable (Support PYT record), with
+// fallbacks so the panel reads correctly before staff fill the fields.
+const sponsorEyebrow =
+  donatePage.sponsor_eyebrow || "For businesses, foundations & major giving";
+const sponsorHeading =
+  donatePage.sponsor_heading || "Sponsor a show or a season.";
+const sponsorShowTitle = donatePage.sponsor_show_title || "Sponsor a Show";
+const sponsorShowDescription =
+  donatePage.sponsor_show_description ||
+  "Back a single Mainstage production and receive recognition tied to that show — program advertising, lobby signage, and on-stage thank-yous.";
+const sponsorSeasonTitle = donatePage.sponsor_season_title || "Sponsor a Season";
+const sponsorSeasonDescription =
+  donatePage.sponsor_season_description ||
+  "Support the full season of productions and education programs, with recognition across the whole year of PYT performances.";
 ---
 
 <BaseLayout
@@ -120,20 +135,17 @@ const SPONSOR_SEASON_URL = "#"; // TODO: Shopify "Sponsor a Season" product URL
   -->
   <section class="section sponsor-section" id="sponsor">
     <div class="container">
-      <p class="eyebrow">For businesses, foundations &amp; major giving</p>
-      <h2 class="section-head">Sponsor a show or a season.</h2>
+      <p class="eyebrow">{sponsorEyebrow}</p>
+      <h2 class="section-head">{sponsorHeading}</h2>
 
       <ul class="tier-list sponsor-list">
         <li class="tier-card">
           <p class="tier-range">Show-level sponsorship</p>
-          <h3>Sponsor a Show</h3>
-          <p class="tier-description">
-            Back a single Mainstage production and receive recognition tied to that
-            show — program advertising, lobby signage, and on-stage thank-yous.
-          </p>
+          <h3>{sponsorShowTitle}</h3>
+          <p class="tier-description">{sponsorShowDescription}</p>
           {SPONSOR_LINKS_LIVE ? (
             <a href={SPONSOR_SHOW_URL} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-              Sponsor a Show
+              {sponsorShowTitle}
             </a>
           ) : (
             <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
@@ -144,14 +156,11 @@ const SPONSOR_SEASON_URL = "#"; // TODO: Shopify "Sponsor a Season" product URL
 
         <li class="tier-card">
           <p class="tier-range">Season-level sponsorship</p>
-          <h3>Sponsor a Season</h3>
-          <p class="tier-description">
-            Support the full season of productions and education programs, with
-            recognition across the whole year of PYT performances.
-          </p>
+          <h3>{sponsorSeasonTitle}</h3>
+          <p class="tier-description">{sponsorSeasonDescription}</p>
           {SPONSOR_LINKS_LIVE ? (
             <a href={SPONSOR_SEASON_URL} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-              Sponsor a Season
+              {sponsorSeasonTitle}
             </a>
           ) : (
             <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
