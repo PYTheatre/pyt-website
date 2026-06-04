@@ -1,6 +1,7 @@
 ---
+audition_date: 2026-08-03
 title: Rules of Comedy
-eyebrow: Studio Shows
+eyebrow: 2026-2027 Studio Shows
 start_date: 2026-08-28
 end_date: 2026-08-28
 date_display: August 2026
@@ -15,5 +16,7 @@ synopsis: What happens when you apply the Rules of Comedy to one of
   this production is a chance to build real ensemble chemistry while stretching
   your range as a performer.
 audition_url: https://www.google.com/
-audition_date: 2026-08-03
+audition_start: 2026-08-03
+audition_end: 2026-08-03
+audition_display: August 3, 2026
 ---
