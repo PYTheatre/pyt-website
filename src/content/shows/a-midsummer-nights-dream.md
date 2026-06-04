@@ -1,7 +1,7 @@
 ---
 audition_date: 2027-03-24
 title: A Midsummer Night's Dream
-eyebrow: Studio Show
+eyebrow: 2027 Studio Show
 start_date: 2027-05-07
 end_date: 2027-05-08
 date_display: May 2027
@@ -15,5 +15,5 @@ synopsis: Shakespeare’s comedy of love, magic, and fairy mischief is a perfect
   this room will stay with you long after closing night. This is the kind of
   creative experience that bonds a group of performers together and genuinely
   levels up your acting.
-audition_display: March 24th, 2027
+audition_display: March 24, 2027
 ---
