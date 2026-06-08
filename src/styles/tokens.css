@@ -36,10 +36,10 @@
   /* ---- NEUTRAL (was mustard/gold; now grey per decisions) ---- */
   --neutral: #6a6a6a;
  
-  /* ---- NAV PILLS (top-level menu items — dusty violet, PLACEHOLDER) ---- */
-  --nav-pill: #6b5b9a;        /* top-level nav pill background      */
-  --nav-pill-hover: #574a80;  /* darker on hover                   */
-  --nav-pill-text: #ffffff;   /* text on the nav pills             */
+  /* ---- NAV PILLS (top-level menu items — soft lilac, PLACEHOLDER) ---- */
+  --nav-pill: #d9d2ec;        /* top-level nav pill background      */
+  --nav-pill-hover: #cabfe3;  /* slightly deeper lilac on hover    */
+  --nav-pill-text: #3c3163;   /* dark plum text on the nav pills   */
  
   /* ---- TYPOGRAPHY (Nunito placeholder — both heading & body) ---- */
   --font-heading: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
