@@ -110,7 +110,7 @@ p {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  font-family: var(--font-body);
+  font-family: var(--font-heading);
   font-size: 0.95rem;
   font-weight: 600;
   padding: 0.7rem 1.4rem;
