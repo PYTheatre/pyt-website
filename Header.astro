@@ -1,0 +1,198 @@
+---
+/*
+  HEADER COMPONENT — sticky top bar.
+
+  Contains: logo, main navigation (pill-style), a Donate
+  button, and a hamburger menu for phones.
+
+  MOBILE-FIRST: on phones the nav links are hidden behind a
+  hamburger button that opens a dropdown panel. On wider
+  screens the links show inline and the hamburger disappears.
+
+  The EN/ES language toggle will be added in the Spanish
+  phase (Phase 4). It's intentionally left out for now.
+*/
+import Logo from "./Logo.astro";
+
+const navItems = [
+  { label: "Shows", href: "/shows" },
+  { label: "Stories on Stage", href: "/stories-on-stage" },
+  { label: "Classes & Camps", href: "/programs" },
+  { label: "Casting", href: "/casting" },
+  { label: "Rentals", href: "/rentals" },
+  { label: "Shop", href: "/shop" },
+  { label: "Photos", href: "/photos" },
+  { label: "About", href: "/about" },
+  { label: "Employment", href: "/employment" },
+  { label: "Support PYT", href: "/ways-to-support" },
+];
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <Logo />
+
+    <!-- Desktop / wide-screen navigation -->
+    <nav class="nav-wide" aria-label="Main navigation">
+      {navItems.map((item) => (
+        <a href={item.href} class="pill">{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="header-actions">
+      <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary donate-btn" target="_blank" rel="noopener">Donate</a>
+
+      <!-- Hamburger button (phones only) -->
+      <button
+        class="hamburger"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        id="hamburger-btn"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile dropdown menu (phones only) -->
+  <nav class="nav-mobile" id="mobile-menu" aria-label="Mobile navigation" hidden>
+    {navItems.map((item) => (
+      <a href={item.href}>{item.label}</a>
+    ))}
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding-block: 0.7rem;
+  }
+
+  /* Wide-screen nav is hidden on phones by default */
+  .nav-wide {
+    display: none;
+    align-items: center;
+    gap: 0.15rem;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .donate-btn {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Hamburger button */
+  .hamburger {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    padding: 0 9px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  /* Animate hamburger into an X when open */
+  .hamburger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .hamburger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile dropdown menu */
+  .nav-mobile {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .nav-mobile[hidden] {
+    display: none;
+  }
+
+  .nav-mobile a {
+    padding: 0.9rem var(--space-md);
+    font-weight: 500;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-mobile a:first-child {
+    border-top: none;
+  }
+
+  .nav-mobile a:hover {
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+  }
+
+  /* ---- Wide screens: show inline nav, hide hamburger ---- */
+  @media (min-width: 920px) {
+    .nav-wide {
+      display: flex;
+    }
+    .hamburger {
+      display: none;
+    }
+    .nav-mobile {
+      display: none !important;
+    }
+    .donate-btn {
+      padding: 0.55rem 1.3rem;
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<script>
+  // Toggle the mobile menu open/closed.
+  const btn = document.getElementById("hamburger-btn");
+  const menu = document.getElementById("mobile-menu");
+
+  if (btn && menu) {
+    btn.addEventListener("click", () => {
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!isOpen));
+      btn.setAttribute("aria-label", isOpen ? "Open menu" : "Close menu");
+      menu.hidden = isOpen;
+    });
+  }
+</script>

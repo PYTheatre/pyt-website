@@ -1,0 +1,181 @@
+---
+/*
+  PHOTOS PAGE  ( /photos )
+
+  A simple "front door" that hands families off to PYT's SmugMug
+  site to browse and buy show & event photos. The actual gallery,
+  cart, and checkout all live on SmugMug — we do NOT rebuild that
+  here. This mirrors how we hand off to Soapbox (donations) and
+  MailChimp (newsletter): point people at the tool that does the
+  job, rather than half-rebuilding it.
+
+  Three parts:
+  1. Hero intro (eyebrow + title + lede).
+  2. An optional grid of sample photos for visual appeal. Staff add,
+     remove, and reorder these and swap images via the CMS
+     (Site Settings → Photos Page). The whole section hides if the
+     list is empty.
+  3. A clear call-to-action button to the SmugMug site, opening in
+     a new tab.
+
+  PHOTO HANDLING NOTE (same approach as the Rentals page):
+  Sample photos vary in quality and dimension over time. To keep the
+  page tidy regardless:
+    - every photo sits in a fixed 4:3 frame and is cropped to fill it
+      (object-fit: cover), so mismatched dimensions never break layout;
+    - rounded corners + soft shadow unify the cards visually;
+    - images lazy-load and are display-capped so a huge unoptimized
+      upload won't slow the page.
+
+  LINK NOTE:
+  The SmugMug destination is the CMS field `smugmug_url`. If it's ever
+  blank, the button falls back to PYT's main SmugMug address so the
+  page never shows a dead button. The button opens in a new tab.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import page from "../content/settings/photos-page.json";
+
+// Fallbacks keep the page rendering correctly before staff fill the
+// CMS fields (the live JSON ships with sensible defaults already).
+const samples = page.samples || [];
+const smugmugUrl = page.smugmug_url || "https://peninsulayouththeatre.smugmug.com/";
+const ctaLabel = page.cta_label || "Browse & buy photos";
+const ctaNote = page.cta_note || "";
+---
+
+<BaseLayout
+  title={`${page.title || "Photos"} — Peninsula Youth Theatre`}
+  description="Browse and buy professional photos from Peninsula Youth Theatre shows and events, hosted on SmugMug."
+>
+  <PageHero
+    eyebrow={page.eyebrow}
+    title={page.title || "Photos"}
+    lede={page.intro}
+  />
+
+  {/* ============ SAMPLE PHOTOS ============ */}
+  {samples.length > 0 && (
+    <section class="section samples-section">
+      <div class="container">
+        {page.samples_heading && <h2 class="section-head">{page.samples_heading}</h2>}
+        {page.samples_blurb && <p class="section-blurb">{page.samples_blurb}</p>}
+
+        <ul class="sample-grid">
+          {samples.map((s: any) => (
+            <li class="sample-card">
+              <div class="sample-photo-frame">
+                {s.photo ? (
+                  <img
+                    src={s.photo}
+                    alt={s.caption || "Peninsula Youth Theatre photo"}
+                    class="sample-photo"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div class="sample-photo-placeholder">
+                    <span>Photo coming soon</span>
+                  </div>
+                )}
+              </div>
+              {s.caption && <p class="sample-caption">{s.caption}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {/* ============ CALL TO ACTION ============ */}
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-card">
+        {page.cta_heading && <h2 class="cta-heading">{page.cta_heading}</h2>}
+        {page.cta_blurb && <p class="cta-blurb">{page.cta_blurb}</p>}
+        <a href={smugmugUrl} class="btn btn-primary cta-btn" target="_blank" rel="noopener">
+          {ctaLabel}
+        </a>
+        {ctaNote && <p class="cta-note">{ctaNote}</p>}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Sample photo grid — mirrors the Rentals category grid so the two
+     pages feel like part of the same site. */
+  .sample-grid {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-lg) 0 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  @media (min-width: 600px) {
+    .sample-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .sample-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .sample-photo-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md, 12px);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+    background: var(--color-surface-2, #f1eef0);
+  }
+  .sample-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .sample-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted, #8a8088);
+    font-size: 0.9rem;
+  }
+  .sample-caption {
+    margin: 0.6rem 0 0;
+    font-size: 0.9rem;
+    color: var(--color-text-muted, #6b626a);
+  }
+
+  /* Call-to-action card */
+  .cta-card {
+    text-align: center;
+    max-width: 56ch;
+    margin-inline: auto;
+    padding: var(--space-xl) var(--space-lg);
+    border-radius: var(--radius-md, 12px);
+    background: var(--color-surface-2, #f7f3f5);
+  }
+  .cta-heading {
+    margin: 0 0 var(--space-sm);
+  }
+  .cta-blurb {
+    margin: 0 auto var(--space-lg);
+    max-width: 48ch;
+  }
+  .cta-btn {
+    font-size: 1.05rem;
+  }
+  .cta-note {
+    margin: var(--space-md) 0 0;
+    font-size: 0.85rem;
+    color: var(--color-text-muted, #6b626a);
+  }
+</style>

@@ -6,6 +6,30 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+## Photos page — front door to SmugMug photo sales (2026-06-08)
+
+**Goal (client):** give families a way to find and buy photos from PYT's shows and events. The photos are hosted and sold on PYT's SmugMug site (`peninsulayouththeatre.smugmug.com`).
+
+**Approach (researched, not guessed — PROJECT_RULES Rule 1):** SmugMug is a complete storefront (cart/checkout/print sizes/payment all live on SmugMug) and does not support embedding its pages into another site. So rather than half-rebuild the shop, the new page is a clean "front door" that hands off to SmugMug — the same pattern we use for Soapbox (donations) and MailChimp (newsletter). Client chose this (Option A) over a slideshow embed (Option B) and over per-gallery embeds (Option C, advised against as fragile).
+
+**Built:** new page at `/photos`:
+- Hero intro (eyebrow + title + lede).
+- Optional grid of **sample photos** (up to whatever staff add) — each in a fixed 4:3 frame (object-fit: cover) with a "Photo coming soon" placeholder when empty, mirroring the Rentals category-photo pattern. Section hides entirely if the list is empty.
+- A clear call-to-action card with a button to the SmugMug site, **opens in a new tab** (`target="_blank" rel="noopener"`). Button falls back to the main SmugMug URL if the CMS field is blank, so it's never a dead link.
+- Added **"Photos"** to the main nav (`Header.astro` `navItems`, after "Shop") — one list feeds both desktop and mobile.
+
+**CMS:** new "Photos Page" settings record (`src/content/settings/photos-page.json`) added as a `files:` entry in `config.yml`. Editable: title, eyebrow, intro, sample-photos heading/blurb, the sample photos list (image + optional caption each), CTA heading/blurb, the SmugMug link, button label, and button note. All with fallbacks so the page renders correctly before staff touch it. Layout stays in code (content-only editability, per Phase 2.8 decisions).
+
+**Photos themselves:** client will upload 3–5 sample photos via the CMS (Site Settings → Photos Page). Page ships with 3 empty sample slots showing "Photo coming soon" placeholders until then. Did NOT fabricate or fetch images (SmugMug blocks automated access, and we don't ship images the client maintains).
+
+**Files changed:** `src/pages/photos.astro` (NEW), `src/content/settings/photos-page.json` (NEW — brand-new settings file for a new feature, so OK to include per Rule 2), `src/components/Header.astro` (nav item), `public/admin/config.yml` (new Photos Page settings block).
+
+**Tested:** clean build, **19 pages** (`/photos` present). Verified in built HTML: 3 placeholder sample cards render, SmugMug button → `peninsulayouththeatre.smugmug.com` in a new tab with `rel="noopener"`, intro + CTA copy present, "Photos" appears in both desktop and mobile nav after "Shop". Screenshots NOT taken (Playwright browser download blocked by sandbox network allowlist) — visual check is the client's to do live.
+
+**Still open / client to do:** upload sample photos via CMS; hard-refresh `/admin` (Cmd+Shift+R) or use incognito so the new "Photos Page" record appears in the editor; optionally aim the button at a specific SmugMug gallery instead of the top-level site.
+
+---
+
 ## Support PYT page redesign + sponsorship moved to Shopify; /sponsor deleted (2026-06-03, evening)
 
 **Goal (client):** rework the Support PYT page (`/ways-to-support`) and relocate sponsorship.
