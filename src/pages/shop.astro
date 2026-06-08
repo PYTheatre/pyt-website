@@ -1,22 +1,43 @@
 ---
 /*
   SHOP PAGE  ( /shop )
-
-  Intentionally minimal for now: just the page title. The PYT online
-  store will live here once Shopify is set up (Phase 3.3). Until then
-  this page exists mainly so the "Shop" nav/footer link lands on a
-  clean, real page instead of falling back to the home page.
-
-  When Shopify is ready, the Buy Button embed (<div> + <script>) per
-  Collection goes inside the <section> below.
+ 
+  Interim state: shows the page title plus a "Coming soon" message.
+  The PYT online store will live here once Shopify is set up
+  (Phase 3.3).
+ 
+  When Shopify is ready, replace the "coming soon" section below with
+  the Buy Button embed (<div> + <script>) per Collection.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 ---
-
+ 
 <BaseLayout
   title="Shop — Peninsula Youth Theatre"
   description="The Peninsula Youth Theatre online store."
 >
   <PageHero title="Shop" />
+ 
+  <section class="section">
+    <div class="container coming-soon">
+      <p class="coming-soon-eyebrow">Coming soon</p>
+    </div>
+  </section>
 </BaseLayout>
+ 
+<style>
+  .coming-soon {
+    text-align: center;
+    max-width: 44ch;
+    margin-inline: auto;
+    padding-block: var(--space-lg);
+  }
+  .coming-soon-eyebrow {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--accent-deep);
+    margin: 0;
+  }
+</style>
