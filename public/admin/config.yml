@@ -349,6 +349,37 @@ collections:
           - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
           - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
           - { name: "cta_url", label: "Call-to-action button URL", widget: "string", default: "/shows" }
+       # --- Audition page ---
+      # The /audition page. The list of shows currently casting is pulled
+      # automatically from the Shows collection (any show with a sign-up
+      # link whose audition end date hasn't passed), so it is NOT edited
+      # here. This record covers the page's words: hero, the Stories on
+      # Stage panel, the casting-philosophy panel, and the FAQ list.
+      - name: "audition-page"
+        label: "Audition Page"
+        file: "src/content/settings/audition-page.json"
+        description: "The /audition page wording — hero, Stories on Stage panel, casting philosophy panel, and FAQ. The list of shows currently casting comes automatically from your Shows; there's nothing to edit for that here."
+        fields:
+          - { name: "eyebrow", label: "Hero — eyebrow text", widget: "string", required: false, default: "Get involved" }
+          - { name: "title", label: "Hero — page title", widget: "string", default: "Auditions" }
+          - { name: "intro", label: "Hero — intro paragraph", widget: "text", required: false }
+          - { name: "no_open_message", label: "Message shown when no shows are currently casting", widget: "text", required: false, hint: "Shown in place of the show list when no Mainstage auditions are open. Example: There are no Mainstage auditions open right now. Check back soon, or explore Stories on Stage below." }
+          - { name: "sos_heading", label: "Stories on Stage panel — heading", widget: "string", required: false, default: "Stories on Stage" }
+          - { name: "sos_blurb", label: "Stories on Stage panel — text", widget: "text", required: false }
+          - { name: "sos_button_label", label: "Stories on Stage panel — button label", widget: "string", required: false, default: "Stories on Stage auditions" }
+          - { name: "casting_heading", label: "Casting panel — heading", widget: "string", required: false, default: "Our casting philosophy" }
+          - { name: "casting_body", label: "Casting panel — text", widget: "text", required: false }
+          - { name: "casting_button_label", label: "Casting panel — button label", widget: "string", required: false, default: "Read about casting" }
+          - { name: "faq_heading", label: "FAQ — section heading", widget: "string", required: false, default: "Frequently asked questions" }
+          - name: "faqs"
+            label: "FAQ items"
+            widget: "list"
+            required: false
+            summary: "{{fields.question}}"
+            hint: "Add as many questions as you like. The whole FAQ section hides automatically if this list is empty."
+            fields:
+              - { name: "question", label: "Question", widget: "string" }
+              - { name: "answer", label: "Answer", widget: "text" }
  
       # --- Judy Robe & Spirits Awards page ---
       # A standalone page (not in the nav) linked from About and Casting.
