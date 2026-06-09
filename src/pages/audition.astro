@@ -1,0 +1,406 @@
+---
+/*
+  AUDITION PAGE  ( /audition )
+
+  A single front door for anyone looking to audition with PYT. It pulls
+  together three audition routes that otherwise live in different places:
+
+    1. Mainstage shows that currently have OPEN auditions — listed with
+       their Active.com sign-up links. This reuses the exact same
+       "is this audition still open?" logic as the Shows list page
+       (/shows), so a show drops off this page automatically once its
+       audition end date passes. No manual upkeep needed.
+    2. Stories on Stage — a separate season cast from one annual audition,
+       so it doesn't carry per-show audition dates. It gets its own panel
+       pointing to /stories-on-stage.
+    3. A casting-philosophy panel pointing to the Casting page (/casting).
+
+  Plus a CMS-editable FAQ section at the bottom.
+
+  CONTENT: all copy is editable via the "Audition Page" CMS record
+  (src/content/settings/audition-page.json). Every field has a sensible
+  fallback so the page renders correctly BEFORE staff touch it — including
+  the empty-FAQ case (the FAQ section hides itself when the list is empty).
+  The show LIST itself is not CMS content here; it is read live from the
+  shows collection, the same source the Shows page uses.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { getCollection } from "astro:content";
+import page from "../content/settings/audition-page.json";
+
+// Load all shows, sort by start date (earliest first), same as /shows.
+const shows = (await getCollection("shows")).sort(
+  (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
+);
+
+const now = new Date();
+
+// Keep only shows whose auditions are still open AND have a sign-up link.
+// "Open" = there's an audition end date (new audition_end, falling back to
+// the legacy audition_date) and it hasn't passed yet. This mirrors the
+// auto-close logic on the Shows page exactly.
+const openAuditions = shows.filter((show) => {
+  if (!show.data.audition_url) return false;
+  const auditionEnd = show.data.audition_end ?? show.data.audition_date;
+  if (!auditionEnd) return false; // no end date = we can't say it's open
+  return auditionEnd.getTime() >= now.getTime();
+});
+
+// --- Content fallbacks (page renders fully even with an empty CMS record) ---
+const eyebrow = page.eyebrow ?? "Get involved";
+const title = page.title ?? "Auditions";
+const intro =
+  page.intro ??
+  "We'd love to see you audition. Below are the shows currently casting, plus how auditions work for Stories on Stage. New to PYT? Everyone is welcome — no experience required.";
+
+const noOpenMessage =
+  page.no_open_message ??
+  "There are no Mainstage auditions open right now. Check back soon, or explore Stories on Stage below.";
+
+const sosHeading = page.sos_heading ?? "Stories on Stage";
+const sosBlurb =
+  page.sos_blurb ??
+  "Our Stories on Stage season is cast from a single annual audition. Productions are short, often touring to local schools. Visit the Stories on Stage page for this year's audition details.";
+const sosButtonLabel = page.sos_button_label ?? "Stories on Stage auditions";
+
+const castingHeading = page.casting_heading ?? "Our casting philosophy";
+const castingBody =
+  page.casting_body ??
+  "We cast with care, fairness, and an eye for growth. Auditioning is meant to be a welcoming experience, not a stressful one. Read more about how we approach casting and what to expect.";
+const castingButtonLabel = page.casting_button_label ?? "Read about casting";
+
+const faqHeading = page.faq_heading ?? "Frequently asked questions";
+
+// FAQ list: tolerant of missing/empty. Drop any item missing a question or
+// answer so one half-filled entry doesn't render a broken row.
+const faqs = Array.isArray(page.faqs)
+  ? page.faqs.filter((f) => f && f.question && f.answer)
+  : [];
+---
+
+<BaseLayout
+  title="Auditions — Peninsula Youth Theatre"
+  description="Audition with Peninsula Youth Theatre. See which shows are currently casting, learn about Stories on Stage auditions, and read our casting philosophy."
+>
+  <PageHero eyebrow={eyebrow} title={title} lede={intro} />
+
+  <!-- ===== Open Mainstage auditions ===== -->
+  <section class="section audition-shows-section">
+    <div class="container">
+      <h2 class="section-heading">Shows currently casting</h2>
+
+      {openAuditions.length === 0 ? (
+        <p class="empty-state">{noOpenMessage}</p>
+      ) : (
+        <ul class="audition-list">
+          {openAuditions.map((show) => (
+            <li class="audition-row">
+              <div class="audition-card">
+                <div class="audition-info">
+                  {show.data.eyebrow && (
+                    <p class="audition-eyebrow">{show.data.eyebrow}</p>
+                  )}
+                  <h3>{show.data.title}</h3>
+                  {show.data.audition_display && (
+                    <p class="audition-dates">
+                      Auditions: {show.data.audition_display}
+                    </p>
+                  )}
+                  {show.data.ages && (
+                    <p class="audition-meta">{show.data.ages}</p>
+                  )}
+                </div>
+                <div class="audition-actions">
+                  <a
+                    href={show.data.audition_url}
+                    class="btn btn-primary"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Sign up to audition
+                  </a>
+                  <a href={`/shows/${show.id}`} class="audition-link-cta">
+                    About this show →
+                  </a>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  <!-- ===== Stories on Stage panel ===== -->
+  <section class="section panel-section">
+    <div class="container">
+      <div class="info-panel">
+        <div class="info-panel-text">
+          <h2>{sosHeading}</h2>
+          <p>{sosBlurb}</p>
+        </div>
+        <a href="/stories-on-stage" class="btn btn-outline">{sosButtonLabel}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Casting philosophy panel ===== -->
+  <section class="section panel-section">
+    <div class="container">
+      <div class="info-panel info-panel-accent">
+        <div class="info-panel-text">
+          <h2>{castingHeading}</h2>
+          <p>{castingBody}</p>
+        </div>
+        <a href="/casting" class="btn btn-outline">{castingButtonLabel}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== (hidden entirely when there are no FAQs) -->
+  {faqs.length > 0 && (
+    <section class="section faq-section">
+      <div class="container container-narrow">
+        <h2 class="section-heading">{faqHeading}</h2>
+        <div class="faq-list">
+          {faqs.map((faq) => (
+            <details class="faq-item">
+              <summary>
+                <span class="faq-question">{faq.question}</span>
+                <span class="faq-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="faq-answer">
+                <p>{faq.answer}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .section-heading {
+    font-size: 1.6rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  /* ---- Open auditions list ---- */
+  .audition-shows-section {
+    padding-bottom: var(--space-lg);
+  }
+
+  .audition-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .audition-row {
+    margin: 0;
+  }
+
+  .audition-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    padding: var(--space-md);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .audition-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .audition-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.35rem;
+  }
+
+  .audition-info h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .audition-dates {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .audition-meta {
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .audition-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .audition-link-cta {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .audition-link-cta:hover {
+    text-decoration: underline;
+  }
+
+  .empty-state {
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+  }
+
+  /* ---- Info panels (Stories on Stage + Casting) ---- */
+  .panel-section {
+    padding-block: var(--space-md);
+  }
+
+  .info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: flex-start;
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+  }
+
+  .info-panel-accent {
+    background: var(--accent-soft);
+    border-color: transparent;
+  }
+
+  .info-panel-text h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-panel-text p {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  /* ---- FAQ ---- */
+  .container-narrow {
+    max-width: 720px;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .faq-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    overflow: hidden;
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    list-style: none;
+  }
+
+  /* Remove the default disclosure triangle across browsers */
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question {
+    flex: 1;
+  }
+
+  /* Plus/minus icon drawn with CSS so we don't depend on an icon font */
+  .faq-icon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .faq-icon::before,
+  .faq-icon::after {
+    content: "";
+    position: absolute;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+  }
+  .faq-icon::before {
+    top: 6px;
+    left: 0;
+    width: 14px;
+    height: 2px;
+  }
+  .faq-icon::after {
+    top: 0;
+    left: 6px;
+    width: 2px;
+    height: 14px;
+  }
+  .faq-item[open] .faq-icon::after {
+    transform: rotate(90deg);
+    opacity: 0;
+  }
+
+  .faq-answer {
+    padding: 0 var(--space-md) var(--space-md);
+  }
+
+  .faq-answer p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  /* ---- Wider screens ---- */
+  @media (min-width: 720px) {
+    .audition-card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .audition-actions {
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .info-panel {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+</style>
