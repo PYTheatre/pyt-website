@@ -60,6 +60,11 @@ const donorCount = campaign.donor_count;
 const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
  
+// Donation-teaser heading. CMS-editable (home.donate_heading). If the
+// field is empty, fall back to the original goal-based wording so the
+// line never renders blank.
+const donateHeading = home.donate_heading?.trim() || `Help us reach $${goal.toLocaleString()}.`;
+ 
 // --- Hero heading with optional italic word ---
 // The CMS lets staff pick one word in the heading to italicize
 // (the accent style). If that word appears in the heading, we
@@ -176,7 +181,7 @@ const heroImage = (home as any).hero_image || "";
   <section class="section donate-teaser">
     <div class="container">
       <p class="eyebrow">{campaignLabel}</p>
-      <h2 class="section-head">Help us reach ${goal.toLocaleString()}.</h2>
+      <h2 class="section-head">{donateHeading}</h2>
       <p class="donate-lede">{home.donate_lede}</p>
  
       <div class="progress-wrap">
