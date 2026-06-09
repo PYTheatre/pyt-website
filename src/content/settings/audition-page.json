@@ -1,15 +1,14 @@
 {
-  "eyebrow": "Get involved",
-  "title": "Auditions",
-  "intro": "We'd love to see you audition. Below are the shows currently casting, plus how auditions work for Stories on Stage. New to PYT? Everyone is welcome — no experience required.",
-  "no_open_message": "There are no Mainstage auditions open right now. Check back soon, or explore Stories on Stage below.",
-  "sos_heading": "Stories on Stage",
-  "sos_blurb": "Our Stories on Stage season is cast from a single annual audition. Productions are short and often tour to local schools. Visit the Stories on Stage page for this year's audition details.",
-  "sos_button_label": "Stories on Stage auditions",
-  "casting_heading": "Our casting philosophy",
-  "casting_body": "We cast with care, fairness, and an eye for growth. Auditioning should be a welcoming experience, not a stressful one — every young performer is considered for the role where they'll thrive. Read more about how we approach casting and what to expect on the day.",
   "casting_button_label": "Read about casting",
+  "casting_heading": "Our casting philosophy",
+  "eyebrow": "Get involved",
+  "intro": "We'd love to see you audition. Below are the shows currently casting, plus how auditions work for Stories on Stage. New to PYT? Everyone is welcome — no experience required.",
+  "sos_button_label": "Stories on Stage auditions",
+  "no_open_message": "There are no Mainstage auditions open right now. Check back soon, or explore Stories on Stage below.",
+  "sos_blurb": "Our Stories on Stage season is cast from a single annual audition. Visit the Stories on Stage page for this year's audition details.",
+  "title": "Auditions",
   "faq_heading": "Frequently asked questions",
+  "sos_heading": "Stories on Stage",
   "faqs": [
     {
       "question": "Do I need experience to audition?",
@@ -23,5 +22,6 @@
       "question": "How do I sign up?",
       "answer": "Use the \"Sign up to audition\" button on the show you're interested in above. It will take you to our sign-up page where you can pick a slot."
     }
-  ]
+  ],
+  "casting_body": "We cast with care, fairness, and an eye for growth. Auditioning is a welcoming experience — every young performer is considered for the role where they'll thrive. Read more about how we approach casting and what to expect on the day."
 }
