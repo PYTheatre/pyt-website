@@ -1,13 +1,13 @@
 ---
 /*
   HOME PAGE.
-
+ 
   Content comes from two CMS-managed sources:
    - src/content/settings/home-page.json — all the editable copy
      (hero, optional hero banner photo, discovery cards, impact
      stats, section headings, etc.)
    - donation-campaign.json — the campaign progress numbers.
-
+ 
   Layout/structure lives here in code (not editable via CMS, by
   design — so the page can't be visually broken). All words, links,
   images, and numbers are editable through the CMS.
@@ -16,7 +16,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
-
+ 
 // --- Upcoming shows strip ---
 // Pulls live from BOTH the Mainstage Shows collection and the
 // Stories on Stage collection. A show counts as "upcoming" while
@@ -30,7 +30,7 @@ import campaign from "../content/settings/donation-campaign.json";
 //    decision — they all live on /stories-on-stage), so those
 //    cards link to /stories-on-stage.
 const now = new Date();
-
+ 
 const mainstage = (await getCollection("shows")).map((s) => ({
   title: s.data.title,
   start: s.data.start_date,
@@ -39,7 +39,7 @@ const mainstage = (await getCollection("shows")).map((s) => ({
   poster: s.data.poster || "",
   url: `/shows/${s.id}`,
 }));
-
+ 
 const sos = (await getCollection("storiesOnStage")).map((s) => ({
   title: s.data.title,
   start: s.data.start_date,
@@ -48,18 +48,18 @@ const sos = (await getCollection("storiesOnStage")).map((s) => ({
   poster: s.data.poster || "",
   url: "/stories-on-stage",
 }));
-
+ 
 const upcomingShows = [...mainstage, ...sos]
   .filter((s) => s.end.getTime() >= now.getTime())
   .sort((a, b) => a.start.getTime() - b.start.getTime());
-
+ 
 // --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
 const donorCount = campaign.donor_count;
 const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
-
+ 
 // --- Hero heading with optional italic word ---
 // The CMS lets staff pick one word in the heading to italicize
 // (the accent style). If that word appears in the heading, we
@@ -75,12 +75,12 @@ if (italicWord && heading.includes(italicWord)) {
   headingItalic = italicWord;
   headingAfter = heading.slice(idx + italicWord.length);
 }
-
+ 
 // --- Optional hero banner image ---
 // A wide photo shown under the intro text. Hidden when empty.
 const heroImage = (home as any).hero_image || "";
 ---
-
+ 
 <BaseLayout title="Peninsula Youth Theatre — Outstanding youth theatre">
   <!-- ============ HERO (intro text) ============ -->
   <section class="hero">
@@ -95,7 +95,7 @@ const heroImage = (home as any).hero_image || "";
         </div>
       </div>
     </div>
-
+ 
     <!-- Wide hero banner photo (hidden when no image is set) -->
     {heroImage && (
       <div class="container">
@@ -103,7 +103,7 @@ const heroImage = (home as any).hero_image || "";
       </div>
     )}
   </section>
-
+ 
   <!-- ============ UPCOMING SHOWS STRIP ============ -->
   <!-- A wide row of upcoming-show cards, soonest first. Pulls live
        from the Shows + Stories on Stage collections. Hidden entirely
@@ -113,7 +113,7 @@ const heroImage = (home as any).hero_image || "";
       <div class="container">
         <p class="eyebrow">On stage</p>
         <h2 class="section-head">Upcoming shows</h2>
-
+ 
         <div class="shows-row">
           {upcomingShows.map((show) => (
             <a href={show.url} class="show-tile">
@@ -133,13 +133,13 @@ const heroImage = (home as any).hero_image || "";
       </div>
     </section>
   )}
-
+ 
   <!-- ============ DISCOVERY CARDS ============ -->
   <section class="section">
     <div class="container">
       <p class="eyebrow">{home.discovery_eyebrow}</p>
       <h2 class="section-head">{home.discovery_heading}</h2>
-
+ 
       <div class="card-grid">
         {home.discovery_cards.map((card) => (
           <a href={card.url} class="card">
@@ -154,13 +154,13 @@ const heroImage = (home as any).hero_image || "";
       </div>
     </div>
   </section>
-
+ 
   <!-- ============ IMPACT STATS ============ -->
   <section class="section impact">
     <div class="container">
       <p class="eyebrow">{home.impact_eyebrow}</p>
       <h2 class="section-head">{home.impact_heading}</h2>
-
+ 
       <div class="stat-grid">
         {home.stats.map((stat) => (
           <div class="stat">
@@ -171,14 +171,14 @@ const heroImage = (home as any).hero_image || "";
       </div>
     </div>
   </section>
-
+ 
   <!-- ============ DONATION TEASER ============ -->
   <section class="section donate-teaser">
     <div class="container">
       <p class="eyebrow">{campaignLabel}</p>
       <h2 class="section-head">Help us reach ${goal.toLocaleString()}.</h2>
       <p class="donate-lede">{home.donate_lede}</p>
-
+ 
       <div class="progress-wrap">
         <div class="progress-bar">
           <div class="progress-fill" style={`width: ${pct}%`}></div>
@@ -188,35 +188,35 @@ const heroImage = (home as any).hero_image || "";
           <span><strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal</span>
         </div>
       </div>
-
+ 
       <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary" target="_blank" rel="noopener">{home.donate_button_label}</a>
     </div>
   </section>
 </BaseLayout>
-
+ 
 <style>
   /* ---- Hero ---- */
   .hero {
     padding-top: var(--space-xl);
     padding-bottom: var(--space-lg);
   }
-
+ 
   .hero-copy h1 {
     margin-block: 0.6rem 1rem;
   }
-
+ 
   .hero-lede {
     font-size: 1.08rem;
     max-width: 60ch;
     margin-bottom: var(--space-md);
   }
-
+ 
   .hero-ctas {
     display: flex;
     flex-wrap: wrap;
     gap: 0.7rem;
   }
-
+ 
   /* Wide hero banner photo */
   .hero-banner-img {
     width: 100%;
@@ -228,14 +228,14 @@ const heroImage = (home as any).hero_image || "";
     box-shadow: var(--shadow-soft);
     max-height: 520px;
   }
-
+ 
   /* ---- Upcoming shows strip ---- */
   .shows-row {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
-
+ 
   .show-tile {
     display: block;
     border: 1px solid var(--line);
@@ -244,13 +244,13 @@ const heroImage = (home as any).hero_image || "";
     overflow: hidden;
     transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   }
-
+ 
   .show-tile:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-soft);
     transform: translateY(-2px);
   }
-
+ 
   .show-tile-poster {
     aspect-ratio: 3 / 4;
     background-color: var(--accent-soft);
@@ -260,7 +260,7 @@ const heroImage = (home as any).hero_image || "";
     align-items: center;
     justify-content: center;
   }
-
+ 
   .show-tile-fallback {
     font-family: var(--font-heading);
     font-weight: 600;
@@ -269,34 +269,34 @@ const heroImage = (home as any).hero_image || "";
     padding: var(--space-sm);
     font-size: 1.05rem;
   }
-
+ 
   .show-tile-body {
     padding: var(--space-sm) var(--space-md) var(--space-md);
   }
-
+ 
   .show-tile-title {
     font-size: 1.1rem;
     margin-bottom: 0.25rem;
   }
-
+ 
   .show-tile-date {
     font-size: 0.9rem;
     color: var(--ink-soft);
   }
-
+ 
   /* ---- Section heading ---- */
   .section-head {
     margin-block: 0.4rem var(--space-lg);
     max-width: 20ch;
   }
-
+ 
   /* ---- Discovery cards ---- */
   .card-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
-
+ 
   .card {
     display: block;
     padding: var(--space-md);
@@ -305,13 +305,13 @@ const heroImage = (home as any).hero_image || "";
     background: var(--paper);
     transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   }
-
+ 
   .card:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-soft);
     transform: translateY(-2px);
   }
-
+ 
   .card-eyebrow {
     font-size: 0.75rem;
     font-weight: 600;
@@ -320,22 +320,22 @@ const heroImage = (home as any).hero_image || "";
     color: var(--accent);
     margin-bottom: 0.5rem;
   }
-
+ 
   .card h3 {
     margin-bottom: 0.5rem;
   }
-
+ 
   .card-body {
     font-size: 0.95rem;
     margin-bottom: var(--space-sm);
   }
-
+ 
   .card-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
-
+ 
   .card-meta span {
     font-size: 0.78rem;
     font-weight: 500;
@@ -345,19 +345,19 @@ const heroImage = (home as any).hero_image || "";
     padding: 0.25rem 0.6rem;
     border-radius: var(--radius-pill);
   }
-
+ 
   /* ---- Impact stats ---- */
   .impact {
     background: var(--paper-warm);
     border-block: 1px solid var(--line);
   }
-
+ 
   .stat-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }
-
+ 
   .stat-figure {
     font-family: var(--font-heading);
     font-size: 3rem;
@@ -365,36 +365,36 @@ const heroImage = (home as any).hero_image || "";
     color: var(--accent);
     line-height: 1;
   }
-
+ 
   .stat-label {
     font-size: 0.98rem;
     color: var(--ink-soft);
     margin-top: 0.4rem;
   }
-
+ 
   /* ---- Donation teaser ---- */
   .donate-lede {
     max-width: 54ch;
     margin-bottom: var(--space-lg);
   }
-
+ 
   .progress-wrap {
     margin-bottom: var(--space-lg);
   }
-
+ 
   .progress-bar {
     height: 14px;
     background: var(--accent-soft);
     border-radius: var(--radius-pill);
     overflow: hidden;
   }
-
+ 
   .progress-fill {
     height: 100%;
-    background: var(--accent);
+    background: var(--campaign-fill);
     border-radius: var(--radius-pill);
   }
-
+ 
   .progress-stats {
     display: flex;
     flex-wrap: wrap;
@@ -404,7 +404,7 @@ const heroImage = (home as any).hero_image || "";
     font-size: 0.92rem;
     color: var(--ink-soft);
   }
-
+ 
   /* ============ WIDER SCREENS ============ */
   @media (min-width: 720px) {
     .stat-grid {
@@ -417,10 +417,11 @@ const heroImage = (home as any).hero_image || "";
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     }
   }
-
+ 
   @media (min-width: 920px) {
     .card-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 </style>
+ 
