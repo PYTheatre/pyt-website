@@ -51,18 +51,21 @@ const shows = defineCollection({
     // acting as the end date when the new fields are absent.
     audition_date: z.coerce.date().optional().catch(undefined),
     cast_page_url: z.string().optional(),
-    // --- DOUBLE-CAST PERFORMANCE SCHEDULE (Mainstage only) ---
-    // Mainstage shows are always double cast, but the external ticketing
+    // --- DOUBLE-CAST PERFORMANCE SCHEDULE ---
+    // ANY show can be double cast (Mainstage always is; SecondStage / Studio
+    // shows sometimes are). When a show is double cast, the external ticketing
     // site (MVCPA) refuses to label which cast performs on which date — it
-    // only shows venue codes. So we list it here: one row per performance
-    // with date, time, cast name, and the buy link for THAT performance.
-    // The two cast names are stored once and only used as hint text in the
-    // CMS form. Everything is optional and tolerant by design: a show with
-    // no performances entered (anything that isn't a double-cast Mainstage
-    // show) simply shows no schedule block. Item fields are optional so one
-    // half-filled row doesn't discard the whole list; the page template
-    // filters rows missing the essentials before rendering. The outer
-    // catch() guards against a wholly malformed value failing the build.
+    // only shows venue codes. So we list it here: one row per performance with
+    // date, time, cast name, and the buy link for THAT performance. The
+    // schedule block only renders when double_cast is true AND at least one
+    // valid performance row exists, so a non-double-cast show (or a
+    // double-cast one with nothing entered yet) shows nothing. The two cast
+    // names are stored once and only used as hint text in the CMS form.
+    // Everything is optional and tolerant by design: item fields are optional
+    // so one half-filled row doesn't discard the whole list; the page template
+    // filters rows missing the essentials before rendering. The outer catch()
+    // guards against a wholly malformed value failing the build.
+    double_cast: z.boolean().optional().catch(undefined),
     cast_a_name: z.string().optional(),
     cast_b_name: z.string().optional(),
     performances: z
