@@ -12,10 +12,10 @@
 // here — they're imported directly into the pages that use
 // them as plain JSON. Collections are only for sets of items.
 // ============================================================
-
+ 
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
-
+ 
 // --- SHOWS ---
 // One Markdown file per show, under src/content/shows/.
 // The frontmatter at the top of each file is validated against
@@ -51,9 +51,34 @@ const shows = defineCollection({
     // acting as the end date when the new fields are absent.
     audition_date: z.coerce.date().optional().catch(undefined),
     cast_page_url: z.string().optional(),
+    // --- DOUBLE-CAST PERFORMANCE SCHEDULE (Mainstage only) ---
+    // Mainstage shows are always double cast, but the external ticketing
+    // site (MVCPA) refuses to label which cast performs on which date — it
+    // only shows venue codes. So we list it here: one row per performance
+    // with date, time, cast name, and the buy link for THAT performance.
+    // The two cast names are stored once and only used as hint text in the
+    // CMS form. Everything is optional and tolerant by design: a show with
+    // no performances entered (anything that isn't a double-cast Mainstage
+    // show) simply shows no schedule block. Item fields are optional so one
+    // half-filled row doesn't discard the whole list; the page template
+    // filters rows missing the essentials before rendering. The outer
+    // catch() guards against a wholly malformed value failing the build.
+    cast_a_name: z.string().optional(),
+    cast_b_name: z.string().optional(),
+    performances: z
+      .array(
+        z.object({
+          date_label: z.string().optional(),
+          time_label: z.string().optional(),
+          cast: z.string().optional(),
+          buy_url: z.string().optional(),
+        })
+      )
+      .optional()
+      .catch(undefined),
   }),
 });
-
+ 
 // --- PROGRAMS ---
 // One Markdown file per program (class, camp, intensive).
 // Note: "Stories on Stage" was previously a program type. It now
@@ -73,7 +98,7 @@ const programs = defineCollection({
     scholarships_available: z.boolean().default(false),
   }),
 });
-
+ 
 // --- STORIES ON STAGE PRODUCTIONS ---
 // Stories on Stage is a parallel season to Mainstage: 6 productions
 // per year, all cast from a single annual audition. Each production
@@ -95,7 +120,7 @@ const storiesOnStage = defineCollection({
     school_bookings_url: z.string().optional(),
   }),
 });
-
+ 
 // --- CAST PAGES ---
 // One entry per show's cast page. These live at unguessable URLs
 // (/cast/<slug>) and are NOT in the site nav — they're linked only
@@ -134,6 +159,6 @@ const castPages = defineCollection({
     body: z.string().optional(),
   }),
 });
-
+ 
 // Expose the collections so Astro can discover them.
 export const collections = { shows, programs, storiesOnStage, castPages };
