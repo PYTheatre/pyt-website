@@ -66,12 +66,16 @@ collections:
       - { name: "audition_end", label: "Audition end date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "Last day of auditions. After this day passes, the Auditions button automatically greys out to 'Auditions closed'. For a single-day audition, use the same day as the start." }
       - { name: "audition_display", label: "Audition dates (shown to families)", widget: "string", required: false, hint: "The audition dates as you want visitors to read them. Example: August 3–7, 2026. Shown next to the Auditions button. Leave blank to show no date text." }
       - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
-      # --- DOUBLE-CAST PERFORMANCE SCHEDULE (Mainstage only) ---
-      # The two cast-name fields are just for your reference and to make the
-      # list below easier to fill in. The performances list is what families
-      # see: one row per performance, telling them which cast plays when, with
-      # a buy link straight to that performance. Leave the list empty for any
-      # show that isn't double cast — the schedule section then stays hidden.
+      # --- DOUBLE-CAST PERFORMANCE SCHEDULE ---
+      # Tick "This show is double cast" to turn on the performance schedule,
+      # then fill in the list below. The schedule only shows on the website
+      # when the box is ticked AND at least one performance is listed — so an
+      # un-ticked show (or a ticked one with an empty list) shows nothing.
+      # The two cast-name fields are just reminders for you while you fill in
+      # the list. The performances list is what families see: one row per
+      # performance, telling them which cast plays when, with a buy link
+      # straight to that performance.
+      - { name: "double_cast", label: "This show is double cast", widget: "boolean", required: false, default: false, hint: "Tick this if the show has two casts performing on different dates. It turns on the 'Performances & casts' schedule below. Leave unticked for single-cast shows." }
       - { name: "cast_a_name", label: "Cast name 1 (for your reference)", widget: "string", required: false, hint: "Example: Ruby Cast. Just a reminder for you while filling in the list below — type the cast name into each performance row." }
       - { name: "cast_b_name", label: "Cast name 2 (for your reference)", widget: "string", required: false, hint: "Example: Emerald Cast." }
       - name: "performances"
