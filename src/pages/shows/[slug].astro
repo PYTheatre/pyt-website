@@ -1,14 +1,14 @@
 ---
 /*
   SHOW DETAIL PAGE  ( /shows/<slug> )
-
+ 
   This is a dynamic page: Astro builds one HTML page for each
   file in src/content/shows/ at build time. The list of pages
   comes from getStaticPaths() below.
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
-
+ 
 export async function getStaticPaths() {
   const shows = await getCollection("shows");
   return shows.map((show) => ({
@@ -16,16 +16,28 @@ export async function getStaticPaths() {
     props: { show },
   }));
 }
-
+ 
 const { show } = Astro.props;
 const { Content } = await render(show);
 const data = show.data;
-
+ 
 // Audition window: end date drives auto-close (legacy single date as fallback).
 const auditionEnd = data.audition_end ?? data.audition_date;
 const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTime();
+ 
+// Double-cast performance schedule. Mainstage shows are double cast, and the
+// external ticketing site won't label which cast plays which date — so we list
+// it here. Keep only rows that have at least a date and a cast (the two things
+// a buyer needs to identify their performance); a stray half-filled row is
+// dropped rather than rendered blank. If nothing survives, the whole block is
+// hidden, so non-Mainstage shows (which have no performances entered) show
+// nothing.
+const performances = (data.performances ?? []).filter(
+  (p) => p && p.date_label && p.cast
+);
+const hasSchedule = performances.length > 0;
 ---
-
+ 
 <BaseLayout
   title={`${data.title} — Peninsula Youth Theatre`}
   description={data.synopsis?.split("\n")[0] || `${data.title} at Peninsula Youth Theatre`}
@@ -41,12 +53,12 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
           <span class="poster-placeholder-large">{data.title}</span>
         )}
       </div>
-
+ 
       <!-- Info column -->
       <div class="show-content">
         {data.eyebrow && <p class="eyebrow">{data.eyebrow}</p>}
         <h1>{data.title}</h1>
-
+ 
         <dl class="show-info-grid">
           <div>
             <dt>Dates</dt>
@@ -75,7 +87,7 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
             </div>
           )}
         </dl>
-
+ 
         <div class="show-ctas">
           {data.ticketing_url ? (
             <a href={data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
@@ -106,30 +118,60 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
             </a>
           )}
         </div>
-
+ 
         <div class="show-synopsis">
           {data.synopsis.split("\n\n").map((para) => (
             <p>{para}</p>
           ))}
         </div>
-
+ 
+        {hasSchedule && (
+          <section class="cast-schedule" aria-labelledby="cast-schedule-heading">
+            <h2 id="cast-schedule-heading">Performances &amp; casts</h2>
+            <p class="cast-schedule-note">
+              Each performance is cast separately. Use the buttons below to
+              buy tickets for the cast and date you'd like to see.
+            </p>
+            <ul class="perf-list">
+              {performances.map((p) => (
+                <li class="perf-row">
+                  <div class="perf-when">
+                    <span class="perf-date">{p.date_label}</span>
+                    {p.time_label && <span class="perf-time">{p.time_label}</span>}
+                  </div>
+                  <span class="perf-cast">{p.cast}</span>
+                  {p.buy_url ? (
+                    <a href={p.buy_url} class="btn btn-primary perf-btn" target="_blank" rel="noopener">
+                      Buy tickets
+                    </a>
+                  ) : (
+                    <span class="btn btn-outline btn-disabled perf-btn" aria-disabled="true">
+                      On sale soon
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+ 
         <p class="back-link"><a href="/shows">← Back to all shows</a></p>
       </div>
     </div>
   </article>
 </BaseLayout>
-
+ 
 <style>
   .show-detail {
     padding-block: var(--space-xl);
   }
-
+ 
   .show-grid {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
   }
-
+ 
   .show-poster-large {
     aspect-ratio: 3 / 4;
     width: 100%;
@@ -142,7 +184,7 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
     padding: var(--space-lg);
     box-shadow: var(--shadow-lift);
   }
-
+ 
   .poster-placeholder-large {
     font-family: var(--font-heading);
     font-size: 2.2rem;
@@ -150,11 +192,11 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
     text-align: center;
     line-height: 1.05;
   }
-
+ 
   .show-content h1 {
     margin-block: 0.4rem var(--space-md);
   }
-
+ 
   .show-info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -164,11 +206,11 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
   }
-
+ 
   .show-info-grid div {
     min-width: 0;
   }
-
+ 
   .show-info-grid dt {
     font-size: 0.75rem;
     font-weight: 600;
@@ -177,40 +219,114 @@ const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTim
     color: var(--ink-muted);
     margin-bottom: 0.3rem;
   }
-
+ 
   .show-info-grid dd {
     font-size: 1rem;
     color: var(--ink);
     margin: 0;
   }
-
+ 
   .show-ctas {
     display: flex;
     flex-wrap: wrap;
     gap: 0.7rem;
     margin-bottom: var(--space-lg);
   }
-
+ 
   .btn-disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-
+ 
   .show-synopsis p {
     font-size: 1.05rem;
     line-height: 1.7;
     margin-bottom: var(--space-md);
   }
-
+ 
   .back-link {
     margin-top: var(--space-xl);
     font-size: 0.95rem;
   }
-
+ 
   .back-link a {
     color: var(--accent-deep);
   }
-
+ 
+  /* --- Double-cast performance schedule --- */
+  .cast-schedule {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--line);
+  }
+ 
+  .cast-schedule h2 {
+    margin: 0 0 0.4rem;
+  }
+ 
+  .cast-schedule-note {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    margin: 0 0 var(--space-md);
+  }
+ 
+  .perf-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+ 
+  .perf-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface, #fff);
+  }
+ 
+  .perf-when {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1 1 9rem;
+  }
+ 
+  .perf-date {
+    font-weight: 600;
+    color: var(--ink);
+  }
+ 
+  .perf-time {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+ 
+  .perf-cast {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--accent-deep);
+    flex: 1 1 7rem;
+  }
+ 
+  .perf-btn {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+ 
+  @media (max-width: 520px) {
+    .perf-btn {
+      margin-left: 0;
+      width: 100%;
+      text-align: center;
+    }
+  }
+ 
   /* Wider screens: poster beside content */
   @media (min-width: 920px) {
     .show-grid {
