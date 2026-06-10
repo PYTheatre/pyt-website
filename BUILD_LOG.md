@@ -6,6 +6,21 @@ Phase-by-phase history of work completed. Newest at the top.
 
 ---
 
+Audition page + menu restructure (2026-06-09)
+Goal (PM): A new Audition page listing all shows currently casting (with their external/Active.com sign-up links, same as the Shows page), plus a Stories on Stage panel, a casting-philosophy panel linking to the Casting page, and a CMS-editable FAQ. Make Audition its own top-level menu heading and move Casting under it (out of About).
+Built (4 pieces):
+
+src/pages/audition.astro (NEW) — hero (CMS copy), a list of shows with OPEN auditions pulled live from the shows collection, a Stories on Stage panel → /stories-on-stage, a casting-philosophy panel → /casting, and an FAQ (details accordion) that hides when empty.
+src/content/settings/audition-page.json (NEW — brand-new settings file, OK under Rule 2) — starter copy + 3 starter FAQs. Every field has a page-side fallback.
+src/components/Header.astro (EDIT) — new "Audition" navGroup (/audition, children: Audition, Casting); Casting removed from the About group. About now = About + Employment. Final menu: Shows▾ · Audition▾ · Classes & Camps · Shop▾ · About▾ · Support PYT · +Donate.
+public/admin/config.yml (EDIT — insert a record) — new "Audition Page" Site Settings record (12 fields incl. an faqs list of question/answer). This piece was the last handed over and was NOT confirmed committed before the session ended — see AUDITION-FEATURE-STATUS-2026-06-09.md.
+
+Open-auditions filter: a show shows only if it has audition_url AND an end date (audition_end, falling back to legacy audition_date) that is today-or-later. Deliberately stricter than /shows: a show with a link but no end date does NOT appear (can't tell if open).
+Decisions with PM: Audition is its own top-level heading with Casting beneath it (PM's revised request — originally floated as a child under Shows). Stories on Stage is a panel, not part of the dated list (it's cast from one annual audition, no per-show dates). Casting philosophy is its own panel, not folded into the FAQ.
+Tested: the sandbox could NOT reach GitHub this session (clone/build blocked by the network allowlist), so work was built against files the PM pasted (content.config.ts, shows/index.astro, Header.astro, config.yml) and verified via logic/parse checks, NOT a real site build: JSON valid (12 fields); navGroups parses with Audition added + Casting moved + About reduced; open-auditions filter correct across edge cases (future/passed/legacy/same-day/no-link/no-end-date); config.yml block parses as YAML and its fields match the page one-to-one (no orphans). A real npm run build, the page count (should be 20, was 19), and the live visual check were NOT done — the latter is always the PM's.
+Still open / next session: confirm pieces #1–3 committed to correct paths; confirm/finish piece #4 (config.yml record) — most likely still pending; PM to hard-refresh /admin after the config.yml change; PM to visually check /audition on phone + desktop.
+Process note: the tappable-button question tool did not render for the PM this session ("I can't see your question") — fell back to plain numbered text questions, which worked. Worth doing proactively next time.
+---
 ## Photos page — front door to SmugMug photo sales (2026-06-08)
 
 **Goal (client):** give families a way to find and buy photos from PYT's shows and events. The photos are hosted and sold on PYT's SmugMug site (`peninsulayouththeatre.smugmug.com`).
