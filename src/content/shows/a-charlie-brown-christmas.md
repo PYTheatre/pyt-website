@@ -17,7 +17,35 @@ synopsis: >-
 
 
   By Toby Marlow and Lucy Moss.
-ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=747
+ticketing_url: ""
 audition_display: Closed
 cast_page_url: ""
+double_cast: true
+cast_a_name: Lancaster
+cast_b_name: York
+performances:
+  - date_label: Thursday 25 June
+    time_label: 7:30pm
+    cast: Lancaster
+    buy_url: https://tickets.mvcpa.com/orderticketsarea.asp?p=2797&a=234&src=eventperformances
+  - date_label: Friday 26 June
+    time_label: 7:30pm
+    cast: York
+    buy_url: https://tickets.mvcpa.com/orderticketsarea.asp?p=2798&a=234&src=eventperformances
+  - date_label: Saturday 27 June
+    time_label: 2pm
+    cast: York
+    buy_url: https://tickets.mvcpa.com/orderticketsarea.asp?p=2800&a=234&src=eventperformances
+  - date_label: Saturday 27 June
+    time_label: 7:30pm
+    cast: Lancaster
+    buy_url: https://tickets.mvcpa.com/orderticketsarea.asp?p=2799&a=234&src=eventperformances
+  - date_label: Sunday 28 June
+    time_label: 1pm
+    cast: Lancaster
+    buy_url: https://tickets.mvcpa.com/orderticketsarea.asp?p=2801&a=234&src=eventperformances
+  - date_label: Sunday 28 June
+    time_label: 6:30pm
+    cast: York
+    buy_url: https://tickets.mvcpa.com/orderticketsarea.asp?p=2802&a=234&src=eventperformances
 ---
