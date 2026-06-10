@@ -1,6 +1,6 @@
 ---
 title: "SIX: TEEN EDITION "
-eyebrow: 2026 Mainstage
+eyebrow: 2026 Second Stage
 start_date: 2026-06-25
 end_date: 2026-06-28
 date_display: June 25–28, 2026
