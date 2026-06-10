@@ -66,6 +66,25 @@ collections:
       - { name: "audition_end", label: "Audition end date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "Last day of auditions. After this day passes, the Auditions button automatically greys out to 'Auditions closed'. For a single-day audition, use the same day as the start." }
       - { name: "audition_display", label: "Audition dates (shown to families)", widget: "string", required: false, hint: "The audition dates as you want visitors to read them. Example: August 3–7, 2026. Shown next to the Auditions button. Leave blank to show no date text." }
       - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
+      # --- DOUBLE-CAST PERFORMANCE SCHEDULE (Mainstage only) ---
+      # The two cast-name fields are just for your reference and to make the
+      # list below easier to fill in. The performances list is what families
+      # see: one row per performance, telling them which cast plays when, with
+      # a buy link straight to that performance. Leave the list empty for any
+      # show that isn't double cast — the schedule section then stays hidden.
+      - { name: "cast_a_name", label: "Cast name 1 (for your reference)", widget: "string", required: false, hint: "Example: Ruby Cast. Just a reminder for you while filling in the list below — type the cast name into each performance row." }
+      - { name: "cast_b_name", label: "Cast name 2 (for your reference)", widget: "string", required: false, hint: "Example: Emerald Cast." }
+      - name: "performances"
+        label: "Performance schedule (which cast plays when)"
+        widget: "list"
+        required: false
+        summary: "{{fields.date_label}} {{fields.time_label}} — {{fields.cast}}"
+        hint: "Add one row per performance. Families use this to see which cast performs on each date and to buy tickets for that exact performance. Leave empty if this show isn't double cast — the whole section then stays hidden on the page."
+        fields:
+          - { name: "date_label", label: "Date", widget: "string", hint: "As you want families to read it. Example: Thu, Jun 25" }
+          - { name: "time_label", label: "Time", widget: "string", required: false, hint: "Example: 7:30pm. Leave blank if not needed." }
+          - { name: "cast", label: "Which cast", widget: "string", hint: "The cast performing this date. Example: Ruby Cast" }
+          - { name: "buy_url", label: "Buy tickets link for this performance", widget: "string", required: false, hint: "The link to buy tickets for THIS specific performance. Leave blank to show 'On sale soon' instead of a button." }
  
   # ============================================================
   # PROGRAMS — Classes, Camps, Stories on Stage, Studio Intensives.
