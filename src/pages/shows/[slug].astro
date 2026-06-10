@@ -1,3 +1,4 @@
+
 ---
 /*
   SHOW DETAIL PAGE  ( /shows/<slug> )
@@ -25,17 +26,18 @@ const data = show.data;
 const auditionEnd = data.audition_end ?? data.audition_date;
 const auditionsClosed = auditionEnd && auditionEnd.getTime() < new Date().getTime();
  
-// Double-cast performance schedule. Mainstage shows are double cast, and the
-// external ticketing site won't label which cast plays which date — so we list
-// it here. Keep only rows that have at least a date and a cast (the two things
-// a buyer needs to identify their performance); a stray half-filled row is
-// dropped rather than rendered blank. If nothing survives, the whole block is
-// hidden, so non-Mainstage shows (which have no performances entered) show
-// nothing.
+// Double-cast performance schedule. Any show CAN be double cast (Mainstage
+// always is; SecondStage/Studio sometimes are). When it is, the external
+// ticketing site won't label which cast plays which date — so we list it here.
+// Keep only rows that have at least a date and a cast (the two things a buyer
+// needs to identify their performance); a stray half-filled row is dropped
+// rather than rendered blank. The block shows ONLY when the show is marked
+// double cast AND at least one valid row exists — so non-double-cast shows,
+// and double-cast shows with nothing entered yet, show nothing.
 const performances = (data.performances ?? []).filter(
   (p) => p && p.date_label && p.cast
 );
-const hasSchedule = performances.length > 0;
+const hasSchedule = data.double_cast === true && performances.length > 0;
 ---
  
 <BaseLayout
