@@ -60,9 +60,6 @@ const now = new Date();
                   )}
                   <h2>{show.data.title}</h2>
                   <p class="show-dates">{show.data.date_display}</p>
-                  {show.data.ages && (
-                    <p class="show-meta">{show.data.ages}</p>
-                  )}
 
                   <div class="show-actions">
                     {/* Audition button — hidden entirely when no link.
@@ -184,12 +181,6 @@ const now = new Date();
     color: var(--ink);
     font-weight: 500;
     margin-bottom: 0.3rem;
-  }
-
-  .show-meta {
-    font-size: 0.92rem;
-    color: var(--ink-muted);
-    margin-bottom: var(--space-sm);
   }
 
   .show-actions {
