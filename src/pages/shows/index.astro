@@ -86,6 +86,9 @@ const now = new Date();
                         Tickets coming soon
                       </span>
                     )}
+
+                    {/* See details — pink outline button, sits next to Tickets. */}
+                    <a href={`/shows/${show.id}`} class="btn btn-outline-accent">See details →</a>
                   </div>
 
                   {/* Audition dates as text — shown whenever there's display text
@@ -93,8 +96,6 @@ const now = new Date();
                   {show.data.audition_display && !auditionsClosed && (
                     <p class="show-audition-dates">Auditions: {show.data.audition_display}</p>
                   )}
-
-                  <a href={`/shows/${show.id}`} class="btn btn-outline-accent show-link-cta">See details →</a>
                 </div>
               </div>
             </li>
@@ -214,11 +215,6 @@ const now = new Date();
     background: var(--accent);
     color: #fff;
     border-color: var(--accent);
-  }
-
-  /* Sits on its own line under the date/auditions text, left-aligned. */
-  .show-link-cta {
-    margin-top: 0.2rem;
   }
 
   .empty-state {
