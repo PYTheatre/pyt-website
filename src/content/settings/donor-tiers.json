@@ -1,24 +1,24 @@
 {
   "tiers": [
     {
-      "name": "Friend",
-      "range": "$50–$249",
-      "description": "Help us keep tickets affordable and our doors open to every family who walks through them."
+      "name": "Friend of PYT",
+      "range": "$150–$999",
+      "description": "Celebration of your support with (optional) name recognition on all published materials, on and offline."
     },
     {
-      "name": "Supporter",
-      "range": "$250–$999",
-      "description": "Underwrite the scripts, sheet music, and rehearsal materials that bring a season to life."
+      "name": "PYT Patron",
+      "range": "$1,000–$6,999",
+      "description": "Signed, framed cast and crew photos of the current season productions. Celebration of your support with (optional) name recognition on all published materials, on and offline."
     },
     {
       "name": "Producer",
-      "range": "$1,000–$4,999",
-      "description": "Name a role: sponsor a scholarship, a costume budget, or a guest-artist visit."
+      "range": "$7,000–$19,999",
+      "description": "Back stage tours for current season productions. Signed, framed cast and crew photos of the current season productions. Celebration of your support with (optional) name recognition on all published materials, on and offline."
     },
     {
-      "name": "Director's Circle",
-      "range": "$5,000 and up",
-      "description": "Our most committed supporters. Director's Circle gifts make multi-year programs possible — touring shows, capital projects, and the deepest scholarships."
+      "name": "Executive Producer",
+      "range": "$20,000 and up",
+      "description": "Present annual awards to actors and staff. Back stage tours for current season productions. Signed, framed cast and crew photos of the current season productions. Celebration of your support with (optional) name recognition on all published materials, on and offline."
     }
   ]
 }
