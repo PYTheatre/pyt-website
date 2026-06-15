@@ -266,6 +266,33 @@ collections:
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
  
+      # --- Photos Page (front door to SmugMug) ---
+      - name: "photos-page"
+        label: "Photos Page"
+        file: "src/content/settings/photos-page.json"
+        description: "The Photos page (/photos). Edit the headings, intro, the 'A few favorites' sample images, and the 'Find your photos' button that links out to SmugMug."
+        fields:
+          - { name: "eyebrow", label: "Small label above title", widget: "string", required: false, hint: "Example: Shows & events. Leave blank to hide." }
+          - { name: "title", label: "Page title", widget: "string", default: "Photos" }
+          - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
+          - { name: "samples_heading", label: "Favorites — section heading", widget: "string", required: false, hint: "Example: A few favorites. Leave blank to hide the heading." }
+          - { name: "samples_blurb", label: "Favorites — short description (optional)", widget: "text", required: false }
+          - name: "samples"
+            label: "Favorite photos"
+            widget: "list"
+            required: false
+            summary: "{{fields.caption}}"
+            label_singular: "Photo"
+            hint: "Each item is one photo in the 'A few favorites' row. Upload an image and add an optional caption. An item with no image shows a 'Photo coming soon' placeholder; remove items you don't want."
+            fields:
+              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "Upload the photo. Leave blank to show a 'Photo coming soon' placeholder." }
+              - { name: "caption", label: "Caption (optional)", widget: "string", required: false }
+          - { name: "cta_heading", label: "Find-your-photos — heading", widget: "string", required: false, default: "Find your photos" }
+          - { name: "cta_blurb", label: "Find-your-photos — description", widget: "text", required: false }
+          - { name: "smugmug_url", label: "SmugMug photo site link", widget: "string", required: false, hint: "The web address of PYT's SmugMug photo site that the button opens. Defaults to PYT's main SmugMug page if left blank." }
+          - { name: "cta_label", label: "Button text", widget: "string", required: false, default: "Browse & buy photos" }
+          - { name: "cta_note", label: "Small note under the button (optional)", widget: "string", required: false, hint: "Example: Opens our photo site in a new tab." }
+ 
       # --- Footer (tagline + copyright line) ---
       - name: "footer"
         label: "Footer"
