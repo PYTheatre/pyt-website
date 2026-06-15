@@ -94,7 +94,7 @@ const now = new Date();
                     <p class="show-audition-dates">Auditions: {show.data.audition_display}</p>
                   )}
 
-                  <a href={`/shows/${show.id}`} class="show-link-cta">See details →</a>
+                  <a href={`/shows/${show.id}`} class="btn btn-outline-accent show-link-cta">See details →</a>
                 </div>
               </div>
             </li>
@@ -202,16 +202,23 @@ const now = new Date();
     margin: 0 0 var(--space-sm);
   }
 
-  .show-link-cta {
-    display: inline-block;
+  /* "See details" — pink outline button (Option A). Base .btn shape
+     comes from global.css; this adds the accent outline + hover fill. */
+  .btn-outline-accent {
+    background: transparent;
     color: var(--accent);
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
+    border-color: var(--accent);
   }
 
-  .show-link-cta:hover {
-    text-decoration: underline;
+  .btn-outline-accent:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* Sits on its own line under the date/auditions text, left-aligned. */
+  .show-link-cta {
+    margin-top: 0.2rem;
   }
 
   .empty-state {
