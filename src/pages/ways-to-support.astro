@@ -12,6 +12,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import campaign from "../content/settings/donation-campaign.json";
 import tiers from "../content/settings/donor-tiers.json";
 import donatePage from "../content/settings/donate-page.json";
+import corporate from "../content/settings/corporate-giving.json";
+import recognition from "../content/settings/donor-recognition.json";
  
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
@@ -25,20 +27,18 @@ const soapboxDonateUrl =
   donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
  
 /*
-  SPONSORSHIP — Shopify (NOT Soapbox).
-  Decided 2026-06-03: sponsorship moves to Shopify (reverses earlier
-  Soapbox plan). No Shopify store exists yet, so these two links are
-  PLACEHOLDERS and the buttons are rendered DISABLED until the real
-  Shopify product/collection URLs are supplied. When they arrive:
-    1. paste the real URLs below,
-    2. set SPONSOR_LINKS_LIVE = true,
-  and the buttons activate (they also need the same two URLs swapped
-  into the site-wide "Sponsor" buttons — see shows/index.astro and
-  shows/[slug].astro).
+  SPONSORSHIP — now routes to the hosted Soapbox donation page (NOT Shopify).
+  Decided 2026-06-15: sponsorship stays tax-deductible, so both "Sponsor a
+  Show" and "Sponsor a Season" buttons point at the general Soapbox donation
+  page (same one the Donate button uses). The flexible Soapbox form lets the
+  giver enter their own amount and recognition name, so one page serves
+  individuals + both sponsorship types. (Reverses the earlier Shopify plan,
+  which would not have been tax-deductible.)
+  NOTE: the site-wide "Sponsor" buttons on shows/index.astro and
+  shows/[slug].astro still need the same swap in a follow-up step.
 */
-const SPONSOR_LINKS_LIVE = false;
-const SPONSOR_SHOW_URL = "#"; // TODO: Shopify "Sponsor a Show" product URL
-const SPONSOR_SEASON_URL = "#"; // TODO: Shopify "Sponsor a Season" product URL
+const sponsorDonateUrl =
+  donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
  
 // Sponsorship panel text — CMS-editable (Support PYT record), with
 // fallbacks so the panel reads correctly before staff fill the fields.
@@ -54,6 +54,22 @@ const sponsorSeasonTitle = donatePage.sponsor_season_title || "Sponsor a Season"
 const sponsorSeasonDescription =
   donatePage.sponsor_season_description ||
   "Support the full season of productions and education programs, with recognition across the whole year of PYT performances.";
+ 
+/*
+  CORPORATE GIVING — also routes to Soapbox (tax-deductible).
+  The dedicated corporate Soapbox page does not exist yet, so
+  corporate_donate_url is empty for now. While empty, the tier buttons
+  render as a non-clickable "Coming soon" pill. Once the PM creates the
+  Soapbox corporate page and fills the link in the CMS, the buttons go live.
+*/
+const corporateDonateUrl = corporate.corporate_donate_url || "";
+const corporateLinkLive = corporateDonateUrl.trim().length > 0;
+ 
+// Recognition: only show groups that actually have at least one name,
+// so empty tiers don't render as bare headings.
+const recognitionGroups = (recognition.groups || []).filter(
+  (g) => Array.isArray(g.names) && g.names.filter((n) => n && n.trim()).length > 0
+);
 ---
  
 <BaseLayout
@@ -94,13 +110,6 @@ const sponsorSeasonDescription =
           </a>
         </div>
       </div>
- 
-      {donatePage.matching_note && (
-        <aside class="matching-callout">
-          <p class="matching-eyebrow">Double your gift</p>
-          <p>{donatePage.matching_note}</p>
-        </aside>
-      )}
     </div>
   </section>
  
@@ -127,6 +136,34 @@ const sponsorSeasonDescription =
     </div>
   </section>
  
+  <!-- ============ CORPORATE GIVING ============ -->
+  <section class="section corporate-section" id="corporate">
+    <div class="container">
+      <p class="eyebrow">{corporate.eyebrow}</p>
+      <h2 class="section-head">{corporate.heading}</h2>
+      {corporate.intro && <p class="corporate-intro">{corporate.intro}</p>}
+ 
+      <ul class="tier-list">
+        {corporate.tiers.map((tier) => (
+          <li class="tier-card">
+            <p class="tier-range">{tier.amount}</p>
+            <h3>{tier.name}</h3>
+            <p class="tier-description">{tier.description}</p>
+            {corporateLinkLive ? (
+              <a href={corporateDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+                Become a {tier.name}
+              </a>
+            ) : (
+              <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
+                Coming soon
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+ 
   <!-- ============ SPONSORSHIP ============ -->
   <!--
     Sponsorship now routes to Shopify (not Soapbox). Two levels only.
@@ -143,34 +180,48 @@ const sponsorSeasonDescription =
           <p class="tier-range">Show-level sponsorship</p>
           <h3>{sponsorShowTitle}</h3>
           <p class="tier-description">{sponsorShowDescription}</p>
-          {SPONSOR_LINKS_LIVE ? (
-            <a href={SPONSOR_SHOW_URL} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-              {sponsorShowTitle}
-            </a>
-          ) : (
-            <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
-              Coming soon
-            </span>
-          )}
+          <a href={sponsorDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+            {sponsorShowTitle}
+          </a>
         </li>
  
         <li class="tier-card">
           <p class="tier-range">Season-level sponsorship</p>
           <h3>{sponsorSeasonTitle}</h3>
           <p class="tier-description">{sponsorSeasonDescription}</p>
-          {SPONSOR_LINKS_LIVE ? (
-            <a href={SPONSOR_SEASON_URL} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-              {sponsorSeasonTitle}
-            </a>
-          ) : (
-            <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
-              Coming soon
-            </span>
-          )}
+          <a href={sponsorDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+            {sponsorSeasonTitle}
+          </a>
         </li>
       </ul>
     </div>
   </section>
+ 
+  <!-- ============ DONOR & SPONSOR RECOGNITION ============ -->
+  {recognitionGroups.length > 0 && (
+    <section class="section recognition-section" id="recognition">
+      <div class="container">
+        <p class="eyebrow">{recognition.eyebrow}</p>
+        <h2 class="section-head">{recognition.heading}</h2>
+        {recognition.intro && <p class="recognition-intro">{recognition.intro}</p>}
+ 
+        <div class="recognition-groups">
+          {recognitionGroups.map((group) => (
+            <div class="recognition-group">
+              <h3 class="recognition-tier">{group.tier_name}</h3>
+              <ul class="recognition-names">
+                {group.names
+                  .filter((n) => n && n.trim())
+                  .map((name) => (
+                    <li>{name}</li>
+                  ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 </BaseLayout>
  
 <style>
@@ -278,24 +329,6 @@ const sponsorSeasonDescription =
     padding: 0.85rem 2.4rem;
   }
  
-  .matching-callout {
-    margin-top: var(--space-xl);
-    padding: var(--space-md);
-    background: var(--accent-soft);
-    border-radius: var(--radius);
-    border-left: 4px solid var(--accent);
-    max-width: 60ch;
-  }
- 
-  .matching-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent-deep);
-    margin-bottom: 0.4rem;
-  }
- 
   /* ---- Donor tiers ---- */
   .tiers-section {
     background: var(--paper-warm);
@@ -390,5 +423,68 @@ const sponsorSeasonDescription =
       gap: var(--space-lg);
     }
   }
-</style>
  
+  /* ---- Corporate Giving ---- */
+  .corporate-section {
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+  }
+ 
+  .corporate-intro {
+    color: var(--ink-soft);
+    max-width: 60ch;
+    font-size: 1.05rem;
+    margin-bottom: var(--space-lg);
+  }
+ 
+  /* ---- Donor & sponsor recognition ---- */
+  .recognition-section {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--line);
+  }
+ 
+  .recognition-intro {
+    color: var(--ink-soft);
+    max-width: 60ch;
+    font-size: 1.05rem;
+    margin-bottom: var(--space-lg);
+  }
+ 
+  .recognition-groups {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+ 
+  .recognition-tier {
+    font-size: 1.15rem;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+ 
+  .recognition-names {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+ 
+  .recognition-names li {
+    font-size: 1rem;
+    color: var(--ink);
+    padding: 0.2rem 0;
+  }
+ 
+  @media (min-width: 720px) {
+    .recognition-groups {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+ 
+  @media (min-width: 1024px) {
+    .recognition-groups {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
