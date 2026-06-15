@@ -42,8 +42,11 @@ const sponsorDonateUrl =
  
 // Sponsorship panel text — CMS-editable (Support PYT record), with
 // fallbacks so the panel reads correctly before staff fill the fields.
+// Eyebrow is optional: present-but-blank hides it (so it can be removed).
 const sponsorEyebrow =
-  donatePage.sponsor_eyebrow || "For businesses, foundations & major giving";
+  donatePage.sponsor_eyebrow !== undefined
+    ? donatePage.sponsor_eyebrow
+    : "For businesses, foundations & major giving";
 const sponsorHeading =
   donatePage.sponsor_heading || "Sponsor a show or a season.";
 const sponsorShowTitle = donatePage.sponsor_show_title || "Sponsor a Show";
@@ -54,6 +57,10 @@ const sponsorSeasonTitle = donatePage.sponsor_season_title || "Sponsor a Season"
 const sponsorSeasonDescription =
   donatePage.sponsor_season_description ||
   "Support the full season of productions and education programs, with recognition across the whole year of PYT performances.";
+// Optional price labels for each sponsor card — shown only when set
+// (replaces the old hardcoded "Show-level / Season-level" labels).
+const sponsorShowPrice = donatePage.sponsor_show_price || "";
+const sponsorSeasonPrice = donatePage.sponsor_season_price || "";
  
 /*
   CORPORATE GIVING — also routes to Soapbox (tax-deductible).
@@ -64,6 +71,8 @@ const sponsorSeasonDescription =
 */
 const corporateDonateUrl = corporate.corporate_donate_url || "";
 const corporateLinkLive = corporateDonateUrl.trim().length > 0;
+// Optional contact email shown under the corporate intro as a mailto link.
+const corporateEmail = (corporate as any).contact_email || "";
  
 // Recognition: only show groups that actually have at least one name,
 // so empty tiers don't render as bare headings.
@@ -71,9 +80,12 @@ const recognitionGroups = (recognition.groups || []).filter(
   (g) => Array.isArray(g.names) && g.names.filter((n) => n && n.trim()).length > 0
 );
  
-// Giving-levels section headings — CMS-editable (Support PYT record),
-// with the original wording as fallbacks.
-const tiersEyebrow = donatePage.tiers_eyebrow || "Giving levels";
+// Giving-levels section headings — CMS-editable (Support PYT record).
+// Heading keeps a sensible fallback; the eyebrow is OPTIONAL — if the
+// field is present but blank, we hide the eyebrow rather than fall back,
+// so staff can remove it entirely from the CMS.
+const tiersEyebrow =
+  donatePage.tiers_eyebrow !== undefined ? donatePage.tiers_eyebrow : "Giving levels";
 const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
 ---
  
@@ -121,7 +133,7 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   <!-- Donor tiers -->
   <section class="section tiers-section">
     <div class="container">
-      <p class="eyebrow">{tiersEyebrow}</p>
+      {tiersEyebrow && <p class="eyebrow">{tiersEyebrow}</p>}
       <h2 class="section-head">{tiersHeading}</h2>
  
       <ul class="tier-list">
@@ -130,6 +142,9 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
             <p class="tier-range">{tier.range}</p>
             <h3>{tier.name}</h3>
             <p class="tier-description">{tier.description}</p>
+            <a href={soapboxDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+              Join
+            </a>
           </li>
         ))}
       </ul>
@@ -139,9 +154,14 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   <!-- ============ CORPORATE GIVING ============ -->
   <section class="section corporate-section" id="corporate">
     <div class="container">
-      <p class="eyebrow">{corporate.eyebrow}</p>
+      {corporate.eyebrow && <p class="eyebrow">{corporate.eyebrow}</p>}
       <h2 class="section-head">{corporate.heading}</h2>
       {corporate.intro && <p class="corporate-intro">{corporate.intro}</p>}
+      {corporateEmail && (
+        <p class="corporate-contact">
+          To discuss corporate giving, email <a href={`mailto:${corporateEmail}`}>{corporateEmail}</a>.
+        </p>
+      )}
  
       <ul class="tier-list">
         {corporate.tiers.map((tier) => (
@@ -151,7 +171,7 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
             <p class="tier-description">{tier.description}</p>
             {corporateLinkLive ? (
               <a href={corporateDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-                Become a {tier.name}
+                Join
               </a>
             ) : (
               <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
@@ -166,18 +186,19 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
  
   <!-- ============ SPONSORSHIP ============ -->
   <!--
-    Sponsorship now routes to Shopify (not Soapbox). Two levels only.
-    Buttons are disabled until SPONSOR_LINKS_LIVE is true and real
-    Shopify URLs are set in the front matter above.
+    Sponsorship routes to the general Soapbox donation page (tax-deductible).
+    The per-card "Show-level/Season-level" labels were replaced with an
+    OPTIONAL price field (sponsor_show_price / sponsor_season_price) that
+    only renders when set — for when price levels are decided.
   -->
   <section class="section sponsor-section" id="sponsor">
     <div class="container">
-      <p class="eyebrow">{sponsorEyebrow}</p>
+      {sponsorEyebrow && <p class="eyebrow">{sponsorEyebrow}</p>}
       <h2 class="section-head">{sponsorHeading}</h2>
  
       <ul class="tier-list sponsor-list">
         <li class="tier-card">
-          <p class="tier-range">Show-level sponsorship</p>
+          {sponsorShowPrice && <p class="tier-range">{sponsorShowPrice}</p>}
           <h3>{sponsorShowTitle}</h3>
           <p class="tier-description">{sponsorShowDescription}</p>
           <a href={sponsorDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
@@ -186,7 +207,7 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
         </li>
  
         <li class="tier-card">
-          <p class="tier-range">Season-level sponsorship</p>
+          {sponsorSeasonPrice && <p class="tier-range">{sponsorSeasonPrice}</p>}
           <h3>{sponsorSeasonTitle}</h3>
           <p class="tier-description">{sponsorSeasonDescription}</p>
           <a href={sponsorDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
@@ -360,6 +381,31 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Push the button to the bottom so cards with longer/shorter text
+     still line their buttons up evenly. */
+  .tier-card .sponsor-btn {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  /* Keep a little breathing room above the button even when text is short. */
+  .tier-card .tier-description {
+    margin-bottom: var(--space-md);
+  }
+
+  .corporate-contact {
+    color: var(--ink-soft);
+    font-size: 1rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .corporate-contact a {
+    color: var(--accent);
+    font-weight: 600;
   }
  
   .tier-range {
@@ -411,10 +457,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   /* Only two sponsorship cards — cap at 2 columns even on wide screens */
   .sponsor-list {
     max-width: 760px;
-  }
- 
-  .tier-card .sponsor-btn {
-    margin-top: var(--space-md);
   }
  
   /* Disabled "Coming soon" sponsor button */
