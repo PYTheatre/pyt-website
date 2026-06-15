@@ -415,6 +415,18 @@ collections:
               - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Artistic Director" }
               - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line. Example: Joined PYT in 2015" }
               - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
+          - { name: "artist_section_heading", label: "Artists section heading", widget: "string", required: false, default: "Artists" }
+          - { name: "artist_section_blurb", label: "Artists section description (optional)", widget: "text", required: false, hint: "Optional short text under the Artists heading. Leave blank to omit." }
+          - name: "artist_members"
+            label: "Artists"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.pyt_title}}"
+            fields:
+              - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
+              - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Resident Choreographer" }
+              - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line." }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
           - { name: "board_section_heading", label: "Board section heading", widget: "string", required: false, default: "Board of Directors" }
           - { name: "board_section_blurb", label: "Board section description (optional)", widget: "text", required: false, hint: "Optional short text under the section heading. Leave blank to omit." }
           - name: "board_members"
