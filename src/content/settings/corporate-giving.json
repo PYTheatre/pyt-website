@@ -7,7 +7,7 @@
     {
       "name": "Partner",
       "amount": "$2,500",
-      "description": "Recognition on our website and in season programs, plus an invitation to a behind-the-scenes event."
+      "description": "tbc"
     },
     {
       "name": "Patron",
@@ -16,13 +16,13 @@
     },
     {
       "name": "Producer",
-      "amount": "$10,000",
-      "description": "All Patron benefits, plus prominent program advertising, on-stage recognition, and a reserved opening-night package."
+      "amount": "$15,000",
+      "description": "tbc"
     },
     {
       "name": "Executive Producer",
-      "amount": "$30,000",
-      "description": "Our highest level of corporate partnership. All Producer benefits, plus season-long naming recognition and a tailored engagement package for your employees and clients."
+      "amount": "$50,000",
+      "description": "tbc"
     }
   ]
 }
