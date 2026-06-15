@@ -62,16 +62,16 @@
   "title": "About PYT",
   "staff_members": [
     {
-      "name": "Loryn Hatten",
-      "pyt_title": "Managing Director",
-      "outside_title": "She is fabulous.",
-      "photo": "/uploads/loryn.jpeg"
-    },
-    {
       "name": "Karen Simpson",
       "pyt_title": "Executive Artistic Director",
       "outside_title": "The GOAT",
       "photo": "/uploads/karen.jpg"
+    },
+    {
+      "name": "Loryn Hatten",
+      "pyt_title": "Managing Director",
+      "outside_title": "She is fabulous.",
+      "photo": "/uploads/loryn.jpeg"
     }
   ],
   "email": "info@pytnet.org"
