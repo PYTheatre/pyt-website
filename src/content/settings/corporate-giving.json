@@ -1,0 +1,28 @@
+{
+  "eyebrow": "For businesses & corporate partners",
+  "heading": "Corporate Giving",
+  "intro": "Partner with PYT and invest in the next generation of Bay Area performers. Corporate gifts are tax-deductible and come with year-round recognition.",
+  "corporate_donate_url": "",
+  "tiers": [
+    {
+      "name": "Partner",
+      "amount": "$2,500",
+      "description": "Recognition on our website and in season programs, plus an invitation to a behind-the-scenes event."
+    },
+    {
+      "name": "Patron",
+      "amount": "$5,000",
+      "description": "All Partner benefits, plus logo placement on lobby signage and a group of complimentary tickets to a production of your choice."
+    },
+    {
+      "name": "Producer",
+      "amount": "$10,000",
+      "description": "All Patron benefits, plus prominent program advertising, on-stage recognition, and a reserved opening-night package."
+    },
+    {
+      "name": "Executive Producer",
+      "amount": "$30,000",
+      "description": "Our highest level of corporate partnership. All Producer benefits, plus season-long naming recognition and a tailored engagement package for your employees and clients."
+    }
+  ]
+}

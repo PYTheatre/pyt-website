@@ -1,0 +1,35 @@
+{
+  "eyebrow": "With gratitude",
+  "heading": "Our Donors & Sponsors",
+  "intro": "We are deeply grateful to the individuals, families, and businesses whose generosity makes our work possible. Thank you.",
+  "groups": [
+    {
+      "tier_name": "Director's Circle",
+      "names": []
+    },
+    {
+      "tier_name": "Producer",
+      "names": []
+    },
+    {
+      "tier_name": "Supporter",
+      "names": []
+    },
+    {
+      "tier_name": "Friend",
+      "names": []
+    },
+    {
+      "tier_name": "Corporate Partners",
+      "names": []
+    },
+    {
+      "tier_name": "Show & Season Sponsors",
+      "names": []
+    },
+    {
+      "tier_name": "Supporters",
+      "names": []
+    }
+  ]
+}
