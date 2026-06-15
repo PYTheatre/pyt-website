@@ -21,4 +21,32 @@ synopsis: >-
   Music by Robert Reale. Book and Lyrics by Willie Reale. Based on the books by Arnold Lobel.
 ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=746
 audition_display: Closed
+double_cast: true
+cast_a_name: Chocolate Chip
+cast_b_name: Snickerdoodle
+performances:
+  - date_label: Thursday 23 July
+    time_label: 6:30pm
+    cast: Chocolate Chip
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2791&src=&_ga=GA1.1.1004523146.1768952394&_gl=
+  - date_label: Friday 24 July
+    time_label: 6:30pm
+    cast: Snickerdoodle
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2792&src=&_ga=GA1.1.1004523146.1768952394&_gl=
+  - date_label: Saturday 25 July
+    time_label: 1pm
+    cast: Snickerdoodle
+    buy_url: https://tickets.mvcpa.com/WordVerification_Check.asp?LineType=0&LineID=2794&backurl=%2F%2Ftickets%2Emvcpa%2Ecom%2Forderticketsvenue%2Easp%3Fp%3D2794&forwardurl=%2F%2Ftickets%2Emvcpa%2Ecom%2Forderticketsvenue%2Easp%3Fp%3D2794%26src%3D&_ga=GA1.1.1004523146.1768952394&_gl=
+  - date_label: Saturday 25 July
+    time_label: 6:30pm
+    cast: Chocolate Chip
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2793
+  - date_label: "Sunday 26 July "
+    time_label: 11am
+    cast: Chocolate Chip
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2795&src=&_ga=GA1.1.1004523146.1768952394&_gl=
+  - date_label: "Sunday 26 July "
+    time_label: 3pm
+    cast: Snickerdoodle
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2796
 ---
