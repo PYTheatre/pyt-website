@@ -4,19 +4,19 @@
   "intro": "We are deeply grateful to the individuals, families, and businesses whose generosity makes PYT's work possible. Thank you.",
   "groups": [
     {
-      "tier_name": "Director's Circle",
+      "tier_name": "Friends of PYT",
       "names": []
     },
     {
-      "tier_name": "Producer",
+      "tier_name": "PYT Patrons",
       "names": []
     },
     {
-      "tier_name": "Supporter",
+      "tier_name": "PYT Producers",
       "names": []
     },
     {
-      "tier_name": "Friend",
+      "tier_name": "PYT Executive Producers",
       "names": []
     },
     {
@@ -24,12 +24,21 @@
       "names": []
     },
     {
-      "tier_name": "Show & Season Sponsors",
+      "tier_name": "Corporate Patrons",
       "names": []
     },
     {
-      "tier_name": "Supporters",
+      "tier_name": "Corporate Producers",
       "names": []
+    },
+    {
+      "tier_name": "Corporate Executive Producers"
+    },
+    {
+      "tier_name": "Show Sponsors"
+    },
+    {
+      "tier_name": "Season Sponsors"
     }
   ]
 }
