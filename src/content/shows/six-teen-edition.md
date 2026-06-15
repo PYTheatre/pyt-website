@@ -17,7 +17,7 @@ synopsis: >-
 
 
   By Toby Marlow and Lucy Moss.
-ticketing_url: ""
+ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=747
 audition_display: Closed
 cast_page_url: ""
 double_cast: true
