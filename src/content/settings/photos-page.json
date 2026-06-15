@@ -1,17 +1,26 @@
 {
-  "title": "Photos",
-  "eyebrow": "Shows & events",
-  "intro": "We have professional photos from our shows and events going back years — moments from opening nights, curtain calls, and everything in between. Browse the full archive and order prints or digital downloads of your favorites.",
-  "samples_heading": "A few favorites",
-  "samples_blurb": "",
-  "samples": [
-    { "photo": "", "caption": "" },
-    { "photo": "", "caption": "" },
-    { "photo": "", "caption": "" }
-  ],
-  "cta_heading": "Find your photos",
-  "cta_blurb": "All of our photos live on SmugMug, where you can browse by show and order prints or downloads.",
+  "cta_note": "Opens our photo site in a new tab.",
   "smugmug_url": "https://peninsulayouththeatre.smugmug.com/",
   "cta_label": "Browse & buy photos",
-  "cta_note": "Opens our photo site in a new tab."
+  "samples_blurb": "",
+  "samples": [
+    {
+      "photo": "/uploads/pyt-community.jpg",
+      "caption": ""
+    },
+    {
+      "photo": "/uploads/pyt-summer-camp.jpg",
+      "caption": ""
+    },
+    {
+      "photo": "/uploads/pyt-shrek.jpg",
+      "caption": ""
+    }
+  ],
+  "eyebrow": "",
+  "cta_blurb": "All of our photos live on SmugMug, where you can browse by show and order prints or downloads.",
+  "intro": "We have professional photos from our shows and events going back years. Browse the full archive and order prints or digital downloads.",
+  "samples_heading": "A few favorites",
+  "cta_heading": "Find your photos",
+  "title": "Photos"
 }
