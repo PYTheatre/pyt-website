@@ -51,6 +51,12 @@ const staffMembers = (about as any).staff_members || [];
 const staffHeading = (about as any).staff_section_heading || "Our Staff";
 const staffBlurb = (about as any).staff_section_blurb || "";
 
+// Artists (optional). Same shape/behavior as staff & board. Sits BETWEEN
+// the Staff and Board sections and hides if empty.
+const artistMembers = (about as any).artist_members || [];
+const artistHeading = (about as any).artist_section_heading || "Artists";
+const artistBlurb = (about as any).artist_section_blurb || "";
+
 // Optional banner image at the top of the page.
 const bannerImage = (about as any).banner_image || "";
 
@@ -151,6 +157,36 @@ function getInitials(name: string): string {
     </section>
   )}
 
+  {artistMembers.length > 0 && (
+    <section class="section artist-section">
+      <div class="container">
+        <p class="eyebrow">Our team</p>
+        <h2 class="section-head">{artistHeading}</h2>
+        {artistBlurb && <p class="board-blurb">{artistBlurb}</p>}
+
+        <ul class="board-grid">
+          {artistMembers.map((m: any) => (
+            <li class="board-card">
+              <div
+                class="board-photo"
+                style={m.photo ? `background-image: url(${m.photo}); background-size: cover; background-position: center;` : ""}
+              >
+                {!m.photo && (
+                  <span class="board-initials">{getInitials(m.name)}</span>
+                )}
+              </div>
+              <p class="board-pyt-title">{m.pyt_title}</p>
+              <p class="board-name">{m.name}</p>
+              {m.outside_title && (
+                <p class="board-outside-title">{m.outside_title}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
   {boardMembers.length > 0 && (
     <section class="section board-section">
       <div class="container">
@@ -217,6 +253,13 @@ function getInitials(name: string): string {
           warm-background Board section directly beneath it ---- */
   .staff-section {
     padding-bottom: var(--space-lg);
+  }
+
+  /* ---- Artists section: same plain treatment as Staff, sits between
+          Staff and the warm-background Board section ---- */
+  .artist-section {
+    padding-block: var(--space-lg);
+    border-top: 1px solid var(--line);
   }
 
   .about-story p {
