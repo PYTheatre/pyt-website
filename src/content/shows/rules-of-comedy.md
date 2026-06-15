@@ -15,7 +15,7 @@ synopsis: What happens when you apply the Rules of Comedy to one of
   handle the tragic drama underneath. Funny, layered, and deeply collaborative,
   this production is a chance to build real ensemble chemistry while stretching
   your range as a performer.
-audition_url: https://www.google.com/
+audition_url: ""
 audition_start: 2026-08-03
 audition_end: 2026-08-03
 audition_display: August 3, 2026
