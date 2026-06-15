@@ -1,45 +1,11 @@
 {
   "roles_heading": "Open Roles",
-  "eyebrow": "Careers & volunteering",
+  "eyebrow": "",
   "roles_intro": "",
   "intro": "PYT is built by a small staff and a generous community of volunteers. Whether you're looking for a paid role on our team or a way to help us put on a show, we'd love to hear from you.",
   "volunteer_heading": "Volunteer opportunities",
   "volunteer_intro": "Volunteers are essential to everything we do. Whether you have a few hours during a show weekend or want a regular role behind the scenes, there's a way to help.",
   "title": "Work with PYT",
-  "volunteer_opportunities": [
-    {
-      "title": "Front-of-house volunteer",
-      "when_where": "During Mainstage performance weekends",
-      "time_commitment": "About 4 hours per show, sign up for as many or as few as you like",
-      "description": "Greet families, scan tickets, help with concessions, and answer questions during our Mainstage productions. ",
-      "how_to_apply_label": "Sign up to volunteer",
-      "how_to_apply_url": "mailto:info@pytnet.org?subject=Front-of-house%20volunteer"
-    },
-    {
-      "title": "Costume shop helper",
-      "when_where": "Year-round, on a rolling schedule",
-      "time_commitment": "2–6 hours per week, flexible",
-      "description": "Help our costume designer prep, mend, organize, and pull costumes for upcoming productions. ",
-      "how_to_apply_label": "Get in touch",
-      "how_to_apply_url": "mailto:info@pytnet.org?subject=Costume%20shop%20volunteer"
-    }
-  ],
-  "roles": [
-    {
-      "title": "Production Manager",
-      "type": "Full-time",
-      "compensation": "$60,000–$75,000 / year, plus health benefits",
-      "description": "Lead the logistics, scheduling, and technical needs of our three Mainstage productions per year. ",
-      "how_to_apply_label": "Email your resume",
-      "how_to_apply_url": "mailto:info@pytnet.org?subject=Production%20Manager%20application"
-    },
-    {
-      "title": "Teaching Artist ",
-      "type": "Part-time",
-      "compensation": "$40–$60 per hour, depending on experience",
-      "description": "Lead after-school drama classes and weekend workshops for students ages 6–14. ",
-      "how_to_apply_label": "Email your resume",
-      "how_to_apply_url": "mailto:info@pytnet.org?subject=Teaching%20Artist%20application"
-    }
-  ]
+  "volunteer_opportunities": [],
+  "roles": []
 }
