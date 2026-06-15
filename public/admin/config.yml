@@ -309,13 +309,15 @@ collections:
           - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
           - { name: "intro_body", label: "Intro paragraph", widget: "text" }
           - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate AND sponsorship buttons open. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
-          - { name: "tiers_eyebrow", label: "Giving levels — small label above heading", widget: "string", required: false, default: "Giving levels" }
+          - { name: "tiers_eyebrow", label: "Giving levels — small label above heading", widget: "string", required: false, hint: "Leave blank to hide this small label entirely." }
           - { name: "tiers_heading", label: "Giving levels — section heading", widget: "string", required: false, default: "Every gift, every level." }
-          - { name: "sponsor_eyebrow", label: "Sponsorship — small label above heading", widget: "string", required: false, default: "For businesses, foundations & major giving" }
+          - { name: "sponsor_eyebrow", label: "Sponsorship — small label above heading", widget: "string", required: false, hint: "Leave blank to hide this small label entirely." }
           - { name: "sponsor_heading", label: "Sponsorship — section heading", widget: "string", required: false, default: "Sponsor a show or a season." }
           - { name: "sponsor_show_title", label: "Sponsorship — \"Show\" card title", widget: "string", required: false, default: "Sponsor a Show" }
+          - { name: "sponsor_show_price", label: "Sponsorship — \"Show\" price (optional)", widget: "string", required: false, hint: "Optional. e.g. \"$5,000\". Leave blank to show no price on the Show card." }
           - { name: "sponsor_show_description", label: "Sponsorship — \"Show\" card description", widget: "text", required: false }
           - { name: "sponsor_season_title", label: "Sponsorship — \"Season\" card title", widget: "string", required: false, default: "Sponsor a Season" }
+          - { name: "sponsor_season_price", label: "Sponsorship — \"Season\" price (optional)", widget: "string", required: false, hint: "Optional. e.g. \"$15,000\". Leave blank to show no price on the Season card." }
           - { name: "sponsor_season_description", label: "Sponsorship — \"Season\" card description", widget: "text", required: false }
  
       # --- Corporate Giving panel (Support PYT page) ---
@@ -324,9 +326,10 @@ collections:
         file: "src/content/settings/corporate-giving.json"
         description: "The Corporate Giving panel on the Support PYT page — intro copy, the corporate Soapbox donation link, and the corporate tiers (Partner, Patron, etc.)."
         fields:
-          - { name: "eyebrow", label: "Small label above heading", widget: "string", required: false, default: "For businesses & corporate partners" }
+          - { name: "eyebrow", label: "Small label above heading", widget: "string", required: false, hint: "Leave blank to hide this small label entirely." }
           - { name: "heading", label: "Section heading", widget: "string", default: "Corporate Giving" }
           - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
+          - { name: "contact_email", label: "Contact email (optional)", widget: "string", required: false, hint: "Optional. Shown under the intro as a clickable email link, e.g. lhatten@pytnet.org. Leave blank to hide." }
           - { name: "corporate_donate_url", label: "Corporate Soapbox donation link", widget: "string", required: false, hint: "The web address of PYT's corporate Soapbox donation page. While this is blank, the tier buttons show \"Coming soon\". Paste the link here once the page exists to make the buttons live." }
           - name: "tiers"
             label: "Corporate tiers"
