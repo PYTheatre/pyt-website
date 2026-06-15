@@ -1,27 +1,45 @@
 ---
 /*
-  JUDY ROBE & SPIRITS AWARDS  ( /judy-robe-spirits-awards )
+  JUDY ROBE & SPIRIT AWARDS  ( /judy-robe-spirits-awards )
 
   Not in the main nav. Linked from the About page and the Casting page.
 
   Content from src/content/settings/judy-robe-spirits-awards.json:
-    - intro description (editable placeholder copy for now)
+    - intro description
     - one optional photo
-    - a list of past winners (year + name), expandable to 30+ entries
+    - "years": a list of years, each with a list of shows. Each show has a
+      name, an optional Judy Robe recipient, and an optional list of Spirit
+      Award names. Not every show has a Judy Robe (only Mainstage shows do),
+      so that field is optional and hidden when blank.
 
-  The photo and the winners list both degrade gracefully when empty.
+  Everything degrades gracefully: a show with neither award is skipped, a
+  year with no shows is skipped, and the whole section hides if empty.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import page from "../content/settings/judy-robe-spirits-awards.json";
 
-const winners = (page as any).winners || [];
 const photo = (page as any).photo || "";
+
+// Keep only shows that actually have at least one award filled in, then
+// keep only years that have at least one such show.
+const years = ((page as any).years || [])
+  .map((y: any) => ({
+    year: y.year,
+    shows: (y.shows || []).filter((s: any) => {
+      const hasJudy = s.judy_robe && s.judy_robe.trim();
+      const hasSpirit =
+        Array.isArray(s.spirit_awards) &&
+        s.spirit_awards.filter((n: any) => n && n.trim()).length > 0;
+      return hasJudy || hasSpirit;
+    }),
+  }))
+  .filter((y: any) => y.shows.length > 0);
 ---
 
 <BaseLayout
   title={`${page.title} — Peninsula Youth Theatre`}
-  description="The Judy Robe & Spirits Awards celebrate outstanding performers at Peninsula Youth Theatre each season."
+  description="The Judy Robe & Spirit Awards celebrate outstanding performers at Peninsula Youth Theatre each season."
 >
   <PageHero eyebrow={page.eyebrow} title={page.title} lede={page.intro} />
 
@@ -33,7 +51,7 @@ const photo = (page as any).photo || "";
     </section>
   )}
 
-  {winners.length > 0 && (
+  {years.length > 0 && (
     <section class="section jr-winners-section">
       <div class="container">
         <h2 class="section-head">{(page as any).winners_heading || "Past winners"}</h2>
@@ -41,14 +59,40 @@ const photo = (page as any).photo || "";
           <p class="jr-blurb">{(page as any).winners_blurb}</p>
         )}
 
-        <ul class="jr-winners-list">
-          {winners.map((w: any) => (
-            <li class="jr-winner-row">
-              <span class="jr-year">{w.year}</span>
-              <span class="jr-name">{w.name}</span>
-            </li>
-          ))}
-        </ul>
+        {years.map((y: any) => (
+          <div class="jr-year-block">
+            <h3 class="jr-year-head">{y.year}</h3>
+
+            <div class="jr-show-grid">
+              {y.shows.map((s: any) => {
+                const spirits = (s.spirit_awards || []).filter(
+                  (n: any) => n && n.trim()
+                );
+                return (
+                  <div class="jr-show-card">
+                    <h4 class="jr-show-title">{s.show}</h4>
+
+                    {s.judy_robe && s.judy_robe.trim() && (
+                      <p class="jr-judy">
+                        <span class="jr-label">Judy Robe</span>
+                        <span class="jr-judy-name">{s.judy_robe}</span>
+                      </p>
+                    )}
+
+                    {spirits.length > 0 && (
+                      <div class="jr-spirit">
+                        <span class="jr-label">Spirit Awards</span>
+                        <ul class="jr-spirit-list">
+                          {spirits.map((n: any) => <li>{n}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   )}
@@ -70,40 +114,87 @@ const photo = (page as any).photo || "";
     max-height: 460px;
   }
 
-  /* ---- Winners list ---- */
+  /* ---- Winners ---- */
   .jr-blurb {
     max-width: 60ch;
     margin-bottom: var(--space-lg);
     font-size: 1rem;
   }
 
-  .jr-winners-list {
+  .jr-year-block {
+    margin-bottom: var(--space-xl);
+  }
+
+  .jr-year-head {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    padding-bottom: 0.4rem;
+    margin-bottom: var(--space-md);
+    border-bottom: 2px solid var(--accent-soft);
+  }
+
+  .jr-show-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .jr-show-card {
+    padding: var(--space-md);
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .jr-show-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .jr-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .jr-judy {
+    margin-bottom: 0.8rem;
+  }
+
+  .jr-judy-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent-deep);
+  }
+
+  .jr-spirit-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    max-width: 640px;
-    border-top: 1px solid var(--line);
   }
 
-  .jr-winner-row {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-md);
-    padding-block: 0.7rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .jr-year {
-    flex-shrink: 0;
-    width: 4rem;
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--accent);
-  }
-
-  .jr-name {
-    font-size: 1.02rem;
+  .jr-spirit-list li {
+    font-size: 1rem;
     color: var(--ink);
+    padding: 0.12rem 0;
+  }
+
+  @media (min-width: 720px) {
+    .jr-show-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .jr-show-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 </style>
