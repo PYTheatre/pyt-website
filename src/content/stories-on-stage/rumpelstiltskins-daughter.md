@@ -2,7 +2,7 @@
 title: Rumpelstiltskin's Daughter
 start_date: 2027-02-12
 end_date: 2027-02-13
-date_display: February 12–13, 2027
+date_display: February 2027
 venue: MVCPA Second Stage
 synopsis: In this merry rethinking of the classic fairy tale, Rumpelstiltskin
   and the miller's daughter are wed, and sixteen years later, their daughter
