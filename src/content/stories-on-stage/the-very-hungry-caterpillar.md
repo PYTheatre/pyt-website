@@ -2,7 +2,7 @@
 title: Creepy Carrots!
 start_date: 2026-10-09
 end_date: 2026-10-10
-date_display: October, 2026
+date_display: October 2026
 venue: Mountain View Center for the Performing Arts, Second Stage
 synopsis: Jasper Rabbit loves carrots, especially the ones from Crackenhopper
   Field. He eats them everywhere he goes. Until the day they start following
