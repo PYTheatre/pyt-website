@@ -42,11 +42,9 @@ const sponsorDonateUrl =
  
 // Sponsorship panel text — CMS-editable (Support PYT record), with
 // fallbacks so the panel reads correctly before staff fill the fields.
-// Eyebrow is optional: present-but-blank hides it (so it can be removed).
-const sponsorEyebrow =
-  donatePage.sponsor_eyebrow !== undefined
-    ? donatePage.sponsor_eyebrow
-    : "For businesses, foundations & major giving";
+// Eyebrow is fully opt-in: shows only when the field has text (no fallback),
+// so clearing it in the CMS removes it.
+const sponsorEyebrow = donatePage.sponsor_eyebrow || "";
 const sponsorHeading =
   donatePage.sponsor_heading || "Sponsor a show or a season.";
 const sponsorShowTitle = donatePage.sponsor_show_title || "Sponsor a Show";
@@ -81,11 +79,10 @@ const recognitionGroups = (recognition.groups || []).filter(
 );
  
 // Giving-levels section headings — CMS-editable (Support PYT record).
-// Heading keeps a sensible fallback; the eyebrow is OPTIONAL — if the
-// field is present but blank, we hide the eyebrow rather than fall back,
-// so staff can remove it entirely from the CMS.
-const tiersEyebrow =
-  donatePage.tiers_eyebrow !== undefined ? donatePage.tiers_eyebrow : "Giving levels";
+// Heading keeps a sensible fallback. The eyebrow is fully OPT-IN: it shows
+// only when the field has text. Missing or blank → no eyebrow. (No fallback,
+// so clearing it in the CMS genuinely removes it.)
+const tiersEyebrow = donatePage.tiers_eyebrow || "";
 const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
 ---
  
