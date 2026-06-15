@@ -11,6 +11,34 @@ import about from "../content/settings/about-page.json";
 // Split the story into paragraphs at blank lines.
 const paragraphs = about.story.split("\n\n").filter((p) => p.trim().length > 0);
 
+// Two optional "footer link" sentences under the story, each pointing at a
+// fixed page (Awards, Casting). Each sentence is built from CMS-editable
+// text either side of a clickable label, so staff control the wording but
+// the link target stays correct.
+//
+// The LABEL gates visibility and is fully opt-in: a sentence shows only when
+// its label has text. To seed sensible defaults on first run (before the
+// fields exist in the JSON), we fall back ONLY when the key is entirely
+// absent; once the key exists (i.e. staff have touched it), an empty value
+// means "hide this sentence" and is respected.
+const a = about as any;
+const awardsLinkLabel =
+  a.awards_link_label !== undefined ? a.awards_link_label : "Judy Robe & Spirit Awards";
+const awardsLinkLead =
+  a.awards_link_lead !== undefined ? a.awards_link_lead : "Learn about the";
+const awardsLinkTail =
+  a.awards_link_tail !== undefined
+    ? a.awards_link_tail
+    : ", our tradition of celebrating outstanding performers each season.";
+const castingLinkLabel =
+  a.casting_link_label !== undefined ? a.casting_link_label : "our casting philosophy";
+const castingLinkLead =
+  a.casting_link_lead !== undefined
+    ? a.casting_link_lead
+    : "Curious how we cast our shows? Read about";
+const castingLinkTail =
+  a.casting_link_tail !== undefined ? a.casting_link_tail : ".";
+
 // Board members (optional — may not exist on older versions of the file).
 // If the field is missing or the list is empty, the whole section is hidden.
 const boardMembers = (about as any).board_members || [];
@@ -54,10 +82,16 @@ function getInitials(name: string): string {
     <div class="container about-grid">
       <div class="about-story">
         {paragraphs.map((p) => <p>{p}</p>)}
-        <p class="about-awards-link">
-          Learn about the <a href="/judy-robe-spirits-awards">Judy Robe &amp; Spirits Awards</a>,
-          our tradition of celebrating outstanding performers each season.
-        </p>
+        {awardsLinkLabel && (
+          <p class="about-awards-link">
+            {awardsLinkLead} <a href="/judy-robe-spirits-awards">{awardsLinkLabel}</a>{awardsLinkTail}
+          </p>
+        )}
+        {castingLinkLabel && (
+          <p class="about-awards-link">
+            {castingLinkLead} <a href="/casting">{castingLinkLabel}</a>{castingLinkTail}
+          </p>
+        )}
       </div>
 
       <aside class="contact-card" id="contact">
