@@ -1,62 +1,56 @@
 {
   "hero_eyebrow": "Summer 2026",
   "hero_secondary_label": "Programs",
-  "impact_heading": "PYT in Numbers",
+  "impact_heading": "PYT' impact",
   "donate_lede": "Love PYT? We need you!",
   "hero_primary_url": "/shows",
   "impact_eyebrow": "Our impact",
   "donate_heading": "Help us reach $200,000",
   "hero_primary_label": "Shows",
-  "discovery_heading": "Find your place with PYT",
+  "discovery_heading": "Ways to join PYT",
   "discovery_cards": [
     {
       "eyebrow": "For performers, schools & families",
       "title": "PYT Shows",
       "body": "Full-scale Main Stage productions, performed at Mountain View's premier venue; focused small cast Studio Shows, performed at our studio on Old Middlefield Way. ",
-      "meta": [
-        "Shows",
-        "Studio"
-      ],
+      "meta": [],
       "url": "/shows"
     },
     {
       "eyebrow": "For performers, schools, families & readers",
       "title": "Stories on Stage",
       "body": "Beloved children's books brought to life in short, lively performances. Actors are cast in a small company each year.",
-      "meta": [
-        "Second Stage",
-        "Select cast, by audition"
-      ],
+      "meta": [],
       "url": "/stories-on-stage"
     },
     {
       "eyebrow": "For young performers",
       "title": "Classes & Camps",
       "body": "After-school drama and musical theatre, holiday camps, masterclasses. ",
-      "meta": [
-        "Locations around the Bay Area",
-        "Everyone welcome"
-      ],
+      "meta": [],
       "url": "/programs"
     },
     {
       "eyebrow": "For schools & theatres",
       "title": "Costume & Prop Rentals",
       "body": "Decades of theatrical inventory available to schools and community theatre at affordable rates.",
-      "meta": [
-        "800+ items",
-        "By appointment"
-      ],
+      "meta": [],
       "url": "/rentals"
     },
     {
       "eyebrow": "For everyone",
       "title": "Support PYT",
-      "body": "Donations, show sponsorships, seasons sponsorships, donations-in-kind, stock, all of it helps PYT reach as many families and youth as possible. ",
+      "body": "Donations, sponsorships, corporate partnership, donations-in-kind - it all helps PYT reach as many families and youth as possible.",
       "url": "https://pyt-website.pages.dev/ways-to-support/",
       "meta": [
         "Support"
       ]
+    },
+    {
+      "eyebrow": "FOR PERFORMERS",
+      "title": "Audition",
+      "body": "Come and audition for one of our productions!",
+      "url": "https://pyt-website.pages.dev/audition/"
     }
   ],
   "hero_image": "/uploads/pyt-newsies-punch.jpg",
