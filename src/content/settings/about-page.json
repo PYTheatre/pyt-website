@@ -1,24 +1,18 @@
 {
   "board_members": [
     {
-      "name": "Mike Cobb",
-      "pyt_title": "Board Member",
-      "photo": "/uploads/mike.jpeg",
-      "outside_title": "SVP, Colliers Leasing"
-    },
-    {
-      "pyt_title": "Board President",
-      "outside_title": "Strategic consultant",
-      "photo": "/uploads/14692256713_abd1b7e9bd_o.jpg",
-      "name": "Beeker Northam"
-    },
-    {
       "name": "Afreen Ali",
       "pyt_title": "Treasurer & Board Member"
     },
     {
       "name": "Alette Mahler",
       "pyt_title": "Board Member"
+    },
+    {
+      "pyt_title": "Board President",
+      "outside_title": "Strategic consultant",
+      "photo": "/uploads/14692256713_abd1b7e9bd_o.jpg",
+      "name": "Beeker Northam"
     },
     {
       "name": "Carol Doup Muller",
@@ -39,6 +33,12 @@
     {
       "name": "Matt Normington",
       "pyt_title": "Board Member"
+    },
+    {
+      "name": "Mike Cobb",
+      "pyt_title": "Board Member",
+      "photo": "/uploads/mike.jpeg",
+      "outside_title": "SVP, Colliers Leasing"
     },
     {
       "name": "Pam Prodromou",
