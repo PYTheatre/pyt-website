@@ -91,7 +91,6 @@ const heroImage = (home as any).hero_image || "";
   <section class="hero">
     <div class="container">
       <div class="hero-copy">
-        <p class="eyebrow">{home.hero_eyebrow}</p>
         <h1>{headingBefore}{headingItalic && <span class="accent-italic">{headingItalic}</span>}{headingAfter}</h1>
         <p class="hero-lede">{home.hero_lede}</p>
         <div class="hero-ctas">
@@ -116,7 +115,6 @@ const heroImage = (home as any).hero_image || "";
   {upcomingShows.length > 0 && (
     <section class="section shows-strip">
       <div class="container">
-        <p class="eyebrow">On stage</p>
         <h2 class="section-head">Upcoming shows</h2>
  
         <div class="shows-row">
@@ -142,7 +140,6 @@ const heroImage = (home as any).hero_image || "";
   <!-- ============ DISCOVERY CARDS ============ -->
   <section class="section">
     <div class="container">
-      <p class="eyebrow">{home.discovery_eyebrow}</p>
       <h2 class="section-head">{home.discovery_heading}</h2>
  
       <div class="card-grid">
@@ -163,7 +160,6 @@ const heroImage = (home as any).hero_image || "";
   <!-- ============ IMPACT STATS ============ -->
   <section class="section impact">
     <div class="container">
-      <p class="eyebrow">{home.impact_eyebrow}</p>
       <h2 class="section-head">{home.impact_heading}</h2>
  
       <div class="stat-grid">
@@ -180,7 +176,6 @@ const heroImage = (home as any).hero_image || "";
   <!-- ============ DONATION TEASER ============ -->
   <section class="section donate-teaser">
     <div class="container">
-      <p class="eyebrow">{campaignLabel}</p>
       <h2 class="section-head">{donateHeading}</h2>
       <p class="donate-lede">{home.donate_lede}</p>
  
@@ -429,4 +424,3 @@ const heroImage = (home as any).hero_image || "";
     }
   }
 </style>
- 
