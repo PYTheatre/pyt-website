@@ -450,14 +450,28 @@ collections:
           - { name: "photo", label: "Photo (optional)", widget: "image", required: false, hint: "Optional. Shown as a banner under the description. Leave empty to hide." }
           - { name: "winners_heading", label: "Winners — section heading", widget: "string", default: "Past winners" }
           - { name: "winners_blurb", label: "Winners — section description (optional)", widget: "text", required: false }
-          - name: "winners"
-            label: "Winners"
+          - name: "years"
+            label: "Award years"
             widget: "list"
             required: false
-            summary: "{{fields.year}} — {{fields.name}}"
+            summary: "{{fields.year}}"
+            label_singular: "Year"
             fields:
               - { name: "year", label: "Year", widget: "string", hint: "Example: 2025" }
-              - { name: "name", label: "Winner name(s)", widget: "string", hint: "Example: Jane Smith, or a list of names" }
+              - name: "shows"
+                label: "Shows this year"
+                widget: "list"
+                summary: "{{fields.show}}"
+                label_singular: "Show"
+                fields:
+                  - { name: "show", label: "Show name", widget: "string", hint: "Example: Mary Poppins" }
+                  - { name: "judy_robe", label: "Judy Robe recipient", widget: "string", required: false, hint: "Leave blank if this show didn't have a Judy Robe Award (only some shows do)." }
+                  - name: "spirit_awards"
+                    label: "Spirit Award winners"
+                    widget: "list"
+                    required: false
+                    field: { name: "name", label: "Name", widget: "string" }
+                    hint: "One name per entry. Leave empty if this show had no Spirit Awards."
  
       # --- Employment page ---
       # Two parallel lists: paid roles and volunteer opportunities.
