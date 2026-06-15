@@ -70,6 +70,11 @@ const corporateLinkLive = corporateDonateUrl.trim().length > 0;
 const recognitionGroups = (recognition.groups || []).filter(
   (g) => Array.isArray(g.names) && g.names.filter((n) => n && n.trim()).length > 0
 );
+ 
+// Giving-levels section headings — CMS-editable (Support PYT record),
+// with the original wording as fallbacks.
+const tiersEyebrow = donatePage.tiers_eyebrow || "Giving levels";
+const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
 ---
  
 <BaseLayout
@@ -116,8 +121,8 @@ const recognitionGroups = (recognition.groups || []).filter(
   <!-- Donor tiers -->
   <section class="section tiers-section">
     <div class="container">
-      <p class="eyebrow">Giving levels</p>
-      <h2 class="section-head">Every gift, every level.</h2>
+      <p class="eyebrow">{tiersEyebrow}</p>
+      <h2 class="section-head">{tiersHeading}</h2>
  
       <ul class="tier-list">
         {tiers.tiers.map((tier) => (
@@ -128,11 +133,6 @@ const recognitionGroups = (recognition.groups || []).filter(
           </li>
         ))}
       </ul>
- 
-      <p class="ein-note">
-        Peninsula Youth Theatre is a 501(c)(3) nonprofit. All gifts are tax-deductible to
-        the extent allowed by law. EIN 77-0335126.
-      </p>
     </div>
   </section>
  
@@ -222,6 +222,17 @@ const recognitionGroups = (recognition.groups || []).filter(
       </div>
     </section>
   )}
+ 
+  <!-- 501(c)(3) / EIN note — applies to ALL giving on this page, so it
+       sits at the very bottom rather than under the donor tiers. -->
+  <section class="section ein-section">
+    <div class="container">
+      <p class="ein-note">
+        Peninsula Youth Theatre is a 501(c)(3) nonprofit. All gifts are tax-deductible to
+        the extent allowed by law. EIN 77-0335126.
+      </p>
+    </div>
+  </section>
 </BaseLayout>
  
 <style>
@@ -368,11 +379,15 @@ const recognitionGroups = (recognition.groups || []).filter(
     color: var(--ink-soft);
   }
  
+  .ein-section {
+    border-top: 1px solid var(--line);
+  }
+ 
   .ein-note {
-    margin-top: var(--space-xl);
     font-size: 0.85rem;
     color: var(--ink-muted);
     text-align: center;
+    margin: 0;
   }
  
   @media (min-width: 720px) {
