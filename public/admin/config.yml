@@ -309,6 +309,8 @@ collections:
           - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
           - { name: "intro_body", label: "Intro paragraph", widget: "text" }
           - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate AND sponsorship buttons open. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
+          - { name: "tiers_eyebrow", label: "Giving levels — small label above heading", widget: "string", required: false, default: "Giving levels" }
+          - { name: "tiers_heading", label: "Giving levels — section heading", widget: "string", required: false, default: "Every gift, every level." }
           - { name: "sponsor_eyebrow", label: "Sponsorship — small label above heading", widget: "string", required: false, default: "For businesses, foundations & major giving" }
           - { name: "sponsor_heading", label: "Sponsorship — section heading", widget: "string", required: false, default: "Sponsor a show or a season." }
           - { name: "sponsor_show_title", label: "Sponsorship — \"Show\" card title", widget: "string", required: false, default: "Sponsor a Show" }
