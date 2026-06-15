@@ -366,6 +366,12 @@ collections:
           - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our story" }
           - { name: "banner_image", label: "Banner image (wide strip near top)", widget: "image", required: false, hint: "Optional. A wide landscape image works best — it's shown as a short banner under the title. Leave empty to hide." }
           - { name: "story", label: "Story (multiple paragraphs)", widget: "text", hint: "The org's story. Use blank lines to separate paragraphs." }
+          - { name: "awards_link_lead", label: "Awards sentence — text before the link", widget: "string", required: false, hint: "Example: \"Learn about the\". The next field is the clickable part." }
+          - { name: "awards_link_label", label: "Awards sentence — clickable link text", widget: "string", required: false, hint: "The clickable words linking to the Judy Robe & Spirit Awards page. Leave blank to hide this whole sentence." }
+          - { name: "awards_link_tail", label: "Awards sentence — text after the link", widget: "string", required: false, hint: "Example: \", our tradition of celebrating performers each season.\" Include any leading comma/space." }
+          - { name: "casting_link_lead", label: "Casting sentence — text before the link", widget: "string", required: false, hint: "Example: \"Curious how we cast our shows? Read about\". The next field is the clickable part." }
+          - { name: "casting_link_label", label: "Casting sentence — clickable link text", widget: "string", required: false, hint: "The clickable words linking to the Casting page. Leave blank to hide this whole sentence." }
+          - { name: "casting_link_tail", label: "Casting sentence — text after the link", widget: "string", required: false, hint: "Example: \".\" — any text after the link, including final punctuation." }
           - { name: "address", label: "Street address", widget: "string", default: "2500 Old Middlefield Way, Mountain View, CA 94043" }
           - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
           - { name: "email", label: "Email", widget: "string", default: "info@pytnet.org" }
