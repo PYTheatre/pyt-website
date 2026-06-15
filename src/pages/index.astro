@@ -148,9 +148,6 @@ const heroImage = (home as any).hero_image || "";
             <p class="card-eyebrow">{card.eyebrow}</p>
             <h3>{card.title}</h3>
             <p class="card-body">{card.body}</p>
-            <div class="card-meta">
-              {card.meta.map((m) => <span>{m}</span>)}
-            </div>
           </a>
         ))}
       </div>
@@ -328,22 +325,6 @@ const heroImage = (home as any).hero_image || "";
   .card-body {
     font-size: 0.95rem;
     margin-bottom: var(--space-sm);
-  }
- 
-  .card-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
- 
-  .card-meta span {
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--ink-muted);
-    background: var(--paper-warm);
-    border: 1px solid var(--line);
-    padding: 0.25rem 0.6rem;
-    border-radius: var(--radius-pill);
   }
  
   /* ---- Impact stats ---- */
