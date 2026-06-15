@@ -1,13 +1,12 @@
 ---
-name: Broadway
+name: Fall schedule coming soon
 eyebrow: ""
 program_type: Class
-age_range: Ages 5–8
+age_range: Coming soon
 season: Fall
-description: |
-  Show tunes!
-schedule: Mondays 4:00–5:00pm
-tuition: "$400 "
+description: Coming soon
+schedule: After school
+tuition: ""
 registration_url: ""
 scholarships_available: true
 ---
