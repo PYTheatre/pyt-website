@@ -29,6 +29,16 @@
 
 ## Sponsorship
 
+**CHANGED 2026-06-15 — sponsorship and corporate giving route to SOAPBOX, not Shopify. This reverses the 2026-06-03 Shopify decision below.** Reason: Shopify treats a large sponsorship as a product purchase — NOT tax-deductible, no Salesforce sync, and transaction fees on big amounts. The client confirmed sponsorship must stay tax-deductible. Current state:
+
+- **Sponsor a Show / Sponsor a Season** (section on the Support PYT page, `/ways-to-support#sponsor`) → both buttons point at the **general** hosted Soapbox donation page (`https://pyt.secure.nonprofitsoapbox.com/donate`), new tab. That flexible form (Other-amount box + recognition-name field) serves individuals AND both sponsorship types from one page. LIVE.
+- **Corporate Giving** (its own panel on the Support PYT page) → a **separate, dedicated** Soapbox page that **does not exist yet**. Corporate "Join" buttons show "Coming soon" until the client creates that Soapbox page and pastes its URL into the CMS (Corporate Giving record → "Corporate Soapbox donation link").
+- The old `SPONSOR_LINKS_LIVE` / `SPONSOR_SHOW_URL` / `SPONSOR_SEASON_URL` Shopify-placeholder logic in `ways-to-support.astro` is REMOVED.
+- **Open follow-up:** the site-wide "Sponsor" buttons on the show pages (`shows/index.astro`, `shows/[slug].astro`) still need auditing/aligning to Soapbox (the grey sponsor strip on the Shows *list* page was removed 2026-06-15, but the per-show *detail* sponsor button was not audited).
+- Corporate tiers, donor tiers, and the donor-recognition wall were also added to the Support PYT page on 2026-06-15 (see `BUILD_LOG.md` and `HANDOVER-2026-06-15-EVENING.md`).
+
+<details><summary>SUPERSEDED 2026-06-03 sponsorship model (Shopify — NO LONGER TRUE, kept for history)</summary>
+
 **CHANGED 2026-06-03 — sponsorship rebuilt around Shopify; the dedicated `/sponsor` page was deleted.** The bullets below the line describe the OLD model (kept for history). Current state:
 
 - **Sponsorship now lives as a section on the Support PYT page** (`/ways-to-support#sponsor`), not its own page. Same card design as Giving Levels.
@@ -43,6 +53,8 @@
 - **Two sponsorship ladders:** Show-level (4 tiers: Show Producer $10K / Sponsor $5K / Friend $2,500 / Supporter $1,000) and Season-level (3 tiers: Season Producer $25K / Sponsor $15K / Friend $7,500).
 - **Show-aware sponsor flow:** Clicking "Sponsor This Show" on a show detail page lands on `/sponsor?show=<slug>`, displays "You're sponsoring: [Show Title]" as a banner, and updates the show-tier "Inquire about this level" buttons' mailto subjects to include the show name. Season-tier buttons are correctly not modified.
 - **Per-tier donation URL:** Each tier has an optional `donation_url` CMS field. When blank, mailto "Inquire" button; when filled, "Give at this level" button.
+</details>
+
 </details>
 
 ## Registration and class enrollment
