@@ -1,28 +1,28 @@
 {
   "eyebrow": "",
-  "heading": "Corporate giving",
-  "intro": "Partner with PYT and invest in the next generation of Bay Area performers. Corporate gifts are tax-deductible and come with year-round recognition. Explore tiers below, or to discuss sponsorship, contact Managing Director Loryn Hatten at lhatten@pytnet.org",
+  "heading": "Corporate Giving",
+  "intro": "Partner with PYT and invest in the next generation of Bay Area youth. Corporate gifts are tax-deductible and come with year-round recognition. Explore tiers below, or to discuss sponsorship, contact Managing Director Loryn Hatten at lhatten@pytnet.org",
   "corporate_donate_url": "google.com",
   "tiers": [
     {
       "name": "Partner",
       "amount": "$2,500",
-      "description": "tbc"
+      "description": "Name and logo recognition online (suited to your preference)."
     },
     {
       "name": "Patron",
       "amount": "$5,000",
-      "description": "All Partner benefits, plus logo placement on lobby signage and a group of complimentary tickets to a production of your choice."
+      "description": "Logo placement on lobby signage, printed programs and a group of complimentary tickets to a production of your choice. Name and logo recognition online. "
     },
     {
       "name": "Producer",
       "amount": "$15,000",
-      "description": "tbc"
+      "description": "Logo placement on lobby signage, printed programs and a group of complimentary tickets to a production of your choice. Name and logo recognition online. "
     },
     {
       "name": "Executive Producer",
-      "amount": "$50,000",
-      "description": "tbc"
+      "amount": "$50,000+",
+      "description": "Logo and name recognition and select copy across PYT materials on and offline. Presented and recognised as a founding partner to PYT. On stage recognition for every production and program. Select complimentary tickets to any production. Back stage and rehearsal tours."
     }
   ]
 }
