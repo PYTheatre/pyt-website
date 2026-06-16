@@ -57,6 +57,11 @@
     {
       "name": "Amy Heumann",
       "pyt_title": "Vocal Director"
+    },
+    {
+      "name": "Jennifer Tipton",
+      "pyt_title": "Choreographer",
+      "photo": "/uploads/image0.jpeg"
     }
   ],
   "banner_image": "/uploads/pyt-shrek.jpg",
@@ -87,11 +92,6 @@
     {
       "name": "Candice Gasperik",
       "pyt_title": "Office Manager"
-    },
-    {
-      "name": "Jennifer Tipton",
-      "pyt_title": "Choreographer",
-      "photo": "/uploads/image0.jpeg"
     }
   ],
   "email": "info@pytnet.org"
