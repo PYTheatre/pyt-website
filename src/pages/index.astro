@@ -59,6 +59,8 @@ const raised = campaign.raised_amount;
 const donorCount = campaign.donor_count;
 const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
+// Thermometer fill height, capped 0–100 so it never overflows the tube.
+const fillPct = Math.min(100, Math.max(0, pct));
  
 // Donation-teaser heading. CMS-editable (home.donate_heading). If the
 // field is empty, fall back to the original goal-based wording so the
@@ -176,13 +178,23 @@ const heroImage = (home as any).hero_image || "";
       <h2 class="section-head">{donateHeading}</h2>
       <p class="donate-lede">{home.donate_lede}</p>
  
-      <div class="progress-wrap">
-        <div class="progress-bar">
-          <div class="progress-fill" style={`width: ${pct}%`}></div>
+      <div class="thermo-row">
+        <!-- Thermometer -->
+        <div class="thermo" role="img"
+             aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
+          <div class="thermo-tube">
+            <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
+          </div>
+          <div class="thermo-bulb"></div>
         </div>
-        <div class="progress-stats">
-          <span><strong>${raised.toLocaleString()}</strong> raised of ${goal.toLocaleString()} goal</span>
-          <span><strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal</span>
+
+        <!-- Numbers -->
+        <div class="thermo-stats">
+          <p class="thermo-raised">${raised.toLocaleString()}</p>
+          <p class="thermo-goal">raised of ${goal.toLocaleString()} goal</p>
+          <p class="thermo-meta">
+            <strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal
+          </p>
         </div>
       </div>
  
@@ -359,31 +371,82 @@ const heroImage = (home as any).hero_image || "";
     margin-bottom: var(--space-lg);
   }
  
-  .progress-wrap {
+  /* ---- Campaign progress thermometer (matches the Support PYT page) ---- */
+  .thermo-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
     margin-bottom: var(--space-lg);
   }
- 
-  .progress-bar {
-    height: 14px;
-    background: var(--accent-soft);
+
+  .thermo {
+    position: relative;
+    width: 56px;
+    height: 250px;
+    flex-shrink: 0;
+  }
+
+  .thermo-tube {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 32px;
+    height: 210px;
+    border: 3px solid var(--accent);
     border-radius: var(--radius-pill);
+    background: var(--accent-soft);
     overflow: hidden;
   }
- 
-  .progress-fill {
-    height: 100%;
+
+  .thermo-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background: var(--campaign-fill);
-    border-radius: var(--radius-pill);
+    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    transition: height 0.4s ease;
   }
- 
-  .progress-stats {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-top: 0.7rem;
-    font-size: 0.92rem;
+
+  .thermo-bulb {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--accent);
+  }
+
+  .thermo-stats {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .thermo-raised {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .thermo-goal {
+    font-size: 1.05rem;
     color: var(--ink-soft);
+    margin: 0.3rem 0 0;
+  }
+
+  .thermo-meta {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0.6rem 0 0;
+  }
+
+  .thermo-meta strong {
+    color: var(--accent);
   }
  
   /* ============ WIDER SCREENS ============ */
