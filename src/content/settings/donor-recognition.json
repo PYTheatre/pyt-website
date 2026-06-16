@@ -4,40 +4,40 @@
   "intro": "We are deeply grateful to the individuals, families, and businesses whose generosity makes PYT's work possible. Thank you.",
   "groups": [
     {
+      "tier_name": "Friends of PYT"
+    },
+    {
       "tier_name": "PYT Patrons",
       "names": []
     },
     {
-      "tier_name": "PYT Producers",
+      "tier_name": "PYT Champion",
       "names": []
     },
     {
-      "tier_name": "PYT Executive Producers",
+      "tier_name": "PYT Founder",
       "names": []
     },
     {
-      "tier_name": "Corporate Partners",
+      "tier_name": "Spotlight Circle",
       "names": []
     },
     {
-      "tier_name": "Corporate Patrons",
+      "tier_name": "Starlight Patrons",
       "names": []
     },
     {
-      "tier_name": "Corporate Producers",
+      "tier_name": "Luminary Partners",
       "names": []
     },
     {
-      "tier_name": "Corporate Executive Producers"
+      "tier_name": "PYT Visionaries"
     },
     {
       "tier_name": "Show Sponsors"
     },
     {
       "tier_name": "Season Sponsors"
-    },
-    {
-      "tier_name": "Friends of PYT"
     }
   ]
 }
