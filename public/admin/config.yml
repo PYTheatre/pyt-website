@@ -197,7 +197,7 @@ collections:
   - name: "settings"
     label: "Site Settings"
     label_singular: "Site Settings"
-    description: "Edit site-wide values: donation campaign, donor tiers, Support PYT page, about page, and casting page."
+    description: "Edit the words, images, and links for each page and section of the site. Pick the page or section you want to change below."
     delete: false
     editor:
       preview: false
@@ -268,7 +268,7 @@ collections:
  
       # --- Photos Page (front door to SmugMug) ---
       - name: "photos-page"
-        label: "Photos Page"
+        label: "Shop Photos Page"
         file: "src/content/settings/photos-page.json"
         description: "The Photos page (/photos). Edit the headings, intro, the 'A few favorites' sample images, and the 'Find your photos' button that links out to SmugMug."
         fields:
@@ -295,7 +295,7 @@ collections:
  
       # --- Footer (tagline + copyright line) ---
       - name: "footer"
-        label: "Footer"
+        label: "Footer (every page of site)"
         file: "src/content/settings/footer.json"
         description: "The tagline and copyright text in the site footer. (The footer link columns are part of the site structure.)"
         fields:
@@ -304,7 +304,7 @@ collections:
  
       # --- Donation campaign progress numbers (from Phase 1) ---
       - name: "donation-campaign"
-        label: "Donation Campaign"
+        label: "Fundraising Statistics (thermometer)"
         file: "src/content/settings/donation-campaign.json"
         fields:
           - { name: "goal_amount", label: "Goal amount (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 200000 }
@@ -312,24 +312,9 @@ collections:
           - { name: "donor_count", label: "Number of donors", widget: "number", value_type: "int", min: 0, default: 142 }
           - { name: "campaign_label", label: "Campaign name shown on the home page", widget: "string", default: "2026 Annual Campaign" }
  
-      # --- Donor tiers shown on the Donate page ---
-      - name: "donor-tiers"
-        label: "Donor Tiers"
-        file: "src/content/settings/donor-tiers.json"
-        description: "The list of giving tiers shown on the Donate page (Friend, Supporter, etc.)."
-        fields:
-          - name: "tiers"
-            label: "Tiers"
-            widget: "list"
-            summary: "{{fields.name}} — {{fields.range}}"
-            fields:
-              - { name: "name", label: "Tier name", widget: "string" }
-              - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
-              - { name: "description", label: "Description", widget: "text" }
- 
-      # --- Donate page settings (Soapbox embed URL, intro copy) ---
+      # --- Support PYT — Main Page (intro copy, Soapbox URL, sponsorship) ---
       - name: "donate-page"
-        label: "Support PYT"
+        label: "Support PYT — Main Page"
         file: "src/content/settings/donate-page.json"
         description: "The Support PYT page — intro text, employer matching note, the Soapbox donation link, and the sponsorship section wording."
         fields:
@@ -347,9 +332,24 @@ collections:
           - { name: "sponsor_season_price", label: "Sponsorship — \"Season\" price (optional)", widget: "string", required: false, hint: "Optional. e.g. \"$15,000\". Leave blank to show no price on the Season card." }
           - { name: "sponsor_season_description", label: "Sponsorship — \"Season\" card description", widget: "text", required: false }
  
+      # --- Support PYT — Giving Levels (donor tiers) ---
+      - name: "donor-tiers"
+        label: "Support PYT — Giving Levels"
+        file: "src/content/settings/donor-tiers.json"
+        description: "The list of giving tiers shown on the Support PYT page (Friend, Supporter, etc.)."
+        fields:
+          - name: "tiers"
+            label: "Tiers"
+            widget: "list"
+            summary: "{{fields.name}} — {{fields.range}}"
+            fields:
+              - { name: "name", label: "Tier name", widget: "string" }
+              - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
+              - { name: "description", label: "Description", widget: "text" }
+ 
       # --- Corporate Giving panel (Support PYT page) ---
       - name: "corporate-giving"
-        label: "Corporate Giving"
+        label: "Support PYT — Corporate Giving"
         file: "src/content/settings/corporate-giving.json"
         description: "The Corporate Giving panel on the Support PYT page — intro copy, the corporate Soapbox donation link, and the corporate tiers (Partner, Patron, etc.)."
         fields:
@@ -369,7 +369,7 @@ collections:
  
       # --- Donor & sponsor recognition (Support PYT page) ---
       - name: "donor-recognition"
-        label: "Donor Recognition"
+        label: "Donor Recognition (sits on Support PYT page)"
         file: "src/content/settings/donor-recognition.json"
         description: "The recognition wall at the bottom of the Support PYT page. Each group is a heading with a list of names. A group with no names is hidden automatically. Use the \"Supporters\" group for donors who want to be recognized but not have their giving level shown."
         fields:
@@ -605,7 +605,7 @@ collections:
       # This record covers: page intro, audition section copy, and the
       # "What is Stories on Stage?" explainer paragraphs.
       - name: "stories-on-stage-page"
-        label: "Stories on Stage Page"
+        label: "Stories on Stage (intro)"
         file: "src/content/settings/stories-on-stage-page.json"
         description: "The /stories-on-stage page — intro copy, auditions section, and the explainer block. (The 6 productions themselves are edited in 'Stories on Stage Productions' above.)"
         fields:
