@@ -5,22 +5,22 @@
   "corporate_donate_url": "google.com",
   "tiers": [
     {
-      "name": "Partner",
+      "name": "Spotlight Circle",
       "amount": "$2,500",
       "description": "Name and logo recognition online (suited to your preference)."
     },
     {
-      "name": "Patron",
-      "amount": "$5,000",
+      "name": "Starlight Patrons",
+      "amount": "$10,000",
       "description": "Logo placement on lobby signage, printed programs and a group of complimentary tickets to a production of your choice. Name and logo recognition online. "
     },
     {
-      "name": "Producer",
-      "amount": "$15,000",
+      "name": "Luminary Partners",
+      "amount": "$25,000",
       "description": "Logo placement on lobby signage, printed programs and a group of complimentary tickets to a production of your choice. Name and logo recognition online. "
     },
     {
-      "name": "Executive Producer",
+      "name": "PYT Visionaries",
       "amount": "$50,000+",
       "description": "Logo and name recognition and select copy across PYT materials on and offline. Presented and recognised as a founding partner to PYT. On stage recognition for every production and program. Select complimentary tickets to any production. Back stage and rehearsal tours."
     }
