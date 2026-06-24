@@ -292,6 +292,14 @@ const navGroups = [
     flex-direction: column;
     border-bottom: 1px solid var(--line);
     background: var(--paper);
+    /* Cap the menu to the space below the top bar and let it scroll
+       internally, so items past the bottom of the screen stay reachable.
+       100dvh accounts for the mobile address bar; 100vh is the fallback.
+       6rem ≈ the sticky header's own height. */
+    max-height: calc(100vh - 6rem);
+    max-height: calc(100dvh - 6rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
  
   .nav-mobile[hidden] {
@@ -371,4 +379,3 @@ const navGroups = [
     });
   }
 </script>
- 
