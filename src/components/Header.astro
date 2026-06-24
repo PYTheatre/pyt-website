@@ -113,13 +113,13 @@ const navGroups = [
     {navGroups.map((group) => (
       group.children ? (
         <div class="nav-mobile-group">
-          <span class="nav-mobile-heading">{group.label}</span>
+          <a href={group.href} class="nav-mobile-pill">{group.label}</a>
           {group.children.map((child) => (
             <a href={child.href} class="nav-mobile-sublink">{child.label}</a>
           ))}
         </div>
       ) : (
-        <a href={group.href} class="nav-mobile-link">{group.label}</a>
+        <a href={group.href} class="nav-mobile-pill nav-mobile-pill-solo">{group.label}</a>
       )
     ))}
   </nav>
@@ -292,6 +292,7 @@ const navGroups = [
     flex-direction: column;
     border-bottom: 1px solid var(--line);
     background: var(--paper);
+    padding: 0.6rem;
     /* Cap the menu to the space below the top bar and let it scroll
        internally, so items past the bottom of the screen stay reachable.
        100dvh accounts for the mobile address bar; 100vh is the fallback.
@@ -306,47 +307,46 @@ const navGroups = [
     display: none;
   }
  
-  /* Top-level plain links in the mobile menu */
-  .nav-mobile-link {
-    padding: 0.9rem var(--space-md);
-    font-weight: 600;
-    color: var(--ink);
-    border-top: 1px solid var(--line);
-  }
- 
-  /* Grouped section in the mobile menu */
+  /* Each top-level item (and its sub-rows) sits in a group block. */
   .nav-mobile-group {
-    border-top: 1px solid var(--line);
-    padding-block: 0.5rem 0.6rem;
+    margin-bottom: 0.55rem;
   }
- 
-  .nav-mobile-heading {
+
+  /* The lilac pill — every top-level item looks like this and is a real link. */
+  .nav-mobile-pill {
     display: block;
-    padding: 0.5rem var(--space-md) 0.2rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--ink-soft);
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    background: var(--nav-pill);
+    color: var(--nav-pill-text);
+    font-weight: 600;
+    font-size: 0.95rem;
   }
- 
+
+  /* Standalone pills (Classes & Camps, Support PYT) — same pill, own spacing. */
+  .nav-mobile-pill-solo {
+    margin-bottom: 0.55rem;
+  }
+
+  .nav-mobile-pill:hover,
+  .nav-mobile-pill:focus-visible {
+    background: var(--nav-pill-hover);
+    color: var(--nav-pill-text);
+  }
+
+  /* Quiet indented sub-rows beneath a pill. */
   .nav-mobile-sublink {
     display: block;
-    padding: 0.65rem var(--space-md) 0.65rem calc(var(--space-md) + 0.6rem);
+    padding: 0.5rem 0.85rem 0.5rem 1.4rem;
     font-weight: 500;
+    font-size: 0.9rem;
     color: var(--ink-soft);
   }
- 
-  .nav-mobile-link:hover,
-  .nav-mobile-sublink:hover {
-    background: var(--accent-soft);
+
+  .nav-mobile-sublink:hover,
+  .nav-mobile-sublink:focus-visible {
     color: var(--accent-deep);
   }
- 
-  .nav-mobile > :first-child {
-    border-top: none;
-  }
- 
   /* ---- Wide screens: show inline nav, hide hamburger ---- */
   @media (min-width: 1000px) {
     .nav-wide {
