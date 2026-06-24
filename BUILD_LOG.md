@@ -2,6 +2,12 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Support PYT dropdown — shorten labels (2026-06-23)
+Goal (PM): rename the Support PYT dropdown options to just Individual / Corporate / Sponsorship.
+Built (1 edit): src/components/Header.astro (EDIT) — navGroups Support PYT children labels changed "Individual giving"→"Individual", "Corporate Giving"→"Corporate" (Sponsorship unchanged). Hrefs (#individual/#corporate/#sponsor) untouched. Applies to both desktop dropdown and mobile pill rows.
+Tested: build 20 pages; both desktop + mobile render Individual/Corporate/Sponsorship with the same correct anchors. NOT verifiable by me: on-screen — PM's check.
+Next: PM edits-in-place src/components/Header.astro; Cloudflare rebuilds ~2 min; PM confirms the new labels in the menu.
+
 Support PYT — new "What Your Gift Funds" section + Support dropdown menu (2026-06-23)
 Goal (PM): (1) add a new section under Donor Benefits on the Support PYT page: a CMS-editable list of giving amounts, each "amount — what it pays for", each with a Donate button; NO visible heading (PM chose option a). (2) Turn the "Support PYT" menu item into a dropdown: Individual giving (top of page, covers Love PYT + Donor Benefits + the new list by scroll order), Corporate Giving (#corporate), Sponsorship (#sponsor).
 Built (4 edits + 1 new file):
