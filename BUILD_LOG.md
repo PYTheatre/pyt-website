@@ -2,6 +2,13 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Mobile menu — fix unreachable items (internal scroll) (2026-06-23)
+Goal (PM): on phones, the open hamburger menu cut off its bottom items (Employment / Support PYT) with NO way to scroll to them — neither the menu nor the page behind it moved. Diagnosed as a real functional bug, not just styling.
+Root cause: .site-header is position:sticky and the mobile menu (.nav-mobile) lives inside it with no height limit and no overflow handling. When the menu is taller than the viewport, the overflow hangs below the screen; because the header is pinned, the page can't scroll to reveal it either. Bottom items become unreachable.
+Built (1 edit): src/components/Header.astro (EDIT) — added to .nav-mobile: `max-height: calc(100vh - 6rem)` then `max-height: calc(100dvh - 6rem)` (dvh accounts for the mobile address bar; vh is the fallback for older browsers), `overflow-y: auto`, and `-webkit-overflow-scrolling: touch` for smooth iOS scrolling. 6rem ≈ the sticky header height. NO change to menu contents, links, order, or the redesign (that's a separate planned step).
+Tested: build 20 pages; confirmed rules landed in built CSS (dist/_astro/BaseLayout.*.css: nav-mobile{...max-height:calc(100vh - 6rem);max-height:calc(100dvh - 6rem)...overflow-y:auto}). Note: first greps against dist/index.html returned empty — the component CSS is in an EXTERNAL stylesheet, not inlined; found it under dist/_astro/ (avoided the §6F false-alarm trap). NOT verifiable by me: the live touch-scroll on the PM's iPhone — PM's check.
+Next: PM edits-in-place src/components/Header.astro; Cloudflare rebuilds ~2 min; PM opens the mobile menu and confirms they can now scroll within it to reach Employment and Support PYT. THEN: the separate mobile-menu redesign (pills/cards/hierarchy) the PM originally asked about.
+
 Per-show "Sponsor This Show" buttons → route straight to Soapbox (2026-06-23)
 Goal (PM): finish the outstanding follow-up flagged in HANDOVER-2026-06-16 §8 and in a code note inside ways-to-support.astro — the per-show "Sponsor This Show" button still used the old two-step hop to /ways-to-support#sponsor, while every other sponsor/donate button on the site now goes straight to the hosted Soapbox donation page. PM chose Option A (point straight at Soapbox) and Option 1 (source the link from the same CMS field, not hardcode).
 Built (2 edits):
