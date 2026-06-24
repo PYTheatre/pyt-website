@@ -162,12 +162,19 @@ const heroImage = (home as any).hero_image || "";
       <h2 class="section-head">{home.impact_heading}</h2>
  
       <div class="stat-grid">
-        {home.stats.map((stat) => (
-          <div class="stat">
-            <p class="stat-figure">{stat.figure}</p>
-            <p class="stat-label">{stat.label}</p>
-          </div>
-        ))}
+        {home.stats.map((stat, i) => {
+          /* Impact numbers are coloured by POSITION using the three logo
+             colours, cycling if there are ever more than three:
+             1st = blue, 2nd = green, 3rd = pink. */
+          const figureColors = ["var(--brand-blue)", "var(--brand-green)", "var(--accent)"];
+          const figureColor = figureColors[i % figureColors.length];
+          return (
+            <div class="stat">
+              <p class="stat-figure" style={`color: ${figureColor}`}>{stat.figure}</p>
+              <p class="stat-label">{stat.label}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   </section>
