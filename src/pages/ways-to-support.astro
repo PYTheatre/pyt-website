@@ -14,6 +14,15 @@ import tiers from "../content/settings/donor-tiers.json";
 import donatePage from "../content/settings/donate-page.json";
 import corporate from "../content/settings/corporate-giving.json";
 import recognition from "../content/settings/donor-recognition.json";
+import giftFunds from "../content/settings/gift-funds.json";
+
+// "What your gift funds" — list under Donor Benefits. Empty-safe: if the
+// live data has no items yet (or the record is absent), the whole section
+// simply doesn't render. Each row's Donate button uses the same general
+// Soapbox link as the rest of the page.
+const giftFundItems = (giftFunds?.items ?? []).filter(
+  (it) => it && (it.amount || it.description)
+);
  
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
@@ -91,7 +100,7 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   description="Support the next generation of Bay Area performers. Your gift to Peninsula Youth Theatre funds scholarships, productions, and school touring."
 >
   <!-- Light hero: campaign progress as a thermometer + Donate button -->
-  <section class="section campaign-hero">
+  <section class="section campaign-hero" id="individual">
     <div class="container">
       <p class="eyebrow">{campaignLabel}</p>
       <h1>{donatePage.intro_heading}</h1>
@@ -147,7 +156,36 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
       </ul>
     </div>
   </section>
- 
+
+  <!-- ============ WHAT YOUR GIFT FUNDS ============ -->
+  <!--
+    Sits directly under Donor Benefits. No visible heading (by design).
+    A plain list of "amount — what it pays for" rows, each with a Donate
+    button to the general Soapbox page. Renders ONLY when the CMS list has
+    items, so the live empty state shows nothing rather than a bare section.
+  -->
+  {giftFundItems.length > 0 && (
+    <section class="section gift-funds-section">
+      <div class="container">
+        <ul class="gift-funds-list">
+          {giftFundItems.map((item) => (
+            <li class="gift-funds-row">
+              <div class="gift-funds-text">
+                <span class="gift-funds-amount">{item.amount}</span>
+                {item.description && (
+                  <span class="gift-funds-desc"> {item.description}</span>
+                )}
+              </div>
+              <a href={soapboxDonateUrl} class="btn btn-primary gift-funds-btn" target="_blank" rel="noopener">
+                Donate
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
   <!-- ============ CORPORATE GIVING ============ -->
   <section class="section corporate-section" id="corporate">
     <div class="container">
@@ -362,6 +400,52 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   .tiers-section {
     background: var(--paper-warm);
     border-top: 1px solid var(--line);
+  }
+
+  /* ---- What your gift funds (list under Donor Benefits) ---- */
+  .gift-funds-section {
+    background: var(--paper-warm);
+  }
+
+  .gift-funds-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .gift-funds-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .gift-funds-text {
+    flex: 1 1 16rem;
+    line-height: 1.4;
+  }
+
+  .gift-funds-amount {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 1.15rem;
+  }
+
+  .gift-funds-desc {
+    color: var(--ink-soft);
+  }
+
+  .gift-funds-btn {
+    flex-shrink: 0;
   }
  
   .tier-list {
