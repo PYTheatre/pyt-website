@@ -2,6 +2,27 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+CMS tidy-up — relabel/reorder Site Settings for staff handover (2026-06-16)
+Goal (PM): the CMS Site Settings list had grown unwieldy for handing to staff. Relabel/regroup for clarity. CMS-ONLY changes (config.yml labels, order, description) — NO site changes, NO field-name changes, NO content files touched, so all live content still maps and the site renders identically.
+Built (1 edit): public/admin/config.yml (EDIT):
+1. Site Settings collection description rewritten to plain/accurate: "Edit the words, images, and links for each page and section of the site. Pick the page or section you want to change below." (was a stale partial list).
+2. "Photos Page" → "Shop Photos Page"; "Footer" → "Footer (every page of site)".
+3. "Donation Campaign" → "Fundraising Statistics (thermometer)".
+4. Grouped the Support PYT records together IN PAGE ORDER and relabelled with a common prefix (PM chose Option A — group + relabel, NOT a true single-form merge, to avoid risk to live data). Order now: "Support PYT — Main Page" (donate-page) → "Support PYT — Giving Levels" (donor-tiers) → "Support PYT — Corporate Giving" (corporate-giving) → "Donor Recognition (sits on Support PYT page)" (donor-recognition). Required swapping donate-page ABOVE donor-tiers (done via a Python reorder script to dodge YAML whitespace-matching issues). donation-campaign/Fundraising Statistics stays just above the group.
+5. "Donor Recognition" → "Donor Recognition (sits on Support PYT page)".
+6. "Stories on Stage Page" → "Stories on Stage (intro)".
+Only labels/order/description changed. Every field `name` and every backing JSON file is UNCHANGED — verified donate-page/donor-tiers/corporate-giving field-name lists intact, so live content maps exactly as before.
+Tested: config valid YAML; build 20 pages; final record order + labels confirmed via parse. NOT verifiable by me: the CMS rendering — PM's live check after hard-refresh.
+Next: PM edits-in-place public/admin/config.yml; hard-refresh /admin. The Site Settings list will show the new names/order. Nothing on the public site changes.
+
+
+Home page — swap campaign progress bar for the thermometer (2026-06-16)
+Goal (PM): the home page donation teaser showed campaign progress as a horizontal BAR; the Support PYT page (/ways-to-support) shows it as a vertical THERMOMETER. PM wants the home page to use the same thermometer.
+Built (1 edit): src/pages/index.astro (EDIT) — added `fillPct = Math.min(100, Math.max(0, pct))` (caps the fill 0–100 so it never overflows). Replaced the .progress-wrap/.progress-bar/.progress-fill/.progress-stats markup with the thermo-row / thermo / thermo-tube / thermo-fill / thermo-bulb / thermo-stats structure copied verbatim from ways-to-support.astro (thermometer left, numbers right; raised $, "raised of $X goal", donors · % of goal). Replaced the matching CSS with the thermometer CSS (identical values to the Support page). The surrounding section — heading ("Help us reach $X"), lede, and Donate button — is unchanged; only the progress visual swapped. The thermo-row uses flex-wrap + min-width:220px so it stacks on phones (same as the Support page, no separate media query needed). All numbers remain data-driven from donation-campaign.json (raised_amount, goal_amount, donor_count).
+Tested: build 20 pages; rendered home page has the thermometer, no progress-bar refs remain, fill height renders. NOTE: sandbox donation-campaign.json is STALE (shows 50% / $100k) vs live (62% / $124k) — the thermometer is data-driven so it'll show the LIVE numbers once deployed; did not touch the data file (Rule 2). NOT verifiable by me: on-screen look — PM's live check.
+Next: PM edits-in-place src/pages/index.astro; Cloudflare rebuilds ~2 min. Thermometer will show the live campaign numbers.
+
+
 About page — add "Artists" section between Staff and Board (2026-06-15)
 Goal (PM): add a new panel on the About page, titled "Artists", positioned BETWEEN the Staff and Board of Directors sections, structured and CMS-editable exactly like those two.
 Built (2 edits):
