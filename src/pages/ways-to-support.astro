@@ -34,8 +34,8 @@ const soapboxDonateUrl =
   giver enter their own amount and recognition name, so one page serves
   individuals + both sponsorship types. (Reverses the earlier Shopify plan,
   which would not have been tax-deductible.)
-  NOTE: the site-wide "Sponsor" buttons on shows/index.astro and
-  shows/[slug].astro still need the same swap in a follow-up step.
+  The per-show "Sponsor This Show" buttons now route to the same Soapbox
+  page directly (done 2026-06-23). shows/index.astro has no sponsor button.
 */
 const sponsorDonateUrl =
   donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
