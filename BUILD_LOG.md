@@ -2,6 +2,14 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Per-show "Sponsor This Show" buttons → route straight to Soapbox (2026-06-23)
+Goal (PM): finish the outstanding follow-up flagged in HANDOVER-2026-06-16 §8 and in a code note inside ways-to-support.astro — the per-show "Sponsor This Show" button still used the old two-step hop to /ways-to-support#sponsor, while every other sponsor/donate button on the site now goes straight to the hosted Soapbox donation page. PM chose Option A (point straight at Soapbox) and Option 1 (source the link from the same CMS field, not hardcode).
+Built (2 edits):
+1. src/pages/shows/[slug].astro (EDIT): added `import donatePage from "../../content/settings/donate-page.json"` and `const sponsorUrl = donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate"` (same field + same fallback the Support page uses, so one source of truth — if staff change the Soapbox URL in the CMS, the show buttons follow). Changed the button from `<a href="/ways-to-support#sponsor" class="btn btn-outline">` to `<a href={sponsorUrl} class="btn btn-outline" target="_blank" rel="noopener">`. Label/placement/style unchanged.
+2. src/pages/ways-to-support.astro (EDIT): replaced the now-completed "NOTE: ... still need the same swap in a follow-up step" comment with a done-note. No code/behaviour change on this page.
+Tested: build 20 pages; rendered button on multiple built show pages (wizard-of-oz, rules-of-comedy, frog-and-toad) now has href=Soapbox + target=_blank + rel=noopener; confirmed NO show page still contains `ways-to-support#sponsor`; confirmed the Support page's own id="sponsor" section is intact (its internal anchor still works). Note: raw greps that included `>` after the opening tag returned false empties because Astro injects a `data-astro-cid-...` attribute — verified by matching on the label instead (the §6F false-alarm trap). Content files untouched (Rule 2). NOT verifiable by me: the live click-through — PM's check.
+Next: PM edits-in-place both files; Cloudflare rebuilds ~2 min; PM opens any show detail page, clicks "Sponsor This Show", confirms it opens the Soapbox donation page in a new tab.
+
 CMS tidy-up — relabel/reorder Site Settings for staff handover (2026-06-16)
 Goal (PM): the CMS Site Settings list had grown unwieldy for handing to staff. Relabel/regroup for clarity. CMS-ONLY changes (config.yml labels, order, description) — NO site changes, NO field-name changes, NO content files touched, so all live content still maps and the site renders identically.
 Built (1 edit): public/admin/config.yml (EDIT):
