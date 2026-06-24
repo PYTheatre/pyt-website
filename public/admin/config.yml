@@ -346,7 +346,21 @@ collections:
               - { name: "name", label: "Tier name", widget: "string" }
               - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
               - { name: "description", label: "Description", widget: "text" }
- 
+
+      # --- Support PYT — What Your Gift Funds (sits under Donor Benefits) ---
+      - name: "gift-funds"
+        label: "Support PYT — What Your Gift Funds"
+        file: "src/content/settings/gift-funds.json"
+        description: "The list of giving amounts on the Support PYT page (under Donor Benefits) — each line is an amount plus what it pays for. Edit, reorder, add or remove lines freely. Leave the whole list empty to hide the section."
+        fields:
+          - name: "items"
+            label: "Gift amounts"
+            widget: "list"
+            summary: "{{fields.amount}} — {{fields.description}}"
+            fields:
+              - { name: "amount", label: "Amount", widget: "string", hint: "Example: $1,000  or  $3,000 per month" }
+              - { name: "description", label: "What it pays for", widget: "text", hint: "Example: pays for costumes for a Main Stage show" }
+
       # --- Corporate Giving panel (Support PYT page) ---
       - name: "corporate-giving"
         label: "Support PYT — Corporate Giving"
