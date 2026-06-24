@@ -1,4 +1,3 @@
-
 ---
 /*
   SHOW DETAIL PAGE  ( /shows/<slug> )
@@ -9,6 +8,13 @@
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
+import donatePage from "../../content/settings/donate-page.json";
+
+// "Sponsor This Show" routes straight to the hosted Soapbox donation page,
+// the same link the Ways to Support page uses (CMS-editable, with the
+// standard Soapbox URL as a safe fallback if the field is empty).
+const sponsorUrl =
+  donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
  
 export async function getStaticPaths() {
   const shows = await getCollection("shows");
@@ -111,7 +117,7 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
               </a>
             )
           )}
-          <a href="/ways-to-support#sponsor" class="btn btn-outline">
+          <a href={sponsorUrl} class="btn btn-outline" target="_blank" rel="noopener">
             Sponsor This Show
           </a>
           {data.cast_page_url && (
