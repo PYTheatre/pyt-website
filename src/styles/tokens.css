@@ -32,6 +32,11 @@
   --accent: #c0287b;       /* primary accent (PYT logo pink)   */
   --accent-deep: #97215f;  /* darker accent (hover, emphasis)  */
   --accent-soft: #fbeaf3;  /* very light accent (tints, fills) */
+
+  /* ---- SECONDARY BRAND COLORS (sampled from the PYT logo's green & blue
+     letters; logo-derived, may be fine-tuned in the Phase 5 rebrand) ---- */
+  --brand-green: #68b050;  /* PYT logo green                   */
+  --brand-blue: #48a8d0;   /* PYT logo blue                    */
  
   /* ---- NEUTRAL (was mustard/gold; now grey per decisions) ---- */
   --neutral: #6a6a6a;
@@ -66,4 +71,3 @@
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.06);
   --shadow-lift: 0 8px 28px rgba(0, 0, 0, 0.10);
 }
- 
