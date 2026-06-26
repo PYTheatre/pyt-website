@@ -151,6 +151,7 @@ collections:
       - { name: "poster", label: "Poster image", widget: "image", required: false, hint: "Upload an optional poster. If empty, a colored placeholder is used." }
       - { name: "public_ticketing_url", label: "Buy Tickets link (public performances)", widget: "string", required: false, hint: "Leave blank to hide the Buy Tickets button." }
       - { name: "school_bookings_url", label: "School Bookings link", widget: "string", required: false, hint: "Leave blank to hide the School Bookings button." }
+      - { name: "tickets_intro", label: "Line above the Tickets button (optional)", widget: "string", required: false, hint: "A short line shown above the Tickets button on this production's page. Leave blank to show nothing." }
  
   # ============================================================
   # CAST PAGES — one entry per show's cast page.
@@ -656,6 +657,7 @@ collections:
         description: "The /stories-on-stage page — intro copy, auditions section, and the explainer block. (The 6 productions themselves are edited in 'Stories on Stage Productions' above.)"
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Stories on Stage" }
+          - { name: "school_booking_email", label: "School / group booking email", widget: "string", default: "lhatten@pytnet.org", hint: "The email address the 'Email about a group booking' button on each production page sends to." }
           - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our second season" }
           - { name: "intro_lede", label: "Intro paragraph (under the title)", widget: "text" }
           - { name: "auditions_strip_text", label: "Audition strip — text at the top of the page", widget: "string", default: "Auditioning for the next Stories on Stage company?" }
