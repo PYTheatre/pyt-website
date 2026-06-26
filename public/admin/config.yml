@@ -51,6 +51,7 @@ collections:
     sortable_fields: ["start_date", "title"]
     fields:
       - { name: "title", label: "Show title", widget: "string", hint: "Example: Dragons Love Tacos" }
+      - { name: "production_type", label: "Production type", widget: "select", default: "Musical", options: ["Musical", "Studio Production"], hint: "Musicals show on the Musicals page; Studio Productions show on the Studio Productions page. Both appear on the main Shows page." }
       - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, hint: "Small text above the title on the show page. Example: Spring 2026 Mainstage" }
       - { name: "start_date", label: "First performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
@@ -346,6 +347,16 @@ collections:
               - { name: "name", label: "Tier name", widget: "string" }
               - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
               - { name: "description", label: "Description", widget: "text" }
+
+      # --- Studio Productions Page (Shows → Studio Productions) ---
+      - name: "studio-productions-page"
+        label: "Studio Productions Page"
+        file: "src/content/settings/studio-productions-page.json"
+        description: "The intro shown at the top of the Studio Productions page. The list of productions below it comes from Shows tagged as 'Studio Production'."
+        fields:
+          - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false }
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "intro", label: "Intro paragraph", widget: "text", hint: "Shown under the page title to introduce the Studio Productions." }
 
       # --- Press Page (About → Press) ---
       - name: "press-page"
