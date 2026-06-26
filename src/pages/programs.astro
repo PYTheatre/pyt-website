@@ -32,6 +32,78 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
     lede={pageContent.lede}
   />
 
+  {(pageContent as any).summer_intro && (
+    <section class="section summer-block-section">
+      <div class="container">
+        <div class="summer-block">
+          <h2 class="summer-heading">{(pageContent as any).summer_heading}</h2>
+          <p class="summer-intro">{(pageContent as any).summer_intro}</p>
+
+          {(pageContent as any).summer_register_url && (
+            <a
+              href={(pageContent as any).summer_register_url}
+              class="btn btn-primary"
+              target="_blank"
+              rel="noopener"
+            >
+              {(pageContent as any).summer_register_label || "Register here"}
+            </a>
+          )}
+
+          <dl class="summer-facts">
+            {(pageContent as any).summer_hours && (
+              <div class="summer-fact">
+                <dt>Hours</dt>
+                <dd>{(pageContent as any).summer_hours}</dd>
+              </div>
+            )}
+            {(pageContent as any).summer_locations && (
+              <div class="summer-fact">
+                <dt>Locations</dt>
+                <dd>
+                  {(pageContent as any).summer_locations.split("\n").map((line: string) => (
+                    <span class="summer-line">{line}</span>
+                  ))}
+                </dd>
+              </div>
+            )}
+            {(pageContent as any).summer_pricing && (
+              <div class="summer-fact">
+                <dt>Pricing</dt>
+                <dd>
+                  {(pageContent as any).summer_pricing.split("\n").map((line: string) => (
+                    <span class="summer-line">{line}</span>
+                  ))}
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          {(pageContent as any).summer_scholarships_note && (
+            <p class="summer-note">{(pageContent as any).summer_scholarships_note}</p>
+          )}
+
+          {(pageContent as any).summer_cancellation_body && (
+            <details class="summer-cancellation">
+              <summary>{(pageContent as any).summer_cancellation_heading || "Cancellation & transfer policy"}</summary>
+              {(pageContent as any).summer_cancellation_body.split("\n\n").map((para: string) => (
+                <p>{para}</p>
+              ))}
+              {(pageContent as any).summer_cancellation_email && (
+                <p>
+                  Requests:{" "}
+                  <a href={`mailto:${(pageContent as any).summer_cancellation_email}`}>
+                    {(pageContent as any).summer_cancellation_email}
+                  </a>
+                </p>
+              )}
+            </details>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+
   <section class="section programs-section">
     <div class="container">
       <!-- Filters -->
@@ -126,6 +198,98 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
 </BaseLayout>
 
 <style>
+  /* ---- Summer Camps block ---- */
+  .summer-block-section {
+    padding-top: 0;
+  }
+
+  .summer-block {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    background: var(--paper);
+  }
+
+  .summer-heading {
+    font-size: 1.5rem;
+    margin: 0 0 var(--space-sm);
+  }
+
+  .summer-intro {
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 65ch;
+    margin: 0 0 var(--space-md);
+  }
+
+  .summer-block .btn {
+    margin-bottom: var(--space-lg);
+  }
+
+  .summer-facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    margin: 0 0 var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line);
+  }
+
+  .summer-fact dt {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .summer-fact dd {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .summer-line {
+    display: block;
+  }
+
+  .summer-note {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-md);
+  }
+
+  .summer-cancellation {
+    border-top: 1px solid var(--line);
+    padding-top: var(--space-md);
+  }
+
+  .summer-cancellation summary {
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .summer-cancellation p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: var(--space-sm) 0 0;
+  }
+
+  .summer-cancellation a {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
+  @media (min-width: 720px) {
+    .summer-facts {
+      grid-template-columns: repeat(3, 1fr);
+      align-items: start;
+    }
+  }
+
   /* ---- Filters ---- */
   .program-filters {
     display: flex;
