@@ -2,6 +2,19 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Shows menu restructure — Musicals / Studio Productions / combined Shows page (2026-06-26)
+Goal (PM): split Shows into Musicals and Studio Productions; relabel the Shows dropdown to Musicals / Studio Productions / Stories on Stage; main Shows title lands on a combined page listing all three types in date order. New Studio Productions page with an editable intro. (PM: always capitalise "Studio Productions", both words.)
+Built (7 files):
+  - src/content.config.ts (EDIT) — added production_type field to shows schema: enum ["Musical","Studio Production"], default "Musical" (so existing shows keep showing until staff tag the studio ones).
+  - src/components/Header.astro (EDIT) — Shows dropdown children changed to Musicals (/musicals), Studio Productions (/studio-productions), Stories on Stage (/stories-on-stage). Main title still → /shows (combined).
+  - src/pages/shows/index.astro (EDIT, full rewrite) — now the COMBINED page: merges shows + storiesOnStage into one list sorted by start_date, each card shows a coloured type label (Musical / Studio Production / Stories on Stage). Stories cards link across to /stories-on-stage (PM choice 2B); show cards link to /shows/<id>.
+  - src/pages/musicals.astro (NEW) — filtered view, shows tagged Musical, reuses the original rich show-card (audition/tickets/detail buttons).
+  - src/pages/studio-productions.astro (NEW) — filtered view, shows tagged Studio Production, same card + an editable intro paragraph (PageHero lede) from settings.
+  - src/content/settings/studio-productions-page.json (NEW seed) — eyebrow/title/intro for the Studio Productions page.
+  - public/admin/config.yml (EDIT) — added "Production type" select (Musical / Studio Production, default Musical) to the Shows collection; added a "Studio Productions Page" settings record for the intro.
+Tested: config.yml YAML valid; build 23 pages (was 21 — adds /musicals + /studio-productions). Parsed rendered HTML: combined /shows lists 11 cards in true date order (5 shows + 6 stories interleaved), labels render 5 Musical + 6 Stories on Stage; /musicals shows 5 (all default to Musical); /studio-productions shows 0 cards + the empty message + the editable intro (correct — nothing tagged Studio yet). NOT verifiable by me: on-screen appearance + the new CMS "Production type" dropdown and "Studio Productions Page" record showing in /admin — PM's checks.
+Notes: all 5 existing shows currently default to Musical; PM will re-tag the studio ones in the CMS. The combined page's type-label colours are inline hex (green #eaf3de/#27500a, blue #e6f1fb/#0c447c) matching the logo green/blue tokens — fine for now, can fold into the Phase-5 palette later.
+
 New Press page under About (2026-06-26)
 Goal (PM): add a Press page under the About section listing links to outside coverage of PYT, with an unlimited CMS list to add new press as it's published.
 Built (4 files): src/pages/press.astro (NEW) — lists press cards newest-first, each links out (target=_blank); shows a staff-editable empty message when the list has no items. src/content/settings/press-page.json (NEW seed) — title, eyebrow, intro (editable), empty_message (editable), items: [] (seeded EMPTY on purpose, so it ships showing the coming-soon message). public/admin/config.yml (EDIT) — new "Press Page" record (intro line, empty message, and unlimited "Press coverage" list with fields headline / source / url / date[optional]); inserted before the gift-funds record. src/components/Header.astro (EDIT) — added { label: "Press", href: "/press" } as third child of the About dropdown (desktop + mobile).
