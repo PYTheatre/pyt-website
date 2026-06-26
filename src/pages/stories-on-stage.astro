@@ -79,31 +79,9 @@ const productions = (await getCollection("storiesOnStage")).sort(
                 <p class="production-venue">{prod.data.venue}</p>
                 <p class="production-synopsis">{prod.data.synopsis}</p>
                 <div class="production-ctas">
-                  {prod.data.public_ticketing_url && (
-                    <a
-                      href={prod.data.public_ticketing_url}
-                      class="btn btn-primary"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      Buy Tickets
-                    </a>
-                  )}
-                  {prod.data.school_bookings_url && (
-                    <a
-                      href={prod.data.school_bookings_url}
-                      class="btn btn-outline"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      School Bookings
-                    </a>
-                  )}
-                  {!prod.data.public_ticketing_url && !prod.data.school_bookings_url && (
-                    <span class="btn btn-outline btn-disabled" aria-disabled="true">
-                      Tickets &amp; bookings coming soon
-                    </span>
-                  )}
+                  <a href={`/stories-on-stage/${prod.id}`} class="btn btn-primary">
+                    Tickets &amp; bookings
+                  </a>
                 </div>
               </div>
             </li>
