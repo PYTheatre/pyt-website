@@ -2,6 +2,12 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Combined Shows page — tickets link hint on every card (2026-06-26)
+Goal (PM): every card on the combined /shows page should show a tickets link hint like the Stories cards do (previously only Stories cards had "· tickets & bookings →"). Combined Shows page only.
+Built (1 file): src/pages/shows/index.astro (EDIT) — Musical/Studio cards now show "· tickets & details →" (they link to the show detail page where the Buy button is); Stories cards keep "· tickets & bookings →". Whole card was already one clickable link; this just adds the visible hint text per type.
+Tested: build 30 pages. Rendered HTML: 5 "tickets & details" + 6 "tickets & bookings" = 11 hints across 11 cards. NOT verifiable by me: on-screen — PM's check.
+Note: wording differs by destination on purpose — Musical/Studio go to a details+buy page, Stories go to a tickets+school-bookings page.
+
 Global ticket fee notice — spacing fix (2026-06-26)
 Goal (PM): the fee notice looked cramped — it sat almost flush against the synopsis below it (margin was var(--space-sm) 0 0 — small above, zero below).
 Built (2 files): src/pages/shows/[slug].astro (EDIT) — notice margin now var(--space-md) 0 var(--space-lg) (room above, more below so the synopsis doesn't crowd it). src/pages/stories-on-stage/[slug].astro (EDIT) — notice margin var(--space-md) 0 0 (room above; the bordered booking-card padding handles below).
