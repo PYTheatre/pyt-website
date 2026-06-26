@@ -3,5 +3,12 @@
   "eyebrow": "About",
   "intro": "Coverage of Peninsula Youth Theatre and our productions from across the press.",
   "empty_message": "Press coverage coming soon — check back as PYT makes headlines.",
-  "items": []
+  "items": [
+    {
+      "headline": "Six the Musical Teen Edition in Mountain View",
+      "url": "https://www.metrosiliconvalley.com/six-the-musical-teen-edition-in-mountain-view/?utm_source=ActiveCampaign&utm_medium=email&utm_content=Metroactive%3A%20The%20Metro%20Silicon%20Valley%20Events%20Calendar&utm_campaign=Metroactive%3A%20The%20Silicon%20Valley%20Events%20Calendar%20%28Copy%29",
+      "source": "Metro Silicon Valley",
+      "date": "June 2026"
+    }
+  ]
 }
