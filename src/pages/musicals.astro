@@ -67,17 +67,7 @@ const now = new Date();
                         )
                       )}
 
-                      {show.data.ticketing_url ? (
-                        <a href={show.data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
-                          Tickets
-                        </a>
-                      ) : (
-                        <span class="btn btn-primary btn-disabled" aria-disabled="true">
-                          Tickets coming soon
-                        </span>
-                      )}
-
-                      <a href={`/shows/${show.id}`} class="btn btn-outline-accent">See details →</a>
+                      <a href={`/shows/${show.id}`} class="btn btn-primary">Tickets &amp; details</a>
                     </div>
 
                     {show.data.audition_display && !auditionsClosed && (
