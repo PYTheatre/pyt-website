@@ -1,0 +1,229 @@
+---
+/*
+  SCHOOL PLAY IN A BOX  ( /school-play-in-a-box )
+
+  PYT's after-school drama program for schools. All content is editable
+  via the CMS at /admin → Site Settings → School Play in a Box Page.
+
+  The inquiry uses an "Email to inquire" button (mailto, pre-addressed
+  to the editable Education Program Manager email with a subject line)
+  rather than an embedded form — the static site has no form backend,
+  and the old site's form just emailed this address anyway.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import page from "../content/settings/school-play-in-a-box-page.json";
+
+const inquiryEmail = (page as any).inquiry_email || "caitlyn@pytnet.org";
+const inquirySubject = encodeURIComponent("School Play in a Box inquiry");
+const inquiryMailto = `mailto:${inquiryEmail}?subject=${inquirySubject}`;
+
+const showsList = ((page as any).shows_list || "")
+  .split("\n")
+  .map((s: string) => s.trim())
+  .filter(Boolean);
+---
+
+<BaseLayout
+  title="School Play in a Box — Peninsula Youth Theatre"
+  description="School Play in a Box — PYT's on-site, after-school drama program for public and private schools."
+>
+  <PageHero
+    eyebrow={(page as any).eyebrow}
+    title={page.title}
+    lede={(page as any).subtitle}
+  />
+
+  <section class="section spib-section">
+    <div class="container spib-narrow">
+      {(page as any).intro && (
+        <div class="spib-intro">
+          {(page as any).intro.split("\n\n").map((para: string) => (
+            <p>{para}</p>
+          ))}
+        </div>
+      )}
+
+      {/* Who provides what */}
+      {((page as any).pyt_provides || (page as any).school_provides) && (
+        <div class="provides-grid">
+          {(page as any).pyt_provides && (
+            <div class="provides-card">
+              <h2>PYT provides</h2>
+              <p>{(page as any).pyt_provides}</p>
+            </div>
+          )}
+          {(page as any).school_provides && (
+            <div class="provides-card">
+              <h2>The school provides</h2>
+              <p>{(page as any).school_provides}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Inquiry */}
+      <div class="spib-cta-card">
+        <h2>Bring it to your school</h2>
+        {(page as any).inquiry_intro && <p>{(page as any).inquiry_intro}</p>}
+        <div class="spib-cta-actions">
+          <a href={inquiryMailto} class="btn btn-primary">Email to inquire</a>
+          {(page as any).current_sessions_url && (
+            <a href={(page as any).current_sessions_url} class="btn btn-outline" target="_blank" rel="noopener">
+              Current sessions
+            </a>
+          )}
+        </div>
+        {(page as any).current_sessions_intro && (
+          <p class="spib-sessions-note">{(page as any).current_sessions_intro}</p>
+        )}
+      </div>
+
+      {/* Shows we offer */}
+      {showsList.length > 0 && (
+        <div class="spib-shows">
+          <h2>{(page as any).shows_heading || "Some School Play in a Box shows"}</h2>
+          <ul class="spib-show-list">
+            {showsList.map((show: string) => (
+              <li>{show}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Schools served */}
+      {(page as any).schools_body && (
+        <div class="spib-schools">
+          <h2>{(page as any).schools_heading || "Schools we've served"}</h2>
+          {(page as any).schools_body.split("\n\n").map((para: string) => (
+            <p>{para}</p>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .spib-section {
+    padding-top: 0;
+  }
+
+  .spib-narrow {
+    max-width: 70ch;
+  }
+
+  .spib-intro p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0 0 var(--space-sm);
+  }
+
+  .provides-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    margin: var(--space-lg) 0;
+  }
+
+  .provides-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    background: var(--paper);
+  }
+
+  .provides-card h2 {
+    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .provides-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .spib-cta-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+    background: var(--paper-warm);
+    margin: var(--space-lg) 0;
+  }
+
+  .spib-cta-card h2 {
+    font-size: 1.25rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .spib-cta-card > p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 var(--space-md);
+  }
+
+  .spib-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .spib-sessions-note {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: var(--space-sm) 0 0;
+  }
+
+  .spib-shows,
+  .spib-schools {
+    margin: var(--space-lg) 0;
+  }
+
+  .spib-shows h2,
+  .spib-schools h2 {
+    font-size: 1.25rem;
+    margin: 0 0 var(--space-sm);
+  }
+
+  .spib-show-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .spib-show-list li {
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .spib-show-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .spib-schools p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-sm);
+  }
+
+  @media (min-width: 720px) {
+    .provides-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .spib-show-list {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+</style>
