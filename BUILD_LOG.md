@@ -2,6 +2,12 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+New Press page under About (2026-06-26)
+Goal (PM): add a Press page under the About section listing links to outside coverage of PYT, with an unlimited CMS list to add new press as it's published.
+Built (4 files): src/pages/press.astro (NEW) — lists press cards newest-first, each links out (target=_blank); shows a staff-editable empty message when the list has no items. src/content/settings/press-page.json (NEW seed) — title, eyebrow, intro (editable), empty_message (editable), items: [] (seeded EMPTY on purpose, so it ships showing the coming-soon message). public/admin/config.yml (EDIT) — new "Press Page" record (intro line, empty message, and unlimited "Press coverage" list with fields headline / source / url / date[optional]); inserted before the gift-funds record. src/components/Header.astro (EDIT) — added { label: "Press", href: "/press" } as third child of the About dropdown (desktop + mobile).
+Tested: config.yml YAML valid; build 21 pages (was 20); parsed dist/press/index.html — title + intro render, empty-state paragraph renders with the seeded message, zero press <li> cards render while list is empty (verified via markup-aware parse, not raw grep — the string "press-card" also appears in the page CSS, a §6F false alarm). NOT verifiable by me: on-screen appearance + the live CMS record showing in /admin — PM's checks.
+Note: items seeded empty deliberately — do NOT re-push this seed over live CMS data once staff add press (Rule 2 / stale-content).
+
 Support PYT dropdown — shorten labels (2026-06-23)
 Goal (PM): rename the Support PYT dropdown options to just Individual / Corporate / Sponsorship.
 Built (1 edit): src/components/Header.astro (EDIT) — navGroups Support PYT children labels changed "Individual giving"→"Individual", "Corporate Giving"→"Corporate" (Sponsorship unchanged). Hrefs (#individual/#corporate/#sponsor) untouched. Applies to both desktop dropdown and mobile pill rows.
