@@ -1,6 +1,7 @@
 ---
 audition_date: 2026-08-29
 title: The Wizard of Oz
+production_type: Musical
 eyebrow: 2026 mainstage
 start_date: 2026-11-14
 end_date: 2026-11-22
