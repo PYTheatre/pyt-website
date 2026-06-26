@@ -125,6 +125,7 @@ const storiesOnStage = defineCollection({
     poster: z.string().optional(),
     public_ticketing_url: z.string().optional(),
     school_bookings_url: z.string().optional(),
+    tickets_intro: z.string().optional(),
   }),
 });
  
