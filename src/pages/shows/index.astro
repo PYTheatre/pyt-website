@@ -39,7 +39,7 @@ const combined = [
     start: p.data.start_date.getTime(),
     poster: p.data.poster,
     kind: "Stories on Stage",
-    href: "/stories-on-stage",
+    href: `/stories-on-stage/${p.id}`,
     external: false,
   })),
 ].sort((a, b) => a.start - b.start);
@@ -83,7 +83,7 @@ const kindClass = (kind: string) =>
                   <p class="combined-dates">
                     {item.date_display}
                     {item.kind === "Stories on Stage" && (
-                      <span class="cross-link"> · visit Stories on Stage →</span>
+                      <span class="cross-link"> · tickets & bookings →</span>
                     )}
                   </p>
                 </div>
