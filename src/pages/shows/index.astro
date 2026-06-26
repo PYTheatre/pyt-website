@@ -82,8 +82,10 @@ const kindClass = (kind: string) =>
                   <h2>{item.title}</h2>
                   <p class="combined-dates">
                     {item.date_display}
-                    {item.kind === "Stories on Stage" && (
-                      <span class="cross-link"> · tickets & bookings →</span>
+                    {item.kind === "Stories on Stage" ? (
+                      <span class="cross-link"> · tickets &amp; bookings →</span>
+                    ) : (
+                      <span class="cross-link"> · tickets &amp; details →</span>
                     )}
                   </p>
                 </div>
