@@ -347,6 +347,27 @@ collections:
               - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
               - { name: "description", label: "Description", widget: "text" }
 
+      # --- Press Page (About → Press) ---
+      - name: "press-page"
+        label: "Press Page"
+        file: "src/content/settings/press-page.json"
+        description: "The Press page (About → Press). Edit the intro line, add or remove press coverage, and set the message shown when there is no press yet. Each press item links out to the original article."
+        fields:
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false }
+          - { name: "intro", label: "Intro line", widget: "text", hint: "The sentence shown under the page title." }
+          - { name: "empty_message", label: "Message when there is no press yet", widget: "text", hint: "Shown only when the press list below is empty." }
+          - name: "items"
+            label: "Press coverage"
+            widget: "list"
+            required: false
+            summary: "{{fields.source}} — {{fields.headline}}"
+            fields:
+              - { name: "headline", label: "Headline / title", widget: "string", hint: "The title of the article." }
+              - { name: "source", label: "Source", widget: "string", hint: "Example: Mercury News" }
+              - { name: "url", label: "Link", widget: "string", hint: "The full web address of the article, starting with https://" }
+              - { name: "date", label: "Date", widget: "string", required: false, hint: "Optional. Example: May 2026" }
+
       # --- Support PYT — What Your Gift Funds (sits under Donor Benefits) ---
       - name: "gift-funds"
         label: "Support PYT — What Your Gift Funds"
