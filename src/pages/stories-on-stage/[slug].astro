@@ -19,6 +19,9 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import settings from "../../content/settings/stories-on-stage-page.json";
+import showsPage from "../../content/settings/shows-page.json";
+
+const ticketFeeNotice = (showsPage as any).ticket_fee_notice || "";
 
 export async function getStaticPaths() {
   const productions = await getCollection("storiesOnStage");
@@ -82,6 +85,7 @@ const ticketsIntro = (data as any).tickets_intro || "";
               Tickets coming soon
             </span>
           )}
+          {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
         </div>
 
         {/* ---- Schools and groups ---- */}
@@ -162,6 +166,13 @@ const ticketsIntro = (data as any).tickets_intro || "";
     color: var(--ink-soft);
     line-height: 1.6;
     margin: 0 0 var(--space-sm);
+  }
+
+  .ticket-fee-notice {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    margin: var(--space-sm) 0 0;
   }
 
   @media (min-width: 720px) {
