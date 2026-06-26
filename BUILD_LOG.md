@@ -2,6 +2,19 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Classes & Camps summer content + new School Play in a Box page (2026-06-26)
+Goal (PM): populate the Classes & Camps page with the old site's summer camps (2026 values, all labelled 2026), and add a new School Play in a Box page. Make Classes & Camps a dropdown. Inquiry by email (caitlyn@pytnet.org, editable), not a rebuilt form.
+Built (8 files):
+  - src/components/Header.astro (EDIT) — Classes & Camps is now a dropdown: Classes & Camps (/programs), School Play in a Box (/school-play-in-a-box).
+  - src/content/settings/programs-page.json (EDIT) — added an editable Summer Camps block: heading, intro, register url+label, hours, locations, pricing, scholarships note, cancellation heading/body, cancellation email. Values ported as-is from pytnet.org/summer-camp (2026).
+  - src/pages/programs.astro (EDIT) — renders the Summer Camps block above the existing filterable program cards. Empty-safe: the whole block hides if summer_intro is blank. Cancellation policy is a <details> with a mailto.
+  - src/content/programs/two-week-camps-2026.md, one-week-camps-2026.md, mini-camps-2026.md (NEW x3) — three camp records, all program_type Camp / season Summer, tuition/age/schedule from the old site, register link to Active.com. (Existing 3 placeholder program records left untouched — Rule 2.)
+  - src/pages/school-play-in-a-box.astro (NEW) — new page: description, "PYT provides / school provides" split, "Email to inquire" button (mailto, editable email, subject "School Play in a Box inquiry") + "Current sessions" link to Active.com, available-shows list, schools-served. Old site's 12-field form replaced by the email button (no form backend on static site; the old form just emailed this address).
+  - src/content/settings/school-play-in-a-box-page.json (NEW seed) — all SPIB content, editable.
+  - public/admin/config.yml (EDIT) — expanded the programs-page record with the Summer block fields; added a new "School Play in a Box Page" record.
+Tested: config.yml YAML valid; build 30 pages (was 29 — adds /school-play-in-a-box). Parsed rendered HTML: Programs page shows the Summer Camps 2026 heading, register link, all three camp cards, and the cancellation mailto; SPIB page has the inquiry mailto (subject auto-filled), PYT-provides text, shows list, schools served, and the current-sessions link; menu has the /school-play-in-a-box dropdown link. NOT verifiable by me: on-screen appearance + the two new/expanded CMS records showing in /admin — PM's checks.
+Notes: built on a fresh clone of origin/main AFTER the ticket-link batch landed (baseline was 29 pages incl. the 6 Stories production pages). All summer content labelled 2026 per PM; 2027 to be added later. Camp cards use the existing Type=Camp/Season=Summer filters, so they appear under those filters automatically.
+
 Ticket links overhaul — show pages, Musicals, new Stories production pages (2026-06-26)
 Goal (PM): rework ticket links across all production types. (1) Show detail page (e.g. SIX): make the pink Tickets button smart. (2) Musicals list: one "Tickets & details" button → show page. (3) Stories on Stage: new per-production pages with a Tickets button + an editable school/group booking email enquiry. (4) Combined Shows page: Stories cards → individual production page.
 Built (8 files):
