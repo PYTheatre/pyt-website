@@ -1,6 +1,7 @@
 ---
 audition_date: 2026-08-03
 title: Rules of Comedy
+production_type: Studio Production
 eyebrow: 2026 Studio Show
 start_date: 2026-08-28
 end_date: 2026-08-28
