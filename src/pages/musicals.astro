@@ -1,0 +1,214 @@
+---
+/*
+  MUSICALS PAGE  ( /musicals )
+
+  Filtered view: only shows tagged production_type "Musical".
+  Same rich card as the old /shows page (audition + tickets buttons,
+  detail links). The combined /shows page is the "everything" view;
+  this is the Musicals-only view linked from the Shows menu.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { getCollection } from "astro:content";
+
+const shows = (await getCollection("shows"))
+  .filter((s) => s.data.production_type === "Musical")
+  .sort((a, b) => a.data.start_date.getTime() - b.data.start_date.getTime());
+
+const now = new Date();
+---
+
+<BaseLayout
+  title="Musicals — Peninsula Youth Theatre"
+  description="PYT's Musicals — full-scale productions performed by Bay Area youth."
+>
+  <PageHero eyebrow="Shows" title="Musicals" />
+
+  <section class="section show-list-section">
+    <div class="container">
+      {shows.length === 0 ? (
+        <p class="empty-state">No Musicals announced yet. Check back soon.</p>
+      ) : (
+        <ul class="show-list">
+          {shows.map((show) => {
+            const auditionEnd = show.data.audition_end ?? show.data.audition_date;
+            const auditionsClosed =
+              auditionEnd && auditionEnd.getTime() < now.getTime();
+            return (
+              <li class="show-row">
+                <div class="show-card">
+                  <a
+                    href={`/shows/${show.id}`}
+                    class="show-poster"
+                    aria-label={`See details for ${show.data.title}`}
+                    style={show.data.poster ? `background-image: url(${show.data.poster}); background-size: cover; background-position: center;` : ""}
+                  >
+                    {!show.data.poster && (
+                      <span class="poster-placeholder">{show.data.title}</span>
+                    )}
+                  </a>
+                  <div class="show-info">
+                    {show.data.eyebrow && (
+                      <p class="show-eyebrow">{show.data.eyebrow}</p>
+                    )}
+                    <h2>{show.data.title}</h2>
+                    <p class="show-dates">{show.data.date_display}</p>
+
+                    <div class="show-actions">
+                      {show.data.audition_url && (
+                        auditionsClosed ? (
+                          <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                            Auditions closed
+                          </span>
+                        ) : (
+                          <a href={show.data.audition_url} class="btn btn-outline" target="_blank" rel="noopener">
+                            Auditions
+                          </a>
+                        )
+                      )}
+
+                      {show.data.ticketing_url ? (
+                        <a href={show.data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
+                          Tickets
+                        </a>
+                      ) : (
+                        <span class="btn btn-primary btn-disabled" aria-disabled="true">
+                          Tickets coming soon
+                        </span>
+                      )}
+
+                      <a href={`/shows/${show.id}`} class="btn btn-outline-accent">See details →</a>
+                    </div>
+
+                    {show.data.audition_display && !auditionsClosed && (
+                      <p class="show-audition-dates">Auditions: {show.data.audition_display}</p>
+                    )}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .show-list-section { padding-top: 0; }
+
+  .show-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .show-row { margin: 0; }
+
+  .show-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--paper);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .show-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+  }
+
+  .show-poster {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: var(--space-md);
+  }
+
+  .poster-placeholder {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .show-info { padding: var(--space-md); }
+
+  .show-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .show-info h2 { font-size: 1.5rem; margin-bottom: 0.4rem; }
+
+  .show-dates {
+    font-size: 1rem;
+    color: var(--ink);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .show-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: var(--space-sm);
+  }
+
+  .btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .show-audition-dates {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .btn-outline-accent {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .btn-outline-accent:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .empty-state {
+    padding: var(--space-lg);
+    text-align: center;
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 720px) {
+    .show-card { flex-direction: row; }
+    .show-poster { flex: 1; aspect-ratio: 3 / 4; max-width: 280px; }
+    .show-info {
+      flex: 2;
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .show-info h2 { font-size: 1.9rem; }
+  }
+</style>
