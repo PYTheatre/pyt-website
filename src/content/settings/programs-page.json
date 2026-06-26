@@ -1,5 +1,16 @@
 {
   "eyebrow": "Education",
   "title": "Classes & Camps",
-  "lede": "From after-school classes, to one and two week-long summer camps, our programs build skills, confidence, and friendships. "
+  "lede": "From after-school classes, to one and two week-long summer camps, our programs build skills, confidence, and friendships. ",
+  "summer_heading": "Summer Camps 2026",
+  "summer_intro": "Join us for a fun-filled summer through our scripted camps, improv camps, musical theatre camps, and general drama camps running from June 8th through August 7th. Camps are open for kids ages 5-15, and whether they've taken a theatre class before or this will be their first theatre experience, they're guaranteed to have a great time!",
+  "summer_register_url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre#/selectSessions/3761937",
+  "summer_register_label": "Register here",
+  "summer_hours": "Full-day sessions: 8:30 am – 3:30 pm. Half-day sessions (5–6-year-olds): AM 9:00 am – 12:00 pm, PM 1:00 pm – 4:00 pm.",
+  "summer_locations": "Congregation Beth Am – Los Altos Hills, CA\nGardner Bullis Elementary School – Los Altos, CA\nLoyola Elementary School – Los Altos, CA\nPYT Studios – Mountain View, CA",
+  "summer_pricing": "Two-week full-day sessions: $945\n$850 prorated rate for camps during Juneteenth and the 4th of July holiday\nOne-week full-day sessions: $525\n$475 prorated rate for camps during the 4th of July holiday\nOne-week half-day sessions: $375",
+  "summer_scholarships_note": "Scholarships are available based on need and availability.",
+  "summer_cancellation_heading": "Cancellation & transfer policy",
+  "summer_cancellation_body": "All cancellation or transfer requests must be made in writing to the email below.\n\nBefore April 30th: No cancellation or transfer fees.\n\nAfter April 30th but earlier than three weeks from the start date: cancellation requests are subject to a $50 fee, and transfer requests to a $25 fee.\n\nFewer than three weeks before the start date: transfer requests are subject to a $75 fee. We cannot provide a refund for cancellations made less than three weeks before the start of your camp.",
+  "summer_cancellation_email": "caitlyn@pytnet.org"
 }
