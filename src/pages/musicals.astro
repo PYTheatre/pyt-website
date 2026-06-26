@@ -9,6 +9,8 @@
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import AuditionsPromo from "../components/AuditionsPromo.astro";
+import page from "../content/settings/musicals-page.json";
 import { getCollection } from "astro:content";
 
 const shows = (await getCollection("shows"))
@@ -22,7 +24,9 @@ const now = new Date();
   title="Musicals — Peninsula Youth Theatre"
   description="PYT's Musicals — full-scale productions performed by Bay Area youth."
 >
-  <PageHero eyebrow="Shows" title="Musicals" />
+  <AuditionsPromo strip stripText={(page as any).auditions_strip_text} />
+
+  <PageHero eyebrow={(page as any).eyebrow || "Shows"} title={(page as any).title || "Musicals"} />
 
   <section class="section show-list-section">
     <div class="container">
@@ -82,6 +86,13 @@ const now = new Date();
       )}
     </div>
   </section>
+  <AuditionsPromo
+    section
+    eyebrow={(page as any).auditions_eyebrow}
+    heading={(page as any).auditions_heading}
+    body={(page as any).auditions_body}
+    buttonLabel={(page as any).auditions_button_label}
+  />
 </BaseLayout>
 
 <style>
