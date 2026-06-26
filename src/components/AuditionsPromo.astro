@@ -1,0 +1,98 @@
+---
+/*
+  AUDITIONS PROMO — reusable strip + pointer section.
+
+  Used on the Musicals, Studio Productions, and combined Shows pages.
+  Each page passes its own editable copy (from its settings JSON), so the
+  wording can differ per page.
+
+  Renders two things:
+    1. <AuditionsStrip /> — the thin pink strip at the very top of the page,
+       linking down to the section. (Call <AuditionsPromo strip /> for this.)
+    2. The pointer section lower on the page (heading + body + a button to
+       the full /audition page). (Call <AuditionsPromo section /> for this.)
+
+  Pass `strip` for the top strip and `section` for the lower block — they're
+  rendered separately because they sit in different places on the page.
+
+  Empty-safe: if `stripText` is blank, the strip renders nothing; if both
+  heading and body are blank, the section renders nothing.
+*/
+interface Props {
+  strip?: boolean;
+  section?: boolean;
+  stripText?: string;
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  buttonLabel?: string;
+}
+
+const {
+  strip = false,
+  section = false,
+  stripText = "",
+  eyebrow = "Get involved",
+  heading = "",
+  body = "",
+  buttonLabel = "See all audition dates",
+} = Astro.props;
+---
+
+{strip && stripText && (
+  <section class="auditions-strip">
+    <div class="container auditions-strip-inner">
+      <p>
+        {stripText}
+        <a href="#auditions" class="auditions-strip-link">Jump to auditions →</a>
+      </p>
+    </div>
+  </section>
+)}
+
+{section && (heading || body) && (
+  <section class="section auditions-promo-section" id="auditions">
+    <div class="container auditions-promo-inner">
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      {heading && <h2 class="auditions-promo-heading">{heading}</h2>}
+      {body && <p class="auditions-promo-body">{body}</p>}
+      <a href="/audition" class="btn btn-primary">{buttonLabel || "See all audition dates"} →</a>
+    </div>
+  </section>
+)}
+
+<style>
+  /* ---- Top strip ---- */
+  .auditions-strip {
+    background: var(--accent-soft);
+    border-bottom: 1px solid var(--accent);
+    padding-block: var(--space-sm);
+  }
+  .auditions-strip-inner p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--accent-deep);
+  }
+  .auditions-strip-link {
+    font-weight: 600;
+    color: var(--accent-deep);
+    text-decoration: underline;
+    margin-left: 0.3rem;
+  }
+
+  /* ---- Pointer section ---- */
+  .auditions-promo-section {
+    border-top: 1px solid var(--line);
+    background: var(--paper-warm);
+    scroll-margin-top: 6rem;
+  }
+  .auditions-promo-heading {
+    margin-block: 0.3rem var(--space-sm);
+  }
+  .auditions-promo-body {
+    max-width: 62ch;
+    margin-bottom: var(--space-md);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+</style>
