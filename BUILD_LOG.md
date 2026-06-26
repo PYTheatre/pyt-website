@@ -2,6 +2,21 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Ticket links overhaul — show pages, Musicals, new Stories production pages (2026-06-26)
+Goal (PM): rework ticket links across all production types. (1) Show detail page (e.g. SIX): make the pink Tickets button smart. (2) Musicals list: one "Tickets & details" button → show page. (3) Stories on Stage: new per-production pages with a Tickets button + an editable school/group booking email enquiry. (4) Combined Shows page: Stories cards → individual production page.
+Built (8 files):
+  - src/pages/shows/[slug].astro (EDIT) — Tickets button now jumps to #cast-schedule when a double-cast schedule exists, else links to the outside ticketing site, else "coming soon". Added id="cast-schedule" + scroll-margin-top:6rem to that section.
+  - src/pages/musicals.astro (EDIT) — merged the old "Tickets" + "See details →" buttons into a single "Tickets & details" button linking to /shows/<id>.
+  - src/pages/studio-productions.astro (EDIT) — SAME merge for consistency (PM only asked for Musicals; Studio uses the identical card, so matched it — FLAG for PM to confirm).
+  - src/pages/stories-on-stage/[slug].astro (NEW) — per-production page, one per Stories show. "Public performances" → Tickets button (outside link or "coming soon"); optional editable line above it (tickets_intro, empty by default, renders nothing when empty — no gap). "Schools and groups" → "Email about a group booking" mailto button, pre-addressed to the editable email, subject auto-filled "Group booking enquiry — <title>".
+  - src/pages/stories-on-stage.astro (EDIT) — list cards now show one "Tickets & bookings" button → the new production page (was two outside-link buttons).
+  - src/pages/shows/index.astro (EDIT) — combined page Stories cards now link to /stories-on-stage/<id> (was the list page); note text changed to "tickets & bookings →".
+  - src/content.config.ts (EDIT) — added optional tickets_intro to the storiesOnStage schema.
+  - src/content/settings/stories-on-stage-page.json (EDIT) — added school_booking_email: "lhatten@pytnet.org".
+  - public/admin/config.yml (EDIT) — added "School / group booking email" to the Stories settings record; added "Line above the Tickets button" (tickets_intro) to the Stories productions collection.
+Tested: config.yml YAML valid; build 29 pages (was 23 — adds 6 Stories production pages). Parsed rendered HTML: Stories page mailto is mailto:lhatten@pytnet.org?subject=Group%20booking%20enquiry%20—%20<title> (subject auto-filled, correct); empty tickets_intro renders nothing (only the schools card's hardcoded intro shows — no weird gap); SIX show page Tickets jumps to #cast-schedule (section exists); Musicals shows the single "Tickets & details" button, old visible "See details" button gone (the "See details for X" left in HTML is only the poster's aria-label — a §6F false alarm, kept intentionally for screen readers).
+Notes: Stories productions' old school_bookings_url field is now unused by the page (kept in schema/CMS so nothing breaks; the new mailto button replaces it). Email subject uses an em-dash (—) like the show titles. PM to confirm the Studio Productions button merge was wanted.
+
 Homepage spacing — equalise gap around "Upcoming shows" (2026-06-26)
 Goal (PM): the white space between the top hero photo and "Upcoming shows" was bigger than the space below "Upcoming shows" (down to "Ways to join"). Make them equal weight. (Homepage only — chose option (a); other pages already use a consistent section rhythm.)
 Cause: the top gap was three spacings stacked (hero padding-bottom + photo margin-top + section padding-top); the bottom gap is the normal two-section rhythm (section pb + next section pt). So top > bottom.
