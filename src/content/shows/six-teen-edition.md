@@ -1,5 +1,6 @@
 ---
 title: "SIX: TEEN EDITION "
+production_type: Musical
 eyebrow: 2026 Second Stage
 start_date: 2026-06-25
 end_date: 2026-06-28
