@@ -1,28 +1,61 @@
 ---
 /*
-  SHOWS LIST PAGE  ( /shows )
+  COMBINED SHOWS PAGE  ( /shows )
 
-  Reads every show file from src/content/shows/ via the CMS-managed
-  content collection, sorts them by start date, and renders each one
-  as a card linking to its detail page.
+  The "everything" page reached by the main Shows menu title.
+  Merges three production types into ONE list, sorted by date:
+    - Musicals          (shows tagged production_type: Musical)
+    - Studio Productions (shows tagged production_type: Studio Production)
+    - Stories on Stage   (the separate storiesOnStage collection)
+
+  Each card shows a small coloured type label. Musicals and Studio
+  Productions link to their own detail page (/shows/<id>); Stories on
+  Stage cards link across to the /stories-on-stage page (chosen by PM —
+  Stories productions have no individual detail pages).
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import { getCollection } from "astro:content";
 import pageContent from "../../content/settings/shows-page.json";
 
-// Load all shows, sort by start date (earliest first).
-const shows = (await getCollection("shows")).sort(
-  (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
-);
+// Pull both collections and normalise them into one shape we can sort
+// and render together. `kind` drives the label + where the card links.
+const shows = await getCollection("shows");
+const stories = await getCollection("storiesOnStage");
 
-// Used to decide whether a show's audition date has passed.
-const now = new Date();
+const combined = [
+  ...shows.map((s) => ({
+    title: s.data.title,
+    date_display: s.data.date_display,
+    start: s.data.start_date.getTime(),
+    poster: s.data.poster,
+    kind: s.data.production_type, // "Musical" | "Studio Production"
+    href: `/shows/${s.id}`,
+    external: false,
+  })),
+  ...stories.map((p) => ({
+    title: p.data.title,
+    date_display: p.data.date_display,
+    start: p.data.start_date.getTime(),
+    poster: p.data.poster,
+    kind: "Stories on Stage",
+    href: "/stories-on-stage",
+    external: false,
+  })),
+].sort((a, b) => a.start - b.start);
+
+// Map each kind to its label CSS class.
+const kindClass = (kind: string) =>
+  kind === "Studio Production"
+    ? "label-studio"
+    : kind === "Stories on Stage"
+    ? "label-stories"
+    : "label-musical";
 ---
 
 <BaseLayout
   title="Shows — Peninsula Youth Theatre"
-  description="The Peninsula Youth Theatre season. Three Mainstage productions a year, performed by Bay Area youth."
+  description="The full Peninsula Youth Theatre season — Musicals, Studio Productions, and Stories on Stage, in date order."
 >
   <PageHero
     eyebrow={pageContent.eyebrow}
@@ -31,76 +64,32 @@ const now = new Date();
 
   <section class="section show-list-section">
     <div class="container">
-      {shows.length === 0 ? (
+      {combined.length === 0 ? (
         <p class="empty-state">No shows announced yet. Check back soon.</p>
       ) : (
-        <ul class="show-list">
-          {shows.map((show) => {
-            // Auto-close uses the audition end date. Fall back to the legacy
-            // single audition_date for any show not yet migrated to the range.
-            const auditionEnd = show.data.audition_end ?? show.data.audition_date;
-            const auditionsClosed =
-              auditionEnd && auditionEnd.getTime() < now.getTime();
-            return (
-            <li class="show-row">
-              <div class="show-card">
-                <a
-                  href={`/shows/${show.id}`}
-                  class="show-poster"
-                  aria-label={`See details for ${show.data.title}`}
-                  style={show.data.poster ? `background-image: url(${show.data.poster}); background-size: cover; background-position: center;` : ""}
+        <ul class="combined-list">
+          {combined.map((item) => (
+            <li class="combined-row">
+              <a href={item.href} class="combined-card">
+                <div
+                  class="combined-poster"
+                  style={item.poster ? `background-image: url(${item.poster}); background-size: cover; background-position: center;` : ""}
                 >
-                  {!show.data.poster && (
-                    <span class="poster-placeholder">{show.data.title}</span>
-                  )}
-                </a>
-                <div class="show-info">
-                  {show.data.eyebrow && (
-                    <p class="show-eyebrow">{show.data.eyebrow}</p>
-                  )}
-                  <h2>{show.data.title}</h2>
-                  <p class="show-dates">{show.data.date_display}</p>
-
-                  <div class="show-actions">
-                    {/* Audition button — hidden entirely when no link.
-                        When present: active if upcoming, greyed "closed" once the end date passes. */}
-                    {show.data.audition_url && (
-                      auditionsClosed ? (
-                        <span class="btn btn-outline btn-disabled" aria-disabled="true">
-                          Auditions closed
-                        </span>
-                      ) : (
-                        <a href={show.data.audition_url} class="btn btn-outline" target="_blank" rel="noopener">
-                          Auditions
-                        </a>
-                      )
-                    )}
-
-                    {/* Tickets button — greys out to "coming soon" when no link yet. */}
-                    {show.data.ticketing_url ? (
-                      <a href={show.data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
-                        Tickets
-                      </a>
-                    ) : (
-                      <span class="btn btn-primary btn-disabled" aria-disabled="true">
-                        Tickets coming soon
-                      </span>
-                    )}
-
-                    {/* See details — pink outline button, sits next to Tickets. */}
-                    <a href={`/shows/${show.id}`} class="btn btn-outline-accent">See details →</a>
-                  </div>
-
-                  {/* Audition dates as text — shown whenever there's display text
-                      and auditions are still open, with or without a sign-up link. */}
-                  {show.data.audition_display && !auditionsClosed && (
-                    <p class="show-audition-dates">Auditions: {show.data.audition_display}</p>
-                  )}
+                  {!item.poster && <span class="poster-placeholder">{item.title}</span>}
                 </div>
-              </div>
+                <div class="combined-info">
+                  <span class={`type-label ${kindClass(item.kind)}`}>{item.kind}</span>
+                  <h2>{item.title}</h2>
+                  <p class="combined-dates">
+                    {item.date_display}
+                    {item.kind === "Stories on Stage" && (
+                      <span class="cross-link"> · visit Stories on Stage →</span>
+                    )}
+                  </p>
+                </div>
+              </a>
             </li>
-            );
-          })}
+          ))}
         </ul>
       )}
     </div>
@@ -112,109 +101,107 @@ const now = new Date();
     padding-top: 0;
   }
 
-  .show-list {
+  .combined-list {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
+    gap: var(--space-md);
   }
 
-  .show-row {
+  .combined-row {
     margin: 0;
   }
 
-  .show-card {
+  .combined-card {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--space-md);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--paper);
+    text-decoration: none;
+    color: inherit;
     transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   }
 
-  .show-card:hover {
+  .combined-card:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-soft);
     transform: translateY(-2px);
   }
 
-  .show-poster {
-    aspect-ratio: 16 / 9;
+  .combined-poster {
+    flex: 0 0 96px;
+    align-self: stretch;
     background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    padding: var(--space-md);
+    padding: 0.5rem;
   }
 
   .poster-placeholder {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
+    font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
     line-height: 1.1;
   }
 
-  .show-info {
-    padding: var(--space-md);
+  .combined-info {
+    padding: var(--space-md) var(--space-md) var(--space-md) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  .show-eyebrow {
-    font-size: 0.78rem;
+  .type-label {
+    display: inline-block;
+    width: fit-content;
+    font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.4rem;
+    padding: 0.18rem 0.5rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0.35rem;
   }
 
-  .show-info h2 {
-    font-size: 1.5rem;
-    margin-bottom: 0.4rem;
+  .label-musical {
+    color: var(--accent-deep);
+    background: var(--accent-soft);
   }
 
-  .show-dates {
-    font-size: 1rem;
+  .label-studio {
+    color: #27500a;
+    background: #eaf3de;
+  }
+
+  .label-stories {
+    color: #0c447c;
+    background: #e6f1fb;
+  }
+
+  .combined-info h2 {
+    font-size: 1.35rem;
+    margin: 0 0 0.25rem;
+  }
+
+  .combined-dates {
+    font-size: 0.95rem;
     color: var(--ink);
     font-weight: 500;
-    margin-bottom: 0.3rem;
+    margin: 0;
   }
 
-  .show-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-bottom: var(--space-sm);
-  }
-
-  .btn-disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  .show-audition-dates {
-    font-size: 0.9rem;
-    color: var(--ink-soft);
-    margin: 0 0 var(--space-sm);
-  }
-
-  /* "See details" — pink outline button (Option A). Base .btn shape
-     comes from global.css; this adds the accent outline + hover fill. */
-  .btn-outline-accent {
-    background: transparent;
-    color: var(--accent);
-    border-color: var(--accent);
-  }
-
-  .btn-outline-accent:hover {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
+  .cross-link {
+    color: var(--accent-deep);
+    font-weight: 500;
   }
 
   .empty-state {
@@ -223,39 +210,12 @@ const now = new Date();
     color: var(--ink-muted);
   }
 
-  .staff-tip {
-    margin-top: var(--space-xl);
-    padding: var(--space-md);
-    background: var(--paper-warm);
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    color: var(--ink-soft);
-  }
-
-  .staff-tip a {
-    color: var(--accent-deep);
-    text-decoration: underline;
-  }
-
-  /* Wider screens: cards become horizontal */
   @media (min-width: 720px) {
-    .show-card {
-      flex-direction: row;
+    .combined-poster {
+      flex: 0 0 140px;
     }
-    .show-poster {
-      flex: 1;
-      aspect-ratio: 3 / 4;
-      max-width: 280px;
-    }
-    .show-info {
-      flex: 2;
-      padding: var(--space-lg);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .show-info h2 {
-      font-size: 1.9rem;
+    .combined-info h2 {
+      font-size: 1.6rem;
     }
   }
 </style>
