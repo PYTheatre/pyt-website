@@ -2,6 +2,16 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Global ticket fee notice (2026-06-26)
+Goal (PM): wherever tickets are sold / a Buy button appears, show editable copy about City of Mountain View fees. Seed copy: "Service charges and facilities fees are added by the City of Mountain View to PYT ticket prices." One global, CMS-editable notice (PM choice: global, not per-show); detail pages only (not list pages).
+Built (4 files):
+  - src/content/settings/shows-page.json (EDIT) — added ticket_fee_notice with the seed copy.
+  - src/pages/shows/[slug].astro (EDIT) — imports shows-page.json; renders the notice beneath the main CTA group, and once beneath the per-cast performances list (double-cast shows). Empty-safe. New .ticket-fee-notice style (muted, 0.85rem).
+  - src/pages/stories-on-stage/[slug].astro (EDIT) — imports shows-page.json; renders the notice beneath the Tickets button. Empty-safe. Same style.
+  - public/admin/config.yml (EDIT) — added "Ticket fee notice" field to the Shows Page record (one edit point, applies site-wide).
+Tested: config.yml YAML valid; build 30 pages (no new pages). Notice counts in rendered HTML: double-cast shows (SIX, Frog and Toad) = 2 (main CTA + performances list); single-cast shows (Midsummer, Wizard of Oz, Rules of Comedy) = 1 (main CTA); Stories production page = 1; all list pages (Musicals, combined Shows, Stories list) = 0 (correct — they route to detail pages, don't sell directly). Empty-safe verified: blanking the field removes the notice with no stray empty <p>. NOT verifiable by me: on-screen appearance — PM's check.
+Notes: global notice lives in shows-page.json (the natural ticketing-wide settings home) and is imported by both detail page types. Edit once in /admin → Shows Page (intro) → "Ticket fee notice", updates everywhere. Built on a fresh pull of origin/main after the Classes & Camps batch landed (30-page baseline).
+
 Classes & Camps summer content + new School Play in a Box page (2026-06-26)
 Goal (PM): populate the Classes & Camps page with the old site's summer camps (2026 values, all labelled 2026), and add a new School Play in a Box page. Make Classes & Camps a dropdown. Inquiry by email (caitlyn@pytnet.org, editable), not a rebuilt form.
 Built (8 files):
