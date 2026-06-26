@@ -55,6 +55,24 @@
           ]
         }
       ]
+    },
+    {
+      "year": "2026",
+      "shows": [
+        {
+          "show": "SIX The Musical",
+          "judy_robe": "Macie Northam Schulze",
+          "spirit_awards": [
+            "Chloe Renz",
+            "Avni Jain",
+            "Zoey Elliott"
+          ]
+        },
+        {
+          "show": "Newsies",
+          "judy_robe": "Amelia Knight"
+        }
+      ]
     }
   ]
 }
