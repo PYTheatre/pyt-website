@@ -2,27 +2,27 @@
   "items": [
     {
       "amount": "$1,000",
-      "description": "pays for costumes for a Main Stage show"
+      "description": "could pay for costumes for a Main Stage show"
     },
     {
       "amount": "$1,800",
-      "description": "pays for a Main Stage scholarship for a child for a year"
+      "description": "could pay for a Main Stage scholarship for a child for a year"
     },
     {
       "amount": "$2,000",
-      "description": "pays for set design and build for a show"
+      "description": "could pay for for set design and build for a show"
     },
     {
       "amount": "$3,000 per month",
-      "description": "pays for costume, prop and set storage"
+      "description": "could pay for costume, prop and set storage"
     },
     {
       "amount": "$8,000 per month",
-      "description": "pays for studio and rehearsal space"
+      "description": "could pay for studio and rehearsal space"
     },
     {
       "amount": "$30 million",
-      "description": "pays for development of a new, larger space for studios to reach more families"
+      "description": "could pay for development of a new, larger space for studios to reach more families"
     }
   ]
 }
