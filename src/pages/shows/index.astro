@@ -15,6 +15,7 @@
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
+import AuditionsPromo from "../../components/AuditionsPromo.astro";
 import { getCollection } from "astro:content";
 import pageContent from "../../content/settings/shows-page.json";
 
@@ -57,6 +58,8 @@ const kindClass = (kind: string) =>
   title="Shows — Peninsula Youth Theatre"
   description="The full Peninsula Youth Theatre season — Musicals, Studio Productions, and Stories on Stage, in date order."
 >
+  <AuditionsPromo strip stripText={(pageContent as any).auditions_strip_text} />
+
   <PageHero
     eyebrow={pageContent.eyebrow}
     title={pageContent.title}
@@ -96,6 +99,13 @@ const kindClass = (kind: string) =>
       )}
     </div>
   </section>
+  <AuditionsPromo
+    section
+    eyebrow={(pageContent as any).auditions_eyebrow}
+    heading={(pageContent as any).auditions_heading}
+    body={(pageContent as any).auditions_body}
+    buttonLabel={(pageContent as any).auditions_button_label}
+  />
 </BaseLayout>
 
 <style>
