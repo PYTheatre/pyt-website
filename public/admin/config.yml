@@ -248,15 +248,16 @@ collections:
           - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
           - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
  
-      # --- Shows Page (hero text only; the shows themselves are their own collection) ---
+      # --- Shows Page (intro + global ticket fee notice) ---
       - name: "shows-page"
         label: "Shows Page (intro)"
         file: "src/content/settings/shows-page.json"
-        description: "The heading and intro text at the top of the Shows page. (The shows themselves are edited under 'Shows'.)"
+        description: "The heading and intro at the top of the Shows page, plus the ticket fee notice shown beneath every Buy Tickets button across the site. (The shows themselves are edited under 'Shows'.)"
         fields:
           - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
+          - { name: "ticket_fee_notice", label: "Ticket fee notice (shown under every Buy Tickets button)", widget: "text", required: false, hint: "Appears beneath ticket-buying buttons on show and Stories on Stage pages. Leave blank to hide it everywhere." }
  
       # --- Programs Page (intro + Summer Camps block) ---
       - name: "programs-page"
