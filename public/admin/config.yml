@@ -258,16 +258,48 @@ collections:
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
  
-      # --- Programs Page (hero text only) ---
+      # --- Programs Page (intro + Summer Camps block) ---
       - name: "programs-page"
         label: "Classes & Camps Page (intro)"
         file: "src/content/settings/programs-page.json"
-        description: "The heading and intro text at the top of the Classes & Camps page. (The programs themselves are edited under 'Classes & Camps'.)"
+        description: "The heading and intro at the top of the Classes & Camps page, plus the Summer Camps block that sits above the program cards. (The programs themselves are edited under 'Classes & Camps'.)"
         fields:
           - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
+          - { name: "summer_heading", label: "Summer block — heading", widget: "string", required: false, hint: "Example: Summer Camps 2026" }
+          - { name: "summer_intro", label: "Summer block — intro", widget: "text", required: false, hint: "Leave the intro blank to hide the whole Summer Camps block." }
+          - { name: "summer_register_url", label: "Summer block — Register link", widget: "string", required: false }
+          - { name: "summer_register_label", label: "Summer block — Register button label", widget: "string", required: false, default: "Register here" }
+          - { name: "summer_hours", label: "Summer block — hours", widget: "text", required: false }
+          - { name: "summer_locations", label: "Summer block — locations (one per line)", widget: "text", required: false }
+          - { name: "summer_pricing", label: "Summer block — pricing (one per line)", widget: "text", required: false }
+          - { name: "summer_scholarships_note", label: "Summer block — scholarships note", widget: "string", required: false }
+          - { name: "summer_cancellation_heading", label: "Summer block — cancellation heading", widget: "string", required: false, default: "Cancellation & transfer policy" }
+          - { name: "summer_cancellation_body", label: "Summer block — cancellation policy", widget: "text", required: false }
+          - { name: "summer_cancellation_email", label: "Summer block — cancellation email", widget: "string", required: false, default: "caitlyn@pytnet.org" }
  
+      # --- School Play in a Box Page (For Educators) ---
+      - name: "school-play-in-a-box-page"
+        label: "School Play in a Box Page"
+        file: "src/content/settings/school-play-in-a-box-page.json"
+        description: "The School Play in a Box page (Classes & Camps → School Play in a Box). Edit the description, who-provides-what, the inquiry email, the available shows, and the schools served."
+        fields:
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false }
+          - { name: "title", label: "Page title", widget: "string" }
+          - { name: "subtitle", label: "Subtitle (under the title)", widget: "string", required: false }
+          - { name: "intro", label: "Description", widget: "text" }
+          - { name: "pyt_provides", label: "PYT provides", widget: "text", required: false }
+          - { name: "school_provides", label: "The school provides", widget: "text", required: false }
+          - { name: "inquiry_intro", label: "Inquiry — intro line", widget: "text", required: false }
+          - { name: "inquiry_email", label: "Inquiry — email address", widget: "string", default: "caitlyn@pytnet.org", hint: "The 'Email to inquire' button sends here." }
+          - { name: "current_sessions_intro", label: "Current sessions — note", widget: "text", required: false }
+          - { name: "current_sessions_url", label: "Current sessions — link", widget: "string", required: false }
+          - { name: "shows_heading", label: "Shows — heading", widget: "string", required: false, default: "Some School Play in a Box shows" }
+          - { name: "shows_list", label: "Shows — list (one per line)", widget: "text", required: false }
+          - { name: "schools_heading", label: "Schools — heading", widget: "string", required: false, default: "Schools we've served" }
+          - { name: "schools_body", label: "Schools — body", widget: "text", required: false }
+
       # --- Photos Page (front door to SmugMug) ---
       - name: "photos-page"
         label: "Shop Photos Page"
