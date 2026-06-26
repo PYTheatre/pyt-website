@@ -9,6 +9,11 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
 import donatePage from "../../content/settings/donate-page.json";
+import showsPage from "../../content/settings/shows-page.json";
+
+// Global ticket-fee notice (CMS-editable, one place, applies everywhere
+// tickets are sold). Empty-safe: renders nothing when blank.
+const ticketFeeNotice = (showsPage as any).ticket_fee_notice || "";
 
 // "Sponsor This Show" routes straight to the hosted Soapbox donation page,
 // the same link the Ways to Support page uses (CMS-editable, with the
@@ -130,6 +135,8 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
             </a>
           )}
         </div>
+
+        {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
  
         <div class="show-synopsis">
           {data.synopsis.split("\n\n").map((para) => (
@@ -164,6 +171,7 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
                 </li>
               ))}
             </ul>
+            {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
           </section>
         )}
  
@@ -238,6 +246,14 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
     margin: 0;
   }
  
+  .ticket-fee-notice {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    max-width: 60ch;
+    margin: var(--space-sm) 0 0;
+  }
+
   .show-ctas {
     display: flex;
     flex-wrap: wrap;
