@@ -2,6 +2,11 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Global ticket fee notice — spacing fix (2026-06-26)
+Goal (PM): the fee notice looked cramped — it sat almost flush against the synopsis below it (margin was var(--space-sm) 0 0 — small above, zero below).
+Built (2 files): src/pages/shows/[slug].astro (EDIT) — notice margin now var(--space-md) 0 var(--space-lg) (room above, more below so the synopsis doesn't crowd it). src/pages/stories-on-stage/[slug].astro (EDIT) — notice margin var(--space-md) 0 0 (room above; the bordered booking-card padding handles below).
+Tested: build 30 pages. NOT verifiable by me: on-screen — PM's check (spacing-only change).
+
 Global ticket fee notice (2026-06-26)
 Goal (PM): wherever tickets are sold / a Buy button appears, show editable copy about City of Mountain View fees. Seed copy: "Service charges and facilities fees are added by the City of Mountain View to PYT ticket prices." One global, CMS-editable notice (PM choice: global, not per-show); detail pages only (not list pages).
 Built (4 files):
