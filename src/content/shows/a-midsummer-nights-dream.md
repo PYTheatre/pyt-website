@@ -1,6 +1,7 @@
 ---
 audition_date: 2027-03-24
 title: A Midsummer Night's Dream
+production_type: Studio Production
 eyebrow: 2027 Studio Production
 start_date: 2027-05-07
 end_date: 2027-05-08
