@@ -1,5 +1,10 @@
 {
   "eyebrow": "Shows",
   "title": "Studio Productions",
-  "intro": "Studio Productions are a space for older performers to do some of the most focused, meaningful work of their time at PYT. With smaller casts and a close-knit creative process, Studio Prodcutions are designed to build strong bonds between performers while giving them the room to really hone their skills. Less about the spotlight, more about the craft and the community you build along the way."
+  "intro": "Studio Productions are a space for older performers to do some of the most focused, meaningful work of their time at PYT. With smaller casts and a close-knit creative process, Studio Prodcutions are designed to build strong bonds between performers while giving them the room to really hone their skills. Less about the spotlight, more about the craft and the community you build along the way.",
+  "auditions_strip_text": "Auditioning for a Studio Production?",
+  "auditions_eyebrow": "Get involved",
+  "auditions_heading": "Audition for a Studio Production",
+  "auditions_body": "Our Studio Productions cast through open auditions, a welcoming first step onto the stage for newer performers. See the full list of audition dates and how to sign up.",
+  "auditions_button_label": "See all audition dates"
 }
