@@ -26,6 +26,10 @@ const shows = defineCollection({
   schema: z.object({
     title: z.string(),
     eyebrow: z.string().optional(),
+    // Which kind of production this is. Drives the Musicals / Studio
+    // Productions split. Defaults to Musical so existing shows keep
+    // showing until staff tag the studio ones in the CMS.
+    production_type: z.enum(["Musical", "Studio Production"]).default("Musical"),
     start_date: z.coerce.date(),
     end_date: z.coerce.date(),
     date_display: z.string(),
