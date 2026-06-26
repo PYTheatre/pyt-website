@@ -37,13 +37,14 @@ const shows = (await getCollection("shows")).sort(
 const now = new Date();
 
 // Keep only shows whose auditions are still open AND have a sign-up link.
-// "Open" = there's an audition end date (new audition_end, falling back to
-// the legacy audition_date) and it hasn't passed yet. This mirrors the
-// auto-close logic on the Shows page exactly.
+// A show is listed here if it has an UPCOMING audition date — whether or
+// not a registration link exists yet. Shows without a date, or whose
+// audition date has already passed, drop off automatically. The button
+// below is smart: real sign-up link if present, "Registration coming
+// soon" if the date is set but no link yet.
 const openAuditions = shows.filter((show) => {
-  if (!show.data.audition_url) return false;
   const auditionEnd = show.data.audition_end ?? show.data.audition_date;
-  if (!auditionEnd) return false; // no end date = we can't say it's open
+  if (!auditionEnd) return false; // no date = nothing to show
   return auditionEnd.getTime() >= now.getTime();
 });
 
@@ -88,7 +89,7 @@ const faqs = Array.isArray(page.faqs)
   <!-- ===== Open Mainstage auditions ===== -->
   <section class="section audition-shows-section">
     <div class="container">
-      <h2 class="section-heading">Shows currently casting</h2>
+      <h2 class="section-heading">{page.shows_heading ?? "Upcoming auditions"}</h2>
 
       {openAuditions.length === 0 ? (
         <p class="empty-state">{noOpenMessage}</p>
@@ -112,14 +113,20 @@ const faqs = Array.isArray(page.faqs)
                   )}
                 </div>
                 <div class="audition-actions">
-                  <a
-                    href={show.data.audition_url}
-                    class="btn btn-primary"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Sign up to audition
-                  </a>
+                  {show.data.audition_url ? (
+                    <a
+                      href={show.data.audition_url}
+                      class="btn btn-primary"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Sign up to audition
+                    </a>
+                  ) : (
+                    <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                      Registration coming soon
+                    </span>
+                  )}
                   <a href={`/shows/${show.id}`} class="audition-link-cta">
                     About this show →
                   </a>
@@ -182,6 +189,12 @@ const faqs = Array.isArray(page.faqs)
 </BaseLayout>
 
 <style>
+  .btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   .section-heading {
     font-size: 1.6rem;
     margin-bottom: var(--space-lg);
