@@ -8,6 +8,7 @@
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import AuditionsPromo from "../components/AuditionsPromo.astro";
 import { getCollection } from "astro:content";
 import page from "../content/settings/studio-productions-page.json";
 
@@ -22,6 +23,8 @@ const now = new Date();
   title="Studio Productions — Peninsula Youth Theatre"
   description="PYT's Studio Productions — smaller-scale shows for younger and newer performers."
 >
+  <AuditionsPromo strip stripText={(page as any).auditions_strip_text} />
+
   <PageHero
     eyebrow={page.eyebrow}
     title={page.title}
@@ -86,6 +89,13 @@ const now = new Date();
       )}
     </div>
   </section>
+  <AuditionsPromo
+    section
+    eyebrow={(page as any).auditions_eyebrow}
+    heading={(page as any).auditions_heading}
+    body={(page as any).auditions_body}
+    buttonLabel={(page as any).auditions_button_label}
+  />
 </BaseLayout>
 
 <style>
