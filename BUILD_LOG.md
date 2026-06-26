@@ -2,6 +2,13 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Homepage spacing — equalise gap around "Upcoming shows" (2026-06-26)
+Goal (PM): the white space between the top hero photo and "Upcoming shows" was bigger than the space below "Upcoming shows" (down to "Ways to join"). Make them equal weight. (Homepage only — chose option (a); other pages already use a consistent section rhythm.)
+Cause: the top gap was three spacings stacked (hero padding-bottom + photo margin-top + section padding-top); the bottom gap is the normal two-section rhythm (section pb + next section pt). So top > bottom.
+Built (1 file): src/pages/index.astro (EDIT) — set .hero padding-bottom to match the section padding at each breakpoint (--space-xl mobile, --space-2xl desktop via the 720px media query); photo margin-bottom 0 (sits flush, its margin-top still separates text from photo inside the hero). Net effect: gap above "Upcoming shows" = hero pb + shows-strip pt = same value as section-to-section gap everywhere else.
+Tested: build 23 pages. Traced both breakpoints: mobile 8rem above vs 8rem reference; desktop 12rem above vs 12rem reference — EQUAL. Also holds in the no-photo case (gap comes from hero padding-bottom, doesn't collapse). NOT verifiable by me: on-screen — PM's check.
+Note: only the homepage was touched. Other pages use the standard .section rhythm and a consistent PageHero→content pattern; if the PM spots uneven spacing elsewhere while clicking around, fix those pages individually rather than a blanket change.
+
 Shows menu restructure — Musicals / Studio Productions / combined Shows page (2026-06-26)
 Goal (PM): split Shows into Musicals and Studio Productions; relabel the Shows dropdown to Musicals / Studio Productions / Stories on Stage; main Shows title lands on a combined page listing all three types in date order. New Studio Productions page with an editable intro. (PM: always capitalise "Studio Productions", both words.)
 Built (7 files):
