@@ -97,7 +97,11 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
         </dl>
  
         <div class="show-ctas">
-          {data.ticketing_url ? (
+          {hasSchedule ? (
+            <a href="#cast-schedule" class="btn btn-primary">
+              Buy Tickets
+            </a>
+          ) : data.ticketing_url ? (
             <a href={data.ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
               Buy Tickets
             </a>
@@ -134,7 +138,7 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
         </div>
  
         {hasSchedule && (
-          <section class="cast-schedule" aria-labelledby="cast-schedule-heading">
+          <section id="cast-schedule" class="cast-schedule" aria-labelledby="cast-schedule-heading">
             <h2 id="cast-schedule-heading">Performances &amp; casts</h2>
             <p class="cast-schedule-note">
               Each performance is cast separately. Use the buttons below to
@@ -263,6 +267,7 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
  
   /* --- Double-cast performance schedule --- */
   .cast-schedule {
+    scroll-margin-top: 6rem;
     margin-top: var(--space-xl);
     padding-top: var(--space-lg);
     border-top: 1px solid var(--line);
