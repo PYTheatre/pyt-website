@@ -5,9 +5,15 @@
   "empty_message": "Press coverage coming soon — check back as PYT makes headlines.",
   "items": [
     {
-      "headline": "Six the Musical Teen Edition in Mountain View",
+      "headline": "\"The critically acclaimed music and story will have everyone in the audience losing their heads. Six the Musical is true HER-story.\" SIX the musical.",
       "url": "https://www.metrosiliconvalley.com/six-the-musical-teen-edition-in-mountain-view/?utm_source=ActiveCampaign&utm_medium=email&utm_content=Metroactive%3A%20The%20Metro%20Silicon%20Valley%20Events%20Calendar&utm_campaign=Metroactive%3A%20The%20Silicon%20Valley%20Events%20Calendar%20%28Copy%29",
       "source": "Metro Silicon Valley",
+      "date": "June 2026"
+    },
+    {
+      "url": "https://www.losaltosonline.com/stepping_out/pyt-opens-teen-edition-of-musical-six-this-week/article_668fd1fc-18c0-4c5d-853b-fc4b670c3b43.html",
+      "headline": "\"You’ll never see another show that’s so unique.\" SIX the musical.",
+      "source": "Los Altos Town Crier",
       "date": "June 2026"
     }
   ]
