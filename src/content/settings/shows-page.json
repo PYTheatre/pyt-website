@@ -2,5 +2,10 @@
   "eyebrow": "2026-2027",
   "title": "Our shows",
   "lede": "Upcoming shows for 2026-2027.",
-  "ticket_fee_notice": "Service charges and facilities fees are added by the City of Mountain View to PYT ticket prices."
+  "ticket_fee_notice": "Service charges and facilities fees are added by the City of Mountain View to PYT ticket prices.",
+  "auditions_strip_text": "Interested in auditioning?",
+  "auditions_eyebrow": "Get involved",
+  "auditions_heading": "Audition with PYT",
+  "auditions_body": "PYT casts its shows through open auditions throughout the year. No experience required — everyone is welcome. See the full list of audition dates and how to sign up.",
+  "auditions_button_label": "See all audition dates"
 }
