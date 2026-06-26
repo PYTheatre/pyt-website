@@ -258,6 +258,11 @@ collections:
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
           - { name: "ticket_fee_notice", label: "Ticket fee notice (shown under every Buy Tickets button)", widget: "text", required: false, hint: "Appears beneath ticket-buying buttons on show and Stories on Stage pages. Leave blank to hide it everywhere." }
+          - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top of the Shows page. Leave blank to hide the strip." }
+          - { name: "auditions_eyebrow", label: "Auditions section — eyebrow", widget: "string", required: false, default: "Get involved" }
+          - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
+          - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
+          - { name: "auditions_button_label", label: "Auditions section — button label", widget: "string", required: false, default: "See all audition dates" }
  
       # --- Programs Page (intro + Summer Camps block) ---
       - name: "programs-page"
@@ -382,6 +387,20 @@ collections:
               - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
               - { name: "description", label: "Description", widget: "text" }
 
+      # --- Musicals Page (Shows → Musicals) ---
+      - name: "musicals-page"
+        label: "Musicals Page"
+        file: "src/content/settings/musicals-page.json"
+        description: "The Musicals page (Shows → Musicals). Edit the title and the auditions strip + section. (The musicals themselves are Shows tagged 'Musical'.)"
+        fields:
+          - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false, default: "Shows" }
+          - { name: "title", label: "Page title", widget: "string", default: "Musicals" }
+          - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top. Leave blank to hide the strip." }
+          - { name: "auditions_eyebrow", label: "Auditions section — eyebrow", widget: "string", required: false, default: "Get involved" }
+          - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
+          - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
+          - { name: "auditions_button_label", label: "Auditions section — button label", widget: "string", required: false, default: "See all audition dates" }
+
       # --- Studio Productions Page (Shows → Studio Productions) ---
       - name: "studio-productions-page"
         label: "Studio Productions Page"
@@ -391,6 +410,11 @@ collections:
           - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "intro", label: "Intro paragraph", widget: "text", hint: "Shown under the page title to introduce the Studio Productions." }
+          - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top. Leave blank to hide the strip." }
+          - { name: "auditions_eyebrow", label: "Auditions section — eyebrow", widget: "string", required: false, default: "Get involved" }
+          - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
+          - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
+          - { name: "auditions_button_label", label: "Auditions section — button label", widget: "string", required: false, default: "See all audition dates" }
 
       # --- Press Page (About → Press) ---
       - name: "press-page"
@@ -547,6 +571,7 @@ collections:
           - { name: "eyebrow", label: "Hero — eyebrow text", widget: "string", required: false, default: "Get involved" }
           - { name: "title", label: "Hero — page title", widget: "string", default: "Auditions" }
           - { name: "intro", label: "Hero — intro paragraph", widget: "text", required: false }
+          - { name: "shows_heading", label: "Upcoming auditions — section heading", widget: "string", required: false, default: "Upcoming auditions" }
           - { name: "no_open_message", label: "Message shown when no shows are currently casting", widget: "text", required: false, hint: "Shown in place of the show list when no Mainstage auditions are open. Example: There are no Mainstage auditions open right now. Check back soon, or explore Stories on Stage below." }
           - { name: "sos_heading", label: "Stories on Stage panel — heading", widget: "string", required: false, default: "Stories on Stage" }
           - { name: "sos_blurb", label: "Stories on Stage panel — text", widget: "text", required: false }
