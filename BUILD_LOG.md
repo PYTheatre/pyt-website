@@ -2,6 +2,21 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Auditions overhaul — dates list + promo strip/section on three pages (2026-06-26)
+Goal (PM): (1) Auditions page lists ALL upcoming shows with an audition date; if no registration link yet, show a "Registration coming soon" button. (2) Replicate the Stories audition strip + section (pink strip at top + section below) onto Musicals, Studio Productions, and the combined Shows page — pointer-style (option a), linking to the full /audition page, with copy editable PER PAGE.
+Built (9 files):
+  - src/pages/audition.astro (EDIT) — list filter changed from "open + has link" to "has an UPCOMING audition date" (link no longer required). Button is smart: real sign-up link if audition_url set, else "Registration coming soon" (disabled style — added .btn-disabled CSS, which this page lacked). Section heading now editable (page.shows_heading, default "Upcoming auditions").
+  - src/components/AuditionsPromo.astro (NEW) — reusable: <AuditionsPromo strip .../> renders the top pink strip (jump to #auditions); <AuditionsPromo section .../> renders the pointer section (eyebrow + heading + body + button to /audition). Empty-safe: strip hides if stripText blank; section hides if heading AND body blank.
+  - src/pages/musicals.astro (EDIT) — imports new musicals-page.json + AuditionsPromo; strip above hero, section at end; hero now uses editable title/eyebrow (was hardcoded).
+  - src/pages/studio-productions.astro (EDIT) — strip + section from its settings.
+  - src/pages/shows/index.astro (EDIT) — strip + section from shows-page.json (combined page).
+  - src/content/settings/musicals-page.json (NEW) — title + per-page audition copy.
+  - src/content/settings/studio-productions-page.json (EDIT) — added 5 audition fields.
+  - src/content/settings/shows-page.json (EDIT) — added 5 audition fields.
+  - public/admin/config.yml (EDIT) — new "Musicals Page" record; audition fields added to Studio + Shows records; "Upcoming auditions" heading field added to the Audition Page record.
+Tested: config.yml YAML valid; build 30 pages (no new pages). Rendered HTML: strip + section present on all three pages; Auditions page heading now "Upcoming auditions", lists the 3 shows with future audition dates (Wizard of Oz, Rules of Comedy, Midsummer) each with "Registration coming soon" (none have audition_url yet), and correctly excludes the closed ones (SIX, Frog and Toad). Empty-safe verified by markup-aware parse: blanking a page's strip/heading/body removes the real strip + section elements (the leftover .auditions-promo-section in the HTML is just the component's CSS rule — §6F false alarm).
+Notes: each page's audition copy is independent in /admin (Musicals Page / Studio Productions Page / Shows Page records). Strip wording defaults: Musicals "Auditioning for a PYT musical?", Studio "Auditioning for a Studio Production?", Shows "Interested in auditioning?". To turn a show's "coming soon" into a live sign-up, staff add an audition_url to that show. The Stories on Stage page keeps its OWN existing strip/section (its company-audition model differs) — not touched.
+
 Combined Shows page — tickets link hint on every card (2026-06-26)
 Goal (PM): every card on the combined /shows page should show a tickets link hint like the Stories cards do (previously only Stories cards had "· tickets & bookings →"). Combined Shows page only.
 Built (1 file): src/pages/shows/index.astro (EDIT) — Musical/Studio cards now show "· tickets & details →" (they link to the show detail page where the Buy button is); Stories cards keep "· tickets & bookings →". Whole card was already one clickable link; this just adds the visible hint text per type.
