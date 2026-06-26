@@ -1,0 +1,142 @@
+---
+/*
+  PRESS PAGE  ( /press )
+
+  A simple list of press coverage — articles published by outside
+  sources that cover or publicise PYT and its productions.
+
+  Each item links out to the original article (opens in a new tab).
+  The list is unlimited and fully CMS-editable: staff add a new
+  entry each time PYT makes the news.
+
+  When the list is empty, the page shows a short, staff-editable
+  "coming soon" message instead of an empty space.
+
+  All content is editable via the CMS at
+  /admin → Site Settings → Press Page.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import page from "../content/settings/press-page.json";
+
+const items = page.items || [];
+const emptyMessage = page.empty_message || "";
+---
+
+<BaseLayout
+  title={`${page.title} — Peninsula Youth Theatre`}
+  description="Press coverage of Peninsula Youth Theatre and our productions."
+>
+  <PageHero
+    eyebrow={page.eyebrow}
+    title={page.title}
+    lede={page.intro}
+  />
+
+  <section class="section">
+    <div class="container">
+      {items.length > 0 ? (
+        <ul class="press-list">
+          {items.map((item: any) => (
+            <li class="press-card">
+              <a
+                href={item.url}
+                class="press-link"
+                target="_blank"
+                rel="noopener"
+              >
+                <div class="press-meta">
+                  {item.source && <span class="press-source">{item.source}</span>}
+                  {item.date && <span class="press-date">{item.date}</span>}
+                </div>
+                <h2 class="press-headline">
+                  {item.headline}
+                  <span class="press-icon" aria-hidden="true">&#8599;</span>
+                </h2>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        emptyMessage && <p class="empty-state">{emptyMessage}</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .press-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .press-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .press-link {
+    display: block;
+    padding: var(--space-md);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .press-link:hover {
+    border-radius: var(--radius);
+    background: var(--paper-warm);
+  }
+
+  .press-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .press-source {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent-deep);
+  }
+
+  .press-date {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  .press-headline {
+    font-size: 1.15rem;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .press-icon {
+    font-size: 0.9em;
+    color: var(--ink-muted);
+    margin-left: 0.15em;
+  }
+
+  .empty-state {
+    padding: var(--space-lg);
+    background: var(--paper-warm);
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 720px) {
+    .press-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
