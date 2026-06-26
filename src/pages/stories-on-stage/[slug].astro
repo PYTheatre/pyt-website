@@ -1,0 +1,174 @@
+---
+/*
+  STORIES ON STAGE — PER-PRODUCTION PAGE  ( /stories-on-stage/<slug> )
+
+  One page per Stories on Stage production. Two booking paths:
+    - Public performances → "Tickets" button to the outside ticketing site
+      (or "coming soon" when no link is set yet). An optional, editable
+      intro line sits above it — empty by default, and renders nothing
+      (no gap) when empty.
+    - Schools and groups → an "Email about a group booking" button that
+      opens the visitor's mail app, pre-addressed to the editable PYT
+      email (Site Settings → Stories on Stage Page → school booking email)
+      with the show title pre-filled in the subject.
+
+  Page-level content (the editable email) comes from the Stories settings
+  JSON; per-production content comes from the storiesOnStage collection.
+*/
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHero from "../../components/PageHero.astro";
+import settings from "../../content/settings/stories-on-stage-page.json";
+
+export async function getStaticPaths() {
+  const productions = await getCollection("storiesOnStage");
+  return productions.map((prod) => ({
+    params: { slug: prod.id },
+    props: { prod },
+  }));
+}
+
+const { prod } = Astro.props;
+const data = prod.data;
+
+// Editable school/group booking email (falls back to the known address).
+const bookingEmail =
+  (settings as any).school_booking_email || "lhatten@pytnet.org";
+const subject = encodeURIComponent(`Group booking enquiry — ${data.title}`);
+const mailto = `mailto:${bookingEmail}?subject=${subject}`;
+
+// Optional editable line above the Tickets button — empty by default.
+const ticketsIntro = (data as any).tickets_intro || "";
+---
+
+<BaseLayout
+  title={`${data.title} — Stories on Stage — Peninsula Youth Theatre`}
+  description={`${data.title} — a Stories on Stage production at Peninsula Youth Theatre. Book tickets or enquire about a school or group booking.`}
+>
+  <PageHero eyebrow="Stories on Stage" title={data.title} />
+
+  <section class="section prod-section">
+    <div class="container prod-grid">
+      <div class="prod-poster-col">
+        <div
+          class="prod-poster"
+          style={data.poster ? `background-image: url(${data.poster}); background-size: cover; background-position: center;` : ""}
+        >
+          {!data.poster && <span class="poster-placeholder">{data.title}</span>}
+        </div>
+      </div>
+
+      <div class="prod-detail-col">
+        <p class="prod-meta">{data.date_display} · {data.venue}</p>
+
+        {data.synopsis && (
+          <div class="prod-synopsis">
+            {data.synopsis.split("\n\n").map((para: string) => (
+              <p>{para}</p>
+            ))}
+          </div>
+        )}
+
+        {/* ---- Public performances ---- */}
+        <div class="booking-card">
+          <h2>Public performances</h2>
+          {ticketsIntro && <p class="booking-intro">{ticketsIntro}</p>}
+          {data.public_ticketing_url ? (
+            <a href={data.public_ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
+              Tickets
+            </a>
+          ) : (
+            <span class="btn btn-outline btn-disabled" aria-disabled="true">
+              Tickets coming soon
+            </span>
+          )}
+        </div>
+
+        {/* ---- Schools and groups ---- */}
+        <div class="booking-card">
+          <h2>Schools and groups</h2>
+          <p class="booking-intro">
+            Bringing a class or group? Email us to arrange a booking.
+          </p>
+          <a href={mailto} class="btn btn-outline">
+            Email about a group booking
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prod-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .prod-poster {
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: var(--space-md);
+    box-shadow: var(--shadow-soft);
+    max-width: 360px;
+  }
+
+  .poster-placeholder {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.15;
+  }
+
+  .prod-meta {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    font-weight: 500;
+    margin: 0 0 var(--space-md);
+  }
+
+  .prod-synopsis {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+
+  .prod-synopsis p {
+    margin: 0 0 var(--space-sm);
+  }
+
+  .booking-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    background: var(--paper);
+  }
+
+  .booking-card h2 {
+    font-size: 1.2rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .booking-intro {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0 0 var(--space-sm);
+  }
+
+  @media (min-width: 720px) {
+    .prod-grid {
+      grid-template-columns: 320px 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+</style>
