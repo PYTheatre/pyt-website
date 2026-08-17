@@ -3,6 +3,38 @@
   "hero_secondary_label": "Programs",
   "impact_heading": "PYT's impact",
   "donate_lede": "Love PYT? We need you - and every little helps :)",
+  "photo_strip": [
+    {
+      "title": "Centre Stage Musicals",
+      "url": "/musicals",
+      "image": ""
+    },
+    {
+      "title": "Studio Shows",
+      "url": "/studio-productions",
+      "image": ""
+    },
+    {
+      "title": "Stories on Stage",
+      "url": "/stories-on-stage",
+      "image": ""
+    },
+    {
+      "title": "School for Performing Arts",
+      "url": "/programs",
+      "image": ""
+    },
+    {
+      "title": "Camps",
+      "url": "/programs",
+      "image": ""
+    },
+    {
+      "title": "School Play in a Box",
+      "url": "/school-play-in-a-box",
+      "image": ""
+    }
+  ],
   "hero_primary_url": "/shows",
   "impact_eyebrow": "Our impact",
   "donate_heading": "Help us reach $200,000",
@@ -54,14 +86,6 @@
     }
   ],
   "hero_image": "/uploads/pyt-newsies-punch.jpg",
-  "photo_strip": [
-    { "title": "Centre Stage Musicals", "url": "/musicals", "image": "" },
-    { "title": "Studio Shows", "url": "/studio-productions", "image": "" },
-    { "title": "Stories on Stage", "url": "/stories-on-stage", "image": "" },
-    { "title": "School for Performing Arts", "url": "/programs", "image": "" },
-    { "title": "Camps", "url": "/programs", "image": "" },
-    { "title": "School Play in a Box", "url": "/school-play-in-a-box", "image": "" }
-  ],
   "hero_heading_italic_word": "",
   "donate_button_label": "Donate",
   "discovery_eyebrow": "Welcome!",
@@ -82,5 +106,5 @@
       "label": "In scholarships awarded"
     }
   ],
-  "hero_lede": "PYT is the Bay Area's home for community youth theater. From first auditions to opening nights, we believe in the magic that happens when a young person steps on stage!"
+  "hero_lede": "PYT believes there's a role for everyone. Join us to find yours!"
 }
