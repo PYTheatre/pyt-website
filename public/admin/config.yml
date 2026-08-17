@@ -218,7 +218,16 @@ collections:
           - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Example: Outstanding youth theatre." }
           - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
           - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text" }
-          - { name: "hero_image", label: "Hero — banner photo (wide, under the intro)", widget: "image", required: false, hint: "Optional. A wide landscape photo shown as a banner under the intro text. Leave empty to hide it." }
+          - { name: "hero_image", label: "Hero — banner photo (wide, under the intro) — NOT CURRENTLY SHOWN", widget: "image", required: false, hint: "Not currently used on the live page (replaced by the photo strip below). Left here in case you want a single wide banner again in future." }
+          - name: "photo_strip"
+            label: "Hero — photo strip (scrollable cards under the intro)"
+            widget: "list"
+            summary: "{{fields.title}}"
+            hint: "A row of photo cards under the intro text, each linking to a page. The title shows on top of the photo. Order shuffles a little each time someone visits, so no one card always leads. If a card's photo is left empty, a colored placeholder with the title is shown instead."
+            fields:
+              - { name: "title", label: "Title (shown on the photo)", widget: "string", hint: "Example: Centre Stage Musicals" }
+              - { name: "url", label: "Link", widget: "string", hint: "Where this card goes. Example: /musicals" }
+              - { name: "image", label: "Photo", widget: "image", required: false, hint: "Wide-ish photo works best. Leave empty for a colored placeholder." }
           - { name: "hero_primary_label", label: "Hero — primary button label", widget: "string" }
           - { name: "hero_primary_url", label: "Hero — primary button link", widget: "string" }
           - { name: "hero_secondary_label", label: "Hero — secondary button label", widget: "string" }
