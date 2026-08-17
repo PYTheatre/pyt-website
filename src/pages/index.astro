@@ -83,9 +83,25 @@ if (italicWord && heading.includes(italicWord)) {
   headingAfter = heading.slice(idx + italicWord.length);
 }
  
-// --- Optional hero banner image ---
-// A wide photo shown under the intro text. Hidden when empty.
+// --- Optional hero banner image (legacy, not currently rendered) ---
 const heroImage = (home as any).hero_image || "";
+
+// --- Hero photo strip ---
+// A row of clickable photo cards under the intro text, replacing the
+// old single wide banner. Each card needs a title and a link; the
+// photo is optional (falls back to a colored placeholder showing the
+// title, cycling through the brand colors so cards without a photo
+// still look intentional rather than broken). Empty-safe: hidden
+// entirely if the list is empty or every entry is missing a title/url.
+const placeholderColors = ["accent", "brand-blue", "brand-green", "accent-deep", "brand-blue", "brand-green"];
+const photoStrip = ((home as any).photo_strip || [])
+  .filter((c: any) => c?.title?.trim() && c?.url?.trim())
+  .map((c: any, i: number) => ({
+    title: c.title,
+    url: c.url,
+    image: c.image || "",
+    colorClass: placeholderColors[i % placeholderColors.length],
+  }));
 ---
  
 <BaseLayout title="Peninsula Youth Theatre — Outstanding youth theatre">
@@ -102,13 +118,42 @@ const heroImage = (home as any).hero_image || "";
       </div>
     </div>
  
-    <!-- Wide hero banner photo (hidden when no image is set) -->
-    {heroImage && (
+    <!-- Photo strip: scrollable row of cards linking to key pages.
+         Hidden entirely when there are no valid cards. Order is
+         shuffled client-side on load (see script below) so the same
+         card doesn't always lead. -->
+    {photoStrip.length > 0 && (
       <div class="container">
-        <img src={heroImage} alt="" class="hero-banner-img" loading="eager" />
+        <div class="photo-strip" id="photo-strip">
+          {photoStrip.map((card) => (
+            <a href={card.url} class="photo-strip-card">
+              {card.image ? (
+                <img src={card.image} alt="" loading="eager" />
+              ) : (
+                <div class={`photo-strip-placeholder c-${card.colorClass}`}></div>
+              )}
+              <span class="photo-strip-title">{card.title}</span>
+            </a>
+          ))}
+        </div>
       </div>
     )}
   </section>
+
+  <script>
+    // Shuffle the photo-strip cards so a different one leads each
+    // time the page loads. Runs client-side only; if JS is off, the
+    // cards still show (and still work) in their CMS-entered order.
+    const strip = document.getElementById("photo-strip");
+    if (strip) {
+      const cards = Array.from(strip.children);
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+      cards.forEach((card) => strip.appendChild(card));
+    }
+  </script>
  
   <!-- ============ UPCOMING SHOWS STRIP ============ -->
   <!-- A wide row of upcoming-show cards, soonest first. Pulls live
@@ -233,7 +278,8 @@ const heroImage = (home as any).hero_image || "";
     gap: 0.7rem;
   }
  
-  /* Wide hero banner photo */
+  /* Wide hero banner photo (legacy, not currently rendered — kept in
+     case hero_image is reused later) */
   .hero-banner-img {
     width: 100%;
     aspect-ratio: 16 / 7;
@@ -244,6 +290,65 @@ const heroImage = (home as any).hero_image || "";
     margin-bottom: 0;
     box-shadow: var(--shadow-soft);
     max-height: 520px;
+  }
+
+  /* ---- Hero photo strip ---- */
+  .photo-strip {
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    margin-top: var(--space-lg);
+    padding-bottom: 0.4rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .photo-strip-card {
+    position: relative;
+    flex: 0 0 220px;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: block;
+    scroll-snap-align: start;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .photo-strip-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-strip-placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-strip-placeholder.c-accent { background: var(--accent); }
+  .photo-strip-placeholder.c-accent-deep { background: var(--accent-deep); }
+  .photo-strip-placeholder.c-brand-blue { background: var(--brand-blue); }
+  .photo-strip-placeholder.c-brand-green { background: var(--brand-green); }
+
+  .photo-strip-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.6rem 0.85rem 0.7rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0));
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 640px) {
+    .photo-strip-card {
+      flex-basis: 168px;
+    }
   }
  
   /* ---- Upcoming shows strip ---- */
