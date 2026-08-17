@@ -54,6 +54,14 @@
     }
   ],
   "hero_image": "/uploads/pyt-newsies-punch.jpg",
+  "photo_strip": [
+    { "title": "Centre Stage Musicals", "url": "/musicals", "image": "" },
+    { "title": "Studio Shows", "url": "/studio-productions", "image": "" },
+    { "title": "Stories on Stage", "url": "/stories-on-stage", "image": "" },
+    { "title": "School for Performing Arts", "url": "/programs", "image": "" },
+    { "title": "Camps", "url": "/programs", "image": "" },
+    { "title": "School Play in a Box", "url": "/school-play-in-a-box", "image": "" }
+  ],
   "hero_heading_italic_word": "",
   "donate_button_label": "Donate",
   "discovery_eyebrow": "Welcome!",
