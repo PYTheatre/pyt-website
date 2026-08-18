@@ -1,48 +1,42 @@
 ---
 /*
-  LOGO COMPONENT — placeholder "P" mark.
+  LOGO COMPONENT — real PYT logo (2026-08-18).
 
-  WHEN THE REAL LOGO ARRIVES:
-  Replace the contents of the <a> below with the real logo
-  (an <img> pointing at /logo.svg, or inline SVG). Because
-  every page uses THIS component, swapping it here updates
+  The logo graphic itself contains BOTH the colored "PYT" mark and the
+  "Peninsula Youth Theatre" wordmark stacked underneath — so there is
+  no separate HTML text next to it anymore (there used to be; removed
+  on purpose to avoid showing the name twice).
+
+  Because it has real text baked into the image, it needs more height
+  than the old icon-only placeholder to stay legible — see .logo-mark
+  below. If a future version of the logo arrives as a wider/horizontal
+  lockup instead of a stacked one, this sizing will need revisiting.
+
+  Every page uses THIS component, so swapping the file here updates
   the logo everywhere at once.
 */
 ---
 
 <a href="/" class="logo" aria-label="Peninsula Youth Theatre — home">
-  <img src="/uploads/pyt-logo.png" alt="PYT" class="logo-mark" width="945" height="324" />
-  <span class="logo-text">Peninsula Youth Theatre</span>
+  <img src="/uploads/pyt-logo-stars.png" alt="Peninsula Youth Theatre" class="logo-mark" width="2526" height="1398" />
 </a>
 
 <style>
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
   }
 
   .logo-mark {
-    height: 30px;
+    height: 44px;
     width: auto;
     display: block;
     flex-shrink: 0;
   }
 
-  .logo-text {
-    font-family: var(--font-heading);
-    font-weight: 400;
-    font-size: 1.02rem;
-    color: var(--nav-text);
-    line-height: 1.1;
-    /* Hide the wordmark on very small screens to save space;
-       the "P" mark alone is enough on a phone. */
-    display: none;
-  }
-
   @media (min-width: 520px) {
-    .logo-text {
-      display: inline;
+    .logo-mark {
+      height: 54px;
     }
   }
 </style>
