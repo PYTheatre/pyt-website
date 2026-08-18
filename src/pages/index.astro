@@ -261,7 +261,11 @@ const photoStrip = ((home as any).photo_strip || [])
   /* ---- Hero ---- */
   .hero {
     padding-top: var(--space-xl);
-    padding-bottom: var(--space-xl);
+    /* Bottom padding kept small on purpose: the section right after
+       (shows-strip) already has its own generous top padding via the
+       shared .section class. Making both edges large stacked into an
+       oddly big gap between the photo strip and "Upcoming shows". */
+    padding-bottom: var(--space-md);
   }
  
   .hero-copy h1 {
@@ -352,6 +356,13 @@ const photoStrip = ((home as any).photo_strip || [])
   }
  
   /* ---- Upcoming shows strip ---- */
+  .shows-strip {
+    /* Same fix as the hero above: keep bottom padding small so it
+       doesn't stack with the next section's own top padding and
+       leave an oddly big gap before "Ways to join PYT". */
+    padding-bottom: var(--space-md);
+  }
+
   .shows-row {
     display: grid;
     grid-template-columns: 1fr;
@@ -572,9 +583,6 @@ const photoStrip = ((home as any).photo_strip || [])
     }
     .shows-row {
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    }
-    .hero {
-      padding-bottom: var(--space-2xl);
     }
   }
  
