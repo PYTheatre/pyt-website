@@ -2,6 +2,15 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Homepage spacing fix + taller nav bar (2026-08-18)
+Goal (PM): PM flagged (with screenshots) two oddly big gaps on the homepage — between the photo strip and "Upcoming shows", and between the show cards and "Ways to join PYT" — plus asked for the nav bar to be a broader/taller strip, similar to SCT's.
+Root cause of the gaps: on desktop, a section's bottom padding and the next section's top padding are both large (96px each, from the shared .section class) and were stacking, since nothing overrode the first section's bottom edge — so two adjacent sections left ~190px of dead space instead of one normal-sized gap. Same pattern in both spots flagged.
+Built (2 files):
+  - src/pages/index.astro (EDIT) — .hero bottom padding reduced (and the old desktop-only bump to an even bigger value removed entirely) so it stops stacking with the next section's own top padding. Same fix applied to .shows-strip (new bottom-padding override). Both sections still get their normal, larger TOP padding from the shared .section class — unchanged, and that's still what everything else on the site uses, so this doesn't affect spacing anywhere except these two specific boundaries on the homepage.
+  - src/components/Header.astro (EDIT, site-wide component) — header's vertical padding increased (0.7rem → 1.1rem) so the whole bar reads taller/broader, closer to SCT's. Applies everywhere since it's the shared header.
+Tested: build stayed at 30 pages. Confirmed directly in the COMPILED CSS (not just source) that .hero's padding-bottom is now the smaller value, .shows-strip has the new override, and .header-inner's padding-block is now 1.1rem — i.e. the fix is actually in the shipped output, not just written and forgotten. Confirmed the homepage's hero and shows-strip sections still render as real elements (nothing accidentally hidden).
+NOT verifiable by me: exact visual size of the gap now on a real screen — PM's call on whether it needs to come down further or is now right.
+
 Real logo swapped in (2026-08-18)
 Goal (PM): replace the placeholder "P" mark with PYT's real logo, uploaded as a PNG (colorful "PYT" letters + stars icon, with "Peninsula Youth Theatre" as a wordmark stacked underneath, baked into the same image). PM chose to use the full graphic (icon + wordmark together) and drop the separate "Peninsula Youth Theatre" text that used to sit next to the mark in the header, since the image already spells it out.
 Built (2 files):
