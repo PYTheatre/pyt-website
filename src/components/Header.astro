@@ -147,9 +147,8 @@ const navGroups = [
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: saturate(180%) blur(10px);
-    border-bottom: 1px solid var(--line);
+    background: var(--nav-bg-dark);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
  
   .header-inner {
@@ -172,15 +171,15 @@ const navGroups = [
     font-size: 0.95rem;
     white-space: nowrap;
     font-family: var(--font-heading);
-    font-weight: 600;
-    background: var(--nav-pill);
-    color: var(--nav-pill-text);
-    transition: background 0.16s ease;
+    font-weight: 400;
+    background: transparent;
+    color: var(--nav-text);
+    transition: background 0.16s ease, color 0.16s ease;
   }
  
   .nav-wide .pill:hover {
-    background: var(--nav-pill-hover);
-    color: var(--nav-pill-text);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--nav-text);
   }
  
   /* ---- Dropdown groups (desktop) ---- */
@@ -206,8 +205,8 @@ const navGroups = [
     padding: 0.4rem;
     background: var(--paper);
     border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
@@ -244,7 +243,7 @@ const navGroups = [
  
   .nav-dropdown-link {
     padding: 0.55rem 0.7rem;
-    border-radius: 8px;
+    border-radius: var(--radius-btn);
     font-size: 0.92rem;
     font-weight: 500;
     color: var(--ink-soft);
@@ -266,6 +265,13 @@ const navGroups = [
   .donate-btn {
     padding: 0.5rem 1.1rem;
     font-size: 0.9rem;
+    background: var(--highlight);
+    color: var(--highlight-text);
+  }
+
+  .donate-btn:hover {
+    background: var(--highlight);
+    filter: brightness(0.92);
   }
  
   /* Hamburger button */
@@ -278,8 +284,8 @@ const navGroups = [
     height: 42px;
     padding: 0 9px;
     background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius-btn);
     cursor: pointer;
   }
  
@@ -287,7 +293,7 @@ const navGroups = [
     display: block;
     height: 2px;
     width: 100%;
-    background: var(--ink);
+    background: var(--nav-text);
     border-radius: 2px;
     transition: transform 0.2s ease, opacity 0.2s ease;
   }
@@ -333,7 +339,7 @@ const navGroups = [
   .nav-mobile-pill {
     display: block;
     padding: 0.7rem 0.85rem;
-    border-radius: 12px;
+    border-radius: var(--radius-btn);
     background: var(--nav-pill);
     color: var(--nav-pill-text);
     font-weight: 600;
