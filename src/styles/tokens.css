@@ -50,9 +50,17 @@
      and the home-page progress bar — aqua, PLACEHOLDER) ---- */
   --campaign-fill: #7ed5d8;
  
-  /* ---- TYPOGRAPHY (Poppins headings + Source Sans 3 body — placeholder) ---- */
-  --font-heading: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* ---- TYPOGRAPHY (Archivo Black headings + Source Sans 3 body — placeholder,
+     chosen to feel closer to reference sites while colors/logo are still TBD) ---- */
+  --font-heading: "Archivo Black", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-body: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* ---- DARK NAV (new bolder header direction — colors still PLACEHOLDER) ---- */
+  --nav-bg-dark: #17151a;         /* header background */
+  --nav-text: #f5f3ef;            /* nav link text on the dark header */
+  --nav-text-muted: rgba(245, 243, 239, 0.7);
+  --highlight: #f2c419;           /* bright CTA color (Donate button), PLACEHOLDER */
+  --highlight-text: #1a1a1a;      /* text on the highlight color */
  
   /* ---- SPACING SCALE (keeps rhythm consistent) ---- */
   --space-xs: 0.5rem;
@@ -64,8 +72,9 @@
  
   /* ---- LAYOUT ---- */
   --max-width: 1140px;     /* max content width on big screens */
-  --radius: 12px;          /* standard rounded-corner size     */
-  --radius-pill: 999px;    /* fully-rounded (pills, buttons)   */
+  --radius: 12px;          /* standard rounded-corner size (cards/photos) */
+  --radius-btn: 4px;       /* slight corner softening — buttons/pills/nav only */
+  --radius-pill: 999px;    /* fully-rounded (true circles/pill shapes, e.g. the donation thermometer) */
  
   /* ---- SHADOWS ---- */
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.06);
