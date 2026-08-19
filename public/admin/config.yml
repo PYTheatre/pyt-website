@@ -236,7 +236,7 @@ collections:
             label: "Hero — photo strip (scrollable cards under the intro)"
             widget: "list"
             summary: "{{fields.title}}"
-            hint: "A row of photo cards under the intro text, each linking to a page. The title shows on top of the photo. Order shuffles a little each time someone visits, so no one card always leads. If a card's photo is left empty, a colored placeholder with the title is shown instead."
+            hint: "A row of photo cards under the intro text, each linking to a page. The title shows below the photo. Cards display in the order listed here. The page always opens centered on the card titled exactly 'Center Stage Musicals' — keep that title spelled that way, or the page will just open on the first card instead. Whichever card is centered (by swipe or by the arrow buttons) displays larger. If a card's photo is left empty, a colored placeholder with the title is shown instead."
             fields:
               - { name: "title", label: "Title (shown on the photo)", widget: "string", hint: "Example: Centre Stage Musicals" }
               - { name: "url", label: "Link", widget: "string", hint: "Where this card goes. Example: /musicals" }
@@ -246,8 +246,6 @@ collections:
           - { name: "hero_secondary_label", label: "Hero — secondary button label", widget: "string" }
           - { name: "hero_secondary_url", label: "Hero — secondary button link", widget: "string" }
           - { name: "now_playing_label", label: "Poster — 'Now playing' label", widget: "string", default: "Now playing" }
-          - { name: "shows_heading", label: "Upcoming shows — section heading", widget: "string", required: false, default: "Upcoming shows" }
-          - { name: "shows_heading_case", label: "Upcoming shows — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           - { name: "discovery_eyebrow", label: "Discovery section — eyebrow", widget: "string", default: "Find your way in" }
           - { name: "discovery_heading", label: "Discovery section — heading", widget: "string" }
           - { name: "discovery_heading_case", label: "Discovery section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
