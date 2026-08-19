@@ -2,7 +2,7 @@
   "hero_eyebrow": "NONE",
   "hero_secondary_label": "Programs",
   "impact_heading": "PYT's impact",
-  "donate_lede": "Every gift, small or big, helps us bring theater and community to as many young people, schools, families and friends as possible across the Bay Area. Thank you!",
+  "donate_lede": "remove",
   "photo_strip": [
     {
       "title": "CENTER STAGE MUSICALS",
@@ -32,52 +32,57 @@
   ],
   "hero_primary_url": "/shows",
   "impact_eyebrow": "Our impact",
-  "donate_heading": "HELP PYT TODAY!",
+  "donate_heading": "$200,000 in 2026",
   "hero_primary_label": "Shows",
   "discovery_heading": "Ways to join PYT",
   "discovery_cards": [
     {
-      "eyebrow": "For performers, schools & families",
-      "title": "PYT Shows",
-      "body": "Full-scale Main Stage productions, performed at Mountain View's premier venue; focused small cast Studio Shows, performed at our studio on Old Middlefield Way. ",
-      "meta": [],
-      "url": "/shows"
-    },
-    {
-      "eyebrow": "For performers, schools, families & readers",
-      "title": "Stories on Stage",
-      "body": "Beloved children's books brought to life in short, lively performances. Actors are cast in a small company each year.",
-      "meta": [],
-      "url": "/stories-on-stage"
-    },
-    {
-      "eyebrow": "For young performers",
-      "title": "Classes & Camps",
-      "body": "After-school drama and musical theatre, holiday camps, masterclasses. ",
-      "meta": [],
+      "title": "FALL CLASSES",
+      "subtitle": "Grade K-8",
+      "image": "",
       "url": "/programs"
     },
     {
-      "eyebrow": "For schools & theatres",
-      "title": "Costume & Prop Rentals",
-      "body": "Decades of theatrical inventory available to schools and community theatre at affordable rates.",
-      "meta": [],
-      "url": "/rentals"
+      "title": "STORIES ON STAGE AUDITIONS",
+      "subtitle": "Grades 5-12",
+      "image": "",
+      "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976"
     },
     {
-      "eyebrow": "For everyone",
-      "title": "Support PYT",
-      "body": "Donations, sponsorships, corporate partnership, donations-in-kind - it all helps PYT reach as many families and youth as possible.",
-      "url": "https://pyt-website.pages.dev/ways-to-support/",
-      "meta": [
-        "Support"
-      ]
+      "title": "MOVIE NIGHT",
+      "subtitle": "Everyone!",
+      "image": "",
+      "url": "/shows"
     },
     {
-      "eyebrow": "FOR PERFORMERS",
-      "title": "Audition",
-      "body": "Come and audition for one of our productions!",
-      "url": "https://pyt-website.pages.dev/audition/"
+      "title": "FALL COSTUME PARTY",
+      "subtitle": "Everyone!",
+      "image": "",
+      "url": "/shows"
+    },
+    {
+      "title": "THE RULES OF COMEDY",
+      "subtitle": "Tickets",
+      "image": "",
+      "url": "/shows/rules-of-comedy"
+    },
+    {
+      "title": "THE WIZARD OF OZ",
+      "subtitle": "Tickets",
+      "image": "",
+      "url": "/shows/the-wizard-of-oz"
+    },
+    {
+      "title": "SINGIN' IN THE RAIN AUDITIONS",
+      "subtitle": "Grades K-12",
+      "image": "",
+      "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976"
+    },
+    {
+      "title": "CREEPY CARROTS",
+      "subtitle": "Tickets",
+      "image": "",
+      "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
     }
   ],
   "hero_image": "/uploads/pyt-newsies-punch.jpg",
@@ -101,5 +106,10 @@
       "label": "In scholarships awarded"
     }
   ],
-  "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!"
+  "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!",
+  "shows_heading": "Upcoming shows",
+  "shows_heading_case": "as-typed",
+  "discovery_heading_case": "as-typed",
+  "impact_heading_case": "as-typed",
+  "donate_heading_case": "as-typed"
 }
