@@ -2,6 +2,14 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Homepage headline font: Baloo 2, uppercase (2026-08-19)
+Goal (PM): after comparing a few playful font options side by side (Baloo 2, Fredoka, Titan One), picked Baloo 2 in caps for the homepage headline specifically.
+Built (2 files):
+  - src/styles/global.css (EDIT) — added Baloo 2 (weight 700) to the existing Google Fonts import, alongside Archivo Black and Source Sans 3.
+  - src/pages/index.astro (EDIT, homepage only) — .hero-heading now sets font-family to Baloo 2 directly (not via the shared --font-heading token), font-weight 700, and text-transform: uppercase. Scoped to just this one headline — every other heading on every other page stays on Archivo Black, untouched.
+Tested: build stayed at 30 pages. Checked the COMPILED CSS (not just source) and confirmed .hero-heading has the Baloo 2 font-family, weight, and uppercase transform; confirmed the font import reached the shared stylesheet. Confirmed on an unrelated inner page (/about) that "Baloo" doesn't appear anywhere — i.e. this really is scoped to the homepage only, not accidentally global.
+Flagged, not yet addressed: the logo-alignment sizing (Logo.astro) and the star-flourish SVG positions (both set earlier this session) were tuned against Archivo Black's specific letter shapes/proportions. Baloo 2 is rounder and measures differently, so the logo-to-headline alignment and the star positions may be slightly off now that the font's changed — flagged to the PM as worth a fresh look once live, not fixed proactively since it wasn't asked for in this batch.
+
 Hero restructure: logo aligned to headline text only, star-trail flourish, lede repositioned (2026-08-19)
 Goal (PM): after mockup review, the hero needed rework — (1) logo should align top-to-bottom with the HEADLINE text specifically, not with the small star doodles that used to sit above it; (2) the earlier CSS wavy underline under "EVERYONE!" should become a scattered trail of small stars that starts as an underline and sweeps up to fill the empty space under "THEATER"/"FOR"; (3) the intro paragraph should line up under the HEADLINE's left edge, not the logo's; (4) on phones, keep everything stacked but make sure the logo doesn't dwarf the text. Went through several rounds of mockups (including one rejected version with a connecting line, which PM asked to remove in favor of stars only) before landing on this.
 Also folded in: the earlier "set accent word to EVERYONE!" content fix, which the PM hadn't uploaded yet — included in this batch since the new star flourish needs that field filled in to show anything.
