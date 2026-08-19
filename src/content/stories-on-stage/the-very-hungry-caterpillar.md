@@ -10,6 +10,6 @@ synopsis: Jasper Rabbit loves carrots, especially the ones from Crackenhopper
   by Peter Brown, this funny and slightly spooky tale is the perfect fall treat
   for our youngest community members and their families.
 poster: /uploads/carrots.jpg
-public_ticketing_url: ""
-school_bookings_url: ""
+public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=767
+school_bookings_url: https://tickets.mvcpa.com/eventperformances.asp?evt=767
 ---
