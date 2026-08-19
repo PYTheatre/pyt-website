@@ -1,5 +1,5 @@
 ---
-title: Alice in Wonderland
+title: ALICE IN WONDERLAND
 start_date: 2027-05-14
 end_date: 2027-05-15
 date_display: May 2027
