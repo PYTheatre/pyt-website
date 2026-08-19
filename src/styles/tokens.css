@@ -72,7 +72,7 @@
  
   /* ---- LAYOUT ---- */
   --max-width: 1140px;     /* max content width on big screens */
-  --radius: 12px;          /* standard rounded-corner size (cards/photos) */
+  --radius: 0;             /* cards/photos — square corners, site-wide as of 2026-08-18 */
   --radius-btn: 4px;       /* slight corner softening — buttons/pills/nav only */
   --radius-pill: 999px;    /* fully-rounded (true circles/pill shapes, e.g. the donation thermometer) */
  
