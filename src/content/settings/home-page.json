@@ -1,6 +1,7 @@
 {
   "hero_eyebrow": "NONE",
   "hero_secondary_label": "Programs",
+  "impact_heading_case": "as-typed",
   "impact_heading": "PYT's impact",
   "donate_lede": "remove",
   "photo_strip": [
@@ -34,63 +35,67 @@
   "impact_eyebrow": "Our impact",
   "donate_heading": "$200,000 in 2026",
   "hero_primary_label": "Shows",
-  "discovery_heading": "Ways to join PYT",
+  "discovery_heading": "FIND YOUR ROLE",
   "discovery_cards": [
     {
       "title": "FALL CLASSES",
       "subtitle": "Grade K-8",
-      "image": "",
-      "url": "/programs"
+      "image": "/uploads/wand.jpg",
+      "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976"
     },
     {
       "title": "STORIES ON STAGE AUDITIONS",
       "subtitle": "Grades 5-12",
-      "image": "",
-      "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976"
+      "image": "/uploads/uglyduckling-pyt-.jpg",
+      "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976#/selectSessions/3847843"
     },
     {
       "title": "MOVIE NIGHT",
       "subtitle": "Everyone!",
-      "image": "",
+      "image": "/uploads/13668736373_39d525da45_b.jpg",
       "url": "/shows"
     },
     {
       "title": "FALL COSTUME PARTY",
       "subtitle": "Everyone!",
-      "image": "",
+      "image": "/uploads/images.png",
       "url": "/shows"
     },
     {
       "title": "THE RULES OF COMEDY",
       "subtitle": "Tickets",
-      "image": "",
+      "image": "/uploads/rules-of-comey.jpg",
       "url": "/shows/rules-of-comedy"
     },
     {
       "title": "THE WIZARD OF OZ",
       "subtitle": "Tickets",
-      "image": "",
+      "image": "/uploads/wizard.jpg",
       "url": "/shows/the-wizard-of-oz"
     },
     {
       "title": "SINGIN' IN THE RAIN AUDITIONS",
       "subtitle": "Grades K-12",
-      "image": "",
+      "image": "/uploads/unnamed.png",
       "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976"
     },
     {
       "title": "CREEPY CARROTS",
       "subtitle": "Tickets",
-      "image": "",
+      "image": "/uploads/carrots.jpg",
       "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
     }
   ],
-  "hero_image": "/uploads/pyt-newsies-punch.jpg",
+  "hero_image": "",
+  "shows_heading_case": "as-typed",
   "hero_heading_italic_word": "EVERYONE!",
   "donate_button_label": "Donate",
+  "shows_heading": "WHAT'S NEXT",
   "discovery_eyebrow": "Welcome!",
   "now_playing_label": "Now playing",
+  "discovery_heading_case": "as-typed",
   "hero_heading": "YOUTH THEATER FOR EVERYONE!",
+  "donate_heading_case": "as-typed",
   "hero_secondary_url": "/programs",
   "stats": [
     {
@@ -106,10 +111,5 @@
       "label": "In scholarships awarded"
     }
   ],
-  "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!",
-  "shows_heading": "Upcoming shows",
-  "shows_heading_case": "as-typed",
-  "discovery_heading_case": "as-typed",
-  "impact_heading_case": "as-typed",
-  "donate_heading_case": "as-typed"
+  "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!"
 }
