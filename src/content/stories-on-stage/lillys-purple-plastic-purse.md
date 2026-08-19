@@ -1,5 +1,5 @@
 ---
-title: Lilly's Purple Plastic Purse
+title: LILLY'S PURLE PLASTIC PURSE
 start_date: 2027-04-09
 end_date: 2027-04-10
 date_display: April 2027
