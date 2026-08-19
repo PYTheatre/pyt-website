@@ -2,6 +2,17 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Nav tweaks + Register button color (2026-08-19)
+Also: confirmed the earlier school-tickets-page.json mix-up (wrong file content had landed on that path, causing a red build) was fixed correctly by the PM before this session started — checked the live file directly, it's valid JSON now.
+Goal (PM): three small follow-ups to the nav overhaul —
+  1. Add "Stories on Stage" as a link under the "Educators" dropdown too (it already lives under "Shows" — now reachable both ways, same pattern as School Play in a Box briefly was under two menus earlier in the project).
+  2. Reorder + rename the "About" dropdown: "About" → "About PYT" (now first), "Support PYT" → "Support" (moved to second), Opportunities, Press — same order as PM specified.
+  3. Register button color changed from the yellow highlight color to PYT's pink accent color (same pink used on primary buttons elsewhere) — Donate keeps the yellow.
+Built (1 file):
+  - src/components/Header.astro (EDIT, site-wide component) — Educators dropdown gained the Stories on Stage link; About dropdown reordered/renamed as above; register-btn and donate-btn CSS split apart (previously shared one rule) so Register now falls through to the normal pink .btn-primary color instead of being forced yellow like Donate.
+Tested: build produced 31 real pages (confirmed by counting actual index.html files in the output — the build tool's own summary line undercounts by one for an unrelated pre-existing reason, not something this batch changed). Parsed the rendered HTML directly (not raw grep — §6F): confirmed the exact dropdown order/labels site-wide including "Stories on Stage" appearing under both Shows and Educators, and "About PYT"/"Support" in the right order. Checked the COMPILED CSS specifically to confirm register-btn no longer has a background/color override (so it's genuinely inheriting the pink accent, not just visually similar by coincidence) while donate-btn still has its own yellow override. Confirmed all of this on an unrelated inner page (/rentals) too, not just the homepage.
+NOT verifiable by me: the actual on-screen pink shade/contrast of the new Register button — PM's call as always.
+
 Nav bar overhaul, inspired by Encore Stage & Studio's site (2026-08-18)
 Goal (PM): restructure the top nav after looking at a reference site. Worked out the exact order and contents over several back-and-forth messages — final spec below.
 New left-to-right order: Shows, Auditions, Classes & Camps, Educators (NEW), Shop, About — then Register (NEW button) and Donate (existing button), both at the far right.
