@@ -48,13 +48,21 @@ const { size = "nav" } = Astro.props;
 
   /* Hero size: bigger throughout, and bigger again on wide screens
      where it sits beside the headline rather than stacked above it. */
+  /* Hero size: sized to match the headline TEXT block's own rendered
+     height (two lines at the site's h1 size/line-height), not the
+     logo's own natural proportions — that's what makes it visually
+     "align" top-to-bottom with the headline rather than towering
+     over it. The two values below correspond to the headline's
+     smallest (phone) and largest (desktop) clamp() sizes on the
+     homepage. If the headline font size ever changes, these should
+     be revisited together. */
   .logo-hero .logo-mark {
-    height: 76px;
+    height: 72px;
   }
 
   @media (min-width: 720px) {
     .logo-hero .logo-mark {
-      height: 96px;
+      height: 108px;
     }
   }
 </style>
