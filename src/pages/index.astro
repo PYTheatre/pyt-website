@@ -149,14 +149,19 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
          copies (loopedPhotoStrip) so the carousel loops continuously in
          both directions — see script below. The card nearest the center
          of the viewport becomes the large "hero" image (photo only —
-         the caption stays normal size so it's never cut off); swiping
-         or using the arrows re-centers whichever card you land on,
-         growing it in turn. Always opens centered on the card titled
-         exactly "Center Stage Musicals" (PM preference, 2026-08-19) —
-         matched by that card's title text, so keep that title spelled
-         that way if it's ever edited. Both arrow buttons and edge fades
-         stay visible at all times on desktop now (there's no "end" to
-         reach) — on mobile people just swipe. -->
+         the caption stays normal size so it's never cut off). Several
+         ways to change which card is the hero: swiping, the arrow
+         buttons, hovering a non-hero card with a mouse (desktop only —
+         real hover devices), or clicking a non-hero card. CLICKING is
+         gated (PM preference, 2026-08-19): a click on any card that
+         ISN'T currently the hero re-centers it instead of following its
+         link; only clicking the card that's already the hero navigates
+         through. Always opens centered on the card titled exactly
+         "Center Stage Musicals" — matched by that card's title text, so
+         keep that title spelled that way if it's ever edited. Both
+         arrow buttons and edge fades stay visible at all times on
+         desktop (there's no "end" to reach) — on mobile people just
+         swipe. -->
     {photoStrip.length > 0 && (
       <div class="container">
         <div class="photo-strip-wrap" id="photo-strip-wrap">
@@ -353,6 +358,35 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
           });
         });
       }
+
+      // Hovering a non-hero card (mouse users only — real hover
+      // devices) re-centers it, making it the hero. Delegated on the
+      // strip so it works for every card without per-card listeners.
+      const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (supportsHover) {
+        strip.addEventListener("mouseover", (e) => {
+          const card = (e.target as HTMLElement)?.closest(".photo-strip-card") as HTMLElement | null;
+          if (!card) return;
+          const idx = cards.indexOf(card);
+          if (idx !== -1 && idx !== currentIndex) {
+            card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+          }
+        });
+      }
+
+      // Clicking a non-hero card re-centers it instead of following its
+      // link (PM preference, 2026-08-19) — only the card that's ALREADY
+      // the hero navigates through when clicked. Delegated on the strip
+      // so it covers every card, including the two extra loop copies.
+      strip.addEventListener("click", (e) => {
+        const card = (e.target as HTMLElement)?.closest(".photo-strip-card") as HTMLElement | null;
+        if (!card) return;
+        const idx = cards.indexOf(card);
+        if (idx !== -1 && idx !== currentIndex) {
+          e.preventDefault();
+          card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+      });
     }
   </script>
  
