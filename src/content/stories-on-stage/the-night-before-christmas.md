@@ -1,5 +1,5 @@
 ---
-title: The Night Before Christmas
+title: THE NIGHT BEFORE CHRISTMAS
 start_date: 2026-12-11
 end_date: 2026-06-12
 date_display: December 2026
