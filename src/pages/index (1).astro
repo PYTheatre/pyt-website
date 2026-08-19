@@ -1,0 +1,865 @@
+---
+/*
+  HOME PAGE.
+ 
+  Content comes from two CMS-managed sources:
+   - src/content/settings/home-page.json — all the editable copy
+     (hero, optional hero banner photo, discovery cards, impact
+     stats, section headings, etc.)
+   - donation-campaign.json — the campaign progress numbers.
+ 
+  Layout/structure lives here in code (not editable via CMS, by
+  design — so the page can't be visually broken). All words, links,
+  images, and numbers are editable through the CMS.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Logo from "../components/Logo.astro";
+import home from "../content/settings/home-page.json";
+import campaign from "../content/settings/donation-campaign.json";
+ 
+// --- Section heading case (2026-08-19) ---
+// Every remaining homepage section heading is editable, with a
+// per-heading choice of "as typed" or "UPPERCASE". Each falls back to
+// a sensible default if the CMS field is blank, so the page never
+// renders with an empty heading.
+const discovery_heading_case = (home as any).discovery_heading_case || "as-typed";
+const impact_heading_case = (home as any).impact_heading_case || "as-typed";
+const donate_heading_case = (home as any).donate_heading_case || "as-typed";
+
+// --- Donation campaign numbers ---
+const goal = campaign.goal_amount;
+const raised = campaign.raised_amount;
+const donorCount = campaign.donor_count;
+const campaignLabel = campaign.campaign_label;
+const pct = Math.round((raised / goal) * 100);
+// Thermometer fill height, capped 0–100 so it never overflows the tube.
+const fillPct = Math.min(100, Math.max(0, pct));
+ 
+// Donation-teaser heading. CMS-editable (home.donate_heading). If the
+// field is empty, fall back to the original goal-based wording so the
+// line never renders blank.
+const donateHeading = home.donate_heading?.trim() || `Help us reach $${goal.toLocaleString()}.`;
+ 
+// --- Hero heading with optional italic word ---
+// The CMS lets staff pick one word in the heading to italicize
+// (the accent style). If that word appears in the heading, we
+// split around it; otherwise the heading renders plain.
+const heading = home.hero_heading;
+const italicWord = home.hero_heading_italic_word?.trim();
+let headingBefore = heading;
+let headingItalic = "";
+let headingAfter = "";
+if (italicWord && heading.includes(italicWord)) {
+  const idx = heading.indexOf(italicWord);
+  headingBefore = heading.slice(0, idx);
+  headingItalic = italicWord;
+  headingAfter = heading.slice(idx + italicWord.length);
+}
+
+// --- Force the headline onto two lines, with the word right before
+// the accent word joining it on the second line (PM preference: e.g.
+// "YOUTH THEATER" / "FOR EVERYONE!" rather than "YOUTH THEATER FOR" /
+// "EVERYONE!"). Only kicks in when there's an accent word AND at
+// least two words before it; otherwise the heading just wraps
+// naturally with no forced break.
+let headingLine1 = "";
+let headingLine2Lead = "";
+if (headingItalic) {
+  const trimmed = headingBefore.trimEnd();
+  const lastSpaceIdx = trimmed.lastIndexOf(" ");
+  if (lastSpaceIdx > 0) {
+    headingLine1 = trimmed.slice(0, lastSpaceIdx);
+    headingLine2Lead = trimmed.slice(lastSpaceIdx + 1);
+  }
+}
+ 
+// --- Optional hero banner image (legacy, not currently rendered) ---
+const heroImage = (home as any).hero_image || "";
+
+// --- Hero photo strip ---
+// A row of clickable photo cards under the intro text, replacing the
+// old single wide banner. Each card needs a title and a link; the
+// photo is optional (falls back to a colored placeholder showing the
+// title, cycling through the brand colors so cards without a photo
+// still look intentional rather than broken). Empty-safe: hidden
+// entirely if the list is empty or every entry is missing a title/url.
+const placeholderColors = ["accent", "brand-blue", "brand-green", "accent-deep", "brand-blue", "brand-green"];
+const photoStrip = ((home as any).photo_strip || [])
+  .filter((c: any) => c?.title?.trim() && c?.url?.trim())
+  .map((c: any, i: number) => ({
+    title: c.title,
+    url: c.url,
+    image: c.image || "",
+    colorClass: placeholderColors[i % placeholderColors.length],
+  }));
+---
+ 
+<BaseLayout title="Peninsula Youth Theatre — Outstanding youth theatre">
+  <!-- ============ HERO (intro text) ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-logo-wrap">
+          <Logo size="hero" />
+        </div>
+        <h1 class="hero-heading">
+          {headingItalic && headingLine2Lead ? (
+            <>
+              {headingLine1}<br />
+              {headingLine2Lead}{" "}
+              <span class="accent-word">
+                {headingItalic}
+                <svg class="accent-stars" viewBox="0 -70 610 90" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
+                  <g fill="#68b050">
+                    <polygon points="12.9,-1.5 15.2,4.0 21.1,4.4 16.6,8.3 18.0,14.1 12.9,11.0 7.8,14.1 9.2,8.3 4.7,4.4 10.6,4.0" />
+                    <polygon points="55.7,2.2 57.6,6.7 62.5,7.1 58.7,10.3 59.9,15.0 55.7,12.5 51.5,15.0 52.7,10.3 48.9,7.1 53.8,6.7" />
+                    <polygon points="98.6,-2.2 100.7,2.8 106.1,3.3 102.0,6.8 103.2,12.1 98.6,9.3 94.0,12.1 95.2,6.8 91.1,3.3 96.5,2.8" />
+                    <polygon points="494.0,-5.0 495.9,-0.5 500.8,-0.1 497.0,3.1 498.2,7.8 494.0,5.3 489.8,7.8 491.0,3.1 487.2,-0.1 492.1,-0.5" />
+                    <polygon points="533.3,-19.3 535.0,-15.2 539.4,-14.9 536.0,-12.0 537.1,-7.7 533.3,-10.0 529.5,-7.7 530.6,-12.0 527.2,-14.9 531.6,-15.2" />
+                  </g>
+                  <g fill="#f2c419">
+                    <polygon points="569.0,-40.0 570.9,-35.5 575.8,-35.1 572.0,-31.9 573.2,-27.2 569.0,-29.7 564.8,-27.2 566.0,-31.9 562.2,-35.1 567.1,-35.5" />
+                    <polygon points="601.1,-57.9 602.4,-54.7 605.9,-54.4 603.2,-52.2 604.0,-48.9 601.1,-50.6 598.2,-48.9 599.0,-52.2 596.3,-54.4 599.8,-54.7" />
+                  </g>
+                </svg>
+              </span>
+              {headingAfter}
+            </>
+          ) : (
+            <>
+              {headingBefore}{headingItalic && (
+                <span class="accent-word">{headingItalic}</span>
+              )}{headingAfter}
+            </>
+          )}
+        </h1>
+        <p class="hero-lede">{home.hero_lede}</p>
+      </div>
+    </div>
+ 
+    <!-- Photo strip / carousel: scrollable row of cards linking to key
+         pages. Hidden entirely when there are no valid cards. Cards
+         render in CMS order (no shuffle). The card nearest the center
+         of the viewport scales up as the "hero" image; swiping or
+         using the arrows re-centers whichever card you land on,
+         growing it in turn (see script below). Always opens centered
+         on the card titled exactly "Center Stage Musicals" (PM
+         preference, 2026-08-19) — matched by that card's title text,
+         so keep that title spelled that way if it's ever edited. The
+         native browser scrollbar is hidden in favor of arrow buttons +
+         edge fades (desktop) — on mobile people just swipe, so the
+         arrows hide themselves there and the fade is the only hint. -->
+    {photoStrip.length > 0 && (
+      <div class="container">
+        <div class="photo-strip-wrap" id="photo-strip-wrap">
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Scroll left">‹</button>
+          <div class="photo-strip-fade photo-strip-fade-left" aria-hidden="true"></div>
+
+          <div class="photo-strip" id="photo-strip">
+            {photoStrip.map((card) => (
+              <a href={card.url} class="photo-strip-card">
+                <div class="photo-strip-photo">
+                  {card.image ? (
+                    <img src={card.image} alt="" loading="eager" />
+                  ) : (
+                    <div class={`photo-strip-placeholder c-${card.colorClass}`}></div>
+                  )}
+                </div>
+                <span class="photo-strip-title">{card.title}</span>
+              </a>
+            ))}
+          </div>
+
+          <div class="photo-strip-fade photo-strip-fade-right" aria-hidden="true"></div>
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-next" id="photo-strip-next" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+    )}
+  </section>
+
+  <script>
+    // Centered photo carousel. Cards stay in CMS order (no shuffle).
+    // The card closest to the center of the visible strip scales up
+    // as the "hero" image; swiping or using the arrows re-centers
+    // whichever card you land on, growing it in turn. Uses
+    // offsetLeft/offsetWidth (layout box) rather than
+    // getBoundingClientRect for all position math, since those are
+    // unaffected by the CSS transform we use to scale cards — reading
+    // a transformed element's bounding rect would feed its own scaled
+    // size back into the next frame's calculation.
+    const strip = document.getElementById("photo-strip") as HTMLElement | null;
+    const wrap = document.getElementById("photo-strip-wrap");
+    const prevBtn = document.getElementById("photo-strip-prev");
+    const nextBtn = document.getElementById("photo-strip-next");
+
+    if (strip && wrap) {
+      const cards = Array.from(strip.querySelectorAll(".photo-strip-card")) as HTMLElement[];
+      let currentIndex = 0;
+
+      // Pad both ends of the track so the first and last cards can
+      // still reach true center — recalculated on resize since card
+      // width differs by breakpoint.
+      const updatePadding = () => {
+        if (!cards.length) return;
+        const pad = Math.max(0, (strip.clientWidth - cards[0].offsetWidth) / 2);
+        strip.style.paddingLeft = `${pad}px`;
+        strip.style.paddingRight = `${pad}px`;
+      };
+
+      const MAX_SCALE = 1.28;
+      const MIN_SCALE = 0.82;
+
+      const updateScale = () => {
+        if (!cards.length) return;
+        const centerX = strip.clientWidth / 2 + strip.scrollLeft;
+        const falloff = cards[0].offsetWidth * 1.35;
+        let closestDist = Infinity;
+        cards.forEach((card, i) => {
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+          const dist = Math.abs(cardCenter - centerX);
+          const t = Math.min(1, dist / falloff);
+          const scale = MAX_SCALE - (MAX_SCALE - MIN_SCALE) * t;
+          card.style.transform = `scale(${scale.toFixed(3)})`;
+          card.style.opacity = Math.max(0.75, 1 - t * 0.4).toFixed(2);
+          if (dist < closestDist) {
+            closestDist = dist;
+            currentIndex = i;
+          }
+        });
+        cards.forEach((card, i) => {
+          card.style.zIndex = i === currentIndex ? "2" : "1";
+        });
+      };
+
+      updatePadding();
+
+      // Always open centered on "Center Stage Musicals" rather than a
+      // random card (PM preference). Falls back to the first card if
+      // that title is ever missing or renamed.
+      const startCard =
+        cards.find(
+          (c) =>
+            (c.querySelector(".photo-strip-title")?.textContent || "")
+              .trim()
+              .toLowerCase() === "center stage musicals"
+        ) || cards[0];
+      startCard?.scrollIntoView({ inline: "center", block: "nearest" });
+      updateScale();
+
+      let scaleQueued = false;
+      const queueScale = () => {
+        if (scaleQueued) return;
+        scaleQueued = true;
+        requestAnimationFrame(() => {
+          updateScale();
+          scaleQueued = false;
+        });
+      };
+      strip.addEventListener("scroll", queueScale, { passive: true });
+
+      window.addEventListener("resize", () => {
+        updatePadding();
+        cards[currentIndex]?.scrollIntoView({ inline: "center", block: "nearest" });
+        updateScale();
+      });
+
+      // Arrow buttons + fade edges: step to the next/previous card and
+      // re-center it, and hide whichever arrow/fade is at a dead end
+      // (no point showing a "next" arrow when already at the last card).
+      if (prevBtn && nextBtn) {
+        const updateArrows = () => {
+          const atStart = strip.scrollLeft <= 4;
+          const atEnd = strip.scrollLeft >= strip.scrollWidth - strip.clientWidth - 4;
+          wrap.classList.toggle("at-start", atStart);
+          wrap.classList.toggle("at-end", atEnd);
+        };
+        prevBtn.addEventListener("click", () => {
+          cards[Math.max(0, currentIndex - 1)]?.scrollIntoView({
+            behavior: "smooth",
+            inline: "center",
+            block: "nearest",
+          });
+        });
+        nextBtn.addEventListener("click", () => {
+          cards[Math.min(cards.length - 1, currentIndex + 1)]?.scrollIntoView({
+            behavior: "smooth",
+            inline: "center",
+            block: "nearest",
+          });
+        });
+        strip.addEventListener("scroll", updateArrows, { passive: true });
+        updateArrows();
+      }
+    }
+  </script>
+ 
+  <!-- ============ DISCOVERY CARDS (square photo grid) ============ -->
+  <!-- "Find your role" — this now sits directly after the hero. The
+       old "Upcoming Shows"/"What's Next" section that used to be here
+       was removed entirely (code + CMS fields) per PM request,
+       2026-08-19. -->
+  <section class="section">
+    <div class="container">
+      <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
+
+      <div class="card-grid">
+        {home.discovery_cards.map((card: any, i: number) => (
+          <a href={card.url} class="card">
+            {card.image ? (
+              <img src={card.image} alt="" class="card-photo" loading="lazy" />
+            ) : (
+              <div class={`card-photo card-photo-placeholder c-${placeholderColors[i % placeholderColors.length]}`}></div>
+            )}
+            <span class="card-overlay">
+              <span class="card-title">{card.title}</span>
+              {card.subtitle && <span class="card-subtitle">{card.subtitle}</span>}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ IMPACT STATS ============ -->
+  <section class="section impact">
+    <div class="container">
+      <h2 class={`section-head ${impact_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.impact_heading}</h2>
+ 
+      <div class="stat-grid">
+        {home.stats.map((stat, i) => {
+          /* Impact numbers are coloured by POSITION using the three logo
+             colours, cycling if there are ever more than three:
+             1st = blue, 2nd = green, 3rd = pink. */
+          const figureColors = ["var(--brand-blue)", "var(--brand-green)", "var(--accent)"];
+          const figureColor = figureColors[i % figureColors.length];
+          return (
+            <div class="stat">
+              <p class="stat-figure" style={`color: ${figureColor}`}>{stat.figure}</p>
+              <p class="stat-label">{stat.label}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ DONATION TEASER ============ -->
+  <section class="section donate-teaser">
+    <div class="container">
+      <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
+      <p class="donate-lede">{home.donate_lede}</p>
+ 
+      <div class="thermo-row">
+        <!-- Thermometer -->
+        <div class="thermo" role="img"
+             aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
+          <div class="thermo-tube">
+            <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
+          </div>
+          <div class="thermo-bulb"></div>
+        </div>
+
+        <!-- Numbers -->
+        <div class="thermo-stats">
+          <p class="thermo-raised">${raised.toLocaleString()}</p>
+          <p class="thermo-goal">raised of ${goal.toLocaleString()} goal</p>
+          <p class="thermo-meta">
+            <strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal
+          </p>
+        </div>
+      </div>
+ 
+      <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary" target="_blank" rel="noopener">{home.donate_button_label}</a>
+    </div>
+  </section>
+</BaseLayout>
+ 
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    padding-top: var(--space-xl);
+    /* Bottom padding kept small on purpose: the section right after
+       (Discovery cards / "Find your role") already has its own
+       generous top padding via the shared .section class. Making
+       both edges large stacked into an oddly big gap. */
+    padding-bottom: var(--space-md);
+  }
+ 
+  .hero-heading {
+    /* Enlarged from the previous size (PM feedback) — scoped to the
+       homepage only, other pages' h1 sizes are unaffected. */
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    margin: 0;
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+    /* PM tried a few playful font options and picked Baloo 2, caps —
+       scoped to just this homepage headline (via font-family here,
+       not the shared --font-heading token), so every other heading
+       on the site stays on Archivo Black.
+       Baloo 2's own font metrics reserve a lot of extra vertical
+       space (for lowercase ascenders/descenders this all-caps
+       headline never uses), which made the default line spacing
+       look oddly loose. line-height is set tight and explicit here
+       to compensate — this value was tuned by measuring the font's
+       actual rendered letter height directly (not just picked by
+       eye), but different headline text/length could still need a
+       revisit. */
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.82;
+  }
+
+  /* Logo + headline + intro text, laid out as a small grid so the
+     lede lines up under the HEADLINE (not the logo), and the logo's
+     own height (set in Logo.astro) matches the headline text block —
+     giving a clean top/bottom alignment between logo and headline
+     without the logo dwarfing anything. Stacked (logo, then headline,
+     then lede, all full width) on phones; side by side once there's
+     enough width for it to breathe. */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 0.6rem;
+  }
+
+  .hero-logo-wrap {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .hero-lede {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  @media (min-width: 720px) {
+    .hero-grid {
+      grid-template-columns: auto 1fr;
+      column-gap: var(--space-lg);
+      align-items: center;
+    }
+
+    .hero-logo-wrap {
+      grid-row: 1;
+    }
+
+    .hero-heading {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .hero-lede {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+
+  /* The CMS-editable accent word (hero_heading_italic_word) now gets
+     a scatter of small stars trailing up from underneath it into the
+     empty space beneath the rest of the headline, instead of a plain
+     underline. Positioned relative to this word specifically (not
+     hardcoded to the page), but the star shapes themselves are
+     hand-placed to roughly fit THIS headline's current wording and
+     line lengths — if the headline text changes substantially later,
+     this will likely need re-tuning to still land in the right gap. */
+  .accent-word {
+    position: relative;
+  }
+
+  .accent-stars {
+    position: absolute;
+    left: 0;
+    bottom: -0.2em;
+    width: 6.1em;
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .hero-lede {
+    /* Brought up to match the impact of the new bolder look — bigger,
+       heavier, and full-strength ink color instead of the muted gray
+       paragraphs normally use. Line-height/letter-spacing tightened
+       from the site's normal body defaults (1.6 leading, no tracking)
+       since at this size+weight the default reads loose — condensed
+       to feel more like a headline-adjacent block than body copy. */
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 60ch;
+    margin-bottom: var(--space-md);
+  }
+ 
+  /* Wide hero banner photo (legacy, not currently rendered — kept in
+     case hero_image is reused later) */
+  .hero-banner-img {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: 0;
+    display: block;
+    margin-top: var(--space-lg);
+    margin-bottom: 0;
+    box-shadow: var(--shadow-soft);
+    max-height: 520px;
+  }
+
+  /* ---- Hero photo strip ---- */
+  .photo-strip-wrap {
+    position: relative;
+    margin-top: var(--space-lg);
+  }
+
+  .photo-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    overflow-x: auto;
+    /* "mandatory" (not "proximity") so the strip always settles on a
+       centered card, since that centered card is now the visually
+       "hero" one — see .photo-strip-card scale below. */
+    scroll-snap-type: x mandatory;
+    /* Extra top/bottom room so the centered card's scale-up doesn't
+       get clipped by this scroll container. */
+    padding: 14px 0 0.6rem;
+    -webkit-overflow-scrolling: touch;
+    /* Hide the native scrollbar — replaced by the arrow buttons and
+       edge fades below. Swiping/dragging still works exactly the
+       same either way. */
+    scrollbar-width: none;
+  }
+
+  .photo-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-strip-fade {
+    display: none; /* shown on wider screens only, see media query below */
+    position: absolute;
+    top: 0;
+    bottom: 0.4rem;
+    width: 48px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .photo-strip-fade-left {
+    left: 0;
+    background: linear-gradient(to right, var(--paper), transparent);
+  }
+
+  .photo-strip-fade-right {
+    right: 0;
+    background: linear-gradient(to left, var(--paper), transparent);
+  }
+
+  .photo-strip-wrap.at-start .photo-strip-fade-left,
+  .photo-strip-wrap.at-end .photo-strip-fade-right {
+    display: none;
+  }
+
+  .photo-strip-arrow {
+    display: none; /* shown on wider screens only, see media query below */
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .photo-strip-arrow-prev {
+    left: -6px;
+  }
+
+  .photo-strip-arrow-next {
+    right: -6px;
+  }
+
+  .photo-strip-wrap.at-start .photo-strip-arrow-prev,
+  .photo-strip-wrap.at-end .photo-strip-arrow-next {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .photo-strip-fade,
+    .photo-strip-arrow {
+      display: flex;
+    }
+
+    .photo-strip-wrap.at-start .photo-strip-fade-left,
+    .photo-strip-wrap.at-start .photo-strip-arrow-prev,
+    .photo-strip-wrap.at-end .photo-strip-fade-right,
+    .photo-strip-wrap.at-end .photo-strip-arrow-next {
+      display: none;
+    }
+  }
+
+  .photo-strip-card {
+    flex: 0 0 220px;
+    display: block;
+    scroll-snap-align: center;
+    transform-origin: center center;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  .photo-strip-photo {
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .photo-strip-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-strip-placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-strip-placeholder.c-accent { background: var(--accent); }
+  .photo-strip-placeholder.c-accent-deep { background: var(--accent-deep); }
+  .photo-strip-placeholder.c-brand-blue { background: var(--brand-blue); }
+  .photo-strip-placeholder.c-brand-green { background: var(--brand-green); }
+
+  .photo-strip-title {
+    display: block;
+    margin-top: 0.6rem;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  @media (max-width: 640px) {
+    .photo-strip-card {
+      flex-basis: 168px;
+    }
+  }
+ 
+  /* ---- Section heading ---- */
+  .section-head {
+    margin-block: 0.4rem var(--space-lg);
+    max-width: 20ch;
+  }
+
+  /* Caps toggle for section headings (NEW, 2026-08-19) — the PM can
+     now choose "as typed" (default) or UPPERCASE per heading in the
+     CMS. Applied by adding this class conditionally, not by forcing
+     text-transform on .section-head itself, so existing headings
+     that were typed in caps by hand (e.g. content already written in
+     capitals) aren't affected either way. */
+  .case-upper {
+    text-transform: uppercase;
+  }
+ 
+  /* ---- Discovery cards (square photo grid, redesigned 2026-08-19) ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+ 
+  .card {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.18s ease;
+  }
+ 
+  .card:hover {
+    transform: translateY(-2px);
+  }
+ 
+  .card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+ 
+  .card-photo-placeholder.c-accent { background: var(--accent); }
+  .card-photo-placeholder.c-accent-deep { background: var(--accent-deep); }
+  .card-photo-placeholder.c-brand-blue { background: var(--brand-blue); }
+  .card-photo-placeholder.c-brand-green { background: var(--brand-green); }
+ 
+  /* Title overlaid on the photo, bottom-anchored, dark gradient scrim
+     behind it for legibility on any photo. Big, bold, Baloo 2, white —
+     PM request, to match the homepage's other playful touches. */
+  .card-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.6rem 0.9rem 0.85rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+ 
+  .card-title {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: clamp(1.1rem, 3.4vw, 1.6rem);
+    line-height: 1.1;
+  }
+ 
+  .card-subtitle {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0.9;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    line-height: 1.2;
+  }
+ 
+  /* ---- Impact stats ---- */
+  .impact {
+    background: var(--paper-warm);
+    border-block: 1px solid var(--line);
+  }
+ 
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+ 
+  .stat-figure {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+ 
+  .stat-label {
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
+  }
+ 
+  /* ---- Donation teaser ---- */
+  .donate-lede {
+    max-width: 54ch;
+    margin-bottom: var(--space-lg);
+  }
+ 
+  /* ---- Campaign progress thermometer (matches the Support PYT page) ---- */
+  .thermo-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+  }
+
+  .thermo {
+    position: relative;
+    width: 56px;
+    height: 250px;
+    flex-shrink: 0;
+  }
+
+  .thermo-tube {
+    position: absolute;
+    left: 12px;
+    top: 0;
+    width: 32px;
+    height: 210px;
+    border: 3px solid var(--accent);
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    overflow: hidden;
+  }
+
+  .thermo-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--campaign-fill);
+    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    transition: height 0.4s ease;
+  }
+
+  .thermo-bulb {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--accent);
+  }
+
+  .thermo-stats {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .thermo-raised {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .thermo-goal {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0.3rem 0 0;
+  }
+
+  .thermo-meta {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0.6rem 0 0;
+  }
+
+  .thermo-meta strong {
+    color: var(--accent);
+  }
+ 
+  /* ============ WIDER SCREENS ============ */
+  @media (min-width: 720px) {
+    .stat-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .card-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+ 
+  @media (min-width: 920px) {
+    .card-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
