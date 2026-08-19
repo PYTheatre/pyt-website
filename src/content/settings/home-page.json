@@ -2,7 +2,7 @@
   "hero_eyebrow": "NONE",
   "hero_secondary_label": "Programs",
   "impact_heading_case": "as-typed",
-  "impact_heading": "PYT's impact",
+  "impact_heading": "PYT in numbers",
   "donate_lede": "remove",
   "photo_strip": [
     {
@@ -32,10 +32,10 @@
     }
   ],
   "hero_primary_url": "/shows",
-  "impact_eyebrow": "Our impact",
-  "donate_heading": "$200,000 in 2026",
+  "impact_eyebrow": "PYT in numbers",
+  "donate_heading": "Help us reach our goal",
   "hero_primary_label": "Shows",
-  "discovery_heading": "FIND YOUR ROLE",
+  "discovery_heading": "Find your role",
   "discovery_cards": [
     {
       "title": "FALL CLASSES",
@@ -100,15 +100,19 @@
   "stats": [
     {
       "figure": "20K+ ",
-      "label": "Children and families served"
+      "label": "Children and families served."
     },
     {
       "figure": "450K+",
-      "label": "Audience members"
+      "label": "Audience members."
     },
     {
       "figure": "$100K",
-      "label": "In scholarships awarded"
+      "label": "In scholarships awarded."
+    },
+    {
+      "figure": "20%",
+      "label": "Operating costs supported by donors % sponsors - like you!"
     }
   ],
   "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!"
