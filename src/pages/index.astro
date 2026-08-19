@@ -333,6 +333,18 @@ const photoStrip = ((home as any).photo_strip || [])
     position: relative;
     grid-column: 1;
     grid-row: 2;
+    /* PM tried a few playful font options and picked Baloo 2, caps —
+       scoped to just this homepage headline (via font-family here,
+       not the shared --font-heading token), so every other heading
+       on the site stays on Archivo Black. NOTE: the logo-alignment
+       sizing (Logo.astro) and the star-flourish positions below were
+       both tuned against Archivo Black's specific letter proportions.
+       Baloo 2 is rounder and a bit different width/cap-height, so
+       both may drift slightly out of place now — worth a fresh look
+       and possibly a follow-up tweak once this is live. */
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 
   /* Logo + headline + intro text, laid out as a small grid so the
