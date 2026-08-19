@@ -1,18 +1,32 @@
 ---
 /*
-  LOGO COMPONENT — real PYT logo (2026-08-18, sized-variant added 2026-08-19).
+  LOGO COMPONENT — real PYT logo (2026-08-18, sized-variant added
+  2026-08-19, precise crop-alignment added 2026-08-19).
 
   The logo graphic itself contains BOTH the colored "PYT" mark and the
-  "Peninsula Youth Theatre" wordmark stacked underneath — so there is
-  no separate HTML text next to it anymore (there used to be; removed
-  on purpose to avoid showing the name twice).
+  "Peninsula Youth Theatre" wordmark stacked underneath, with a row of
+  decorative stars ABOVE the "PYT" letters — so there is no separate
+  HTML text next to it anymore (there used to be; removed on purpose
+  to avoid showing the name twice).
 
   Two sizes:
    - size="nav" (default) — small, used in the header on every page
-     EXCEPT the homepage (the homepage removed the nav logo in favor
-     of the "hero" size below).
+     EXCEPT the homepage. Simple: scales the whole image (including
+     the decorative stars) to a fixed height. No special alignment
+     needed here, it just needs to look like a normal logo mark.
    - size="hero" — bigger, used once on the homepage, sitting next to
-     (desktop) or above (mobile) the hero headline.
+     (desktop) or above (mobile) the hero headline. This one uses a
+     precise crop/offset so the TOP OF THE "PYT" LETTERS (not the
+     decorative stars above them) lines up with the top of the
+     headline text, and the BOTTOM OF THE "PENINSULA YOUTH THEATRE"
+     WORDMARK lines up with the bottom of the headline text — the
+     decorative stars are allowed to poke up above that aligned box,
+     same as they do in the source artwork.
+
+     The crop percentages below (26.47% / 97.50%) were measured
+     directly from the actual image file's pixel rows (not eyeballed)
+     — see BUILD_LOG.md for how. If the logo artwork is ever replaced
+     with a different file, these percentages will need remeasuring.
 
   Every page uses THIS component, so swapping the file here updates
   the logo everywhere at once, at both sizes.
@@ -23,9 +37,17 @@ interface Props {
 const { size = "nav" } = Astro.props;
 ---
 
-<a href="/" class={`logo logo-${size}`} aria-label="Peninsula Youth Theatre — home">
-  <img src="/uploads/pyt-logo-stars.png" alt="Peninsula Youth Theatre" class="logo-mark" width="2526" height="1398" />
-</a>
+{size === "hero" ? (
+  <a href="/" class="logo logo-hero" aria-label="Peninsula Youth Theatre — home">
+    <span class="logo-hero-frame">
+      <img src="/uploads/pyt-logo-stars.png" alt="Peninsula Youth Theatre" class="logo-mark logo-mark-hero" width="2526" height="1398" />
+    </span>
+  </a>
+) : (
+  <a href="/" class="logo logo-nav" aria-label="Peninsula Youth Theatre — home">
+    <img src="/uploads/pyt-logo-stars.png" alt="Peninsula Youth Theatre" class="logo-mark" width="2526" height="1398" />
+  </a>
+)}
 
 <style>
   .logo {
@@ -46,23 +68,40 @@ const { size = "nav" } = Astro.props;
     }
   }
 
-  /* Hero size: bigger throughout, and bigger again on wide screens
-     where it sits beside the headline rather than stacked above it. */
-  /* Hero size: sized to match the headline TEXT block's own rendered
-     height (two lines at the site's h1 size/line-height), not the
-     logo's own natural proportions — that's what makes it visually
-     "align" top-to-bottom with the headline rather than towering
-     over it. The two values below correspond to the headline's
-     smallest (phone) and largest (desktop) clamp() sizes on the
-     homepage. If the headline font size ever changes, these should
-     be revisited together. */
-  .logo-hero .logo-mark {
-    height: 72px;
+  /* Hero size: the frame is sized to exactly the headline text
+     block's height (PYT-top to wordmark-bottom); the image itself is
+     scaled bigger than that and shifted up inside it, so the stars
+     above "PYT" poke out above the frame instead of being counted as
+     part of the aligned height. Numbers recalculated 2026-08-19 for
+     the switch to Baloo 2 at a bigger size with a tightened
+     line-height (see index.astro) — if the headline font-size,
+     line-height, or typeface changes again, these should be
+     revisited together. */
+  .logo-hero-frame {
+    position: relative;
+    display: block;
+    overflow: visible;
+    height: 50px;
+    width: 127.2px;
+  }
+
+  .logo-mark-hero {
+    position: absolute;
+    left: 0;
+    top: -18.6px;
+    height: 70.4px;
+    width: auto;
   }
 
   @media (min-width: 720px) {
-    .logo-hero .logo-mark {
-      height: 108px;
+    .logo-hero-frame {
+      height: 87px;
+      width: 221.3px;
+    }
+
+    .logo-mark-hero {
+      top: -32.4px;
+      height: 122.5px;
     }
   }
 </style>
