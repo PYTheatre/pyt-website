@@ -2,6 +2,24 @@ PYT Website — Build Log
 Phase-by-phase history of work completed. Newest at the top.
 New Claude session: read START_HERE.md first. For current state, read START_HERE.md and IN_FLIGHT.md. For rules, read PROJECT_RULES.md. For locked decisions, read DECISIONS.md. This build log is history — accurate for how we got here, but not the place to read off current state.
 
+Nav bar overhaul, inspired by Encore Stage & Studio's site (2026-08-18)
+Goal (PM): restructure the top nav after looking at a reference site. Worked out the exact order and contents over several back-and-forth messages — final spec below.
+New left-to-right order: Shows, Auditions, Classes & Camps, Educators (NEW), Shop, About — then Register (NEW button) and Donate (existing button), both at the far right.
+Built (4 files):
+  - src/content/settings/nav-labels.json (NEW) — two small CMS-editable fields: musicals_label ("Center Stage Musicals") and studio_shows_label ("Studio Shows"), used in the Shows dropdown. Added specifically because the PM wants to control the "Center"/"Centre" spelling themselves going forward without asking me each time — everything else in the nav is still code-defined (fixed site structure), just these two wording fields are now editable.
+  - public/admin/config.yml (EDIT) — registered the new "Navigation Labels" settings record (the two fields above), and a new "School Tickets Page" settings record (see below).
+  - src/content/settings/school-tickets-page.json (NEW) + src/pages/school-tickets.astro (NEW) — a simple placeholder page for the new "Educators" menu, since the real school-ticketing page doesn't exist yet. Starts with an empty show list and a friendly "check back soon" message with a contact email; the PM can add real shows (title, dates, description, a booking button) anytime in the CMS with no code changes needed. This is why the page count went from 30 to 31.
+  - src/components/Header.astro (EDIT, site-wide component) — rebuilt navGroups in the new order:
+      • Shows: dropdown renamed to "Center Stage Musicals" / "Studio Shows" (pulled from the new nav-labels.json) / "Stories on Stage" (unchanged)
+      • "Audition" renamed to "Auditions" (kept its Casting sub-link)
+      • "Classes & Camps": School Play in a Box REMOVED from here (moved, see below)
+      • "Educators" (NEW): School Play in a Box (moved from Classes & Camps) + the new School Tickets page
+      • Shop: unchanged
+      • About: reordered — "Support PYT" now sits at the TOP of this dropdown (linking to /ways-to-support, not its old Individual/Corporate/Sponsorship sub-links — those are gone from the nav, the page itself still has those sections), then About, then "Employment" renamed to "Opportunities", then Press. "Support PYT" is no longer its own top-level nav item.
+      • New "Register" button added next to Donate, same bright highlight-color treatment, linking to the external camps registration page the PM provided.
+Tested: build stayed at 31 pages (30 + the new School Tickets page — expected, not a bug). Parsed the rendered HTML directly (not raw grep — §6F) on the homepage: confirmed the exact top-level order (Shows, Auditions, Classes & Camps, Educators, Shop, About), the exact dropdown contents and labels for every group in document order, and both CTA buttons with their correct URLs and left-to-right order (Register, then Donate). Confirmed the SAME nav (Educators item + Register button) is present on an unrelated inner page (/rentals), so it reached every page via the shared component. On the new School Tickets page: confirmed the real empty-state paragraph element is absent when a test listing is added (and present again once removed) — genuine empty-safe behavior, not a §6F false alarm (the class name also appears in that page's own <style> block, which is why I checked for the actual `<p class="empty-state">` element specifically rather than just searching for the text "empty-state").
+NOT verifiable by me: how the new nav actually looks/reads on screen, especially with 6 top-level items now — worth the PM's close look on both desktop and the mobile hamburger menu, since 6 items is more than before and might need to be reviewed for crowding.
+
 Photo strip: arrow buttons instead of the grey scrollbar (2026-08-18)
 Goal (PM): the native browser scrollbar under the homepage photo strip looked out of place ("not elegant"). Discussed 3 options (edge fade only / arrows / dots); PM went with arrows, plus a light edge fade so it reads as intentional rather than just cut off. PM also removed one extra photo-strip card themselves via the CMS in the meantime (no code change needed for that — confirmed it's gone from the live content).
 Built (1 file):
