@@ -58,6 +58,7 @@ const navGroups = [
     children: [
       { label: "School Play in a Box", href: "/school-play-in-a-box" },
       { label: "School Tickets", href: "/school-tickets" },
+      { label: "Stories on Stage", href: "/stories-on-stage" },
     ],
   },
   {
@@ -73,8 +74,8 @@ const navGroups = [
     label: "About",
     href: "/about",
     children: [
-      { label: "Support PYT", href: "/ways-to-support" },
-      { label: "About", href: "/about" },
+      { label: "About PYT", href: "/about" },
+      { label: "Support", href: "/ways-to-support" },
       { label: "Opportunities", href: "/employment" },
       { label: "Press", href: "/press" },
     ],
@@ -263,16 +264,23 @@ const navGroups = [
     gap: 0.6rem;
   }
  
-  .donate-btn,
-  .register-btn {
+  /* Donate keeps the bright highlight color. Register uses PYT's
+     pink accent instead (PM request) — .btn-primary already gives
+     it that pink by default, so register-btn just needs sizing,
+     no color override. */
+  .donate-btn {
     padding: 0.5rem 1.1rem;
     font-size: 0.9rem;
     background: var(--highlight);
     color: var(--highlight-text);
   }
 
-  .donate-btn:hover,
-  .register-btn:hover {
+  .register-btn {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  .donate-btn:hover {
     background: var(--highlight);
     filter: brightness(0.92);
   }
