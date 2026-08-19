@@ -111,10 +111,6 @@ const photoStrip = ((home as any).photo_strip || [])
       <div class="hero-copy">
         <h1>{headingBefore}{headingItalic && <span class="accent-italic">{headingItalic}</span>}{headingAfter}</h1>
         <p class="hero-lede">{home.hero_lede}</p>
-        <div class="hero-ctas">
-          <a href={home.hero_primary_url} class="btn btn-primary">{home.hero_primary_label}</a>
-          <a href={home.hero_secondary_url} class="btn btn-outline">{home.hero_secondary_label}</a>
-        </div>
       </div>
     </div>
  
@@ -269,19 +265,22 @@ const photoStrip = ((home as any).photo_strip || [])
   }
  
   .hero-copy h1 {
+    /* Smaller than the site-wide default h1 size (PM feedback: felt
+       too large against the rest of the new, bolder look) — scoped
+       to the homepage only, other pages' h1 sizes are unaffected. */
+    font-size: clamp(1.9rem, 6vw, 2.9rem);
     margin-block: 0.6rem 1rem;
   }
- 
+
   .hero-lede {
-    font-size: 1.08rem;
+    /* Brought up to match the impact of the new bolder look — bigger,
+       heavier, and full-strength ink color instead of the muted gray
+       paragraphs normally use. */
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ink);
     max-width: 60ch;
     margin-bottom: var(--space-md);
-  }
- 
-  .hero-ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
   }
  
   /* Wide hero banner photo (legacy, not currently rendered — kept in
