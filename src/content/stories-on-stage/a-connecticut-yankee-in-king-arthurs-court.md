@@ -1,5 +1,5 @@
 ---
-title: A Connecticut Yankee in King Arthur's Court
+title: A CONNECTICUT YANKEE IN KING ARTHUR'S COURT
 start_date: 2027-01-22
 end_date: 2027-01-23
 date_display: January 2027
