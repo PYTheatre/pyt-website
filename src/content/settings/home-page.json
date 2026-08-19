@@ -10,7 +10,7 @@
       "image": "/uploads/pyt-newsies-punch.jpg"
     },
     {
-      "title": "Studio Shows",
+      "title": "STUDIO SHOWS",
       "url": "/studio-productions",
       "image": "/uploads/pyt-christmas-carol.jpg"
     },
@@ -20,19 +20,19 @@
       "image": "/uploads/uglyduckling-pyt-.jpg"
     },
     {
-      "title": "School for Performing Arts",
-      "url": "/programs",
-      "image": ""
-    },
-    {
-      "title": "Camps",
+      "title": "CLASSES & CAMPS",
       "url": "/programs",
       "image": "/uploads/pyt-summer-camp.jpg"
     },
     {
+      "title": "REMOVE",
+      "url": "REMOVE",
+      "image": ""
+    },
+    {
       "title": "School Play in a Box",
       "url": "/school-play-in-a-box",
-      "image": ""
+      "image": "/uploads/pyt-shrek.jpg"
     }
   ],
   "hero_primary_url": "/shows",
