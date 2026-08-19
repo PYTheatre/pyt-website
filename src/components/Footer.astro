@@ -8,6 +8,7 @@
 */
 const year = new Date().getFullYear();
 
+import Logo from "./Logo.astro";
 import footer from "../content/settings/footer.json";
 
 const columns = [
@@ -40,8 +41,9 @@ const columns = [
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <img src="/uploads/pyt-logo.png" alt="PYT" class="footer-mark" width="945" height="324" />
-      <p class="footer-name">Peninsula Youth Theatre</p>
+      <div class="footer-logo-wrap">
+        <Logo size="nav" />
+      </div>
       <p class="footer-tagline">
         {footer.tagline}
       </p>
@@ -80,18 +82,8 @@ const columns = [
     gap: var(--space-lg);
   }
 
-  .footer-mark {
-    height: 32px;
-    width: auto;
-    display: block;
-    margin-bottom: 0.6rem;
-  }
-
-  .footer-name {
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    color: var(--ink);
-    margin-bottom: 0.3rem;
+  .footer-logo-wrap {
+    margin-bottom: 0.8rem;
   }
 
   .footer-tagline {
