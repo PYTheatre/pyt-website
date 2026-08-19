@@ -109,13 +109,33 @@ const photoStrip = ((home as any).photo_strip || [])
   <!-- ============ HERO (intro text) ============ -->
   <section class="hero">
     <div class="container">
-      <div class="hero-top">
-        <Logo size="hero" />
-        <div class="hero-copy">
-          <p class="hero-doodle" aria-hidden="true">✦ ✦</p>
-          <h1>{headingBefore}{headingItalic && <span class="accent-word">{headingItalic}</span>}{headingAfter}</h1>
-          <p class="hero-lede">{home.hero_lede}</p>
+      <div class="hero-grid">
+        <div class="hero-logo-wrap">
+          <Logo size="hero" />
         </div>
+        <h1 class="hero-heading">
+          {headingBefore}{headingItalic && (
+            <span class="accent-word">
+              {headingItalic}
+              <svg class="accent-stars" viewBox="0 0 300 90" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
+                <g fill="#68b050">
+                  <polygon points="18,46 20,52 26,52 21,56 23,62 18,58 13,62 15,56 10,52 16,52" />
+                  <polygon points="52,42 53.6,46.7 58.6,46.7 54.6,49.6 56.2,54.3 52,51.4 47.8,54.3 49.4,49.6 45.4,46.7 50.4,46.7" />
+                  <polygon points="86,50 87.6,54.7 92.6,54.7 88.6,57.6 90.2,62.3 86,59.4 81.8,62.3 83.4,57.6 79.4,54.7 84.4,54.7" />
+                  <polygon points="118,36 119.4,40 123.6,40 120.2,42.6 121.6,46.6 118,44.2 114.4,46.6 115.8,42.6 112.4,40 116.6,40" />
+                  <polygon points="150,44 151.4,48 155.6,48 152.2,50.6 153.6,54.6 150,52.2 146.4,54.6 147.8,50.6 144.4,48 148.6,48" />
+                  <polygon points="178,28 179.2,31.4 182.8,31.4 179.9,33.6 181.1,37 178,34.8 174.9,37 176.1,33.6 173.2,31.4 176.8,31.4" />
+                  <polygon points="208,38 209.2,41.4 212.8,41.4 209.9,43.6 211.1,47 208,44.8 204.9,47 206.1,43.6 203.2,41.4 206.8,41.4" />
+                </g>
+                <g fill="#f2c419">
+                  <polygon points="175,24 176,27 179,27 176.5,29 177.5,32 175,30 172.5,32 173.5,29 171,27 174,27" />
+                  <polygon points="205,10 205.8,12.3 208.3,12.3 206.3,13.8 207,16 205,14.6 203,16 203.7,13.8 201.7,12.3 204.2,12.3" />
+                </g>
+              </svg>
+            </span>
+          )}{headingAfter}
+        </h1>
+        <p class="hero-lede">{home.hero_lede}</p>
       </div>
     </div>
  
@@ -304,59 +324,95 @@ const photoStrip = ((home as any).photo_strip || [])
     padding-bottom: var(--space-md);
   }
  
-  .hero-copy h1 {
+  .hero-heading {
     /* Smaller than the site-wide default h1 size (PM feedback: felt
        too large against the rest of the new, bolder look) — scoped
        to the homepage only, other pages' h1 sizes are unaffected. */
     font-size: clamp(1.9rem, 6vw, 2.9rem);
-    margin-block: 0.2rem 1rem;
+    margin: 0;
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
   }
 
-  /* Logo + headline block: stacked (logo above) on phones, side by
-     side (logo left of the text) once there's enough width for it
-     to breathe — PM tested both and preferred beside-on-desktop. */
-  .hero-top {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
+  /* Logo + headline + intro text, laid out as a small grid so the
+     lede lines up under the HEADLINE (not the logo), and the logo's
+     own height (set in Logo.astro) matches the headline text block —
+     giving a clean top/bottom alignment between logo and headline
+     without the logo dwarfing anything. Stacked (logo, then headline,
+     then lede, all full width) on phones; side by side once there's
+     enough width for it to breathe. */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 0.6rem;
+  }
+
+  .hero-logo-wrap {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .hero-lede {
+    grid-column: 1;
+    grid-row: 3;
   }
 
   @media (min-width: 720px) {
-    .hero-top {
-      flex-direction: row;
+    .hero-grid {
+      grid-template-columns: auto 1fr;
+      column-gap: var(--space-lg);
       align-items: center;
-      gap: var(--space-lg);
+    }
+
+    .hero-logo-wrap {
+      grid-row: 1;
+    }
+
+    .hero-heading {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .hero-lede {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 
-  /* Small hand-drawn-style star doodles above the headline — purely
-     decorative, echoes the stars in the logo artwork itself. */
-  .hero-doodle {
-    margin: 0 0 0.2rem;
-    font-size: 1.1rem;
-    color: var(--highlight);
-    letter-spacing: 0.3em;
+  /* The CMS-editable accent word (hero_heading_italic_word) now gets
+     a scatter of small stars trailing up from underneath it into the
+     empty space beneath the rest of the headline, instead of a plain
+     underline. Positioned relative to this word specifically (not
+     hardcoded to the page), but the star shapes themselves are
+     hand-placed to roughly fit THIS headline's current wording and
+     line lengths — if the headline text changes substantially later,
+     this will likely need re-tuning to still land in the right gap. */
+  .accent-word {
+    position: relative;
   }
 
-  /* The CMS-editable accent word (same hero_heading_italic_word field
-     as before) now gets a hand-drawn underline instead of an italic
-     color treatment — a wavy CSS text-decoration adapts automatically
-     to whatever word the PM types in, no fixed-width artwork needed. */
-  .accent-word {
-    text-decoration: underline;
-    text-decoration-style: wavy;
-    text-decoration-color: var(--brand-green);
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.12em;
+  .accent-stars {
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    width: 6.5em;
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
   }
 
   .hero-lede {
     /* Brought up to match the impact of the new bolder look — bigger,
        heavier, and full-strength ink color instead of the muted gray
-       paragraphs normally use. */
+       paragraphs normally use. Line-height/letter-spacing tightened
+       from the site's normal body defaults (1.6 leading, no tracking)
+       since at this size+weight the default reads loose — condensed
+       to feel more like a headline-adjacent block than body copy. */
     font-size: 1.3rem;
     font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
     color: var(--ink);
     max-width: 60ch;
     margin-bottom: var(--space-md);
