@@ -19,41 +19,76 @@ import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
  
 // --- Upcoming shows strip ---
-// Pulls live from BOTH the Mainstage Shows collection and the
-// Stories on Stage collection. A show counts as "upcoming" while
-// its end_date is today or later (so a currently-running show still
-// shows, and finished shows drop off automatically on the next
-// rebuild). Sorted soonest-first by start_date.
+// Pulls live from BOTH the Center Stage Musicals collection and the
+// Stories on Stage collection. Sorted soonest-first by start_date.
+//
+// A show appears here if EITHER:
+//   - it has an upcoming/open audition (Center Stage Musicals only —
+//     Stories on Stage doesn't have per-production auditions), OR
+//   - it has a ticket link set (ticketing_url for Center Stage
+//     Musicals, public_ticketing_url for Stories on Stage) AND the
+//     show itself hasn't already happened (end_date is today or
+//     later).
+// A show with neither an open audition nor a live ticket link simply
+// doesn't show here yet — that's intentional (PM decision, 2026-08-19):
+// this section is meant to prompt action (audition or buy tickets),
+// not list every future show regardless of whether there's anything
+// to do about it yet.
 //
 // Link behavior differs by type, by design:
-//  - Mainstage shows have their own detail page at /shows/<id>.
+//  - Center Stage Musicals have their own detail page at /shows/<id>.
 //  - Stories on Stage productions have NO detail page (locked
 //    decision — they all live on /stories-on-stage), so those
 //    cards link to /stories-on-stage.
 const now = new Date();
- 
-const mainstage = (await getCollection("shows")).map((s) => ({
-  title: s.data.title,
-  start: s.data.start_date,
-  end: s.data.end_date,
-  dateDisplay: s.data.date_display,
-  poster: s.data.poster || "",
-  url: `/shows/${s.id}`,
-}));
- 
-const sos = (await getCollection("storiesOnStage")).map((s) => ({
-  title: s.data.title,
-  start: s.data.start_date,
-  end: s.data.end_date,
-  dateDisplay: s.data.date_display,
-  poster: s.data.poster || "",
-  url: "/stories-on-stage",
-}));
- 
+
+const mainstage = (await getCollection("shows"))
+  .filter((s) => {
+    const auditionEnd = s.data.audition_end || s.data.audition_date;
+    const hasOpenAudition = auditionEnd && new Date(auditionEnd).getTime() >= now.getTime();
+    const hasTickets = !!s.data.ticketing_url && s.data.end_date.getTime() >= now.getTime();
+    return hasOpenAudition || hasTickets;
+  })
+  .map((s) => ({
+    title: s.data.title,
+    start: s.data.start_date,
+    end: s.data.end_date,
+    dateDisplay: s.data.date_display,
+    poster: s.data.poster || "",
+    url: `/shows/${s.id}`,
+  }));
+
+const sos = (await getCollection("storiesOnStage"))
+  .filter((s) => {
+    const hasTickets = !!s.data.public_ticketing_url && s.data.end_date.getTime() >= now.getTime();
+    return hasTickets;
+  })
+  .map((s) => ({
+    title: s.data.title,
+    start: s.data.start_date,
+    end: s.data.end_date,
+    dateDisplay: s.data.date_display,
+    poster: s.data.poster || "",
+    url: "/stories-on-stage",
+  }));
+
 const upcomingShows = [...mainstage, ...sos]
-  .filter((s) => s.end.getTime() >= now.getTime())
   .sort((a, b) => a.start.getTime() - b.start.getTime());
- 
+
+// --- Section heading text + case (NEW, 2026-08-19) ---
+// Every homepage section heading is now editable, with a per-heading
+// choice of "as typed" or "UPPERCASE" — added because "Upcoming
+// shows" was the one heading on the page that wasn't editable at all
+// (the others already were), and the PM wanted a caps/lowercase
+// choice added everywhere while fixing that gap. Each falls back to
+// a sensible default if the CMS field is blank, so the page never
+// renders with an empty heading.
+const shows_heading = (home as any).shows_heading?.trim() || "Upcoming shows";
+const shows_heading_case = (home as any).shows_heading_case || "as-typed";
+const discovery_heading_case = (home as any).discovery_heading_case || "as-typed";
+const impact_heading_case = (home as any).impact_heading_case || "as-typed";
+const donate_heading_case = (home as any).donate_heading_case || "as-typed";
+
 // --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
@@ -246,7 +281,7 @@ const photoStrip = ((home as any).photo_strip || [])
   {upcomingShows.length > 0 && (
     <section class="section shows-strip">
       <div class="container">
-        <h2 class="section-head">Upcoming shows</h2>
+        <h2 class={`section-head ${shows_heading_case === "uppercase" ? "case-upper" : ""}`}>{shows_heading}</h2>
  
         <div class="shows-row">
           {upcomingShows.map((show) => (
@@ -268,17 +303,23 @@ const photoStrip = ((home as any).photo_strip || [])
     </section>
   )}
  
-  <!-- ============ DISCOVERY CARDS ============ -->
+  <!-- ============ DISCOVERY CARDS (square photo grid) ============ -->
   <section class="section">
     <div class="container">
-      <h2 class="section-head">{home.discovery_heading}</h2>
- 
+      <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
+
       <div class="card-grid">
-        {home.discovery_cards.map((card) => (
+        {home.discovery_cards.map((card: any, i: number) => (
           <a href={card.url} class="card">
-            <p class="card-eyebrow">{card.eyebrow}</p>
-            <h3>{card.title}</h3>
-            <p class="card-body">{card.body}</p>
+            {card.image ? (
+              <img src={card.image} alt="" class="card-photo" loading="lazy" />
+            ) : (
+              <div class={`card-photo card-photo-placeholder c-${placeholderColors[i % placeholderColors.length]}`}></div>
+            )}
+            <span class="card-overlay">
+              <span class="card-title">{card.title}</span>
+              {card.subtitle && <span class="card-subtitle">{card.subtitle}</span>}
+            </span>
           </a>
         ))}
       </div>
@@ -288,7 +329,7 @@ const photoStrip = ((home as any).photo_strip || [])
   <!-- ============ IMPACT STATS ============ -->
   <section class="section impact">
     <div class="container">
-      <h2 class="section-head">{home.impact_heading}</h2>
+      <h2 class={`section-head ${impact_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.impact_heading}</h2>
  
       <div class="stat-grid">
         {home.stats.map((stat, i) => {
@@ -311,7 +352,7 @@ const photoStrip = ((home as any).photo_strip || [])
   <!-- ============ DONATION TEASER ============ -->
   <section class="section donate-teaser">
     <div class="container">
-      <h2 class="section-head">{donateHeading}</h2>
+      <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
       <p class="donate-lede">{home.donate_lede}</p>
  
       <div class="thermo-row">
@@ -624,7 +665,7 @@ const photoStrip = ((home as any).photo_strip || [])
 
   .shows-row {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
   }
  
@@ -633,7 +674,6 @@ const photoStrip = ((home as any).photo_strip || [])
     border: 1px solid var(--line);
     border-radius: 0;
     background: var(--paper);
-    overflow: hidden;
     transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   }
  
@@ -644,7 +684,12 @@ const photoStrip = ((home as any).photo_strip || [])
   }
  
   .show-tile-poster {
-    aspect-ratio: 3 / 4;
+    /* Square, not the old tall portrait shape (PM feedback). No
+       overflow:hidden/height constraint here or on .show-tile above —
+       that's what let a longer title like "Rumpelstiltskin's
+       Daughter" look visually cramped/cut off before, even though it
+       was never actually being clipped by CSS. */
+    aspect-ratio: 1 / 1;
     background-color: var(--accent-soft);
     background-size: cover;
     background-position: center;
@@ -667,12 +712,13 @@ const photoStrip = ((home as any).photo_strip || [])
   }
  
   .show-tile-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
   }
  
   .show-tile-date {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--ink-soft);
   }
  
@@ -681,45 +727,79 @@ const photoStrip = ((home as any).photo_strip || [])
     margin-block: 0.4rem var(--space-lg);
     max-width: 20ch;
   }
+
+  /* Caps toggle for section headings (NEW, 2026-08-19) — the PM can
+     now choose "as typed" (default) or UPPERCASE per heading in the
+     CMS. Applied by adding this class conditionally, not by forcing
+     text-transform on .section-head itself, so existing headings
+     that were typed in caps by hand (e.g. content already written in
+     capitals) aren't affected either way. */
+  .case-upper {
+    text-transform: uppercase;
+  }
  
-  /* ---- Discovery cards ---- */
+  /* ---- Discovery cards (square photo grid, redesigned 2026-08-19) ---- */
   .card-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
   }
  
   .card {
+    position: relative;
     display: block;
-    padding: var(--space-md);
-    border: 1px solid var(--line);
-    border-radius: 0;
-    background: var(--paper);
-    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.18s ease;
   }
  
   .card:hover {
-    border-color: var(--accent);
-    box-shadow: var(--shadow-soft);
     transform: translateY(-2px);
   }
  
-  .card-eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
+  .card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
  
-  .card h3 {
-    margin-bottom: 0.5rem;
+  .card-photo-placeholder.c-accent { background: var(--accent); }
+  .card-photo-placeholder.c-accent-deep { background: var(--accent-deep); }
+  .card-photo-placeholder.c-brand-blue { background: var(--brand-blue); }
+  .card-photo-placeholder.c-brand-green { background: var(--brand-green); }
+ 
+  /* Title overlaid on the photo, bottom-anchored, dark gradient scrim
+     behind it for legibility on any photo. Big, bold, Baloo 2, white —
+     PM request, to match the homepage's other playful touches. */
+  .card-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.6rem 0.9rem 0.85rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
   }
  
-  .card-body {
-    font-size: 0.95rem;
-    margin-bottom: var(--space-sm);
+  .card-title {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: clamp(1.1rem, 3.4vw, 1.6rem);
+    line-height: 1.1;
+  }
+ 
+  .card-subtitle {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0.9;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    line-height: 1.2;
   }
  
   /* ---- Impact stats ---- */
@@ -847,7 +927,7 @@ const photoStrip = ((home as any).photo_strip || [])
  
   @media (min-width: 920px) {
     .card-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 </style>
