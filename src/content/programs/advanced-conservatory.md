@@ -2,7 +2,7 @@
 name: STUDIO CLASSES
 eyebrow: ""
 program_type: Class
-age_range: Coming soon
+age_range: Ages 5-12
 season: Fall
 description: >-
   PYT’s School for the Performing Arts is where young performers come to learn
@@ -17,7 +17,7 @@ description: >-
 
   For more information, contact Education Program Manager, Caitlyn DeRouin.
 schedule: ""
-tuition: ""
-registration_url: ""
+tuition: $385-420
+registration_url: https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=abac2ab6-609b-4c71-9c6c-c688ccf0a17b&e4p=92c9cbb9-9b92-4bd3-a9ed-a09101912cc2&e4ts=1787164935&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=0551db09d5b97b0898ff3597e3f4d025#/selectSessions/3850644
 scholarships_available: true
 ---
