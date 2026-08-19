@@ -117,22 +117,33 @@ const photoStrip = ((home as any).photo_strip || [])
     <!-- Photo strip: scrollable row of cards linking to key pages.
          Hidden entirely when there are no valid cards. Order is
          shuffled client-side on load (see script below) so the same
-         card doesn't always lead. -->
+         card doesn't always lead. The native browser scrollbar is
+         hidden in favor of arrow buttons + edge fades (desktop) —
+         on mobile people just swipe, so the arrows hide themselves
+         there and the fade is the only hint. -->
     {photoStrip.length > 0 && (
       <div class="container">
-        <div class="photo-strip" id="photo-strip">
-          {photoStrip.map((card) => (
-            <a href={card.url} class="photo-strip-card">
-              <div class="photo-strip-photo">
-                {card.image ? (
-                  <img src={card.image} alt="" loading="eager" />
-                ) : (
-                  <div class={`photo-strip-placeholder c-${card.colorClass}`}></div>
-                )}
-              </div>
-              <span class="photo-strip-title">{card.title}</span>
-            </a>
-          ))}
+        <div class="photo-strip-wrap" id="photo-strip-wrap">
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Scroll left">‹</button>
+          <div class="photo-strip-fade photo-strip-fade-left" aria-hidden="true"></div>
+
+          <div class="photo-strip" id="photo-strip">
+            {photoStrip.map((card) => (
+              <a href={card.url} class="photo-strip-card">
+                <div class="photo-strip-photo">
+                  {card.image ? (
+                    <img src={card.image} alt="" loading="eager" />
+                  ) : (
+                    <div class={`photo-strip-placeholder c-${card.colorClass}`}></div>
+                  )}
+                </div>
+                <span class="photo-strip-title">{card.title}</span>
+              </a>
+            ))}
+          </div>
+
+          <div class="photo-strip-fade photo-strip-fade-right" aria-hidden="true"></div>
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-next" id="photo-strip-next" aria-label="Scroll right">›</button>
         </div>
       </div>
     )}
@@ -150,6 +161,30 @@ const photoStrip = ((home as any).photo_strip || [])
         [cards[i], cards[j]] = [cards[j], cards[i]];
       }
       cards.forEach((card) => strip.appendChild(card));
+    }
+
+    // Arrow buttons + fade edges: scroll by roughly one card's width
+    // per click, and hide whichever arrow/fade is at a dead end
+    // (no point showing a "next" arrow when already at the last card).
+    const wrap = document.getElementById("photo-strip-wrap");
+    const prevBtn = document.getElementById("photo-strip-prev");
+    const nextBtn = document.getElementById("photo-strip-next");
+    if (strip && wrap && prevBtn && nextBtn) {
+      const updateArrows = () => {
+        const atStart = strip.scrollLeft <= 4;
+        const atEnd = strip.scrollLeft >= strip.scrollWidth - strip.clientWidth - 4;
+        wrap.classList.toggle("at-start", atStart);
+        wrap.classList.toggle("at-end", atEnd);
+      };
+      const scrollByCard = (direction: number) => {
+        const card = strip.querySelector(".photo-strip-card") as HTMLElement | null;
+        const amount = card ? card.getBoundingClientRect().width + 14 : 220;
+        strip.scrollBy({ left: amount * direction, behavior: "smooth" });
+      };
+      prevBtn.addEventListener("click", () => scrollByCard(-1));
+      nextBtn.addEventListener("click", () => scrollByCard(1));
+      strip.addEventListener("scroll", updateArrows, { passive: true });
+      updateArrows();
     }
   </script>
  
@@ -298,14 +333,98 @@ const photoStrip = ((home as any).photo_strip || [])
   }
 
   /* ---- Hero photo strip ---- */
+  .photo-strip-wrap {
+    position: relative;
+    margin-top: var(--space-lg);
+  }
+
   .photo-strip {
     display: flex;
     gap: 0.9rem;
     overflow-x: auto;
     scroll-snap-type: x proximity;
-    margin-top: var(--space-lg);
     padding-bottom: 0.4rem;
     -webkit-overflow-scrolling: touch;
+    /* Hide the native scrollbar — replaced by the arrow buttons and
+       edge fades below. Swiping/dragging still works exactly the
+       same either way. */
+    scrollbar-width: none;
+  }
+
+  .photo-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-strip-fade {
+    display: none; /* shown on wider screens only, see media query below */
+    position: absolute;
+    top: 0;
+    bottom: 0.4rem;
+    width: 48px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .photo-strip-fade-left {
+    left: 0;
+    background: linear-gradient(to right, var(--paper), transparent);
+  }
+
+  .photo-strip-fade-right {
+    right: 0;
+    background: linear-gradient(to left, var(--paper), transparent);
+  }
+
+  .photo-strip-wrap.at-start .photo-strip-fade-left,
+  .photo-strip-wrap.at-end .photo-strip-fade-right {
+    display: none;
+  }
+
+  .photo-strip-arrow {
+    display: none; /* shown on wider screens only, see media query below */
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .photo-strip-arrow-prev {
+    left: -6px;
+  }
+
+  .photo-strip-arrow-next {
+    right: -6px;
+  }
+
+  .photo-strip-wrap.at-start .photo-strip-arrow-prev,
+  .photo-strip-wrap.at-end .photo-strip-arrow-next {
+    display: none;
+  }
+
+  @media (min-width: 720px) {
+    .photo-strip-fade,
+    .photo-strip-arrow {
+      display: flex;
+    }
+
+    .photo-strip-wrap.at-start .photo-strip-fade-left,
+    .photo-strip-wrap.at-start .photo-strip-arrow-prev,
+    .photo-strip-wrap.at-end .photo-strip-fade-right,
+    .photo-strip-wrap.at-end .photo-strip-arrow-next {
+      display: none;
+    }
   }
 
   .photo-strip-card {
