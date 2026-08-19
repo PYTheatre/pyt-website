@@ -1,23 +1,29 @@
 ---
 /*
-  LOGO COMPONENT — real PYT logo (2026-08-18).
+  LOGO COMPONENT — real PYT logo (2026-08-18, sized-variant added 2026-08-19).
 
   The logo graphic itself contains BOTH the colored "PYT" mark and the
   "Peninsula Youth Theatre" wordmark stacked underneath — so there is
   no separate HTML text next to it anymore (there used to be; removed
   on purpose to avoid showing the name twice).
 
-  Because it has real text baked into the image, it needs more height
-  than the old icon-only placeholder to stay legible — see .logo-mark
-  below. If a future version of the logo arrives as a wider/horizontal
-  lockup instead of a stacked one, this sizing will need revisiting.
+  Two sizes:
+   - size="nav" (default) — small, used in the header on every page
+     EXCEPT the homepage (the homepage removed the nav logo in favor
+     of the "hero" size below).
+   - size="hero" — bigger, used once on the homepage, sitting next to
+     (desktop) or above (mobile) the hero headline.
 
   Every page uses THIS component, so swapping the file here updates
-  the logo everywhere at once.
+  the logo everywhere at once, at both sizes.
 */
+interface Props {
+  size?: "nav" | "hero";
+}
+const { size = "nav" } = Astro.props;
 ---
 
-<a href="/" class="logo" aria-label="Peninsula Youth Theatre — home">
+<a href="/" class={`logo logo-${size}`} aria-label="Peninsula Youth Theatre — home">
   <img src="/uploads/pyt-logo-stars.png" alt="Peninsula Youth Theatre" class="logo-mark" width="2526" height="1398" />
 </a>
 
@@ -35,8 +41,20 @@
   }
 
   @media (min-width: 520px) {
-    .logo-mark {
+    .logo-nav .logo-mark {
       height: 54px;
+    }
+  }
+
+  /* Hero size: bigger throughout, and bigger again on wide screens
+     where it sits beside the headline rather than stacked above it. */
+  .logo-hero .logo-mark {
+    height: 76px;
+  }
+
+  @media (min-width: 720px) {
+    .logo-hero .logo-mark {
+      height: 96px;
     }
   }
 </style>
