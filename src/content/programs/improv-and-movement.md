@@ -1,5 +1,5 @@
 ---
-name: Summer Camp 2027
+name: CAMPS 2026-2027
 eyebrow: ""
 program_type: Camp
 age_range: Coming soon
