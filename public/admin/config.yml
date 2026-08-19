@@ -205,6 +205,19 @@ collections:
       preview: false
     files:
  
+      # --- Navigation labels ---
+      # A couple of small, specific labels used in the "Shows" dropdown
+      # in the nav bar at the top of every page. Kept separate (rather
+      # than editing the whole nav) because most of the nav is fixed
+      # site structure — these two are just wording that comes up
+      # often (e.g. "Center" vs "Centre" spelling).
+      - name: "nav-labels"
+        label: "Navigation Labels"
+        file: "src/content/settings/nav-labels.json"
+        fields:
+          - { name: "musicals_label", label: "\"Shows\" menu — Musicals item label", widget: "string", hint: "Shown in the Shows dropdown in the nav bar at the top of every page." }
+          - { name: "studio_shows_label", label: "\"Shows\" menu — Studio Shows item label", widget: "string", hint: "Shown in the Shows dropdown in the nav bar at the top of every page." }
+
       # --- Home Page ---
       # All editable copy on the home page. Layout/structure stays in
       # code. The "Now Playing" poster is automatic (next upcoming show
@@ -683,6 +696,34 @@ collections:
               - { name: "description", label: "Description", widget: "text" }
               - { name: "how_to_apply_label", label: "Button label", widget: "string", default: "Get in touch" }
               - { name: "how_to_apply_url", label: "Button link", widget: "string", required: false, hint: "External URL or mailto: link. Leave blank to hide the button." }
+
+      # --- School Tickets page (NEW, placeholder — 2026-08-18) ---
+      # A new page for the "Educators" nav dropdown, listing shows
+      # schools can book discounted group trips to. Starts empty —
+      # add shows here as they're ready; the page shows a friendly
+      # empty state with a contact email until the first one is added.
+      - name: "school-tickets-page"
+        label: "School Tickets Page"
+        file: "src/content/settings/school-tickets-page.json"
+        description: "The /school-tickets page (linked from the 'Educators' menu) — school-discount show listings. Empty by default; add shows as they're ready."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "School Tickets" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "For schools" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          - name: "listings"
+            label: "School-discount shows"
+            widget: "list"
+            required: false
+            summary: "{{fields.title}}"
+            fields:
+              - { name: "title", label: "Show title", widget: "string" }
+              - { name: "dates", label: "Dates (optional)", widget: "string", required: false, hint: "Example: Performances Oct 12–16, 2026" }
+              - { name: "description", label: "Description", widget: "text" }
+              - { name: "link_label", label: "Button label", widget: "string", default: "Book tickets" }
+              - { name: "link_url", label: "Button link", widget: "string", required: false, hint: "Link to the booking form or ticket page. Leave blank to hide the button." }
+          - { name: "empty_state_text", label: "Message shown when no shows are listed yet", widget: "text", default: "No school-discount shows are listed yet. Check back soon, or get in touch below." }
+          - { name: "contact_email", label: "Contact email shown in the empty state", widget: "string", required: false, default: "caitlyn@pytnet.org" }
+
  
       # --- Rentals page ---
       # Intro copy, a list of rental categories (each with a photo),
