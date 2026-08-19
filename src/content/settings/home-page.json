@@ -87,10 +87,10 @@
     }
   ],
   "hero_image": "",
-  "shows_heading_case": "uppercase",
+  "shows_heading_case": "as-typed",
   "hero_heading_italic_word": "EVERYONE!",
   "donate_button_label": "Donate",
-  "shows_heading": "WHAT'S NEXT",
+  "shows_heading": "What's Next",
   "discovery_eyebrow": "Welcome!",
   "now_playing_label": "Now playing",
   "discovery_heading_case": "as-typed",
