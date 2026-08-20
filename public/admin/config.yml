@@ -432,6 +432,7 @@ collections:
                   - { label: "Studio Shows", value: "/studio-productions" }
                   - { label: "Ways to Support", value: "/ways-to-support" }
               - { name: "image", label: "Photo", widget: "image", hint: "A wide landscape photo works best. Leave a row out entirely rather than adding one with no photo." }
+              - { name: "focus", label: "Vertical focus (%)", widget: "number", required: false, default: 50, value_type: "int", min: 0, max: 100, step: 5, hint: "Which part of the photo to keep when it's cropped to the banner shape. 0 = top, 50 = middle (the default), 100 = bottom. If someone's face is being cut off at the top, lower this — around 15-25 usually does it. Leave blank for the middle." }
               - { name: "alt", label: "Photo description (optional)", widget: "string", required: false, hint: "For screen readers. Leave blank if the photo is purely decorative and the page text already says everything important." }
 
       # --- Footer (tagline + copyright line) ---
