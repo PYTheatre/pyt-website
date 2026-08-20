@@ -26,7 +26,7 @@ const now = new Date();
 >
   <AuditionsPromo strip stripText={(page as any).auditions_strip_text} />
 
-  <PageHero eyebrow={(page as any).eyebrow || "Shows"} title={(page as any).title || "Musicals"} />
+  <PageHero title={(page as any).title || "Musicals"} />
 
   <section class="section show-list-section">
     <div class="container">
@@ -52,9 +52,6 @@ const now = new Date();
                     )}
                   </a>
                   <div class="show-info">
-                    {show.data.eyebrow && (
-                      <p class="show-eyebrow">{show.data.eyebrow}</p>
-                    )}
                     <h2>{show.data.title}</h2>
                     <p class="show-dates">{show.data.date_display}</p>
 
@@ -88,7 +85,6 @@ const now = new Date();
   </section>
   <AuditionsPromo
     section
-    eyebrow={(page as any).auditions_eyebrow}
     heading={(page as any).auditions_heading}
     body={(page as any).auditions_body}
     buttonLabel={(page as any).auditions_button_label}
@@ -145,14 +141,6 @@ const now = new Date();
 
   .show-info { padding: var(--space-md); }
 
-  .show-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.4rem;
-  }
 
   .show-info h2 { font-size: 1.5rem; margin-bottom: 0.4rem; }
 
