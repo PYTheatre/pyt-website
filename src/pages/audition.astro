@@ -26,6 +26,7 @@
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
+import { renderMarkdown } from "../lib/markdown";
 import { getCollection } from "astro:content";
 import page from "../content/settings/audition-page.json";
 
@@ -54,9 +55,15 @@ const openAuditions = shows.filter((show) => {
 // deleting the field would have made that text REAPPEAR rather than go
 // away. No eyebrow is passed to PageHero at all now.
 const title = page.title?.trim() || "Auditions";
+// The intro is a CMS Markdown field (2026-08-20) so staff can put links
+// inside it — most importantly the link to the casting philosophy page,
+// which replaced the separate callout box that used to sit at the
+// bottom of this page. Rendered to HTML here and passed to PageHero as
+// `ledeHtml`; links are styled pink there.
 const intro =
   page.intro?.trim() ||
   "We'd love to see you audition. Below are the shows currently casting, plus how auditions work for Stories on Stage. New to PYT? Everyone is welcome — no experience required.";
+const introHtml = renderMarkdown(intro);
 
 const noOpenMessage =
   page.no_open_message?.trim() ||
@@ -68,12 +75,10 @@ const sosBlurb =
   "Our Stories on Stage season is cast from a single annual audition. Productions are short, often touring to local schools. Visit the Stories on Stage page for this year's audition details.";
 const sosButtonLabel = page.sos_button_label?.trim() || "Auditions";
 
-// Casting philosophy is now a slim link callout rather than a full panel
-// (2026-08-20), so it needs a heading and one line of link text — the old
-// long body paragraph and separate button label are no longer shown.
-const castingHeading = page.casting_heading?.trim() || "Our casting philosophy";
-const castingLinkLabel =
-  page.casting_link_label?.trim() || "How we cast, and what to expect";
+// NOTE (2026-08-20): the casting-philosophy callout box was removed
+// entirely. The link to /casting now lives inside the intro paragraph
+// above, written by staff in the CMS. Nothing here reads casting_* any
+// more — those CMS fields were retired with it.
 
 // Description line for a show's audition card. Uses the show's own
 // CMS-written blurb when there is one; otherwise assembles a readable
@@ -123,7 +128,7 @@ const faqs = Array.isArray(page.faqs)
   title="Auditions — Peninsula Youth Theatre"
   description="Audition with Peninsula Youth Theatre. See which shows are currently casting, learn about Stories on Stage auditions, and read our casting philosophy."
 >
-  <PageHero title={title} lede={intro} />
+  <PageHero title={title} ledeHtml={introHtml} />
 
   <!-- ===== Auditions + FAQs, side by side on wide screens =====
        Redesigned 2026-08-20. Previously these were four stacked
@@ -211,22 +216,6 @@ const faqs = Array.isArray(page.faqs)
     </div>
   </section>
 
-  <!-- ===== Casting philosophy — slim link callout =====
-       Black and white with pink used only for the link itself, matching
-       the treatment used on the mobile nav. Deliberately narrower than
-       the content column and generously padded so it reads as a quiet
-       aside rather than a squashed banner. -->
-  <section class="casting-callout-section">
-    <div class="container">
-      <a href="/casting" class="casting-callout">
-        <span class="casting-callout-heading">{castingHeading}</span>
-        <span class="casting-callout-link">
-          {castingLinkLabel}
-          <span class="casting-callout-arrow" aria-hidden="true">→</span>
-        </span>
-      </a>
-    </div>
-  </section>
 
 </BaseLayout>
 
@@ -416,59 +405,6 @@ const faqs = Array.isArray(page.faqs)
     margin: 0;
     color: var(--ink-soft);
     line-height: 1.6;
-  }
-
-  /* ---- Casting philosophy callout ---- */
-  /* Black and white, pink only on the link (PM request). Narrower than
-     the content column, and padded generously top/bottom so the two
-     lines inside never feel squashed against the border. */
-  .casting-callout-section {
-    padding-bottom: var(--space-2xl);
-  }
-
-  .casting-callout {
-    display: block;
-    max-width: 520px;
-    padding: var(--space-lg);
-    border: 2px solid var(--ink);
-    border-radius: var(--radius);
-    background: var(--paper);
-    text-decoration: none;
-    transition: background 0.18s ease;
-  }
-
-  .casting-callout:hover {
-    background: var(--paper-warm);
-  }
-
-  .casting-callout-heading {
-    display: block;
-    font-family: var(--font-heading);
-    font-size: 1.05rem;
-    line-height: 1.3;
-    color: var(--ink);
-    /* Clear separation from the link line beneath it. */
-    margin-bottom: 0.6rem;
-  }
-
-  .casting-callout-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-weight: 600;
-    font-size: 0.98rem;
-    line-height: 1.4;
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-  }
-
-  .casting-callout-arrow {
-    transition: transform 0.18s ease;
-  }
-
-  .casting-callout:hover .casting-callout-arrow {
-    transform: translateX(3px);
   }
 
   /* ---- Wider screens: auditions and FAQ side by side ---- */
