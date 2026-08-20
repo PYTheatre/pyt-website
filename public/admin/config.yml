@@ -66,6 +66,7 @@ collections:
       - { name: "audition_start", label: "Audition start date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "First day of auditions. For a single-day audition, set this and the end date to the same day. Leave blank if not scheduled yet." }
       - { name: "audition_end", label: "Audition end date (for auto-closing)", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false, hint: "Last day of auditions. After this day passes, the Auditions button automatically greys out to 'Auditions closed'. For a single-day audition, use the same day as the start." }
       - { name: "audition_display", label: "Audition dates (shown to families)", widget: "string", required: false, hint: "The audition dates as you want visitors to read them. Example: August 3–7, 2026. Shown next to the Auditions button. Leave blank to show no date text." }
+      - { name: "audition_blurb", label: "Auditions page — short description", widget: "text", required: false, hint: "The couple of lines shown under this show's title on the Auditions page. Leave blank and one is written automatically from the show type, audition dates, and ages." }
       - { name: "cast_page_url", label: "Cast page link (internal URL)", widget: "string", required: false, hint: "Optional. Example: /cast/dragons-love-tacos" }
       # --- DOUBLE-CAST PERFORMANCE SCHEDULE ---
       # Tick "This show is double cast" to turn on the performance schedule,
@@ -682,20 +683,18 @@ collections:
       - name: "audition-page"
         label: "Audition Page"
         file: "src/content/settings/audition-page.json"
-        description: "The /audition page wording — hero, Stories on Stage panel, casting philosophy panel, and FAQ. The list of shows currently casting comes automatically from your Shows; there's nothing to edit for that here."
+        description: "The /audition page wording. The shows currently casting are pulled automatically from your Shows — to change a show's description on this page, edit that show's 'Auditions page — short description'. The hero photo is set in Page Hero Images."
         fields:
-          - { name: "eyebrow", label: "Hero — eyebrow text", widget: "string", required: false, default: "Get involved" }
           - { name: "title", label: "Hero — page title", widget: "string", default: "Auditions" }
           - { name: "intro", label: "Hero — intro paragraph", widget: "text", required: false }
-          - { name: "shows_heading", label: "Upcoming auditions — section heading", widget: "string", required: false, default: "Upcoming auditions" }
-          - { name: "no_open_message", label: "Message shown when no shows are currently casting", widget: "text", required: false, hint: "Shown in place of the show list when no Center Stage Musicals auditions are open. Example: There are no Center Stage Musicals auditions open right now. Check back soon, or explore Stories on Stage below." }
-          - { name: "sos_heading", label: "Stories on Stage panel — heading", widget: "string", required: false, default: "Stories on Stage" }
-          - { name: "sos_blurb", label: "Stories on Stage panel — text", widget: "text", required: false }
-          - { name: "sos_button_label", label: "Stories on Stage panel — button label", widget: "string", required: false, default: "Stories on Stage auditions" }
-          - { name: "casting_heading", label: "Casting panel — heading", widget: "string", required: false, default: "Our casting philosophy" }
-          - { name: "casting_body", label: "Casting panel — text", widget: "text", required: false }
-          - { name: "casting_button_label", label: "Casting panel — button label", widget: "string", required: false, default: "Read about casting" }
-          - { name: "faq_heading", label: "FAQ — section heading", widget: "string", required: false, default: "Frequently asked questions" }
+          - { name: "shows_heading", label: "Auditions column — heading", widget: "string", required: false, default: "Upcoming auditions", hint: "Sits above the audition cards on the left." }
+          - { name: "no_open_message", label: "Message shown when no shows are currently casting", widget: "text", required: false, hint: "Shown under the cards when no Center Stage Musicals auditions are open. Stories on Stage still shows its own card. Example: There are no Center Stage Musicals auditions open right now — check back soon." }
+          - { name: "sos_heading", label: "Stories on Stage card — heading", widget: "string", required: false, default: "Stories on Stage", hint: "Stories on Stage now appears as a card alongside the shows, in the same style." }
+          - { name: "sos_blurb", label: "Stories on Stage card — description", widget: "text", required: false, hint: "The couple of lines under the heading, matching the show cards." }
+          - { name: "sos_button_label", label: "Stories on Stage card — button label", widget: "string", required: false, default: "Auditions", hint: "Keep it short — the buttons are sized to their label." }
+          - { name: "casting_heading", label: "Casting philosophy — heading", widget: "string", required: false, default: "Our casting philosophy" }
+          - { name: "casting_link_label", label: "Casting philosophy — link text", widget: "string", required: false, default: "How we cast, and what to expect", hint: "The pink underlined link under the heading. This replaced the old paragraph + button: the casting panel is now a slim link rather than a full block of text." }
+          - { name: "faq_heading", label: "FAQ column — heading", widget: "string", required: false, default: "Frequently asked questions", hint: "Sits above the FAQ list on the right." }
           - name: "faqs"
             label: "FAQ items"
             widget: "list"
