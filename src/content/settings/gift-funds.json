@@ -1,24 +1,24 @@
 {
   "items": [
     {
-      "amount": "$1,000",
-      "description": "could pay for costumes for a Main Stage show"
+      "amount": "$650",
+      "description": "A scholarship for one actor for a Center Stage Musical."
     },
     {
-      "amount": "$1,800",
-      "description": "could pay for a Main Stage scholarship for a child for a year"
+      "amount": "$950",
+      "description": "A scholarship for one actor to go to summer camp."
     },
     {
       "amount": "$2,000",
-      "description": "could pay for for set design and build for a show"
+      "description": "Costumes for a Center Stage Musical."
     },
     {
-      "amount": "$3,000 per month",
-      "description": "could pay for costume, prop and set storage"
+      "amount": "$12,000",
+      "description": "Royalties costs for a Center Stage Musical."
     },
     {
-      "amount": "$8,000 per month",
-      "description": "could pay for studio and rehearsal space"
+      "amount": "$24,000",
+      "description": "One month's rent for studio and rehearsal space."
     },
     {
       "amount": "$30 million",
