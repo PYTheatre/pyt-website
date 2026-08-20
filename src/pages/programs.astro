@@ -27,7 +27,6 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
   description="Year-round classes, summer camps, Stories on Stage, and Studio Intensives for ages 4–18."
 >
   <PageHero
-    eyebrow={pageContent.eyebrow}
     title={pageContent.title}
     lede={pageContent.lede}
   />
@@ -137,9 +136,6 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
             data-type={program.data.program_type}
             data-season={program.data.season}
           >
-            {program.data.eyebrow && (
-              <p class="program-eyebrow">{program.data.eyebrow}</p>
-            )}
             <h2>{program.data.name}</h2>
 
             <ul class="program-tags">
@@ -376,14 +372,6 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
     display: none;
   }
 
-  .program-eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.4rem;
-  }
 
   .program-card h2 {
     font-size: 1.3rem;
