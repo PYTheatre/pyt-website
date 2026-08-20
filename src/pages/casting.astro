@@ -11,6 +11,7 @@
   lines starting with "- " become a bulleted list.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeroImage from "../components/PageHeroImage.astro";
 import casting from "../content/settings/casting-page.json";
 import { renderMarkdown } from "../lib/markdown";
 
@@ -32,14 +33,10 @@ const bodyHtml = renderMarkdown(casting.body);
     </div>
   </section>
 
-  <!-- Banner image (contained width, short strip) -->
-  {casting.hero_image ? (
-    <section class="casting-banner" aria-label="Casting banner image">
-      <div class="container">
-        <img src={casting.hero_image} alt="" class="casting-banner-img" loading="lazy" />
-      </div>
-    </section>
-  ) : null}
+  <!-- Hero image — now the shared component (2026-08-20), managed with
+       every other page's in Site Settings → Page Hero Images. This
+       page's existing photo was carried into that record unchanged. -->
+  <PageHeroImage />
 
   <!-- Body copy -->
   <section class="section casting-body">
@@ -74,20 +71,6 @@ const bodyHtml = renderMarkdown(casting.body);
 </BaseLayout>
 
 <style>
-  /* ---- Banner image (contained, short strip) ---- */
-  .casting-banner {
-    padding-top: var(--space-md);
-  }
-
-  .casting-banner-img {
-    width: 100%;
-    aspect-ratio: 21 / 6;
-    object-fit: cover;
-    border-radius: var(--radius);
-    display: block;
-    box-shadow: var(--shadow-soft);
-  }
-
   /* ---- Title block ---- */
   .casting-title {
     padding-block: var(--space-xl) 0;
@@ -195,9 +178,4 @@ const bodyHtml = renderMarkdown(casting.body);
     text-align: center;
   }
 
-  @media (min-width: 720px) {
-    .casting-banner-img {
-      aspect-ratio: 24 / 5;
-    }
-  }
 </style>
