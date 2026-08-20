@@ -145,7 +145,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   <!-- Light hero: campaign progress as a thermometer + Donate button -->
   <section class="section campaign-hero" id="individual">
     <div class="container">
-      <p class="eyebrow">{campaignLabel}</p>
       <h1>{donatePage.intro_heading}</h1>
       <p class="campaign-intro">{donatePage.intro_body}</p>
 
@@ -204,7 +203,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   <!-- Donor tiers -->
   <section class="section tiers-section">
     <div class="container">
-      {tiersEyebrow && <p class="eyebrow">{tiersEyebrow}</p>}
       <h2 class="section-head">{tiersHeading}</h2>
  
       <ul class="tier-list">
@@ -254,7 +252,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   <!-- ============ CORPORATE GIVING ============ -->
   <section class="section corporate-section" id="corporate">
     <div class="container">
-      {corporate.eyebrow && <p class="eyebrow">{corporate.eyebrow}</p>}
       <h2 class="section-head">{corporate.heading}</h2>
       {corporate.intro && <p class="corporate-intro">{corporate.intro}</p>}
       {corporateEmail && (
@@ -293,7 +290,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   -->
   <section class="section sponsor-section" id="sponsor">
     <div class="container">
-      {sponsorEyebrow && <p class="eyebrow">{sponsorEyebrow}</p>}
       <h2 class="section-head">{sponsorHeading}</h2>
  
       <ul class="tier-list sponsor-list">
@@ -322,7 +318,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
   {recognitionGroups.length > 0 && (
     <section class="section recognition-section" id="recognition">
       <div class="container">
-        <p class="eyebrow">{recognition.eyebrow}</p>
         <h2 class="section-head">{recognition.heading}</h2>
         {recognition.intro && <p class="recognition-intro">{recognition.intro}</p>}
  
