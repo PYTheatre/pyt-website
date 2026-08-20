@@ -79,7 +79,7 @@ function getInitials(name: string): string {
 ---
 
 <BaseLayout title={`${about.title} — Peninsula Youth Theatre`}>
-  <PageHero eyebrow={about.eyebrow} title={about.title} />
+  <PageHero title={about.title} />
 
   <section class="section about-section">
     <div class="container about-grid">
@@ -127,7 +127,6 @@ function getInitials(name: string): string {
   {staffMembers.length > 0 && (
     <section class="section staff-section">
       <div class="container">
-        <p class="eyebrow">Our team</p>
         <h2 class="section-head">{staffHeading}</h2>
         {staffBlurb && <p class="board-blurb">{staffBlurb}</p>}
 
@@ -157,7 +156,6 @@ function getInitials(name: string): string {
   {artistMembers.length > 0 && (
     <section class="section artist-section">
       <div class="container">
-        <p class="eyebrow">Our team</p>
         <h2 class="section-head">{artistHeading}</h2>
         {artistBlurb && <p class="board-blurb">{artistBlurb}</p>}
 
@@ -187,7 +185,6 @@ function getInitials(name: string): string {
   {boardMembers.length > 0 && (
     <section class="section board-section">
       <div class="container">
-        <p class="eyebrow">Leadership</p>
         <h2 class="section-head">{boardHeading}</h2>
         {boardBlurb && <p class="board-blurb">{boardBlurb}</p>}
 
