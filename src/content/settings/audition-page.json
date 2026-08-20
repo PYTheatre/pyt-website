@@ -1,7 +1,5 @@
 {
-  "casting_button_label": "CASTING",
   "casting_heading": "Our casting philosophy",
-  "eyebrow": "",
   "intro": "All shows with auditions currently open are listed here, and you can also read more about what we're looking for, and what to expect at auditions.",
   "sos_button_label": "AUDITIONS",
   "no_open_message": "",
@@ -119,5 +117,5 @@
       "answer": "For Center Stage Musicals, all actors who audition and who fall within the age range for that show are cast - unless they exceed the maximum number of conflicts allowed, or present casting requirements that cannot be met. There will be two casts (each with four performance dates), and all roles will be double-cast.\n\nEvery effort will be made to feature each performer and maximize their stage time."
     }
   ],
-  "casting_body": "We cast with care, fairness, and an eye for growth. Auditioning is a welcoming experience — every young performer is considered for the role where they'll thrive. Read more about how we approach casting and what to expect."
+  "casting_link_label": "How we cast, and what to expect"
 }
