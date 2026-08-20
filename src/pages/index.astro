@@ -17,16 +17,19 @@ import Logo from "../components/Logo.astro";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
 
-// --- Star-dust trail flourish (2026-08-19, redesigned) ---
-// Replaces the earlier "a few big star polygons" version with a
-// proper swirling ribbon of many small dots along a curved path,
-// tapering in size toward one end — after the PM shared a reference
-// image of a stardust-swirl look. This is an ORIGINAL shape built
-// from scratch in the site's own green/gold palette (not a
-// reproduction of that reference image — no image asset is used at
-// all, every dot is generated math). Uses a small deterministic PRNG
-// (not Math.random()) so the trail looks identical on every rebuild
-// rather than shifting around each time content changes.
+// --- Star trail flourish (2026-08-19, second redesign) ---
+// PM feedback on the previous version: the trail should be made of
+// actual small STAR shapes (not plain dots), green only (no gold),
+// and follow a specific zigzag: underline "Everyone" in the headline,
+// sweep right, curve left down through the photo carousel, then curve
+// right again down through the discovery grid, ending near whichever
+// card renders last (Creepy Carrots today). Mocked up and approved
+// before this was built. The reference image the PM shared earlier
+// was for the PATH's overall swirl motion, not the individual shapes
+// — this version keeps that path-generation approach (many small
+// shapes distributed along a curved line with a deterministic seeded
+// PRNG, so it's identical on every rebuild) but renders each point as
+// a real 5-point star polygon instead of a circle.
 function seededRand(seed: number): () => number {
   let s = seed % 2147483647;
   if (s <= 0) s += 2147483646;
@@ -53,18 +56,33 @@ function bezierPoint(points: { x: number; y: number }[], t: number): { x: number
   return pts[0];
 }
 
-type Dot = { cx: number; cy: number; r: number; color: string; opacity: string };
+// Builds the SVG "points" attribute for a simple 5-point star
+// centered at (cx, cy) with outer point radius r, rotated by `rot`
+// radians (each star gets a random rotation so the trail doesn't look
+// like a repeated stamp).
+function starPoints(cx: number, cy: number, r: number, rot: number): string {
+  const inner = r * 0.42;
+  const pts: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const angle = (Math.PI / 5) * i - Math.PI / 2 + rot;
+    const radius = i % 2 === 0 ? r : inner;
+    pts.push(`${(cx + radius * Math.cos(angle)).toFixed(1)},${(cy + radius * Math.sin(angle)).toFixed(1)}`);
+  }
+  return pts.join(" ");
+}
 
-function dustTrail(
+type StarSpec = { cx: number; cy: number; r: number; rot: number; color: string; opacity: string };
+
+function starTrail(
   points: { x: number; y: number }[],
   count: number,
   spread: number,
   seed: number,
   colors: string[],
   taperFrom: "start" | "end" = "end"
-): Dot[] {
+): StarSpec[] {
   const rand = seededRand(seed);
-  const dots: Dot[] = [];
+  const stars: StarSpec[] = [];
   for (let i = 0; i < count; i++) {
     const t = i / (count - 1);
     const base = bezierPoint(points, t);
@@ -72,17 +90,18 @@ function dustTrail(
     const angle = rand() * Math.PI * 2;
     const dist = rand() * localSpread;
     const taperT = taperFrom === "end" ? t : 1 - t;
-    const taper = 1 - taperT * 0.75;
-    const r = (0.5 + rand() * 1.5) * taper * 2.6;
-    dots.push({
+    const taper = 1 - taperT * 0.7;
+    const r = (0.5 + rand() * 1.3) * taper * 2.4;
+    stars.push({
       cx: Number((base.x + Math.cos(angle) * dist).toFixed(1)),
       cy: Number((base.y + Math.sin(angle) * dist).toFixed(1)),
-      r: Number(Math.max(0.4, r).toFixed(2)),
+      r: Number(Math.max(0.5, r).toFixed(2)),
+      rot: rand() * Math.PI,
       color: colors[Math.floor(rand() * colors.length)],
-      opacity: (0.4 + rand() * 0.6).toFixed(2),
+      opacity: (0.55 + rand() * 0.45).toFixed(2),
     });
   }
-  return dots;
+  return stars;
 }
  
 // --- Section heading case (2026-08-19) ---
@@ -184,10 +203,10 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
               <span class="accent-word">
                 {headingItalic}
                 <svg class="accent-stars" viewBox="0 -95 610 130" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
-                  {dustTrail(
+                  {starTrail(
                     [{ x: 0, y: 22 }, { x: 160, y: -55 }, { x: 380, y: -75 }, { x: 610, y: -50 }],
-                    70, 16, 101, ["#68b050", "#8fce6a", "#f2c419"]
-                  ).map((d) => <circle cx={d.cx} cy={d.cy} r={d.r} fill={d.color} opacity={d.opacity} />)}
+                    46, 16, 101, ["#68b050", "#8fce6a", "#4a7d38"]
+                  ).map((d) => <polygon points={starPoints(d.cx, d.cy, d.r, d.rot)} fill={d.color} opacity={d.opacity} />)}
                 </svg>
               </span>
               {headingAfter}
@@ -231,10 +250,10 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
                carousel. Purely decorative (aria-hidden), pointer-events
                none so it never blocks the arrow button underneath it. -->
           <svg class="trail-stars trail-stars-carousel" viewBox="0 0 220 150" aria-hidden="true">
-            {dustTrail(
+            {starTrail(
               [{ x: 210, y: 10 }, { x: 130, y: 50 }, { x: 60, y: 100 }, { x: 10, y: 145 }],
-              50, 15, 202, ["#68b050", "#8fce6a", "#f2c419"]
-            ).map((d) => <circle cx={d.cx} cy={d.cy} r={d.r} fill={d.color} opacity={d.opacity} />)}
+              32, 15, 202, ["#68b050", "#8fce6a", "#4a7d38"]
+            ).map((d) => <polygon points={starPoints(d.cx, d.cy, d.r, d.rot)} fill={d.color} opacity={d.opacity} />)}
           </svg>
           <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Scroll left">‹</button>
           <div class="photo-strip-fade photo-strip-fade-left" aria-hidden="true"></div>
@@ -511,13 +530,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        2026-08-19. -->
   <section class="section discovery-section">
     <!-- Star trail, segment 3 of 4: picks up from the carousel and
-         sweeps into the top-left corner of this section, ahead of the
-         heading. -->
+         sweeps right, down into this section — continuing the
+         zigzag (right, then left through the carousel, then right
+         again through this grid) the PM asked for. -->
     <svg class="trail-stars trail-stars-discovery" viewBox="0 0 220 140" aria-hidden="true">
-      {dustTrail(
-        [{ x: 205, y: 15 }, { x: 130, y: 5 }, { x: 55, y: 60 }, { x: 10, y: 130 }],
-        50, 15, 303, ["#68b050", "#8fce6a", "#f2c419"]
-      ).map((d) => <circle cx={d.cx} cy={d.cy} r={d.r} fill={d.color} opacity={d.opacity} />)}
+      {starTrail(
+        [{ x: 15, y: 10 }, { x: 85, y: 40 }, { x: 160, y: 90 }, { x: 210, y: 135 }],
+        32, 15, 303, ["#68b050", "#8fce6a", "#4a7d38"]
+      ).map((d) => <polygon points={starPoints(d.cx, d.cy, d.r, d.rot)} fill={d.color} opacity={d.opacity} />)}
     </svg>
     <div class="container">
       <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
@@ -547,10 +567,10 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
                    right card (Creepy Carrots today) even if the list
                    is reordered or a card is added/removed later. -->
               <svg class="trail-stars trail-stars-end" viewBox="0 0 150 130" aria-hidden="true">
-                {dustTrail(
-                  [{ x: 15, y: 15 }, { x: 90, y: 10 }, { x: 130, y: 60 }, { x: 95, y: 105 }, { x: 70, y: 90 }],
-                  55, 13, 404, ["#68b050", "#8fce6a", "#f2c419"], "end"
-                ).map((d) => <circle cx={d.cx} cy={d.cy} r={d.r} fill={d.color} opacity={d.opacity} />)}
+                {starTrail(
+                  [{ x: 10, y: 70 }, { x: 55, y: 25 }, { x: 105, y: 15 }, { x: 138, y: 55 }],
+                  34, 13, 404, ["#68b050", "#8fce6a", "#4a7d38"], "end"
+                ).map((d) => <polygon points={starPoints(d.cx, d.cy, d.r, d.rot)} fill={d.color} opacity={d.opacity} />)}
               </svg>
             </div>
           ) : (
