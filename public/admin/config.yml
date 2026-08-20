@@ -61,7 +61,6 @@ collections:
       # facing wording is handled separately (see PRODUCTION_TYPE_LABELS
       # in src/lib/showLabels.ts).
       - { name: "production_type", label: "Production type", widget: "select", default: "Musical", options: [{ label: "Center Stage Musical", value: "Musical" }, { label: "Studio Show", value: "Studio Production" }], hint: "Center Stage Musicals show on the Center Stage Musicals page; Studio Shows show on the Studio Shows page. Both appear on the main Shows page." }
-      - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, hint: "Small text above the title on the show page. Example: Spring 2026 Center Stage Musicals" }
       - { name: "start_date", label: "First performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { name: "date_display", label: "Date display text", widget: "string", hint: "How dates appear on the page. Example: May 15–16, 2026" }
@@ -116,7 +115,6 @@ collections:
     sortable_fields: ["name", "program_type", "season"]
     fields:
       - { name: "name", label: "Program name", widget: "string", hint: "Example: Drama Tots" }
-      - { name: "eyebrow", label: "Eyebrow text (audience)", widget: "string", required: false, hint: "Example: For Young Performers" }
       - name: "program_type"
         label: "Program type"
         widget: "select"
@@ -268,7 +266,6 @@ collections:
         file: "src/content/settings/home-page.json"
         description: "All the words, links, and numbers on the home page. The 'Now Playing' poster updates automatically from your Shows list."
         fields:
-          - { name: "hero_eyebrow", label: "Hero — small eyebrow text", widget: "string", hint: "Example: On stage now · Spring 2026" }
           - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Example: Outstanding youth theatre." }
           - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
           - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text" }
@@ -287,7 +284,6 @@ collections:
           - { name: "hero_secondary_label", label: "Hero — secondary button label", widget: "string" }
           - { name: "hero_secondary_url", label: "Hero — secondary button link", widget: "string" }
           - { name: "now_playing_label", label: "Poster — 'Now playing' label", widget: "string", default: "Now playing" }
-          - { name: "discovery_eyebrow", label: "Discovery section — eyebrow", widget: "string", default: "Find your way in" }
           - { name: "discovery_heading", label: "Discovery section — heading", widget: "string" }
           - { name: "discovery_heading_case", label: "Discovery section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           - name: "discovery_cards"
@@ -300,7 +296,6 @@ collections:
               - { name: "subtitle", label: "Subtitle (smaller, under the title — optional)", widget: "string", required: false, hint: "Example: Grade K-8, or Tickets" }
               - { name: "image", label: "Photo", widget: "image", required: false, hint: "Leave empty for a colored placeholder." }
               - { name: "url", label: "Link", widget: "string", hint: "Example: /shows, or a full https:// link" }
-          - { name: "impact_eyebrow", label: "Impact section — eyebrow", widget: "string", default: "Our impact" }
           - { name: "impact_heading", label: "Impact section — heading", widget: "string" }
           - { name: "impact_heading_case", label: "Impact section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           - name: "stats"
@@ -321,12 +316,10 @@ collections:
         file: "src/content/settings/shows-page.json"
         description: "The heading and intro at the top of the Shows page, plus the ticket fee notice shown beneath every Buy Tickets button across the site. (The shows themselves are edited under 'Shows'.)"
         fields:
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
           - { name: "ticket_fee_notice", label: "Ticket fee notice (shown under every Buy Tickets button)", widget: "text", required: false, hint: "Appears beneath ticket-buying buttons on show and Stories on Stage pages. Leave blank to hide it everywhere." }
           - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top of the Shows page. Leave blank to hide the strip." }
-          - { name: "auditions_eyebrow", label: "Auditions section — eyebrow", widget: "string", required: false, default: "Get involved" }
           - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
           - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
           - { name: "auditions_button_label", label: "Auditions section — button label", widget: "string", required: false, default: "See all audition dates" }
@@ -337,7 +330,6 @@ collections:
         file: "src/content/settings/programs-page.json"
         description: "The heading and intro at the top of the Classes & Camps page, plus the Summer Camps block that sits above the program cards. (The programs themselves are edited under 'Classes & Camps'.)"
         fields:
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string" }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
           - { name: "summer_heading", label: "Summer block — heading", widget: "string", required: false, hint: "Example: Summer Camps 2026" }
@@ -358,7 +350,6 @@ collections:
         file: "src/content/settings/school-play-in-a-box-page.json"
         description: "The School Play in a Box page (Classes & Camps → School Play in a Box). Edit the description, who-provides-what, the inquiry email, the available shows, and the schools served."
         fields:
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "subtitle", label: "Subtitle (under the title)", widget: "string", required: false }
           - { name: "intro", label: "Description", widget: "text" }
@@ -379,7 +370,6 @@ collections:
         file: "src/content/settings/photos-page.json"
         description: "The Photos page (/photos). Edit the headings, intro, the 'A few favorites' sample images, and the 'Find your photos' button that links out to SmugMug."
         fields:
-          - { name: "eyebrow", label: "Small label above title", widget: "string", required: false, hint: "Example: Shows & events. Leave blank to hide." }
           - { name: "title", label: "Page title", widget: "string", default: "Photos" }
           - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
           - { name: "samples_heading", label: "Favorites — section heading", widget: "string", required: false, hint: "Example: A few favorites. Leave blank to hide the heading." }
@@ -488,9 +478,7 @@ collections:
           - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
           - { name: "intro_body", label: "Intro paragraph", widget: "text" }
           - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate AND sponsorship buttons open. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
-          - { name: "tiers_eyebrow", label: "Giving levels — small label above heading", widget: "string", required: false, hint: "Leave blank to hide this small label entirely." }
           - { name: "tiers_heading", label: "Giving levels — section heading", widget: "string", required: false, default: "Every gift, every level." }
-          - { name: "sponsor_eyebrow", label: "Sponsorship — small label above heading", widget: "string", required: false, hint: "Leave blank to hide this small label entirely." }
           - { name: "sponsor_heading", label: "Sponsorship — section heading", widget: "string", required: false, default: "Sponsor a show or a season." }
           - { name: "sponsor_show_title", label: "Sponsorship — \"Show\" card title", widget: "string", required: false, default: "Sponsor a Show" }
           - { name: "sponsor_show_price", label: "Sponsorship — \"Show\" price (optional)", widget: "string", required: false, hint: "Optional. e.g. \"$5,000\". Leave blank to show no price on the Show card." }
@@ -520,10 +508,8 @@ collections:
         file: "src/content/settings/musicals-page.json"
         description: "The Musicals page (Shows → Musicals). Edit the title and the auditions strip + section. (The musicals themselves are Shows tagged 'Musical'.)"
         fields:
-          - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false, default: "Shows" }
           - { name: "title", label: "Page title", widget: "string", default: "Musicals" }
           - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top. Leave blank to hide the strip." }
-          - { name: "auditions_eyebrow", label: "Auditions section — eyebrow", widget: "string", required: false, default: "Get involved" }
           - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
           - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
           - { name: "auditions_button_label", label: "Auditions section — button label", widget: "string", required: false, default: "See all audition dates" }
@@ -534,11 +520,9 @@ collections:
         file: "src/content/settings/studio-productions-page.json"
         description: "The intro shown at the top of the Studio Productions page. The list of productions below it comes from Shows tagged as 'Studio Production'."
         fields:
-          - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false }
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "intro", label: "Intro paragraph", widget: "text", hint: "Shown under the page title to introduce the Studio Productions." }
           - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top. Leave blank to hide the strip." }
-          - { name: "auditions_eyebrow", label: "Auditions section — eyebrow", widget: "string", required: false, default: "Get involved" }
           - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
           - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
           - { name: "auditions_button_label", label: "Auditions section — button label", widget: "string", required: false, default: "See all audition dates" }
@@ -550,7 +534,6 @@ collections:
         description: "The Press page (About → Press). Edit the intro line, add or remove press coverage, and set the message shown when there is no press yet. Each press item links out to the original article."
         fields:
           - { name: "title", label: "Page title", widget: "string" }
-          - { name: "eyebrow", label: "Eyebrow (small label above the title)", widget: "string", required: false }
           - { name: "intro", label: "Intro line", widget: "text", hint: "The sentence shown under the page title." }
           - { name: "empty_message", label: "Message when there is no press yet", widget: "text", hint: "Shown only when the press list below is empty." }
           - name: "items"
@@ -584,7 +567,6 @@ collections:
         file: "src/content/settings/corporate-giving.json"
         description: "The Corporate Giving panel on the Support PYT page — intro copy, the corporate Soapbox donation link, and the corporate tiers (Partner, Patron, etc.)."
         fields:
-          - { name: "eyebrow", label: "Small label above heading", widget: "string", required: false, hint: "Leave blank to hide this small label entirely." }
           - { name: "heading", label: "Section heading", widget: "string", default: "Corporate Giving" }
           - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
           - { name: "contact_email", label: "Contact email (optional)", widget: "string", required: false, hint: "Optional. Shown under the intro as a clickable email link, e.g. lhatten@pytnet.org. Leave blank to hide." }
@@ -604,7 +586,6 @@ collections:
         file: "src/content/settings/donor-recognition.json"
         description: "The recognition wall at the bottom of the Support PYT page. Each group is a heading with a list of names. A group with no names is hidden automatically. Use the \"Supporters\" group for donors who want to be recognized but not have their giving level shown."
         fields:
-          - { name: "eyebrow", label: "Small label above heading", widget: "string", required: false, default: "With gratitude" }
           - { name: "heading", label: "Section heading", widget: "string", default: "Our Donors & Sponsors" }
           - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
           - name: "groups"
@@ -621,7 +602,6 @@ collections:
         file: "src/content/settings/about-page.json"
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "About Peninsula Youth Theatre" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our story" }
           - { name: "banner_image", label: "Banner image (wide strip near top)", widget: "image", required: false, hint: "Optional. A wide landscape image works best — it's shown as a short banner under the title. Leave empty to hide." }
           - { name: "story", label: "Story (multiple paragraphs)", widget: "text", hint: "The org's story. Use blank lines to separate paragraphs." }
           - { name: "awards_link_lead", label: "Awards sentence — text before the link", widget: "string", required: false, hint: "Example: \"Learn about the\". The next field is the clickable part." }
@@ -678,7 +658,6 @@ collections:
         description: "The Casting page — text content plus the hero image."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Casting" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Auditioning at PYT" }
           - { name: "hero_image", label: "Hero image", widget: "image", required: false, hint: "Upload a wide image for the top of the page. If empty, a colored placeholder is used." }
           - { name: "body", label: "Page body (Markdown supported)", widget: "markdown", hint: "Use blank lines between paragraphs. Bulleted lists with - work too." }
           - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
@@ -732,7 +711,6 @@ collections:
         description: "The Judy Robe & Spirits Awards page (/judy-robe-spirits-awards). Not in the main menu — linked from the About and Casting pages."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Judy Robe & Spirits Awards" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "A PYT tradition" }
           - { name: "intro", label: "Description paragraph", widget: "text", hint: "A short description of the awards." }
           - { name: "photo", label: "Photo (optional)", widget: "image", required: false, hint: "Optional. Shown as a banner under the description. Leave empty to hide." }
           - { name: "winners_heading", label: "Winners — section heading", widget: "string", default: "Past winners" }
@@ -770,7 +748,6 @@ collections:
         description: "The Employment page — paid roles and volunteer opportunities. Each section auto-hides if empty."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Work with us" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Careers & volunteering" }
           - { name: "intro", label: "Page intro paragraph", widget: "text" }
  
           - { name: "roles_heading", label: "Paid roles — section heading", widget: "string", default: "Roles with PYT" }
@@ -818,7 +795,6 @@ collections:
         description: "The /school-tickets page (linked from the 'Educators' menu) — school-discount show listings. Empty by default; add shows as they're ready."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "School Tickets" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "For schools" }
           - { name: "intro", label: "Page intro paragraph", widget: "text" }
           - name: "listings"
             label: "School-discount shows"
@@ -847,7 +823,6 @@ collections:
         description: "The /rentals page — intro copy, rental categories (with photos), and the inquiry form settings. Add or reorder categories anytime; the section hides if the list is empty."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Costume & Prop Rentals" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "For schools & theatres" }
           - { name: "intro", label: "Page intro paragraph", widget: "text" }
           - { name: "categories_heading", label: "Categories — section heading", widget: "string", default: "What we rent" }
           - { name: "categories_blurb", label: "Categories — section description (optional)", widget: "text", required: false }
@@ -879,7 +854,6 @@ collections:
         description: "The /calendar page — intro copy and which Google Calendar is embedded. The calendar itself (its events) is managed in Google Calendar, not here."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Calendar" }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Stay in the loop" }
           - { name: "intro", label: "Page intro paragraph", widget: "text", required: false, hint: "Leave blank to hide this paragraph entirely." }
           - { name: "calendar_id", label: "Google Calendar ID", widget: "string", hint: "Looks like an email address, e.g. boardpresident@pytnet.org. Find it in Google Calendar → Settings and sharing → (pick the calendar) → Integrate calendar → Calendar ID. That calendar must also be set to public there, or this page will show blank to visitors." }
  
@@ -895,7 +869,6 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Stories on Stage" }
           - { name: "school_booking_email", label: "School / group booking email", widget: "string", default: "lhatten@pytnet.org", hint: "The email address the 'Email about a group booking' button on each production page sends to." }
-          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Our second season" }
           - { name: "intro_lede", label: "Intro paragraph (under the title)", widget: "text" }
           - { name: "auditions_strip_text", label: "Audition strip — text at the top of the page", widget: "string", default: "Auditioning for the next Stories on Stage company?" }
           - { name: "auditions_strip_link_text", label: "Audition strip — link text", widget: "string", default: "Jump to auditions" }
