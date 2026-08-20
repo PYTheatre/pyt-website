@@ -26,21 +26,30 @@
 */
 import Logo from "./Logo.astro";
 import navLabels from "../content/settings/nav-labels.json";
+import navTickets from "../content/settings/nav-tickets.json";
 
 // On the homepage, the logo has moved down into the hero (next to the
 // new playful headline treatment) instead of sitting in the nav bar.
 // Every other page keeps the small logo in the nav as before.
 const isHomepage = Astro.url.pathname === "/";
 
+// --- Tickets nav item (2026-08-19) ---
+// Replaces the old plain "Shows" nav item. Styled differently (blue,
+// ticket-notch shape — see .tickets-btn below) and its dropdown is
+// fully CMS-editable (src/content/settings/nav-tickets.json) rather
+// than hardcoded, since the PM expects to change this list often as
+// shows come and go. Marked with `special: "tickets"` so both the
+// desktop and mobile render loops below know to apply the distinct
+// styling to just this one item, while reusing all the normal
+// dropdown behavior/markup.
 const navGroups = [
   {
-    label: "Shows",
-    href: "/shows",
-    children: [
-      { label: navLabels.musicals_label, href: "/musicals" },
-      { label: navLabels.studio_shows_label, href: "/studio-productions" },
-      { label: "Stories on Stage", href: "/stories-on-stage" },
-    ],
+    label: "Tickets",
+    href: (navTickets as any).main_url || "/shows",
+    special: "tickets",
+    children: ((navTickets as any).items || [])
+      .filter((i: any) => i?.label?.trim() && i?.url?.trim())
+      .map((i: any) => ({ label: i.label, href: i.url })),
   },
   {
     label: "Auditions",
@@ -95,9 +104,14 @@ const navGroups = [
     <!-- Desktop / wide-screen navigation -->
     <nav class="nav-wide" aria-label="Main navigation">
       {navGroups.map((group) => (
-        group.children ? (
+        group.children && group.children.length > 0 ? (
           <div class="nav-group">
-            <a href={group.href} class="pill nav-group-trigger" aria-haspopup="true" aria-expanded="false">
+            <a
+              href={group.href}
+              class={`pill nav-group-trigger ${(group as any).special === "tickets" ? "tickets-btn" : ""}`}
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
               {group.label}
               <svg class="caret" width="13" height="8" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
@@ -108,12 +122,26 @@ const navGroups = [
             </div>
           </div>
         ) : (
-          <a href={group.href} class="pill">{group.label}</a>
+          <a href={group.href} class={`pill ${(group as any).special === "tickets" ? "tickets-btn" : ""}`}>{group.label}</a>
         )
       ))}
     </nav>
  
     <div class="header-actions">
+      <!-- Simple EN/ES translate toggle (2026-08-19). Not a real
+           bilingual site (that's a much bigger project — see the
+           build log) — this routes the CURRENT page through Google's
+           free translate.goog proxy, which needs no sign-up, no
+           script embed, and no CMS content of its own. Label/behavior
+           swap client-side (see script below) based on whether the
+           visitor is already viewing the translated version. -->
+      <a
+        href="#"
+        id="lang-toggle"
+        class="pill lang-toggle"
+        data-site-origin={(navLabels as any).site_origin || "https://pyt-website.pages.dev"}
+        aria-label="Translate this site"
+      >ES</a>
       <a href="https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=ad16ecb8-2b37-477f-9cdc-8b959668e4df&e4p=22397909-9890-4b5f-8947-e4982093fc34&e4ts=1787101915&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=b318cf7ff23b5f8ebd7b7077a038eb52" class="btn btn-primary register-btn" target="_blank" rel="noopener">Register</a>
       <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary donate-btn" target="_blank" rel="noopener">Donate</a>
  
@@ -135,15 +163,15 @@ const navGroups = [
   <!-- Mobile dropdown menu (phones only) -->
   <nav class="nav-mobile" id="mobile-menu" aria-label="Mobile navigation" hidden>
     {navGroups.map((group) => (
-      group.children ? (
+      group.children && group.children.length > 0 ? (
         <div class="nav-mobile-group">
-          <a href={group.href} class="nav-mobile-pill">{group.label}</a>
+          <a href={group.href} class={`nav-mobile-pill ${(group as any).special === "tickets" ? "tickets-btn-mobile" : ""}`}>{group.label}</a>
           {group.children.map((child) => (
             <a href={child.href} class="nav-mobile-sublink">{child.label}</a>
           ))}
         </div>
       ) : (
-        <a href={group.href} class="nav-mobile-pill nav-mobile-pill-solo">{group.label}</a>
+        <a href={group.href} class={`nav-mobile-pill nav-mobile-pill-solo ${(group as any).special === "tickets" ? "tickets-btn-mobile" : ""}`}>{group.label}</a>
       )
     ))}
   </nav>
@@ -261,6 +289,89 @@ const navGroups = [
   .nav-dropdown-link:hover {
     background: var(--accent-soft);
     color: var(--accent-deep);
+  }
+
+  /* ---- Tickets button (2026-08-19) ---- */
+  /* Blue (PYT logo blue), shaped like a ticket stub — two circular
+     notches bitten out of the left/right edges. The notch trick:
+     each ::before/::after is a small circle colored to match the
+     bar it sits on (the dark nav background), so it visually "cuts
+     into" the blue pill. This only works because the button always
+     sits directly on that solid dark background — if this button is
+     ever reused somewhere with a different/patterned background,
+     the notches will need a different technique (e.g. an SVG mask). */
+  .tickets-btn {
+    position: relative;
+    background: var(--brand-blue);
+    color: #0d2733;
+    font-weight: 600;
+    padding-inline: 1.3rem;
+    z-index: 1;
+  }
+
+  .tickets-btn:hover {
+    background: var(--brand-blue);
+    filter: brightness(1.07);
+    color: #0d2733;
+  }
+
+  .tickets-btn::before,
+  .tickets-btn::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background: var(--nav-bg-dark);
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .tickets-btn::before {
+    left: -7px;
+  }
+
+  .tickets-btn::after {
+    right: -7px;
+  }
+
+  /* Mobile version: same notch idea, but the pill sits on the light
+     mobile-menu panel background instead of the dark bar. */
+  .tickets-btn-mobile {
+    position: relative;
+    background: var(--brand-blue) !important;
+    color: #0d2733 !important;
+    z-index: 1;
+  }
+
+  .tickets-btn-mobile::before,
+  .tickets-btn-mobile::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    background: var(--paper);
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .tickets-btn-mobile::before {
+    left: -7px;
+  }
+
+  .tickets-btn-mobile::after {
+    right: -7px;
+  }
+
+  /* ---- EN/ES translate toggle ---- */
+  .lang-toggle {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
  
   .header-actions {
@@ -417,5 +528,35 @@ const navGroups = [
       btn.setAttribute("aria-label", isOpen ? "Open menu" : "Close menu");
       menu.hidden = isOpen;
     });
+  }
+
+  // EN/ES translate toggle. Routes the current page through Google's
+  // free translate.goog domain-proxy (no sign-up, no script embed
+  // needed) — e.g. example.com/shows becomes
+  // example-com.translate.goog/shows with a couple of query params
+  // telling Google which languages to use. If the visitor is ALREADY
+  // on the translated version, the button instead links back to the
+  // real site, built from the "site address" set in the CMS (Site
+  // Settings → Navigation Labels) rather than trying to reverse the
+  // proxy's URL — reversing it is ambiguous whenever the real domain
+  // itself contains a dash (true of the current pyt-website.pages.dev
+  // address), so a known, CMS-set origin is used instead.
+  const langBtn = document.getElementById("lang-toggle") as HTMLAnchorElement | null;
+  if (langBtn) {
+    const onTranslatedPage = window.location.hostname.endsWith(".translate.goog");
+    if (onTranslatedPage) {
+      langBtn.textContent = "EN";
+      const origin = langBtn.dataset.siteOrigin || "";
+      langBtn.href = origin + window.location.pathname;
+    } else {
+      langBtn.textContent = "ES";
+      langBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const translatedHost = window.location.hostname.replace(/\./g, "-") + ".translate.goog";
+        const sep = window.location.search ? "&" : "?";
+        window.location.href =
+          `https://${translatedHost}${window.location.pathname}${window.location.search}${sep}_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en`;
+      });
+    }
   }
 </script>
