@@ -52,6 +52,16 @@ const navGroups = [
       .map((i: any) => ({ label: i.label, href: i.url })),
   },
   {
+    // Calendar (2026-08-19) — a plain link (no dropdown), styled
+    // green with a calendar-ring shape, mirroring the Tickets button
+    // right next to it (see .calendar-btn below, same technique as
+    // .tickets-btn just with two small "ring" tabs on top instead of
+    // side notches).
+    label: "Calendar",
+    href: "/calendar",
+    special: "calendar",
+  },
+  {
     label: "Auditions",
     href: "/audition",
     children: [
@@ -95,6 +105,20 @@ const navGroups = [
     ],
   },
 ];
+
+// Maps a navGroup's `special` flag to its CSS class (desktop pill
+// vs. mobile pill use different class names for the same visual
+// treatment). Centralized here so adding a third "special" nav item
+// later doesn't mean hunting down every ternary across four render
+// branches (desktop dropdown-trigger, desktop plain-link, mobile
+// dropdown-trigger, mobile plain-link).
+function specialClass(group: any, variant: "desktop" | "mobile"): string {
+  const map: Record<string, { desktop: string; mobile: string }> = {
+    tickets: { desktop: "tickets-btn", mobile: "tickets-btn-mobile" },
+    calendar: { desktop: "calendar-btn", mobile: "calendar-btn-mobile" },
+  };
+  return map[group.special]?.[variant] || "";
+}
 ---
  
 <header class="site-header">
@@ -108,7 +132,7 @@ const navGroups = [
           <div class="nav-group">
             <a
               href={group.href}
-              class={`pill nav-group-trigger ${(group as any).special === "tickets" ? "tickets-btn" : ""}`}
+              class={`pill nav-group-trigger ${specialClass(group, "desktop")}`}
               aria-haspopup="true"
               aria-expanded="false"
             >
@@ -122,7 +146,7 @@ const navGroups = [
             </div>
           </div>
         ) : (
-          <a href={group.href} class={`pill ${(group as any).special === "tickets" ? "tickets-btn" : ""}`}>{group.label}</a>
+          <a href={group.href} class={`pill ${specialClass(group, "desktop")}`}>{group.label}</a>
         )
       ))}
     </nav>
@@ -168,13 +192,13 @@ const navGroups = [
     {navGroups.map((group) => (
       group.children && group.children.length > 0 ? (
         <div class="nav-mobile-group">
-          <a href={group.href} class={`nav-mobile-pill ${(group as any).special === "tickets" ? "tickets-btn-mobile" : ""}`}>{group.label}</a>
+          <a href={group.href} class={`nav-mobile-pill ${specialClass(group, "mobile")}`}>{group.label}</a>
           {group.children.map((child) => (
             <a href={child.href} class="nav-mobile-sublink">{child.label}</a>
           ))}
         </div>
       ) : (
-        <a href={group.href} class={`nav-mobile-pill nav-mobile-pill-solo ${(group as any).special === "tickets" ? "tickets-btn-mobile" : ""}`}>{group.label}</a>
+        <a href={group.href} class={`nav-mobile-pill nav-mobile-pill-solo ${specialClass(group, "mobile")}`}>{group.label}</a>
       )
     ))}
   </nav>
@@ -375,6 +399,76 @@ const navGroups = [
 
   .tickets-btn-mobile::after {
     right: -7px;
+  }
+
+  /* ---- Calendar button (2026-08-19) ---- */
+  /* Green (site's brand-green), with two small "ring" tabs poking
+     above the top edge — evokes a wall calendar's binder rings, the
+     same general idea as the Tickets button's side notches but
+     additive (small light tabs drawn ON TOP) rather than a "bite"
+     needing to match the background color, so this one doesn't
+     depend on what's behind it. Uses !important for the same reason
+     as .tickets-btn: Astro auto-scopes every class in a selector, so
+     the generic ".nav-wide .pill" rule ends up with more specificity
+     than a plain ".calendar-btn" rule could ever win outright. */
+  .calendar-btn {
+    position: relative;
+    background: var(--brand-green) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    padding-inline: 1.2rem;
+    margin-top: 6px;
+  }
+
+  .calendar-btn:hover {
+    background: var(--brand-green) !important;
+    filter: brightness(1.08);
+    color: #ffffff !important;
+  }
+
+  .calendar-btn::before,
+  .calendar-btn::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    width: 5px;
+    height: 11px;
+    background: #ffffff;
+    border-radius: 2px;
+  }
+
+  .calendar-btn::before {
+    left: 28%;
+  }
+
+  .calendar-btn::after {
+    right: 28%;
+  }
+
+  .calendar-btn-mobile {
+    position: relative;
+    background: var(--brand-green) !important;
+    color: #ffffff !important;
+    margin-top: 6px;
+  }
+
+  .calendar-btn-mobile::before,
+  .calendar-btn-mobile::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    width: 5px;
+    height: 11px;
+    background: #ffffff;
+    border-radius: 2px;
+  }
+
+  .calendar-btn-mobile::before {
+    left: 28%;
+  }
+
+  .calendar-btn-mobile::after {
+    right: 28%;
   }
 
   /* ---- EN/ES translate toggle ---- */
