@@ -782,6 +782,25 @@ collections:
           - { name: "inquiry_heading", label: "Inquiry — section heading", widget: "string", default: "Request a rental" }
           - { name: "inquiry_blurb", label: "Inquiry — section description (optional)", widget: "text", required: false }
           - { name: "form_endpoint", label: "Inquiry form delivery URL (Formspree)", widget: "string", required: false, hint: "The Formspree endpoint that emails inquiries to PYT. Looks like https://formspree.io/f/xxxxxxx. If blank, the form is replaced by an email link." }
+
+      # --- Calendar page (2026-08-19) ---
+      # A public Google Calendar embedded on its own page. To point
+      # this at a DIFFERENT calendar later, find the new calendar's ID
+      # in Google Calendar (Settings and sharing → that calendar →
+      # scroll to "Integrate calendar" → "Calendar ID" — it looks like
+      # an email address) and paste it into the field below. The
+      # calendar must be set to public (same settings page → "Access
+      # permissions for events" → "Make available to public") or
+      # visitors won't see anything.
+      - name: "calendar-page"
+        label: "Calendar Page"
+        file: "src/content/settings/calendar-page.json"
+        description: "The /calendar page — intro copy and which Google Calendar is embedded. The calendar itself (its events) is managed in Google Calendar, not here."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Calendar" }
+          - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Stay in the loop" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          - { name: "calendar_id", label: "Google Calendar ID", widget: "string", hint: "Looks like an email address, e.g. boardpresident@pytnet.org. Find it in Google Calendar → Settings and sharing → (pick the calendar) → Integrate calendar → Calendar ID. That calendar must also be set to public there, or this page will show blank to visitors." }
  
       # --- Stories on Stage page ---
       # Everything on the /stories-on-stage page that ISN'T per-production.
