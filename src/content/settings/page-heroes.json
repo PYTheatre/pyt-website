@@ -9,6 +9,38 @@
       "page": "/casting",
       "image": "/uploads/pyt-summer-camp.jpg",
       "alt": ""
+    },
+    {
+      "page": "/audition",
+      "image": "/uploads/development.jpg"
+    },
+    {
+      "page": "/judy-robe-spirits-awards",
+      "image": "/uploads/screenshot-2026-06-26-at-13.24.44.png"
+    },
+    {
+      "page": "/programs",
+      "image": "/uploads/pyt-summer-camp.jpg"
+    },
+    {
+      "page": "/school-play-in-a-box",
+      "image": "/uploads/pyt-shrek.jpg"
+    },
+    {
+      "page": "/school-tickets",
+      "image": "/uploads/pyt-newsies-punch.jpg"
+    },
+    {
+      "page": "/stories-on-stage",
+      "image": "/uploads/uglyduckling-pyt-.jpg"
+    },
+    {
+      "page": "/studio-productions",
+      "image": "/uploads/pyt-christmas-carol.jpg"
+    },
+    {
+      "page": "/employment",
+      "image": "/uploads/volunteers.jpg"
     }
   ]
 }
