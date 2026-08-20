@@ -33,10 +33,6 @@
       "name": "Kristen Saham"
     },
     {
-      "name": "Matt Normington",
-      "pyt_title": "Board Member"
-    },
-    {
       "name": "Mike Cobb",
       "pyt_title": "Board Member",
       "photo": "/uploads/mike.jpeg",
@@ -63,9 +59,24 @@
       "pyt_title": "Vocal Director"
     },
     {
-      "name": "Jennifer Tipton",
-      "pyt_title": "Resident Choreographer",
-      "photo": "/uploads/image0.jpeg"
+      "name": "Bill Olsen",
+      "pyt_title": "Director (Stories on Stage)"
+    },
+    {
+      "name": "Stefan Fisher",
+      "pyt_title": "Director (Stories on Stage)"
+    },
+    {
+      "name": "Beth McClelland",
+      "pyt_title": "Director (Stories on Stage)"
+    },
+    {
+      "name": "Holly Smolik",
+      "pyt_title": "Vocal Director"
+    },
+    {
+      "name": "Roma Olvera",
+      "pyt_title": "Vocal Director"
     }
   ],
   "banner_image": "/uploads/pyt-shrek.jpg",
@@ -97,6 +108,15 @@
       "name": "Candice Gasperik",
       "pyt_title": "Office Manager",
       "photo": "/uploads/candice.jpg"
+    },
+    {
+      "name": "Jennifer Tipton",
+      "pyt_title": "Resident Choreographer",
+      "photo": "/uploads/image0.jpeg"
+    },
+    {
+      "name": "Shibby Thill",
+      "pyt_title": "Resident Stage Manager"
     }
   ],
   "email": "info@pytnet.org"
