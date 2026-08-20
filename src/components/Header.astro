@@ -26,85 +26,36 @@
 */
 import Logo from "./Logo.astro";
 import navLabels from "../content/settings/nav-labels.json";
-import navTickets from "../content/settings/nav-tickets.json";
+import navMenu from "../content/settings/nav-menu.json";
 
 // On the homepage, the logo has moved down into the hero (next to the
 // new playful headline treatment) instead of sitting in the nav bar.
 // Every other page keeps the small logo in the nav as before.
 const isHomepage = Astro.url.pathname === "/";
 
-// --- Tickets nav item (2026-08-19) ---
-// Replaces the old plain "Shows" nav item. Styled differently (blue,
-// ticket-notch shape — see .tickets-btn below) and its dropdown is
-// fully CMS-editable (src/content/settings/nav-tickets.json) rather
-// than hardcoded, since the PM expects to change this list often as
-// shows come and go. Marked with `special: "tickets"` so both the
-// desktop and mobile render loops below know to apply the distinct
-// styling to just this one item, while reusing all the normal
-// dropdown behavior/markup.
-const navGroups = [
-  {
-    label: "Tickets",
-    href: (navTickets as any).main_url || "/shows",
-    special: "tickets",
-    children: ((navTickets as any).items || [])
+// --- Full nav menu, CMS-driven (2026-08-20) ---
+// EVERY top-level item and its dropdown children now come from
+// src/content/settings/nav-menu.json — including the ORDER (the CMS
+// list widget is drag-reorderable), replacing the old setup where
+// only Tickets was CMS-editable and everything else (Auditions,
+// Classes & Camps, Educators, Shop, About) was hardcoded here.
+// Each item's `style` field ("none" | "tickets" | "calendar") is
+// still what drives the special blue/green button shapes — it's a
+// CMS select field so it can't be mistyped into something the code
+// doesn't recognize. Empty-array-safe: an item with zero children
+// renders as a plain link, checked with `.length > 0` rather than
+// bare truthiness (an empty array is still truthy in JS — see
+// BUILD_LOG.md, this bit a previous session).
+const navGroups = ((navMenu as any).items || [])
+  .filter((g: any) => g?.label?.trim() && g?.url?.trim())
+  .map((g: any) => ({
+    label: g.label,
+    href: g.url,
+    special: g.style && g.style !== "none" ? g.style : undefined,
+    children: (g.children || [])
       .filter((i: any) => i?.label?.trim() && i?.url?.trim())
       .map((i: any) => ({ label: i.label, href: i.url })),
-  },
-  {
-    // Calendar (2026-08-19) — a plain link (no dropdown), styled
-    // green with a calendar-ring shape, mirroring the Tickets button
-    // right next to it (see .calendar-btn below, same technique as
-    // .tickets-btn just with two small "ring" tabs on top instead of
-    // side notches).
-    label: "Calendar",
-    href: "/calendar",
-    special: "calendar",
-  },
-  {
-    label: "Auditions",
-    href: "/audition",
-    children: [
-      { label: "Auditions", href: "/audition" },
-      { label: "Casting", href: "/casting" },
-    ],
-  },
-  {
-    label: "Classes & Camps",
-    href: "/programs",
-    children: [
-      { label: "Classes & Camps", href: "/programs" },
-    ],
-  },
-  {
-    label: "Educators",
-    href: "/school-tickets",
-    children: [
-      { label: "School Play in a Box", href: "/school-play-in-a-box" },
-      { label: "School Tickets", href: "/school-tickets" },
-      { label: "Stories on Stage", href: "/stories-on-stage" },
-    ],
-  },
-  {
-    label: "Shop",
-    href: "/shop",
-    children: [
-      { label: "Shop", href: "/shop" },
-      { label: "Rentals", href: "/rentals" },
-      { label: "Photos", href: "/photos" },
-    ],
-  },
-  {
-    label: "About",
-    href: "/about",
-    children: [
-      { label: "About PYT", href: "/about" },
-      { label: "Support", href: "/ways-to-support" },
-      { label: "Opportunities", href: "/employment" },
-      { label: "Press", href: "/press" },
-    ],
-  },
-];
+  }));
 
 // Maps a navGroup's `special` flag to its CSS class (desktop pill
 // vs. mobile pill use different class names for the same visual
