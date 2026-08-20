@@ -45,7 +45,6 @@ const productions = (await getCollection("storiesOnStage")).sort(
   </section>
 
   <PageHero
-    eyebrow={page.eyebrow}
     title={page.title}
     lede={page.intro_lede}
   />
@@ -53,7 +52,6 @@ const productions = (await getCollection("storiesOnStage")).sort(
   <!-- ============ SEASON LINEUP ============ -->
   <section class="section lineup-section">
     <div class="container">
-      <p class="eyebrow">This season</p>
       <h2 class="section-head">{page.lineup_heading}</h2>
       <p class="lineup-blurb">{page.lineup_blurb}</p>
 
@@ -94,7 +92,6 @@ const productions = (await getCollection("storiesOnStage")).sort(
   <!-- ============ AUDITIONS ============ -->
   <section class="section auditions-section" id="auditions">
     <div class="container auditions-inner">
-      <p class="eyebrow">Join the company</p>
       <h2 class="section-head">{page.auditions_heading}</h2>
       <p class="auditions-intro">{page.auditions_intro}</p>
 
