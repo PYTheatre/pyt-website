@@ -59,24 +59,24 @@
       "pyt_title": "Vocal Director"
     },
     {
-      "name": "Bill Olsen",
-      "pyt_title": "Director (Stories on Stage)"
-    },
-    {
-      "name": "Stefan Fisher",
-      "pyt_title": "Director (Stories on Stage)"
-    },
-    {
-      "name": "Beth McClelland",
-      "pyt_title": "Director (Stories on Stage)"
-    },
-    {
       "name": "Holly Smolik",
       "pyt_title": "Vocal Director"
     },
     {
       "name": "Roma Olvera",
       "pyt_title": "Vocal Director"
+    },
+    {
+      "name": "Beth McClelland",
+      "pyt_title": "Director (Stories on Stage)"
+    },
+    {
+      "name": "Bill Olsen",
+      "pyt_title": "Director (Stories on Stage)"
+    },
+    {
+      "name": "Stefan Fisher",
+      "pyt_title": "Director (Stories on Stage)"
     }
   ],
   "banner_image": "/uploads/pyt-shrek.jpg",
@@ -100,23 +100,23 @@
       "photo": "/uploads/loryn.jpeg"
     },
     {
-      "name": "Caitlyn DeRouin",
-      "pyt_title": "Education Program Manager",
-      "photo": "/uploads/screenshot-2026-06-26-at-12.44.36.png"
-    },
-    {
-      "name": "Candice Gasperik",
-      "pyt_title": "Office Manager",
-      "photo": "/uploads/candice.jpg"
-    },
-    {
       "name": "Jennifer Tipton",
       "pyt_title": "Resident Choreographer",
       "photo": "/uploads/image0.jpeg"
     },
     {
+      "name": "Caitlyn DeRouin",
+      "pyt_title": "Education Program Manager",
+      "photo": "/uploads/screenshot-2026-06-26-at-12.44.36.png"
+    },
+    {
       "name": "Shibby Thill",
       "pyt_title": "Resident Stage Manager"
+    },
+    {
+      "name": "Candice Gasperik",
+      "pyt_title": "Office Manager",
+      "photo": "/uploads/candice.jpg"
     }
   ],
   "email": "info@pytnet.org"
