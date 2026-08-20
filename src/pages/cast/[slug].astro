@@ -76,7 +76,6 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
   {/* ---- PASSWORD GATE (shown first; hidden once unlocked) ---- */}
   <section class="gate" id="cast-gate">
     <div class="container gate-inner">
-      <p class="eyebrow">Cast page</p>
       <h1>{data.show_title}</h1>
       <p class="gate-lede">This page is for the cast and their families. Please enter the password shared with you.</p>
 
@@ -93,7 +92,6 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
   <div id="cast-content" hidden>
     <section class="section cast-head">
       <div class="container">
-        <p class="eyebrow">Cast page</p>
         <h1>{data.show_title}</h1>
         {introParas.length > 0 && (
           <div class="cast-intro">
