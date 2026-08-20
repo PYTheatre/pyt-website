@@ -1,11 +1,12 @@
 {
   "casting_heading": "Our casting philosophy",
+  "casting_link_label": "How we cast, and what to expect",
   "intro": "All shows with auditions currently open are listed here, and you can also read more about what we're looking for, and what to expect at auditions.",
   "sos_button_label": "AUDITIONS",
   "no_open_message": "",
   "sos_blurb": "EACH Stories on Stage season is cast during a single annual audition, usually in September.",
   "title": "Auditions at PYT",
-  "faq_heading": "WHAT TO EXPECT & AUDITION FAQs",
+  "faq_heading": "What to expect, and FAQs",
   "sos_heading": "STORIES ON STAGE - Grades 5-12",
   "faqs": [
     {
@@ -116,6 +117,5 @@
       "question": "What are PYT’s casting policies - do you cast everyone?",
       "answer": "For Center Stage Musicals, all actors who audition and who fall within the age range for that show are cast - unless they exceed the maximum number of conflicts allowed, or present casting requirements that cannot be met. There will be two casts (each with four performance dates), and all roles will be double-cast.\n\nEvery effort will be made to feature each performer and maximize their stage time."
     }
-  ],
-  "casting_link_label": "How we cast, and what to expect"
+  ]
 }
