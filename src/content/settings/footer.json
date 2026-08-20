@@ -16,10 +16,6 @@
           "url": "/programs"
         },
         {
-          "label": "Shop",
-          "url": "/shop"
-        },
-        {
           "url": "https://www.instagram.com/pyouththeatre/?hl=en",
           "label": "Instagram"
         },
@@ -33,16 +29,8 @@
       "title": "Community",
       "links": [
         {
-          "label": "Rentals",
-          "url": "/rentals"
-        },
-        {
           "label": "Newsletter signup",
           "url": "/subscribe"
-        },
-        {
-          "label": "Contact",
-          "url": "/about/#contact"
         },
         {
           "label": "Volunteer",
