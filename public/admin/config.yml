@@ -219,27 +219,35 @@ collections:
           - { name: "studio_shows_label", label: "\"Shows\" menu — Studio Shows item label", widget: "string", hint: "Shown in the Shows dropdown in the nav bar at the top of every page." }
           - { name: "site_origin", label: "Site address (for the ES translate button)", widget: "string", hint: "The site's own web address, no trailing slash — e.g. https://pytnet.org. Used only to build the 'back to English' link when someone uses the ES button. IMPORTANT: update this once the real pytnet.org domain is connected, or the 'back to English' link will point at the wrong place." }
 
-      # --- Navigation — Tickets menu (2026-08-19) ---
-      # The "Tickets" nav button (replaces the old "Shows" item) and
-      # its dropdown. Fully editable here since the PM expects to
-      # change this list often as shows change — add, remove, or
-      # reorder any of the label/link rows freely; nothing here is
-      # tied to the Shows collection, so you can point a row at any
-      # page, including a specific show's own page.
-      - name: "nav-tickets"
-        label: "Navigation — Tickets Menu"
-        file: "src/content/settings/nav-tickets.json"
-        description: "The blue 'Tickets' button in the nav bar and its dropdown menu. Change this often as shows come and go — nothing here is automatic."
+      # --- Navigation — full menu (2026-08-20) ---
+      # Every item in the top nav bar, in order, including each
+      # item's own dropdown. Drag rows to reorder — both the top-level
+      # items (Tickets, Calendar, Auditions, etc.) and the items
+      # inside any dropdown. Replaces the old setup where only the
+      # Tickets dropdown was editable here and everything else was
+      # fixed in the code.
+      - name: "nav-menu"
+        label: "Navigation — Full Menu"
+        file: "src/content/settings/nav-menu.json"
+        description: "The entire top nav bar: every button, its order, and its dropdown (if it has one). Drag the ⠿ handle on any row to reorder."
         fields:
-          - { name: "main_url", label: "Where the Tickets button itself goes", widget: "string", default: "/shows", hint: "Clicking the button's main label (not the dropdown) goes here." }
           - name: "items"
-            label: "Dropdown items"
+            label: "Nav bar items"
             widget: "list"
             summary: "{{fields.label}}"
-            hint: "One row per dropdown item, in the order they should appear."
+            hint: "One row per top-level nav button, in the order they appear left to right (before Register/Donate)."
             fields:
-              - { name: "label", label: "Label", widget: "string", hint: "Example: The Wizard of Oz" }
-              - { name: "url", label: "Link", widget: "string", hint: "Example: /shows/the-wizard-of-oz, or /musicals for a whole category." }
+              - { name: "label", label: "Label", widget: "string", hint: "Example: Auditions" }
+              - { name: "url", label: "Where the button itself goes", widget: "string", hint: "Used when someone clicks the label directly (not a dropdown item). Example: /audition" }
+              - { name: "style", label: "Special styling", widget: "select", default: "none", options: [{ label: "Normal (lilac pill)", value: "none" }, { label: "Tickets style (blue, ticket shape)", value: "tickets" }, { label: "Calendar style (green, ring shape)", value: "calendar" }], hint: "Leave as 'Normal' unless this button should look like the blue Tickets button or the green Calendar button." }
+              - name: "children"
+                label: "Dropdown items (leave empty for a plain link with no dropdown)"
+                widget: "list"
+                summary: "{{fields.label}}"
+                hint: "One row per dropdown item, in the order they should appear. Leave this list empty if the button should just be a plain link (like Calendar)."
+                fields:
+                  - { name: "label", label: "Label", widget: "string", hint: "Example: The Wizard of Oz" }
+                  - { name: "url", label: "Link", widget: "string", hint: "Example: /shows/the-wizard-of-oz, or /musicals for a whole category." }
 
       # --- Home Page ---
       # All editable copy on the home page. Layout/structure stays in
@@ -386,12 +394,26 @@ collections:
       - name: "footer"
         label: "Footer (every page of site)"
         file: "src/content/settings/footer.json"
-        description: "The address and copyright text in the site footer, plus the Privacy Policy link. (The footer link columns are part of the site structure.)"
+        description: "Everything in the site footer: the address, the Privacy Policy link, the copyright line, and the three link columns."
         fields:
-          - { name: "address", label: "Address (shown under the logo)", widget: "text", hint: "The street address shown under the logo in the footer. The Privacy Policy link (below) is now separate from this text, so it renders as an actual clickable link instead of a URL typed out in the address." }
-          - { name: "privacy_link_label", label: "Privacy policy — link text", widget: "string", default: "Privacy policy", hint: "The clickable words. Leave blank to hide the Privacy Policy link entirely." }
+          - { name: "address", label: "Address (shown under the logo)", widget: "text", hint: "Press Enter/Return inside this box for a real line break — it's now preserved exactly as typed (e.g. street on one line, city/zip on the next). The Privacy Policy link always renders on its own line below this, so you don't need to add it here." }
+          - { name: "privacy_link_label", label: "Privacy policy — link text", widget: "string", default: "Privacy policy", hint: "The clickable words. Leave blank to hide the Privacy Policy link entirely. Always shown on its own line, under the address." }
           - { name: "privacy_link_url", label: "Privacy policy — link URL", widget: "string", required: false, hint: "Where the Privacy Policy link goes." }
           - { name: "copyright_extra", label: "Copyright extra text", widget: "string", hint: "Shown after the year. Example: 501(c)(3) · EIN 77-0335126" }
+          - name: "columns"
+            label: "Footer link columns"
+            widget: "list"
+            summary: "{{fields.title}}"
+            hint: "Each column has a heading and a short list of links. Drag to reorder columns or the links inside one; add or remove either freely. PM's earlier choice was a short curated set rather than a full nav mirror — keep that in mind, but it's entirely up to you now."
+            fields:
+              - { name: "title", label: "Column heading", widget: "string", hint: "Example: Explore" }
+              - name: "links"
+                label: "Links"
+                widget: "list"
+                summary: "{{fields.label}}"
+                fields:
+                  - { name: "label", label: "Label", widget: "string" }
+                  - { name: "url", label: "Link", widget: "string", hint: "Example: /shows, or a full https:// link" }
  
       # --- Donation campaign progress numbers (from Phase 1) ---
       - name: "donation-campaign"
