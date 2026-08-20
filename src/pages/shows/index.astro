@@ -14,6 +14,7 @@
   Stories productions have no individual detail pages).
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { productionTypeLabel } from "../../lib/showLabels";
 import PageHero from "../../components/PageHero.astro";
 import AuditionsPromo from "../../components/AuditionsPromo.astro";
 import { getCollection } from "astro:content";
@@ -30,7 +31,10 @@ const combined = [
     date_display: s.data.date_display,
     start: s.data.start_date.getTime(),
     poster: s.data.poster,
-    kind: s.data.production_type, // "Musical" | "Studio Production"
+    // `kind` stays the STORED value ("Musical" | "Studio Production") because
+    // kindClass() below keys off it for the label colour. The visitor-facing
+    // wording comes from kindLabel, so the two can differ safely.
+    kind: s.data.production_type,
     href: `/shows/${s.id}`,
     external: false,
   })),
@@ -45,7 +49,15 @@ const combined = [
   })),
 ].sort((a, b) => a.start - b.start);
 
-// Map each kind to its label CSS class.
+// Visitor-facing wording for the little type label on each card
+// (2026-08-20): "Center Stage Musical" / "Studio Show" rather than the
+// stored "Musical" / "Studio Production". "Stories on Stage" isn't a
+// production_type at all — it's a separate collection — so it passes
+// straight through unchanged.
+const kindLabel = (kind: string) => productionTypeLabel(kind);
+
+// Map each kind to its label CSS class. Keyed off the STORED value, not
+// the displayed label, so re-wording the label can't break the colours.
 const kindClass = (kind: string) =>
   kind === "Studio Production"
     ? "label-studio"
@@ -81,7 +93,7 @@ const kindClass = (kind: string) =>
                   {!item.poster && <span class="poster-placeholder">{item.title}</span>}
                 </div>
                 <div class="combined-info">
-                  <span class={`type-label ${kindClass(item.kind)}`}>{item.kind}</span>
+                  <span class={`type-label ${kindClass(item.kind)}`}>{kindLabel(item.kind)}</span>
                   <h2>{item.title}</h2>
                   <p class="combined-dates">
                     {item.date_display}
