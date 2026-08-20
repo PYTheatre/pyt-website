@@ -1,361 +1,1231 @@
-PYT Website — Build Log
-Phase-by-phase history of work completed. Newest at the top.
-New Claude session: read the most recent HANDOVER-*.md file first (it names which other docs are current — usually BUILD_LOG.md, PROJECT_RULES.md, DECISIONS.md — and which are stale). This build log is history — accurate for how we got here, but not the place to read off current state.
+---
+/*
+  HOME PAGE.
+ 
+  Content comes from two CMS-managed sources:
+   - src/content/settings/home-page.json — all the editable copy
+     (hero, optional hero banner photo, discovery cards, impact
+     stats, section headings, etc.)
+   - donation-campaign.json — the campaign progress numbers.
+ 
+  Layout/structure lives here in code (not editable via CMS, by
+  design — so the page can't be visually broken). All words, links,
+  images, and numbers are editable through the CMS.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Logo from "../components/Logo.astro";
+import home from "../content/settings/home-page.json";
+import campaign from "../content/settings/donation-campaign.json";
 
-Homepage: star trail rebuilt again — actual star shapes, green only, corrected zigzag path (2026-08-19)
-Goal (PM): the previous "dust ribbon" version (small tapering circles) missed the mark — clarified that the reference swirl image was only ever meant to describe the PATH's overall motion, not the individual shapes, and that the trail should be made of actual small star shapes (not dots), green only (no gold), following a specific zigzag: underline "Everyone" in the headline, sweep right, curve left down through the carousel, then curve right again down through the discovery grid toward wherever the last card is (Creepy Carrots today). Mocked up (as a real PNG image, after the interactive widget mockup failed to render on the PM's end) and explicitly approved before touching any code.
-Built (1 file):
-  - src/pages/index.astro (EDIT, homepage only) — renamed the generator from dustTrail() to starTrail(): same underlying approach (many points distributed along a bezier-defined path with a deterministic seeded PRNG, tapering in size toward one end) but each point now renders as a real 5-point star polygon (via a new starPoints() helper, with a random rotation per star) instead of a circle, and the color list dropped gold entirely — three green shades only (#68b050, #8fce6a, #4a7d38). Fixed the DIRECTION of segment 3 (discovery-grid entry), which had been sweeping the wrong way (left) — reversed its control points to sweep right, matching the corrected zigzag. Segment 4 (the ending, still anchored to whichever discovery card renders last) adjusted to continue that same rightward-arriving motion into the card's corner. Segments 1 (headline) and 2 (carousel) already swept in the right directions, so only their shape/color changed, not their path.
-Tested: build stayed at 31 real pages. Parsed the rendered HTML directly: confirmed zero `<circle>` elements remain anywhere in the trail (fully replaced by `<polygon>` stars) and zero occurrences of the old gold color in any of the four trail segments specifically — checked each segment's SVG body in isolation, not just a page-wide search, since the gold highlight color is used elsewhere on the page (buttons) and a page-wide check alone wouldn't have caught a leftover gold star. Confirmed each segment renders a real, non-trivial star count (46/32/32/34). Empty-safe test: blanked both photo_strip and discovery_cards together, rebuilt, confirmed no crash (including the last-card trail-anchoring logic on an empty array), then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match.
-NOT verifiable by me: the actual on-screen read of the corrected zigzag (whether it now genuinely feels like the stars "sweep right, then left through the carousel, then right again through the grid" when scrolling the real page) — the mockup showed a schematic version at roughly true proportions, but only a live look confirms the real thing lands the same way.
+// --- Star trail flourish (2026-08-19, third redesign) ---
+// PM feedback on the previous two versions: too small to read as
+// stars, and didn't reliably reach the intended spots. Root cause of
+// both: this was previously generated at BUILD time with fixed pixel/
+// viewBox coordinates guessed by hand, which can't account for how
+// the logo and headline text actually move relative to each other
+// across breakpoints (stacked on phones, side-by-side on wider
+// screens) or as font-loading shifts text slightly.
+//
+// This version drops build-time generation entirely and instead
+// measures the ACTUAL rendered positions of the logo and the specific
+// words in the browser (getBoundingClientRect), then draws the star
+// path directly in real pixel coordinates — see the <script> near the
+// hero markup below. That removes the whole class of scaling bugs the
+// earlier attempts kept hitting, since there's no separate "viewBox
+// units vs. display pixels" conversion to get wrong: 1 unit is always
+// 1 real pixel, measured fresh on load and again on resize.
+//
+// Path (PM spec, 2026-08-19): starts near the bottom-right corner of
+// the logo, runs under "FOR", continues under the first part of
+// "EVERYONE" ("EVER"), then curves up and arcs over the last part
+// ("ONE"). Same-size stars throughout (no tapering) — kept simple and
+// literal to what was asked, after two earlier attempts overcomplicated
+// this with tapering/color-variety that didn't read as intended.
+ 
+// --- Section heading case (2026-08-19) ---
+// Every remaining homepage section heading is editable, with a
+// per-heading choice of "as typed" or "UPPERCASE". Each falls back to
+// a sensible default if the CMS field is blank, so the page never
+// renders with an empty heading.
+const discovery_heading_case = (home as any).discovery_heading_case || "as-typed";
+const impact_heading_case = (home as any).impact_heading_case || "as-typed";
+const donate_heading_case = (home as any).donate_heading_case || "as-typed";
 
-Homepage: fix — star trail nearly invisible, not spanning the page (2026-08-19)
-Goal (PM): caught live that the star trail had "almost disappeared" and didn't span the page the way the approved mockup showed.
-Root cause: each trail segment is its own small SVG with a fixed internal coordinate space (its viewBox) — stars are drawn as coordinates/radii WITHIN that space. The CSS display width I'd set for each of the four trail containers (7.4em for the headline, 150px/150px/100px for the other three) was small relative to their viewBox widths (610/220/220/150 units), which scales EVERYTHING inside down proportionally — stars included. That's what shrank them to near-dust. It also meant each trail was confined to a small corner box rather than genuinely reaching across the page.
-Built (1 file):
-  - src/pages/index.astro (EDIT, homepage only) — roughly doubled (or more) the display width of all four trail containers: headline switched from a small font-relative 7.4em to min(88vw, 640px) — real pixels instead of em, decoupled from the heading's font-size, and close to a 1:1 match with its 610-unit viewBox; carousel and discovery-entry both 150px → 320px; the ending segment 100px → 220px. Position offsets (top/left/right) scaled to match each new size, so the trail still reads as "poking into" its corner rather than swallowing it. Also increased the underlying star-size formula itself (the multiplier that turns a 0–1 random value into an actual radius) by about 75%, as extra headroom on top of the container-size fix, so even on narrower phone screens the stars stay clearly star-shaped rather than shrinking back toward dust.
-Tested: build stayed at 31 real pages. Checked the COMPILED CSS for all four segments to confirm the new widths and offsets actually landed in the shipped output, not just the source. Calculated the expected on-screen star sizes from the compiled scale factors (viewBox-to-display-width ratio): most stars in every segment now land in roughly the 16–22px diameter range, with only the deliberately-tapered tail-end stars shrinking smaller — a large jump from the previous ~4–6px maximum. Empty-safe test: blanked both photo_strip and discovery_cards together, rebuilt, confirmed no crash, then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match.
-NOT verifiable by me: the actual on-screen look — whether the new sizes genuinely read as clearly star-shaped and whether the trail now visibly spans the page the way the mockup showed, rather than just being a bigger blob in each corner. Worth the PM's close look, especially at a couple of different screen widths since the headline segment's sizing is now viewport-relative (min(88vw, 640px)).
+// --- Donation campaign numbers ---
+const goal = campaign.goal_amount;
+const raised = campaign.raised_amount;
+const donorCount = campaign.donor_count;
+const campaignLabel = campaign.campaign_label;
+const pct = Math.round((raised / goal) * 100);
+// Thermometer fill height, capped 0–100 so it never overflows the tube.
+const fillPct = Math.min(100, Math.max(0, pct));
+ 
+// Donation-teaser heading. CMS-editable (home.donate_heading). If the
+// field is empty, fall back to the original goal-based wording so the
+// line never renders blank.
+const donateHeading = home.donate_heading?.trim() || `Help us reach $${goal.toLocaleString()}.`;
+ 
+// --- Hero heading with optional italic word ---
+// The CMS lets staff pick one word in the heading to italicize
+// (the accent style). If that word appears in the heading, we
+// split around it; otherwise the heading renders plain.
+const heading = home.hero_heading;
+const italicWord = home.hero_heading_italic_word?.trim();
+let headingBefore = heading;
+let headingItalic = "";
+let headingAfter = "";
+if (italicWord && heading.includes(italicWord)) {
+  const idx = heading.indexOf(italicWord);
+  headingBefore = heading.slice(0, idx);
+  headingItalic = italicWord;
+  headingAfter = heading.slice(idx + italicWord.length);
+}
 
-Navbar: fix — Tickets button not showing blue, ES toggle too washed out (2026-08-19)
-Goal (PM): caught live that the Tickets button rendered as a plain white pill (no blue, no ticket shape) and the ES toggle was barely visible against the dark bar.
-Root cause, Tickets button: CSS specificity, not a deploy issue. Astro automatically appends its own scoping attribute to EVERY class in a selector, not just the last one — so ".nav-wide .pill" doesn't compile to "2 classes" worth of specificity, it compiles to 4 (class + attribute, twice), while ".tickets-btn" alone is only 1 class + 1 attribute = 2. The nav-wide rule was winning by a wide margin, silently overriding the blue background/text color back to the plain default every other nav pill uses. Confirmed by inspecting the actual compiled CSS output, not just the source.
-Root cause, ES toggle: the button sits in .header-actions, OUTSIDE the .nav-wide container, so the ".nav-wide .pill" rule that gives every other nav item its bright white color never reaches it at all — it was falling back to the base .pill class's default color (--ink-soft), which is a muted gray tuned for light-background contexts elsewhere on the site, not this dark bar.
-Built (1 file):
-  - src/components/Header.astro (EDIT, site-wide component) — .tickets-btn's background/color now use !important, matching the approach already used for the mobile version (which had this same protection from the start and was unaffected by this bug) — chosen over trying to out-calculate Astro's auto-injected specificity, which is what caused the miscalculation in the first build of this feature. .lang-toggle now sets its own color/background explicitly (also with !important, for the same certainty) instead of relying on inheriting from a rule that doesn't actually reach it, and gained a faint border (matching the hamburger button's existing border treatment) so it reads as a real button rather than plain dim text.
-Tested: build stayed at 31 real pages. Checked the COMPILED CSS directly (not just source) to confirm both !important declarations actually landed in the shipped output. Confirmed both elements render in the rendered HTML on the homepage AND an unrelated inner page (/rentals), to verify the fix reached every page via the shared Header component.
-NOT verifiable by me: the actual on-screen contrast/legibility of the ES toggle's new bordered treatment — PM's call, as always with color/contrast decisions.
+// --- Force the headline onto two lines, with the word right before
+// the accent word joining it on the second line (PM preference: e.g.
+// "YOUTH THEATER" / "FOR EVERYONE!" rather than "YOUTH THEATER FOR" /
+// "EVERYONE!"). Only kicks in when there's an accent word AND at
+// least two words before it; otherwise the heading just wraps
+// naturally with no forced break.
+let headingLine1 = "";
+let headingLine2Lead = "";
+if (headingItalic) {
+  const trimmed = headingBefore.trimEnd();
+  const lastSpaceIdx = trimmed.lastIndexOf(" ");
+  if (lastSpaceIdx > 0) {
+    headingLine1 = trimmed.slice(0, lastSpaceIdx);
+    headingLine2Lead = trimmed.slice(lastSpaceIdx + 1);
+  }
+}
+ 
+// --- Optional hero banner image (legacy, not currently rendered) ---
+const heroImage = (home as any).hero_image || "";
 
-Navbar: Tickets button (replaces Shows), EN/ES translate toggle (2026-08-19)
-Goal (PM): two things missing from the nav — (1) a Spanish/English toggle, which existed in the very first design prototype but was flagged "Phase 4, not started" from day one and never actually got built into the real site; (2) a "Tickets" button, blue (PYT logo blue) and shaped with ticket-like notched edges (PM shared a reference image), replacing "Shows" at the far left of the nav, still linking to /shows by default but with a dropdown — fully CMS-editable since the PM expects to change it often — covering All Shows, Center Stage Musicals, Studio Shows, Stories on Stage, School Shows, and the two shows currently running (The Rules of Comedy, The Wizard of Oz).
-On the EN/ES toggle specifically: confirmed with PM that a REAL bilingual site (translating and maintaining every page's content in Spanish, plus the routing/CMS infrastructure to support it) is a big separate project, not something to fold into this batch — PM chose a lightweight auto-translate widget instead, understanding the trade-off is lower translation quality with none of that infrastructure needed.
-Built (4 files):
-  - src/content/settings/nav-tickets.json (NEW) — the Tickets button's own link (main_url) plus its dropdown items list (label + url pairs), seeded with the 7 items above. Note for a future session: "The Rules of Comedy" and "The Wizard of Oz" point at their actual show pages (/shows/rules-of-comedy, /shows/the-wizard-of-oz) found in the Shows collection; "School Shows" was pointed at /school-tickets (not /school-play-in-a-box) since it's a ticket-buying context — worth the PM double-checking that's the right target, easy to change since it's just a CMS field now.
-  - src/content/settings/nav-labels.json (EDIT — content) — added site_origin ("https://pyt-website.pages.dev" for now), used only to build the EN/ES toggle's "back to English" link. MUST be updated once the real pytnet.org domain is connected, or that link will point at the temporary address — flagged clearly in both the CMS hint and this note so it isn't missed.
-  - public/admin/config.yml (EDIT) — added the site_origin field to the Navigation Labels record; added a new "Navigation — Tickets Menu" record (main_url + an editable items list) with a description telling staff this is meant to be changed often, not a rare edit.
-  - src/components/Header.astro (EDIT, site-wide component) — replaced the old hardcoded "Shows" navGroup with one sourced from nav-tickets.json, flagged internally with `special: "tickets"` so both the desktop and mobile render loops apply distinct styling to just this one item while reusing all the existing dropdown hover/focus/keyboard behavior untouched. The ticket-notch shape is pure CSS: two small circles (colored to match whatever background the button sits on — the dark nav bar on desktop, the light mobile-menu panel on mobile) positioned over the left/right edges to visually "bite" a notch out of the blue pill; this specifically depends on the button always sitting on a solid, known background color, noted in a code comment in case this button is ever reused somewhere with a different backdrop. Tightened an existing bug while in here: a navGroup with an empty (but present) children array used to still render an empty, caret-having dropdown box on hover — changed the condition from "has a children array" to "has at least one child," so an empty Tickets dropdown (if the PM ever clears the whole list) now correctly falls back to a plain ticket-styled link instead of showing a dead-looking empty box; verified the ticket-blue styling itself still applies in that fallback case too (it originally wouldn't have — caught and fixed during testing, see below). Added the EN/ES toggle as a small pill in the header-actions row (next to Register/Donate) plus a matching entry in the mobile menu area implicitly via the shared header-actions markup; its behavior is a client-side script that routes the CURRENT page through Google's free translate.goog domain-proxy (dots in the hostname replaced with dashes, e.g. pytnet.org → pytnet-org.translate.goog) with query params telling Google en→es — no sign-up, no script embed, no CMS content needed for this part. Detects if the visitor is already on a translated page (hostname ends in .translate.goog) and swaps the button to "EN," linking back to the real site using the new site_origin setting rather than trying to reverse-engineer the proxy's URL (which is genuinely ambiguous for a domain that itself contains a dash, true of the current temporary pyt-website.pages.dev address).
-Tested: build stayed at 31 real pages. Parsed the rendered HTML directly on BOTH the homepage and an unrelated inner page (/rentals) to confirm the nav change reached every page via the shared component: "Shows" is genuinely gone from the top-level nav triggers, "Tickets" is first, and its dropdown renders the exact 7 items in the requested order. Checked the COMPILED (minified) CSS for the actual notch styling (:before/:after circles, blue background, correct notch-background color on both the desktop and mobile variants) and for the EN/ES pill's styling. Checked the COMPILED script for the translate.goog URL-construction logic and the _x_tr_sl/_x_tr_tl query params. Empty-safe test: cleared the Tickets dropdown's items list entirely, rebuilt, confirmed it fell back to a plain (but still correctly blue/ticket-styled, after a fix mid-testing) link on both desktop and mobile with no dead empty dropdown box, then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match. Re-validated config.yml as valid YAML after the edits.
-NOT verifiable by me: the actual on-screen look of the ticket notches (whether the circle-bite technique reads convincingly as a ticket at real nav-bar size), and whether Google's translate.goog proxy actually works smoothly end-to-end once clicked (I confirmed via research that this mechanism is still active as of mid-2026, but Google could change or restrict it without notice — it's explicitly a "deprecated but still functional" mechanism, which is the accepted trade-off of the lightweight-widget choice over a real bilingual build). Also worth the PM's own click-through once live: whether "School Shows" linking to /school-tickets (rather than /school-play-in-a-box) is actually the right target.
+// --- Hero photo strip ---
+// A row of clickable photo cards under the intro text, replacing the
+// old single wide banner. Each card needs a title and a link; the
+// photo is optional (falls back to a colored placeholder showing the
+// title, cycling through the brand colors so cards without a photo
+// still look intentional rather than broken). Empty-safe: hidden
+// entirely if the list is empty or every entry is missing a title/url.
+const placeholderColors = ["accent", "brand-blue", "brand-green", "accent-deep", "brand-blue", "brand-green"];
+const photoStrip = ((home as any).photo_strip || [])
+  .filter((c: any) => c?.title?.trim() && c?.url?.trim())
+  .map((c: any, i: number) => ({
+    title: c.title,
+    url: c.url,
+    image: c.image || "",
+    colorClass: placeholderColors[i % placeholderColors.length],
+  }));
 
-Homepage: star trail rebuilt as a dust ribbon, carousel hover slowed down, donate button centered, thermometer goal label (2026-08-19)
-Goal (PM): five fixes after seeing the black-stats/footer/star-trail batch live —
-  1. Star trail looked like a few scattered star clusters, not a sweeping trail — PM shared a reference image (a dense stardust-swirl ribbon) and asked for something closer to that.
-  2. Donate button needed to be bigger (including bigger type) and directly centered under the thermometer — it was left-aligned with the heading/lede above it.
-  3. Footer text under the logo wasn't showing up as white/visible. (Turned out to be a deploy-timing issue, not a code problem — PM confirmed it resolved on its own once the deploy fully propagated. No fix needed.)
-  4. The carousel's hover-to-hero behavior (added last round) scrolled too fast and felt out of control when moving the mouse across the row.
-  5. The thermometer needed the goal amount ($200,000) labeled at the top of the tube.
-Built (1 file):
-  - src/pages/index.astro (EDIT, homepage only) —
-      1. Replaced the star-polygon clusters entirely with a new `dustTrail()` generator: many small circles (50–70 per section) scattered along a curved path with a deterministic seeded random number generator (not `Math.random()`, so the trail looks identical on every rebuild instead of shifting around), tapering in size toward one end. This is an ORIGINAL shape built from scratch in the site's own green/gold palette — no image asset is used anywhere and nothing is copied from the reference photo the PM shared; it's the same general "dust ribbon" concept, built as math. All four trail segments (headline, carousel entry, discovery-grid entry, ending at the last card) now use this generator, and their display size roughly doubled to read as a real sweep rather than a small huddle.
-      2. Donate button wrapped in a new `.donate-teaser-btn-wrap` (`text-align: center`) so it's centered regardless of the button's own inline-flex display; font-size bumped 1.15rem → 1.35rem, padding increased, weight set to 600.
-      3. Footer: no code change (see above).
-      4. Carousel: replaced every remaining `scrollIntoView({behavior:"smooth"})` call (arrows, click-to-center, hover) with a custom `animateScrollTo()` — a self-timed, fully interruptible eased scroll (cubic ease-in-out) that runs over a fixed, controllable duration instead of the browser's own native smooth-scroll speed. Hover specifically also gained a 180ms "dwell" delay before it re-centers a card, so quickly passing the mouse across several cards no longer fires a new scroll for every single one it crosses — only the card the cursor actually settles on for a moment. Hover's own animation duration (700ms) is a bit longer than arrows/clicks (500ms) since it should read as the gentlest of the three.
-      5. Added a `.thermo-goal-label` showing `${goal.toLocaleString()}` positioned above the thermometer tube.
-Tested: build stayed at 31 real pages. Parsed the rendered HTML directly: confirmed the exact dot counts render for all four trail segments (70/50/50/55 = 225 total dots, matching what was requested from the generator); confirmed the `$200,000` goal label renders. Checked the COMPILED (minified) script for zero remaining occurrences of `"smooth"` (confirming every native smooth-scroll call was actually replaced, not just some), 5 `requestAnimationFrame` calls (the new eased-scroll loop plus the pre-existing scale/resize ones), and the `180` dwell-delay value landing in the shipped output. Checked the COMPILED CSS for the button wrapper's `text-align:center`, the bigger button font-size/padding, and the goal label's positioning. Empty-safe test: blanked both `photo_strip` and `discovery_cards` together, rebuilt, confirmed both the carousel and the grid disappeared cleanly with no errors (including the last-card trail-anchoring logic, which runs safely on an empty array), then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match.
-NOT verifiable by me: the actual on-screen feel of the dust trail (whether it reads as a continuous sweep versus four separate clusters) and whether the new hover timing (180ms dwell + 700ms ease) feels right — could still be tuned faster/slower once the PM tries it on a real trackpad/mouse.
+// The carousel is rendered as three back-to-back copies of the same
+// cards so it can loop continuously in either direction (see script
+// below) — swiping/clicking past either end silently jumps back into
+// the middle copy rather than running out of cards.
+const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, ...photoStrip] : [];
+---
+ 
+<BaseLayout title="Peninsula Youth Theatre — Outstanding youth theatre">
+  <!-- ============ HERO (intro text) ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid" id="hero-grid">
+        <div class="hero-logo-wrap" id="hero-logo-wrap">
+          <Logo size="hero" />
+        </div>
+        <h1 class="hero-heading">
+          {headingItalic && headingLine2Lead ? (
+            <>
+              {headingLine1}<br />
+              <span id="hero-lead-word">{headingLine2Lead}</span>{" "}
+              <span class="accent-word" id="hero-accent-word">
+                {headingItalic}
+              </span>
+              {headingAfter}
+            </>
+          ) : (
+            <>
+              {headingBefore}{headingItalic && (
+                <span class="accent-word">{headingItalic}</span>
+              )}{headingAfter}
+            </>
+          )}
+        </h1>
+        <p class="hero-lede">{home.hero_lede}</p>
+        <!-- Star trail: drawn entirely at runtime (see script below),
+             not at build time — it needs the ACTUAL rendered positions
+             of the logo and the words above, which shift between the
+             stacked mobile layout and the side-by-side desktop layout,
+             and can't be predicted with fixed coordinates. Path (PM
+             spec, 2026-08-19): starts near the logo's bottom-right
+             corner, runs under the lead word ("FOR"), continues under
+             the first part of the accent word ("EVER"), then curves up
+             and over the last part ("ONE"). Empty until the script
+             populates it; harmless if JS is off. -->
+        <svg id="hero-star-trail" class="hero-star-trail" aria-hidden="true"></svg>
+      </div>
+    </div>
+ 
+    <!-- Photo strip / carousel: scrollable row of cards linking to key
+         pages. Hidden entirely when there are no valid cards. Cards
+         render in CMS order (no shuffle), rendered as three back-to-back
+         copies (loopedPhotoStrip) so the carousel loops continuously in
+         both directions — see script below. The card nearest the center
+         of the viewport becomes the large "hero" image (photo only —
+         the caption stays normal size so it's never cut off). Several
+         ways to change which card is the hero: swiping, the arrow
+         buttons, hovering a non-hero card with a mouse (desktop only —
+         real hover devices), or clicking a non-hero card. CLICKING is
+         gated (PM preference, 2026-08-19): a click on any card that
+         ISN'T currently the hero re-centers it instead of following its
+         link; only clicking the card that's already the hero navigates
+         through. Always opens centered on the card titled exactly
+         "Center Stage Musicals" — matched by that card's title text, so
+         keep that title spelled that way if it's ever edited. Both
+         arrow buttons and edge fades stay visible at all times on
+         desktop (there's no "end" to reach) — on mobile people just
+         swipe. -->
+    {photoStrip.length > 0 && (
+      <div class="container">
+        <div class="photo-strip-wrap" id="photo-strip-wrap">
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Scroll left">‹</button>
+          <div class="photo-strip-fade photo-strip-fade-left" aria-hidden="true"></div>
 
-Homepage + footer: black stats/thermometer redesign, footer overhaul, star trail across sections (2026-08-19)
-Goal (PM): a large batch, mocked up first and approved before building —
-  1. "PYT in numbers" — black background matching the nav, each number boxed in its brand color.
-  2. Donate section — "Every gift, small and large..." matched to the hero intro's exact font/weight; thermometer numbers switched to the shared heading font; thermometer made bigger and centered (was smaller, beside the numbers); Donate button switched to the nav's yellow highlight color and made bigger.
-  3. Footer — black background matching the nav; bigger link type; link columns curated rather than a full nav mirror (PM's explicit choice) — Explore / Community / About, each shortened from the old set; the street address split apart from the Privacy Policy text (which used to be a plain URL typed into the same field) into its own field plus a real clickable link, both independently CMS-editable.
-  4. Star trail — bigger stars in the existing headline flourish, plus three new flowing clusters continuing the sweep: into the top-left of the photo carousel, into the top-left of the "Find your role" grid, and a final cluster anchored to whichever discovery card renders LAST (Creepy Carrots today) rather than to a fixed page position — confirmed with PM as a set of separate flowing segments per section rather than one continuous shape, since a single page-spanning SVG breaks on any reflow.
-Also fixed in passing: `public/admin/config.yml` had somehow ended up byte-identical to `src/pages/index.astro` (looks like a copy-paste mix-up during the last handoff), which meant the CMS admin panel was completely broken — Decap couldn't parse it as YAML, so nothing in `/admin` would have loaded. Restored from the last known-good version before making this session's edits.
-Built (4 files):
-  - src/pages/index.astro (EDIT, homepage only) — added a small `starPoints()` helper (generates 5-point star SVG polygons from a center + radius) rather than hand-typing coordinates, used for all four trail segments. Impact section: dark background + bordered `.stat` boxes, stat grid now 4-across on wider screens (was 3, to match the site's 4 stats evenly). Donate section: `.donate-lede` now uses the exact same font-size/weight/line-height/letter-spacing as `.hero-lede`; thermometer markup unchanged but resized (56×250 → 80×320) and `.thermo-row` switched to a centered column layout; `.thermo-raised` switched to `var(--font-heading)`; Donate button got its own `.donate-teaser-btn` class using `var(--highlight)`/`var(--highlight-text)` at a bigger size, scoped to just this button (the Support PYT page's own Donate button is untouched). Discovery section: wrapped in `.discovery-section` (now `position: relative`) for the new star cluster; the `.map()` over `discovery_cards` now flags the last item and wraps it in `.card-trail-end-wrap` carrying the ending star cluster as a sibling of `.card` (not a child), so it isn't clipped by the card's own `overflow: hidden`.
-  - src/components/Footer.astro (EDIT) — background switched to `var(--nav-bg-dark)`; link columns rebuilt as the curated Explore/Community/About set (dropped "Donate" as a text link since it's already prominent as a button elsewhere, dropped "Our Story" in favor of "About PYT" + added "Support PYT" to match the current nav wording); link font-size bumped (0.95rem → 1.05rem); reads the new `address`/`privacy_link_label`/`privacy_link_url` fields instead of the old single `tagline` field, rendering the address as plain text and the policy as a real `<a>` only when both the label and URL are present.
-  - src/content/settings/footer.json (EDIT — content) — replaced the single `tagline` field (which had the address AND a plain-text "Privacy Policy https://..." URL crammed into one text block) with `address`, `privacy_link_label`, and `privacy_link_url` as three separate fields. `copyright_extra` untouched.
-  - public/admin/config.yml (EDIT, plus the corruption fix described above) — replaced the Footer record's single `tagline` field with the three new fields described above, each with its own hint explaining what it does.
-Tested: build stayed at 31 real pages. Parsed the rendered HTML directly: confirmed exactly 4 `.stat` boxes; all four star-trail segment classes present (`accent-stars`, `trail-stars-carousel`, `trail-stars-discovery`, `trail-stars-end`); exactly one `.card-trail-end-wrap` in the discovery grid, and confirmed by title that it wraps whichever card is actually last in the CMS list (currently "Creepy Carrots") — proving the anchor follows array position, not a hardcoded location; footer address + all three curated column headings present. Checked the COMPILED CSS (not just source) for: `.impact` background using `var(--nav-bg-dark)`, `.stat` border color, `.donate-teaser-btn` using `var(--highlight)`, `.thermo` at the new bigger dimensions, the shared `.trail-stars` base rule, `.site-footer` background, and the footer link font-size at 1.05rem. Empty-safe tests: blanked the footer's address/privacy fields (the paragraph disappears cleanly, no stray empty tag); blanked `discovery_cards` entirely (grid disappears cleanly, no crash from the last-card trail logic running on an empty array); blanked `stats` entirely (grid disappears cleanly) — restored all three content files and rebuilt again after each, diffing against the pre-test version each time to confirm an exact match. Re-validated `config.yml` as valid YAML after the corruption fix and again after this session's edits.
-NOT verifiable by me: the actual on-screen read of the four separate star clusters — whether they genuinely feel like one continuous flowing trail when scrolling down the page, rather than four disconnected clusters — is inherently something only a real scroll-through can judge; also not verified: how the bordered stat boxes and bigger thermometer look at in-between screen widths (only checked the compiled CSS values, not a live rendering).
-Flagged for PM, not part of this batch: since the corrupted config.yml would have made `/admin` completely unusable, worth double-checking your first login to the CMS after this deploy actually shows all the expected Site Settings records (should be back to normal now that it's restored, but flagging so it's not a surprise if it was already broken for a few days).
+          <div class="photo-strip" id="photo-strip">
+            {loopedPhotoStrip.map((card) => (
+              <a href={card.url} class="photo-strip-card">
+                <div class="photo-strip-photo">
+                  {card.image ? (
+                    <img src={card.image} alt="" loading="eager" />
+                  ) : (
+                    <div class={`photo-strip-placeholder c-${card.colorClass}`}></div>
+                  )}
+                </div>
+                <span class="photo-strip-title">{card.title}</span>
+              </a>
+            ))}
+          </div>
 
-Homepage: carousel — hover-to-hero on desktop, click gated to the hero card only (2026-08-19)
-Goal (PM): two more carousel refinements after seeing the loop/scale fixes live — (1) hovering a non-hero photo with a mouse should make it the hero, not just swiping/arrows; (2) clicking a non-hero photo should re-center it instead of sending the visitor straight to its page — only clicking the photo that's ALREADY the hero should follow its link through.
-Built (2 files):
-  - src/pages/index.astro (EDIT, homepage only) — added a delegated `mouseover` listener on the strip, gated behind `window.matchMedia("(hover: hover) and (pointer: fine)")` so it only fires on real mouse/trackpad devices, not touchscreens: hovering any card that isn't already the hero smoothly re-centers it. Added a delegated `click` listener: a click on any card that ISN'T the current hero calls `preventDefault()` and re-centers that card instead of navigating; a click on the card that IS already the hero is left alone and follows its link normally. Both listeners are delegated on the strip itself (not per-card) so they automatically cover all three loop copies with no extra wiring.
-  - public/admin/config.yml (EDIT) — updated the photo_strip field's CMS hint to describe hover-to-hero and the click-gating behavior, so it's clear in the CMS why clicking a card sometimes just re-centers it instead of navigating.
-Tested: build stayed at 31 real pages. Parsed the compiled (minified) script directly: confirmed the `matchMedia` hover check, the delegated `mouseover` handler comparing against the current hero index, and the delegated `click` handler calling `preventDefault()` specifically when the clicked card isn't the current hero. Empty-safe test: blanked the photo strip, rebuilt, confirmed it disappeared cleanly with no errors, then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match. Confirmed config.yml is still valid YAML.
-NOT verifiable by me: the actual on-screen feel of hover-following-the-mouse across the row (whether it feels responsive or overeager), and whether the click-gating is intuitive on a first try — PM's call once live. Also not verified: keyboard-only navigation (tabbing to a card and pressing Enter) — since Enter on a link triggers a synthetic click, a non-hero card would need Enter pressed twice (once to center it, once to follow the link) rather than once; flagging as a known trade-off, not something raised as a requirement, so not addressed further in this batch.
+          <div class="photo-strip-fade photo-strip-fade-right" aria-hidden="true"></div>
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-next" id="photo-strip-next" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+    )}
+  </section>
 
-Homepage: carousel fixes — bigger hero, continuous loop, caption no longer clipped (2026-08-19)
-Goal (PM): after seeing the carousel live, three fixes — (1) the centered "hero" photo should be noticeably bigger, about a third bigger than it was; (2) it should loop continuously in both directions — currently it opened on the very first card with nothing to scroll to on the left, which looked broken; (3) the caption text below each photo was getting cut off, both under the hero and under the smaller side photos.
-Built (1 file):
-  - src/pages/index.astro (EDIT, homepage only) —
-      1. Hero photo now scales up to 1.7x at dead-center (up from 1.28x — about a third bigger), while the near-neighbor cards keep the SAME size they had before (1.28x down to 0.82x by distance, unchanged) — done via a small "core" dead-zone right at center that jumps straight to the bigger hero size, then falls back to the original neighbor curve just past it, rather than smoothly scaling everything up.
-      2. Carousel now loops continuously: the card list renders as three back-to-back copies of the same cards (CMS order preserved, still opens centered on "Center Stage Musicals," now specifically the middle copy). Whenever the centered card drifts into the first or third copy, the script silently jumps the scroll position by exactly one full set-width in the opposite direction — instant, no animation, same visual frame — so there's always more to scroll to either direction. Removed the old "hide the arrow/fade at the end" logic entirely, since there's no end anymore; both arrows and both edge fades now stay visible at all times on desktop.
-      3. Fixed the caption clipping: the zoom effect now applies to the PHOTO only, not the whole card (caption included) — previously scaling the whole card also grew the caption text and pushed it partly outside the scrollable strip, which is what was cutting it off. The photo's scale now anchors to its own bottom edge (transform-origin) so it grows upward, away from the caption, and the caption never resizes. The strip's top padding is now calculated by the script (not a fixed CSS value) to exactly fit how far the hero photo grows, so nothing bleeds outside and gets clipped by the scrollable container.
-Tested: build stayed at 31 real pages. Parsed the rendered HTML directly: confirmed the photo strip now renders 15 cards (5 real cards × 3 copies) in the same CMS order each time, with "Center Stage Musicals" as card #1 and #6 (start of copy 2). Checked the COMPILED (minified) script directly for the actual scale values (1.7 hero / 1.28 neighbor / 0.82 min / 0.12 core dead-zone) and the loop-correction logic, and checked the compiled CSS to confirm transform-origin:center bottom landed on the PHOTO element specifically, not the card. Empty-safe test: blanked the photo strip, rebuilt, confirmed the whole carousel (including the now-tripled markup) disappeared cleanly with no errors, then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match.
-NOT verifiable by me: the actual on-screen feel of the loop (whether the "jump back" during a fast swipe is ever visible/jarring) and whether 1.7x reads as the right amount of "much bigger" — PM's call once live.
-Flagged, unrelated to this fix: three stray duplicate files from an earlier handoff mix-up are still sitting in the repo (`src/pages/index (1).astro`, `public/admin/config (1).yml`, `BUILD_LOG (1).md`) — the first one is actually generating an extra unwanted page at `/index (1)/`. These need to be deleted directly on GitHub; noted again at the end of this session's message since they weren't removed last time.
+  <script>
+    // Hero star trail (2026-08-19, third redesign). Drawn entirely at
+    // runtime by measuring the ACTUAL rendered positions of the logo
+    // and the specific headline words, rather than guessing fixed
+    // coordinates at build time — that's what broke the two earlier
+    // attempts, since the logo and headline move relative to each
+    // other between the stacked mobile layout and the side-by-side
+    // desktop layout. Path (PM spec, 2026-08-19): starts near the
+    // logo's bottom-right corner, runs under the lead word ("FOR"),
+    // continues under the first part of the accent word ("EVER"),
+    // then curves up and over the last part ("ONE"). Same-size stars
+    // throughout — no tapering, kept deliberately simple.
+    function drawHeroStarTrail() {
+      const grid = document.getElementById("hero-grid");
+      const logoWrap = document.getElementById("hero-logo-wrap");
+      const leadWord = document.getElementById("hero-lead-word");
+      const accentWord = document.getElementById("hero-accent-word");
+      const svg = document.getElementById("hero-star-trail");
+      if (!grid || !logoWrap || !accentWord || !svg) return;
 
-Homepage: removed "What's Next", moved "Find your role" up, centered photo carousel (2026-08-19)
-Goal (PM): after reviewing the previous batch live, three follow-ups — (1) delete the "What's Next" (Upcoming Shows) section entirely, code and CMS fields both; (2) move "Find your role" up to sit where it used to be, unchanged (same 8 cards, same photo-overlay design); (3) redesign the hero photo carousel so the centered photo displays much bigger than the others, with swiping or the arrow buttons re-centering (and re-enlarging) whichever photo you land on. Mocked up both before building; PM confirmed correct except the mockup's "Find your role" was intentionally shortened for the demo — full 8-card section stays exactly as-is. Carousel always opens centered on "Center Stage Musicals" (not random), confirmed with PM.
-Built (3 files):
-  - src/pages/index.astro (EDIT, homepage only) — removed the entire Upcoming Shows/What's Next section (markup, CSS, and the show-filtering/sorting logic that fed it — it had no other use on the page); Discovery cards ("Find your role") now renders directly after the hero with no changes to its content or design. Photo strip rebuilt as a centered carousel: cards keep CMS order (shuffle removed), snap to center instead of start, and the card nearest the visible center scales up (1.28x down to 0.82x by distance) via a scroll listener — swiping or clicking the arrows re-centers and re-scales. Position math uses offsetLeft/offsetWidth rather than getBoundingClientRect specifically so the CSS transform used for scaling doesn't feed back into its own position calculation. On load, the carousel centers on whichever card's title matches "Center Stage Musicals" exactly (falls back to the first card if that title's ever changed/missing).
-  - public/admin/config.yml (EDIT) — removed the Home Page "shows_heading"/"shows_heading_case" fields (no longer used, section is gone); updated the photo_strip field's CMS hint to describe the new fixed-order, centered-on-"Center Stage Musicals" behavior instead of the old shuffle.
-  - src/content/settings/home-page.json (EDIT — content) — removed the shows_heading/shows_heading_case values that went with the deleted section. No other content touched; all 8 discovery_cards entries left exactly as they were.
-Tested: build stayed at 31 real pages (index.html count). Parsed the rendered HTML directly (not raw grep): confirmed "Find your role" is now the first section heading after the hero (no "What's Next" or shows-strip/show-tile markup anywhere in the output); confirmed all 8 discovery cards still render with their existing titles/subtitles/links unchanged; confirmed the photo strip renders in CMS order with "Center Stage Musicals" first. Checked the COMPILED CSS for the new scroll-snap-align: center and the scale/opacity transition on .photo-strip-card. Empty-safe test: blanked discovery_cards, rebuilt, confirmed the card grid disappeared cleanly with the "Find your role" heading still showing and no broken layout, then restored the content and rebuilt again — diffed the restored file against the pre-test version to confirm an exact match.
-NOT verifiable by me: the actual on-screen feel of the scale-up (whether 1.28x reads as "much bigger" or needs to go further) and whether the swipe/arrow re-centering feels smooth on a real touchscreen — PM's call once live.
+      // Only draw when there's actually a lead word to run under (see
+      // headingLine2Lead in the frontmatter) — if the headline text
+      // changes enough that there's no word before the accent word on
+      // its line, skip drawing rather than draw a broken partial path.
+      if (!leadWord) {
+        svg.innerHTML = "";
+        return;
+      }
 
-Homepage: Upcoming Shows filter rework, square cards, "Ways to join" photo grid, Mainstage rename (2026-08-19)
-Goal (PM): a bundle of related fixes after noticing the "Upcoming shows" heading couldn't be edited and the show cards looked wrong. Confirmed scope: homepage only (not the rest of the site) for the new editable-heading-with-caps-toggle pattern. Mocked up the square cards and the new "Ways to join" grid before building, per usual.
-  1. "Upcoming shows" heading — was hardcoded, now editable, plus every homepage section heading (Upcoming shows, Ways to join PYT, Impact, Donate teaser) gets a new "As typed / UPPERCASE" choice in the CMS.
-  2. Which shows appear in "Upcoming shows" — changed from "any show that hasn't finished yet" to "has an upcoming/open audition, OR has a ticket link AND hasn't finished yet." Confirmed with PM that Stories on Stage productions (which have no audition data at all) only qualify via the ticket-link path — same rule as Center Stage Musicals shows, no special exception.
-  3. Show cards — square instead of tall/portrait; investigated the "titles get cut off" complaint and found no actual CSS truncation was happening (no line-clamp, no fixed height) — likely just looked cramped on the old narrow portrait shape. Squared off the photo and gave the title more line-height/room regardless.
-  4. "Ways to join PYT" — completely redesigned from text cards (eyebrow/title/body) into a square photo grid, title (and optional subtitle) overlaid in white Baloo 2 over a dark gradient scrim. Content also fully replaced with 8 new specific items (Fall Classes, Stories on Stage Auditions, Movie Night, Fall Costume Party, The Rules of Comedy, The Wizard of Oz, Singin' in the Rain Auditions, Creepy Carrots) and their real links, as given by the PM.
-  5. "Mainstage" renamed to "Center Stage Musicals" everywhere it appeared in CMS-facing labels/hints/descriptions, and in the two places it appeared in actual live fallback page copy (the audition page's "no auditions open" message, and the sponsor-a-show blurb on Ways to Support). Left untouched in a few spots that are pure code comments never seen by anyone (noted so a future session doesn't wonder why "Mainstage" still appears in a code comment).
-Built (4 files):
-  - src/content.config.ts — NO changes needed here: discovered mid-investigation that Stories on Stage already has a `public_ticketing_url` field (drives the Buy Tickets button on each production's own page), already exposed in the CMS. Reused it directly for the new homepage filter instead of adding a duplicate field — one less thing to keep in sync.
-  - public/admin/config.yml (EDIT) — added the 4 new "heading capitalization" select fields (default "As typed", so nothing changes for existing content until the PM actively switches one to uppercase); redesigned the discovery_cards list fields (dropped eyebrow/body/meta, added subtitle + image); renamed "Mainstage" throughout as described above.
-  - src/content/settings/home-page.json (EDIT — content) — discovery_cards replaced with the 8 new items (all photos left empty — placeholders until the PM uploads real ones); added shows_heading + the 4 new case fields (all "as-typed", matching how the site already looked, so this defaults to a no-visual-change state).
-  - src/pages/index.astro (EDIT, homepage only) — new audition-or-tickets filter logic for both the Center Stage Musicals and Stories on Stage collections; heading text/case now read from the CMS with sensible fallbacks; show-tile and discovery-card CSS rebuilt for the square-photo treatment described above.
-  - src/pages/audition.astro, src/pages/ways-to-support.astro (EDIT) — the two live-rendered fallback strings mentioning "Mainstage" updated to "Center Stage Musicals".
-Tested: build stayed at 30 pages. Parsed the rendered HTML directly (not raw grep — §6F): confirmed the exact 3 shows that now qualify for the Upcoming Shows strip (Creepy Carrots, The Wizard of Oz, A Midsummer Night's Dream — each verified against its actual audition/ticket data) and confirmed by name which shows correctly do NOT qualify yet (Rules of Comedy and Singin' in the Rain — neither has an open audition or a ticket link set in their content files right now, which is accurate to their real data, not a bug); confirmed all 8 new discovery-card titles/subtitles render correctly with real placeholder elements (not real photos) since no images are uploaded yet. Temporarily set a real heading + uppercase value, rebuilt, confirmed the class and text both changed correctly, then reverted. Checked the COMPILED CSS (not just source) for the square aspect-ratios on both card types and the Baloo/white/overlay card-title styling.
-NOT verifiable by me: how the white overlay text actually reads against real (not placeholder-color) photos once the PM uploads them — worth a look once real images are in, since a busy photo could reduce legibility more than a flat color does despite the gradient scrim.
-FYI for the PM, not a bug: "Creepy Carrots" already existed in the content under a mismatched filename (the-very-hungry-caterpillar.md) from before this session — its title field says "CREEPY CARROTS!" and it already had the exact ticket link you gave me for it. Left as-is since renaming the file could affect other things referencing that slug; flagging only so it doesn't look like a mistake.
+      const gridRect = grid.getBoundingClientRect();
+      if (gridRect.width === 0 || gridRect.height === 0) return;
 
-Homepage headline font: Baloo 2, uppercase (2026-08-19)
-Goal (PM): after comparing a few playful font options side by side (Baloo 2, Fredoka, Titan One), picked Baloo 2 in caps for the homepage headline specifically.
-Built (2 files):
-  - src/styles/global.css (EDIT) — added Baloo 2 (weight 700) to the existing Google Fonts import, alongside Archivo Black and Source Sans 3.
-  - src/pages/index.astro (EDIT, homepage only) — .hero-heading now sets font-family to Baloo 2 directly (not via the shared --font-heading token), font-weight 700, and text-transform: uppercase. Scoped to just this one headline — every other heading on every other page stays on Archivo Black, untouched.
-Tested: build stayed at 30 pages. Checked the COMPILED CSS (not just source) and confirmed .hero-heading has the Baloo 2 font-family, weight, and uppercase transform; confirmed the font import reached the shared stylesheet. Confirmed on an unrelated inner page (/about) that "Baloo" doesn't appear anywhere — i.e. this really is scoped to the homepage only, not accidentally global.
-Flagged, not yet addressed: the logo-alignment sizing (Logo.astro) and the star-flourish SVG positions (both set earlier this session) were tuned against Archivo Black's specific letter shapes/proportions. Baloo 2 is rounder and measures differently, so the logo-to-headline alignment and the star positions may be slightly off now that the font's changed — flagged to the PM as worth a fresh look once live, not fixed proactively since it wasn't asked for in this batch.
+      const rel = (r: DOMRect) => ({
+        left: r.left - gridRect.left,
+        right: r.right - gridRect.left,
+        top: r.top - gridRect.top,
+        bottom: r.bottom - gridRect.top,
+        width: r.width,
+      });
+      const logo = rel(logoWrap.getBoundingClientRect());
+      const lead = rel(leadWord.getBoundingClientRect());
+      const accent = rel(accentWord.getBoundingClientRect());
 
-Hero restructure: logo aligned to headline text only, star-trail flourish, lede repositioned (2026-08-19)
-Goal (PM): after mockup review, the hero needed rework — (1) logo should align top-to-bottom with the HEADLINE text specifically, not with the small star doodles that used to sit above it; (2) the earlier CSS wavy underline under "EVERYONE!" should become a scattered trail of small stars that starts as an underline and sweeps up to fill the empty space under "THEATER"/"FOR"; (3) the intro paragraph should line up under the HEADLINE's left edge, not the logo's; (4) on phones, keep everything stacked but make sure the logo doesn't dwarf the text. Went through several rounds of mockups (including one rejected version with a connecting line, which PM asked to remove in favor of stars only) before landing on this.
-Also folded in: the earlier "set accent word to EVERYONE!" content fix, which the PM hadn't uploaded yet — included in this batch since the new star flourish needs that field filled in to show anything.
-Built (2 files):
-  - src/components/Logo.astro (EDIT, site-wide component) — hero logo size recalculated from the ACTUAL rendered height of the two-line headline text (roughly 108px at the headline's max desktop size, 72px at its smallest phone size), replacing an earlier guess that was roughly double that and made the logo tower over the text. Nav-size logo (every other page) untouched.
-  - src/pages/index.astro (EDIT, homepage only) —
-      • Removed the small "✦ ✦" doodle line that used to sit above the headline (it was the thing throwing off the logo/headline alignment, since the logo was matching the doodle+headline block's combined height, not just the headline).
-      • Rebuilt the hero as a small CSS grid: on phones, everything stacks full-width (logo, then headline, then intro line). At 720px+, it switches to two columns — logo in column 1, headline AND the intro line both in column 2, so the intro line's left edge now lines up with the headline's, not the logo's.
-      • The CMS-editable accent-word field (same one as before, no new content-model change) now renders a small cluster of star shapes (SVG) instead of a CSS underline — positioned relative to that word, starting as a line of stars right under it and trailing upward/rightward into the empty space beneath the rest of the headline.
-  - src/content/settings/home-page.json (EDIT — content, only this one field touched) — hero_heading_italic_word set to "EVERYONE!" so the star flourish has something to attach to out of the box.
-Tested: build stayed at 30 pages both before and after. Parsed the rendered HTML directly (not raw grep — §6F): confirmed the old hero-top/hero-copy/hero-doodle markup is genuinely gone, the new hero-grid/hero-logo-wrap structure is real, and all 9 star `<polygon>` elements render as real SVG shapes around the real word "EVERYONE!". Specifically re-tested the empty-safe case by blanking the accent-word field and rebuilding — confirmed the star span disappears completely and the headline still renders correctly as plain text — then restored the field and rebuilt again to leave it in the intended state. Checked the COMPILED CSS (not just source) for the grid's mobile-stacked vs desktop-two-column rules and the corrected logo heights, to confirm they're genuinely in the shipped output.
-NOT verifiable by me: the actual on-screen alignment precision between the logo and headline text (CSS line-height includes some built-in visual padding above/below the letters themselves, so "matching heights" gets close but isn't pixel-perfect against the letters' actual ink) — worth the PM's close look; and, as flagged before, the star positions are hand-tuned to fit this specific headline wording/length and would need re-tuning if the headline text changes substantially.
+      svg.setAttribute("viewBox", `0 0 ${gridRect.width} ${gridRect.height}`);
 
-Homepage logo relocation + playful headline treatment + nav breathing room (2026-08-19)
-Goal (PM): after looking at a reference site (Encore Stage & Studio) for inspiration, worked through mockups for a more playful homepage headline treatment (chose "Option B" — hand-drawn underline + star doodles, staying on the light background rather than needing a full photo), moving the logo out of the nav bar and into the hero next to the headline (beside it on desktop, stacked above it on phones, per a side-by-side mockup comparison), and loosening up the nav bar's spacing since it felt cramped.
-Built (3 files):
-  - src/components/Logo.astro (EDIT, site-wide component) — added a `size` prop: "nav" (default, same as before — used everywhere except the homepage) and "hero" (new, bigger — used once on the homepage). One component still drives the logo everywhere, so swapping the artwork file still updates both sizes at once.
-  - src/components/Header.astro (EDIT, site-wide component) — the header now checks which page it's on; the nav logo is hidden ONLY on the homepage (moved into the hero instead — see below), and still shows normally on every other page. Nav items also got more breathing room (gap and padding increased) and the dropdown arrows are bigger, site-wide — this was a general "it's cramped" complaint, not homepage-specific.
-  - src/pages/index.astro (EDIT, homepage only) — logo now sits next to the headline block (side by side once there's room, ~720px+) or stacked above it on phones. Added two small decorative star marks above the headline (purely visual, not CMS-editable, echoes the stars already in the logo artwork). The existing CMS-editable "accent word" field (same one as before — nothing new to configure, still edited the same way in Home Page settings) now gets a hand-drawn wavy underline instead of an italic color treatment; used CSS text-decoration rather than a fixed-width graphic specifically so it keeps working correctly no matter what word or how long a phrase the PM types into that field.
-Tested: build stayed at 30 pages. Parsed the rendered HTML directly (not raw grep — §6F): confirmed the nav logo is genuinely absent from the homepage header but genuinely present on an unrelated inner page (/rentals) — the on/off logic is real, not just visually hidden. Confirmed the hero's logo, star doodles, and headline are real elements. Temporarily set the accent-word field to a real value, rebuilt, and confirmed the wavy-underline span renders correctly around exactly that word, then reverted the content back to blank and rebuilt again to leave it untouched. Checked the COMPILED CSS (not just source) for the hero-top layout, the accent-word underline, and the wider nav-item spacing, on both the homepage and an inner page.
-NOT verifiable by me: how the logo actually looks at hero size next to the real headline text on a real screen, and whether the beside/stacked breakpoint switches at a sensible width — PM's visual check, especially worth trying at a couple of in-between window widths.
+      // Control points for the path, in the order the PM described:
+      // logo bottom-right -> under FOR -> under EVER -> up and over ONE.
+      const everMidX = accent.left + accent.width * 0.45;
+      const controlPoints = [
+        { x: logo.right - 8, y: logo.bottom - 6 },
+        { x: lead.left + lead.width * 0.4, y: lead.bottom + 6 },
+        { x: lead.right + 4, y: lead.bottom + 6 },
+        { x: everMidX, y: accent.bottom + 6 },
+        { x: everMidX + (accent.right - everMidX) * 0.35, y: accent.top - 4 },
+        { x: accent.left + accent.width * 0.85, y: accent.top - 16 },
+        { x: accent.right + 4, y: accent.top + 8 },
+      ];
 
-Nav tweaks + Register button color (2026-08-19)
-Also: confirmed the earlier school-tickets-page.json mix-up (wrong file content had landed on that path, causing a red build) was fixed correctly by the PM before this session started — checked the live file directly, it's valid JSON now.
-Goal (PM): three small follow-ups to the nav overhaul —
-  1. Add "Stories on Stage" as a link under the "Educators" dropdown too (it already lives under "Shows" — now reachable both ways, same pattern as School Play in a Box briefly was under two menus earlier in the project).
-  2. Reorder + rename the "About" dropdown: "About" → "About PYT" (now first), "Support PYT" → "Support" (moved to second), Opportunities, Press — same order as PM specified.
-  3. Register button color changed from the yellow highlight color to PYT's pink accent color (same pink used on primary buttons elsewhere) — Donate keeps the yellow.
-Built (1 file):
-  - src/components/Header.astro (EDIT, site-wide component) — Educators dropdown gained the Stories on Stage link; About dropdown reordered/renamed as above; register-btn and donate-btn CSS split apart (previously shared one rule) so Register now falls through to the normal pink .btn-primary color instead of being forced yellow like Donate.
-Tested: build produced 31 real pages (confirmed by counting actual index.html files in the output — the build tool's own summary line undercounts by one for an unrelated pre-existing reason, not something this batch changed). Parsed the rendered HTML directly (not raw grep — §6F): confirmed the exact dropdown order/labels site-wide including "Stories on Stage" appearing under both Shows and Educators, and "About PYT"/"Support" in the right order. Checked the COMPILED CSS specifically to confirm register-btn no longer has a background/color override (so it's genuinely inheriting the pink accent, not just visually similar by coincidence) while donate-btn still has its own yellow override. Confirmed all of this on an unrelated inner page (/rentals) too, not just the homepage.
-NOT verifiable by me: the actual on-screen pink shade/contrast of the new Register button — PM's call as always.
+      const bezierPoint = (pts: { x: number; y: number }[], t: number): { x: number; y: number } => {
+        let arr = pts;
+        while (arr.length > 1) {
+          const next: { x: number; y: number }[] = [];
+          for (let i = 0; i < arr.length - 1; i++) {
+            next.push({
+              x: arr[i].x + (arr[i + 1].x - arr[i].x) * t,
+              y: arr[i].y + (arr[i + 1].y - arr[i].y) * t,
+            });
+          }
+          arr = next;
+        }
+        return arr[0];
+      };
 
-Nav bar overhaul, inspired by Encore Stage & Studio's site (2026-08-18)
-Goal (PM): restructure the top nav after looking at a reference site. Worked out the exact order and contents over several back-and-forth messages — final spec below.
-New left-to-right order: Shows, Auditions, Classes & Camps, Educators (NEW), Shop, About — then Register (NEW button) and Donate (existing button), both at the far right.
-Built (4 files):
-  - src/content/settings/nav-labels.json (NEW) — two small CMS-editable fields: musicals_label ("Center Stage Musicals") and studio_shows_label ("Studio Shows"), used in the Shows dropdown. Added specifically because the PM wants to control the "Center"/"Centre" spelling themselves going forward without asking me each time — everything else in the nav is still code-defined (fixed site structure), just these two wording fields are now editable.
-  - public/admin/config.yml (EDIT) — registered the new "Navigation Labels" settings record (the two fields above), and a new "School Tickets Page" settings record (see below).
-  - src/content/settings/school-tickets-page.json (NEW) + src/pages/school-tickets.astro (NEW) — a simple placeholder page for the new "Educators" menu, since the real school-ticketing page doesn't exist yet. Starts with an empty show list and a friendly "check back soon" message with a contact email; the PM can add real shows (title, dates, description, a booking button) anytime in the CMS with no code changes needed. This is why the page count went from 30 to 31.
-  - src/components/Header.astro (EDIT, site-wide component) — rebuilt navGroups in the new order:
-      • Shows: dropdown renamed to "Center Stage Musicals" / "Studio Shows" (pulled from the new nav-labels.json) / "Stories on Stage" (unchanged)
-      • "Audition" renamed to "Auditions" (kept its Casting sub-link)
-      • "Classes & Camps": School Play in a Box REMOVED from here (moved, see below)
-      • "Educators" (NEW): School Play in a Box (moved from Classes & Camps) + the new School Tickets page
-      • Shop: unchanged
-      • About: reordered — "Support PYT" now sits at the TOP of this dropdown (linking to /ways-to-support, not its old Individual/Corporate/Sponsorship sub-links — those are gone from the nav, the page itself still has those sections), then About, then "Employment" renamed to "Opportunities", then Press. "Support PYT" is no longer its own top-level nav item.
-      • New "Register" button added next to Donate, same bright highlight-color treatment, linking to the external camps registration page the PM provided.
-Tested: build stayed at 31 pages (30 + the new School Tickets page — expected, not a bug). Parsed the rendered HTML directly (not raw grep — §6F) on the homepage: confirmed the exact top-level order (Shows, Auditions, Classes & Camps, Educators, Shop, About), the exact dropdown contents and labels for every group in document order, and both CTA buttons with their correct URLs and left-to-right order (Register, then Donate). Confirmed the SAME nav (Educators item + Register button) is present on an unrelated inner page (/rentals), so it reached every page via the shared component. On the new School Tickets page: confirmed the real empty-state paragraph element is absent when a test listing is added (and present again once removed) — genuine empty-safe behavior, not a §6F false alarm (the class name also appears in that page's own <style> block, which is why I checked for the actual `<p class="empty-state">` element specifically rather than just searching for the text "empty-state").
-NOT verifiable by me: how the new nav actually looks/reads on screen, especially with 6 top-level items now — worth the PM's close look on both desktop and the mobile hamburger menu, since 6 items is more than before and might need to be reviewed for crowding.
+      const starPoints = (cx: number, cy: number, r: number, rot: number): string => {
+        const inner = r * 0.42;
+        const pts: string[] = [];
+        for (let i = 0; i < 10; i++) {
+          const angle = (Math.PI / 5) * i - Math.PI / 2 + rot;
+          const radius = i % 2 === 0 ? r : inner;
+          pts.push(`${(cx + radius * Math.cos(angle)).toFixed(1)},${(cy + radius * Math.sin(angle)).toFixed(1)}`);
+        }
+        return pts.join(" ");
+      };
 
-Photo strip: arrow buttons instead of the grey scrollbar (2026-08-18)
-Goal (PM): the native browser scrollbar under the homepage photo strip looked out of place ("not elegant"). Discussed 3 options (edge fade only / arrows / dots); PM went with arrows, plus a light edge fade so it reads as intentional rather than just cut off. PM also removed one extra photo-strip card themselves via the CMS in the meantime (no code change needed for that — confirmed it's gone from the live content).
-Built (1 file):
-  - src/pages/index.astro (EDIT, homepage only) — the native scrollbar is hidden (still fully swipeable/draggable underneath, nothing about the scrolling itself changed). On screens ≥720px, small round arrow buttons appear at each end plus a soft fade at that edge; whichever end you're already at (start or end of the strip) hides its own arrow/fade automatically, so you're never shown a "next" arrow with nowhere further to go. On phones, arrows/fades stay hidden entirely — swipe is the obvious gesture there, so a hidden scrollbar plus swipe is all that's needed. Clicking an arrow scrolls by roughly one card's width with a smooth animation.
-Tested: build stayed at 30 pages. Parsed the rendered HTML directly (not raw grep — §6F): confirmed the wrap div, both arrow buttons, both fade divs, and all 6 cards are real elements; confirmed the compiled CSS actually contains the scrollbar-hiding rules (not just present in source). Confirmed the card count in the live content file is now 5 titled cards after the PM's own CMS removal — no code-side interference.
-NOT verifiable by me: how the arrows/fades actually feel to click and how obvious the fade reads on a real screen — PM's call, especially since the "hide native scrollbar in favor of custom controls" pattern needs a real cursor/touch test to judge properly.
+      // Deterministic seeded PRNG (not Math.random()) so the trail
+      // looks the same every time the page loads, not shifting around.
+      let seed = 707;
+      const rand = () => {
+        seed = (seed * 16807) % 2147483647;
+        return (seed - 1) / 2147483646;
+      };
 
-Homepage hero tweaks + square corners rolled out site-wide (2026-08-18)
-Goal (PM): on the homepage — remove the "Shows"/"Programs" buttons under the intro text, shrink the "Building character on stage!" headline, and make the "PYT believes there's a role..." line feel as bold as the rest of the new look. Also: roll the square-corner treatment out from homepage-only to the whole site. (Note: the Archivo Black headline font was already site-wide from the earlier "beta look refresh" batch — nothing further needed there, just flagged it to the PM as already done.)
-Built (2 files):
-  - src/styles/tokens.css (EDIT) — the shared --radius token (used for cards/photos everywhere except true circles/pills, which use a separate token) changed from 12px to 0. This is a ONE-LINE change but it affects every page, since it's the same token the homepage cards were already using. Checked first for anything relying on this specific token for a circular shape (headshots, avatars) — found none; the few things that need to stay round (donation thermometer, hamburger button, etc.) use the separate --radius-pill / --radius-btn tokens and were untouched.
-  - src/pages/index.astro (EDIT, homepage only) — removed the "Shows"/"Programs" button row entirely (the CMS fields behind them — hero_primary_url/label, hero_secondary_url/label — are left in place in the content file, just no longer rendered, same "don't delete, just stop using" approach as hero_image earlier). Headline font size reduced (scoped to the homepage's h1 only, via a more specific selector — every other page's h1 size is untouched). Intro line bumped up in size/weight and switched from the site's normal muted paragraph gray to full-strength ink color, so it reads with more presence.
-Tested: build stayed at 30 pages. Parsed the rendered homepage HTML directly (not raw grep — §6F): confirmed the button row is a genuinely absent element (not just visually hidden), and the headline/intro text still render correctly. Checked the COMPILED CSS output (not source) on both the homepage and an unrelated inner page (/rentals) to confirm: the smaller h1 size and bolder lede styling are homepage-scoped as intended, and the --radius:0 change compiled into the shared stylesheet that every page uses — i.e. genuinely site-wide, not just homepage. Also swept the compiled CSS for any leftover hardcoded 12px corner values to make sure nothing was quietly bypassing the token — none found (the one remaining "12px" in the file turned out to be a shadow-blur value, unrelated to corners).
-NOT verifiable by me: how the new proportions and corner change actually look/feel across a full pass of other pages — PM's visual check, especially worth a look at a page or two beyond the homepage now that this reaches everywhere.
+      const COUNT = 30;
+      const STAR_R = 9; // same size throughout — PM asked for uniform stars, no tapering
+      const SPREAD = 5;
+      let markup = "";
+      for (let i = 0; i < COUNT; i++) {
+        const t = i / (COUNT - 1);
+        const base = bezierPoint(controlPoints, t);
+        const jx = (rand() - 0.5) * SPREAD;
+        const jy = (rand() - 0.5) * SPREAD;
+        const rot = rand() * Math.PI;
+        markup += `<polygon points="${starPoints(base.x + jx, base.y + jy, STAR_R, rot)}" fill="#68b050" />`;
+      }
+      svg.innerHTML = markup;
+    }
 
-Homepage spacing fix + taller nav bar (2026-08-18)
-Goal (PM): PM flagged (with screenshots) two oddly big gaps on the homepage — between the photo strip and "Upcoming shows", and between the show cards and "Ways to join PYT" — plus asked for the nav bar to be a broader/taller strip, similar to SCT's.
-Root cause of the gaps: on desktop, a section's bottom padding and the next section's top padding are both large (96px each, from the shared .section class) and were stacking, since nothing overrode the first section's bottom edge — so two adjacent sections left ~190px of dead space instead of one normal-sized gap. Same pattern in both spots flagged.
-Built (2 files):
-  - src/pages/index.astro (EDIT) — .hero bottom padding reduced (and the old desktop-only bump to an even bigger value removed entirely) so it stops stacking with the next section's own top padding. Same fix applied to .shows-strip (new bottom-padding override). Both sections still get their normal, larger TOP padding from the shared .section class — unchanged, and that's still what everything else on the site uses, so this doesn't affect spacing anywhere except these two specific boundaries on the homepage.
-  - src/components/Header.astro (EDIT, site-wide component) — header's vertical padding increased (0.7rem → 1.1rem) so the whole bar reads taller/broader, closer to SCT's. Applies everywhere since it's the shared header.
-Tested: build stayed at 30 pages. Confirmed directly in the COMPILED CSS (not just source) that .hero's padding-bottom is now the smaller value, .shows-strip has the new override, and .header-inner's padding-block is now 1.1rem — i.e. the fix is actually in the shipped output, not just written and forgotten. Confirmed the homepage's hero and shows-strip sections still render as real elements (nothing accidentally hidden).
-NOT verifiable by me: exact visual size of the gap now on a real screen — PM's call on whether it needs to come down further or is now right.
+    drawHeroStarTrail();
+    window.addEventListener("load", drawHeroStarTrail);
+    if ((document as any).fonts && (document as any).fonts.ready) {
+      (document as any).fonts.ready.then(drawHeroStarTrail);
+    }
+    let heroTrailResizeTimer: number | undefined;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(heroTrailResizeTimer);
+      heroTrailResizeTimer = window.setTimeout(drawHeroStarTrail, 150);
+    });
+  </script>
 
-Real logo swapped in (2026-08-18)
-Goal (PM): replace the placeholder "P" mark with PYT's real logo, uploaded as a PNG (colorful "PYT" letters + stars icon, with "Peninsula Youth Theatre" as a wordmark stacked underneath, baked into the same image). PM chose to use the full graphic (icon + wordmark together) and drop the separate "Peninsula Youth Theatre" text that used to sit next to the mark in the header, since the image already spells it out.
-Built (2 files):
-  - public/uploads/pyt-logo-stars.png (NEW) — the logo file itself, uploaded as-is (2526×1398px), added under a new filename rather than overwriting the old pyt-logo.png (which is now unused — left in place, harmless, low-priority cleanup for later).
-  - src/components/Logo.astro (EDIT, site-wide component) — now renders just the one image (no more separate HTML text span, since the wordmark is in the picture now). Sized taller than the old icon-only version (44px on phones, 54px on wider screens, up from 30px) since it now needs to render real readable words, not just an icon. Header grows slightly taller to fit it — expected, not a bug.
-Tested: build stayed at 30 pages. Parsed the rendered HTML directly (not raw grep — §6F) and confirmed: the real `<img>` element pointing at the new file is present with correct alt text, the old logo-text span is gone, the old pyt-logo.png filename no longer appears anywhere in the header; the same new logo element also confirmed present on an unrelated inner page (/rentals) to verify it reached every page via the shared component; confirmed the actual image file made it into the build output at the expected path.
-NOT verifiable by me: legibility of the small embedded "Peninsula Youth Theatre" text at real nav-bar size on an actual phone screen — this is a raster PNG with fairly small type baked in, so it may read a little soft at the smallest size. Worth the PM's close look on-screen; if it's too small to read comfortably, options next time would be sizing it up further, or going back to icon + separate live HTML text (which stays crisp at any size since it's real text, not a raster image).
+  <script>
+    // Looping, centered photo carousel. Cards render as three
+    // back-to-back copies of the same set (see loopedPhotoStrip above);
+    // whenever the centered card drifts into the first or third copy,
+    // we silently jump the scroll position by exactly one set-width in
+    // the opposite direction (no animation, same visual frame) so it's
+    // always sitting in the middle copy with room to keep scrolling —
+    // that's what makes it feel continuous instead of running out.
+    //
+    // Scale is applied to the PHOTO only, not the whole card, with
+    // transform-origin anchored to the photo's bottom edge — so the
+    // hero photo grows upward, away from its caption underneath, and
+    // the caption itself never resizes or gets crowded/clipped. Uses
+    // offsetLeft/offsetWidth/offsetHeight (layout box) for all position
+    // math rather than getBoundingClientRect, since those are
+    // unaffected by the CSS transform — reading a transformed element's
+    // bounding rect would feed its own scaled size back into the next
+    // frame's calculation.
+    const strip = document.getElementById("photo-strip") as HTMLElement | null;
+    const wrap = document.getElementById("photo-strip-wrap");
+    const prevBtn = document.getElementById("photo-strip-prev");
+    const nextBtn = document.getElementById("photo-strip-next");
 
-Beta look refresh — dark nav + Archivo Black + square corners (2026-08-18)
-Goal (PM): after comparing to Seattle Children's Theatre's site (sct.org) for inspiration, PM approved a bolder visual direction via mockups: dark nav bar with a bright Donate button, Archivo Black headline font, and mostly-square corners (buttons/pills keep a slight 2-4px softening; everything else goes fully square). Scope explicitly agreed: nav bar + buttons + headline font go SITE-WIDE (all 30 pages); square photo/card corners start on the HOMEPAGE ONLY for now, other pages to follow in a later pass. All still explicitly placeholder colors/type/logo pending real branding — this is about shape and contrast, not final brand colors.
-Built (5 files):
-  - src/styles/tokens.css (EDIT) — --font-heading now "Archivo Black" (was Poppins). New --radius-btn: 4px token for buttons/pills/nav controls specifically (kept --radius-pill: 999px only for genuinely circular shapes like the homepage donation thermometer, which was NOT touched). New placeholder tokens: --nav-bg-dark, --nav-text, --nav-text-muted, --highlight (bright Donate button color), --highlight-text.
-  - src/styles/global.css (EDIT) — swapped the Google Fonts import from Poppins to Archivo Black (Poppins import removed entirely — nothing in the codebase referenced the family name directly, everything goes through the --font-heading token, so nothing else needed touching). h1-h4, .btn, .pill font-weight dropped from 600 to 400, since Archivo Black is already a single very heavy weight — asking for extra bold on top of it risks the browser faking extra boldness. .btn and .pill corner radius switched from the old full-pill token to the new --radius-btn (4px).
-  - src/components/Header.astro (EDIT, site-wide component) — dark background bar; top-level nav items changed from solid lilac pills to plain light text (hover shows a subtle light overlay); Donate button now uses the new bright --highlight color instead of the standard pink accent, for contrast against the dark bar; dropdown panel corners squared to 0, dropdown links get the new 4px button radius; hamburger icon and its lines recolored to be visible on dark; mobile menu items (still a light dropdown panel below the bar, left light for readability) get the new 4px radius instead of full pill.
-  - src/components/Logo.astro (EDIT, site-wide component) — wordmark text color changed from near-black to the new light nav-text color, since it now sits on a dark bar (only used inside Header.astro, so scoped to that one place in effect).
-  - src/pages/index.astro (EDIT, homepage only) — photo-strip cards restructured: title moved from an overlay-on-photo caption to plain text below the photo (its own line), photo corners now fully square. Legacy hero-banner-img, the "now playing" show tiles, and the discovery cards on the homepage also squared off. Fallback poster label weight adjusted to 400 to match the new heading-weight convention.
-Tested: build stayed at 30 pages both before and after. Rendered HTML parsed directly (not raw grep — §6F), confirming: all 6 photo-strip cards render with the photo element genuinely BEFORE the title span (not overlaid) and correct titles/links; the header's real Donate button element, 6 nav pill links, hamburger, and logo wordmark all present as real elements on the homepage; the SAME dark-header markup and Donate button also confirmed present as real elements on an unrelated inner page (/rentals) to verify the nav change actually reached every page via the shared component, not just the homepage; confirmed the compiled CSS actually contains the new --nav-bg-dark token and Archivo Black font name (not just present in source).
-NOT verifiable by me: actual on-screen look/contrast/legibility of the dark nav and new font at real size — PM's visual check, as always. Also didn't touch other pages' card/photo corners yet (by design, per agreed scope) — those still show the old rounded --radius corners until a follow-up pass. Some per-page badge/eyebrow text elsewhere in the site sets explicit font-weight (600/700) alongside the heading font; since Archivo Black only ships one weight, browsers may render those slightly heavier than intended in a few spots outside the homepage — worth a look once the PM has seen it live, not fixed proactively to keep this batch focused.
+    if (strip && wrap) {
+      const cards = Array.from(strip.querySelectorAll(".photo-strip-card")) as HTMLElement[];
+      const SET_SIZE = cards.length / 3;
+      let currentIndex = 0;
+      let correcting = false;
 
-Homepage hero — replaced single banner photo with a 6-card photo strip (2026-08-17)
-Goal (PM): replace the wide hero banner photo with a scrollable strip of 6 photo cards, each linking to a different page, title overlaid on the photo, built with placeholders (no real photos yet). PM approved via mockup.
-Built (3 files):
-  - src/content/settings/home-page.json (EDIT) — added new `photo_strip` list (6 seed entries: Centre Stage Musicals → /musicals, Studio Shows → /studio-productions, Stories on Stage → /stories-on-stage, School for Performing Arts → /programs, Camps → /programs, School Play in a Box → /school-play-in-a-box). All images left empty on purpose (placeholders) — PM will add real photos later. Old `hero_image` field left in place, untouched, just no longer rendered.
-  - public/admin/config.yml (EDIT) — new "Hero — photo strip" list field on the Home Page record (title/link/photo per card, add/remove/reorder in `/admin`). Old hero_image field label updated to note it's not currently shown.
-  - src/pages/index.astro (EDIT) — renders the strip instead of the old single banner image. Each card is one clickable link; photo if set, else a colored placeholder (cycles through the site's accent/blue/green tokens) with the title overlaid in a bottom gradient scrim so text stays readable on any photo. A small inline script shuffles the card order on each page load (Fisher-Yates), so the same card doesn't always lead — works without JS too, just in CMS-entered order. Empty-safe: whole strip disappears if the list is empty.
-Tested: config.yml YAML valid, home-page.json JSON valid, build 30 pages (no change). Rendered HTML parsed directly (not raw grep — §6F): confirmed 6 real `<a class="photo-strip-card">` elements with correct hrefs, titles, and cycling placeholder colors; old hero-banner-img absent. Empty-safe verified by blanking the list, rebuilding, confirming the real strip element is gone (a stray text match in a comment/script was the only hit — not a real element), then restoring the seed data and rebuilding to confirm the 6 cards are back. NOT verifiable by me: on-screen appearance, shuffle-on-load behavior, and swipe feel on an actual phone — PM's checks.
-Notes: built on a fresh re-sync of origin/main (last live commit before this: the 2026-06-26 auditions overhaul). Only touched the `photo_strip` field in home-page.json — did not overwrite any other field, to avoid clobbering any live edits made since the sandbox was last synced.
+      // Custom eased scroll-to, replacing native scrollIntoView's
+      // smooth behavior (PM feedback, 2026-08-19: hovering used to
+      // feel "too fast and out of control" because every mouseover
+      // fired the browser's own default-speed smooth-scroll, and
+      // rapid retargeting mid-animation looked jerky). This version is
+      // fully self-timed and interruptible: retargeting mid-animation
+      // just eases toward the new target from wherever the strip
+      // currently is, instead of restarting abruptly.
+      let scrollAnimFrame: number | null = null;
+      const animateScrollTo = (target: HTMLElement, duration = 550) => {
+        if (scrollAnimFrame) cancelAnimationFrame(scrollAnimFrame);
+        const startX = strip.scrollLeft;
+        const endX = target.offsetLeft + target.offsetWidth / 2 - strip.clientWidth / 2;
+        const distance = endX - startX;
+        const startTime = performance.now();
+        const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+        const step = (now: number) => {
+          const elapsed = now - startTime;
+          const t = Math.min(1, elapsed / duration);
+          strip.scrollLeft = startX + distance * easeInOutCubic(t);
+          scrollAnimFrame = t < 1 ? requestAnimationFrame(step) : null;
+        };
+        scrollAnimFrame = requestAnimationFrame(step);
+      };
 
-Auditions overhaul — dates list + promo strip/section on three pages (2026-06-26)
-Goal (PM): (1) Auditions page lists ALL upcoming shows with an audition date; if no registration link yet, show a "Registration coming soon" button. (2) Replicate the Stories audition strip + section (pink strip at top + section below) onto Musicals, Studio Productions, and the combined Shows page — pointer-style (option a), linking to the full /audition page, with copy editable PER PAGE.
-Built (9 files):
-  - src/pages/audition.astro (EDIT) — list filter changed from "open + has link" to "has an UPCOMING audition date" (link no longer required). Button is smart: real sign-up link if audition_url set, else "Registration coming soon" (disabled style — added .btn-disabled CSS, which this page lacked). Section heading now editable (page.shows_heading, default "Upcoming auditions").
-  - src/components/AuditionsPromo.astro (NEW) — reusable: <AuditionsPromo strip .../> renders the top pink strip (jump to #auditions); <AuditionsPromo section .../> renders the pointer section (eyebrow + heading + body + button to /audition). Empty-safe: strip hides if stripText blank; section hides if heading AND body blank.
-  - src/pages/musicals.astro (EDIT) — imports new musicals-page.json + AuditionsPromo; strip above hero, section at end; hero now uses editable title/eyebrow (was hardcoded).
-  - src/pages/studio-productions.astro (EDIT) — strip + section from its settings.
-  - src/pages/shows/index.astro (EDIT) — strip + section from shows-page.json (combined page).
-  - src/content/settings/musicals-page.json (NEW) — title + per-page audition copy.
-  - src/content/settings/studio-productions-page.json (EDIT) — added 5 audition fields.
-  - src/content/settings/shows-page.json (EDIT) — added 5 audition fields.
-  - public/admin/config.yml (EDIT) — new "Musicals Page" record; audition fields added to Studio + Shows records; "Upcoming auditions" heading field added to the Audition Page record.
-Tested: config.yml YAML valid; build 30 pages (no new pages). Rendered HTML: strip + section present on all three pages; Auditions page heading now "Upcoming auditions", lists the 3 shows with future audition dates (Wizard of Oz, Rules of Comedy, Midsummer) each with "Registration coming soon" (none have audition_url yet), and correctly excludes the closed ones (SIX, Frog and Toad). Empty-safe verified by markup-aware parse: blanking a page's strip/heading/body removes the real strip + section elements (the leftover .auditions-promo-section in the HTML is just the component's CSS rule — §6F false alarm).
-Notes: each page's audition copy is independent in /admin (Musicals Page / Studio Productions Page / Shows Page records). Strip wording defaults: Musicals "Auditioning for a PYT musical?", Studio "Auditioning for a Studio Production?", Shows "Interested in auditioning?". To turn a show's "coming soon" into a live sign-up, staff add an audition_url to that show. The Stories on Stage page keeps its OWN existing strip/section (its company-audition model differs) — not touched.
+      // Pad both ends of the track so any card can still reach true
+      // center — recalculated on resize since card width differs by
+      // breakpoint.
+      const updateHorizontalPadding = () => {
+        if (!cards.length) return;
+        const pad = Math.max(0, (strip.clientWidth - cards[0].offsetWidth) / 2);
+        strip.style.paddingLeft = `${pad}px`;
+        strip.style.paddingRight = `${pad}px`;
+      };
 
-Combined Shows page — tickets link hint on every card (2026-06-26)
-Goal (PM): every card on the combined /shows page should show a tickets link hint like the Stories cards do (previously only Stories cards had "· tickets & bookings →"). Combined Shows page only.
-Built (1 file): src/pages/shows/index.astro (EDIT) — Musical/Studio cards now show "· tickets & details →" (they link to the show detail page where the Buy button is); Stories cards keep "· tickets & bookings →". Whole card was already one clickable link; this just adds the visible hint text per type.
-Tested: build 30 pages. Rendered HTML: 5 "tickets & details" + 6 "tickets & bookings" = 11 hints across 11 cards. NOT verifiable by me: on-screen — PM's check.
-Note: wording differs by destination on purpose — Musical/Studio go to a details+buy page, Stories go to a tickets+school-bookings page.
+      // The hero photo grows upward (see CSS transform-origin), so the
+      // track needs extra room above it to avoid being clipped by its
+      // own scroll container — sized to the tallest possible growth.
+      const updateVerticalPadding = () => {
+        const photo = cards[0]?.querySelector(".photo-strip-photo") as HTMLElement | null;
+        if (!photo) return;
+        const growth = photo.offsetHeight * (HERO_SCALE - 1);
+        strip.style.paddingTop = `${14 + growth}px`;
+      };
 
-Global ticket fee notice — spacing fix (2026-06-26)
-Goal (PM): the fee notice looked cramped — it sat almost flush against the synopsis below it (margin was var(--space-sm) 0 0 — small above, zero below).
-Built (2 files): src/pages/shows/[slug].astro (EDIT) — notice margin now var(--space-md) 0 var(--space-lg) (room above, more below so the synopsis doesn't crowd it). src/pages/stories-on-stage/[slug].astro (EDIT) — notice margin var(--space-md) 0 0 (room above; the bordered booking-card padding handles below).
-Tested: build 30 pages. NOT verifiable by me: on-screen — PM's check (spacing-only change).
+      // HERO_SCALE: the centered "hero" photo — about a third bigger
+      // than the previous 1.28x hero size (PM feedback, 2026-08-19).
+      // NEIGHBOR_SCALE: matches the OLD hero size exactly, so the
+      // immediate neighbor cards keep looking the same as before —
+      // only the dead-center photo should look dramatically bigger.
+      // CORE_T is a small "still counts as centered" dead zone so the
+      // jump from HERO_SCALE down to the neighbor curve happens right
+      // at the center, not gradually across it.
+      const HERO_SCALE = 1.7;
+      const NEIGHBOR_SCALE = 1.28;
+      const MIN_SCALE = 0.82;
+      const CORE_T = 0.12;
 
-Global ticket fee notice (2026-06-26)
-Goal (PM): wherever tickets are sold / a Buy button appears, show editable copy about City of Mountain View fees. Seed copy: "Service charges and facilities fees are added by the City of Mountain View to PYT ticket prices." One global, CMS-editable notice (PM choice: global, not per-show); detail pages only (not list pages).
-Built (4 files):
-  - src/content/settings/shows-page.json (EDIT) — added ticket_fee_notice with the seed copy.
-  - src/pages/shows/[slug].astro (EDIT) — imports shows-page.json; renders the notice beneath the main CTA group, and once beneath the per-cast performances list (double-cast shows). Empty-safe. New .ticket-fee-notice style (muted, 0.85rem).
-  - src/pages/stories-on-stage/[slug].astro (EDIT) — imports shows-page.json; renders the notice beneath the Tickets button. Empty-safe. Same style.
-  - public/admin/config.yml (EDIT) — added "Ticket fee notice" field to the Shows Page record (one edit point, applies site-wide).
-Tested: config.yml YAML valid; build 30 pages (no new pages). Notice counts in rendered HTML: double-cast shows (SIX, Frog and Toad) = 2 (main CTA + performances list); single-cast shows (Midsummer, Wizard of Oz, Rules of Comedy) = 1 (main CTA); Stories production page = 1; all list pages (Musicals, combined Shows, Stories list) = 0 (correct — they route to detail pages, don't sell directly). Empty-safe verified: blanking the field removes the notice with no stray empty <p>. NOT verifiable by me: on-screen appearance — PM's check.
-Notes: global notice lives in shows-page.json (the natural ticketing-wide settings home) and is imported by both detail page types. Edit once in /admin → Shows Page (intro) → "Ticket fee notice", updates everywhere. Built on a fresh pull of origin/main after the Classes & Camps batch landed (30-page baseline).
+      const updateScale = () => {
+        if (!cards.length) return;
+        const centerX = strip.clientWidth / 2 + strip.scrollLeft;
+        const falloff = cards[0].offsetWidth * 1.35;
+        let closestDist = Infinity;
+        cards.forEach((card, i) => {
+          const photo = card.querySelector(".photo-strip-photo") as HTMLElement | null;
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+          const dist = Math.abs(cardCenter - centerX);
+          const t = Math.min(1, dist / falloff);
+          let scale: number;
+          if (t < CORE_T) {
+            scale = HERO_SCALE;
+          } else {
+            const t2 = (t - CORE_T) / (1 - CORE_T);
+            scale = NEIGHBOR_SCALE - (NEIGHBOR_SCALE - MIN_SCALE) * t2;
+          }
+          if (photo) photo.style.transform = `scale(${scale.toFixed(3)})`;
+          card.style.opacity = Math.max(0.75, 1 - t * 0.4).toFixed(2);
+          if (dist < closestDist) {
+            closestDist = dist;
+            currentIndex = i;
+          }
+        });
+        cards.forEach((card, i) => {
+          card.style.zIndex = i === currentIndex ? "2" : "1";
+        });
 
-Classes & Camps summer content + new School Play in a Box page (2026-06-26)
-Goal (PM): populate the Classes & Camps page with the old site's summer camps (2026 values, all labelled 2026), and add a new School Play in a Box page. Make Classes & Camps a dropdown. Inquiry by email (caitlyn@pytnet.org, editable), not a rebuilt form.
-Built (8 files):
-  - src/components/Header.astro (EDIT) — Classes & Camps is now a dropdown: Classes & Camps (/programs), School Play in a Box (/school-play-in-a-box).
-  - src/content/settings/programs-page.json (EDIT) — added an editable Summer Camps block: heading, intro, register url+label, hours, locations, pricing, scholarships note, cancellation heading/body, cancellation email. Values ported as-is from pytnet.org/summer-camp (2026).
-  - src/pages/programs.astro (EDIT) — renders the Summer Camps block above the existing filterable program cards. Empty-safe: the whole block hides if summer_intro is blank. Cancellation policy is a <details> with a mailto.
-  - src/content/programs/two-week-camps-2026.md, one-week-camps-2026.md, mini-camps-2026.md (NEW x3) — three camp records, all program_type Camp / season Summer, tuition/age/schedule from the old site, register link to Active.com. (Existing 3 placeholder program records left untouched — Rule 2.)
-  - src/pages/school-play-in-a-box.astro (NEW) — new page: description, "PYT provides / school provides" split, "Email to inquire" button (mailto, editable email, subject "School Play in a Box inquiry") + "Current sessions" link to Active.com, available-shows list, schools-served. Old site's 12-field form replaced by the email button (no form backend on static site; the old form just emailed this address).
-  - src/content/settings/school-play-in-a-box-page.json (NEW seed) — all SPIB content, editable.
-  - public/admin/config.yml (EDIT) — expanded the programs-page record with the Summer block fields; added a new "School Play in a Box Page" record.
-Tested: config.yml YAML valid; build 30 pages (was 29 — adds /school-play-in-a-box). Parsed rendered HTML: Programs page shows the Summer Camps 2026 heading, register link, all three camp cards, and the cancellation mailto; SPIB page has the inquiry mailto (subject auto-filled), PYT-provides text, shows list, schools served, and the current-sessions link; menu has the /school-play-in-a-box dropdown link. NOT verifiable by me: on-screen appearance + the two new/expanded CMS records showing in /admin — PM's checks.
-Notes: built on a fresh clone of origin/main AFTER the ticket-link batch landed (baseline was 29 pages incl. the 6 Stories production pages). All summer content labelled 2026 per PM; 2027 to be added later. Camp cards use the existing Type=Camp/Season=Summer filters, so they appear under those filters automatically.
+        // Loop correction: if the centered card has drifted out of the
+        // middle copy, jump back into it by exactly one set-width —
+        // instant, same visual position — so there's always more to
+        // scroll to in either direction.
+        if (!correcting && SET_SIZE > 0) {
+          if (currentIndex < SET_SIZE) {
+            correcting = true;
+            const setWidth = cards[currentIndex + SET_SIZE].offsetLeft - cards[currentIndex].offsetLeft;
+            strip.scrollLeft += setWidth;
+            currentIndex += SET_SIZE;
+            requestAnimationFrame(() => { correcting = false; });
+          } else if (currentIndex >= SET_SIZE * 2) {
+            correcting = true;
+            const setWidth = cards[currentIndex].offsetLeft - cards[currentIndex - SET_SIZE].offsetLeft;
+            strip.scrollLeft -= setWidth;
+            currentIndex -= SET_SIZE;
+            requestAnimationFrame(() => { correcting = false; });
+          }
+        }
+      };
 
-Ticket links overhaul — show pages, Musicals, new Stories production pages (2026-06-26)
-Goal (PM): rework ticket links across all production types. (1) Show detail page (e.g. SIX): make the pink Tickets button smart. (2) Musicals list: one "Tickets & details" button → show page. (3) Stories on Stage: new per-production pages with a Tickets button + an editable school/group booking email enquiry. (4) Combined Shows page: Stories cards → individual production page.
-Built (8 files):
-  - src/pages/shows/[slug].astro (EDIT) — Tickets button now jumps to #cast-schedule when a double-cast schedule exists, else links to the outside ticketing site, else "coming soon". Added id="cast-schedule" + scroll-margin-top:6rem to that section.
-  - src/pages/musicals.astro (EDIT) — merged the old "Tickets" + "See details →" buttons into a single "Tickets & details" button linking to /shows/<id>.
-  - src/pages/studio-productions.astro (EDIT) — SAME merge for consistency (PM only asked for Musicals; Studio uses the identical card, so matched it — FLAG for PM to confirm).
-  - src/pages/stories-on-stage/[slug].astro (NEW) — per-production page, one per Stories show. "Public performances" → Tickets button (outside link or "coming soon"); optional editable line above it (tickets_intro, empty by default, renders nothing when empty — no gap). "Schools and groups" → "Email about a group booking" mailto button, pre-addressed to the editable email, subject auto-filled "Group booking enquiry — <title>".
-  - src/pages/stories-on-stage.astro (EDIT) — list cards now show one "Tickets & bookings" button → the new production page (was two outside-link buttons).
-  - src/pages/shows/index.astro (EDIT) — combined page Stories cards now link to /stories-on-stage/<id> (was the list page); note text changed to "tickets & bookings →".
-  - src/content.config.ts (EDIT) — added optional tickets_intro to the storiesOnStage schema.
-  - src/content/settings/stories-on-stage-page.json (EDIT) — added school_booking_email: "lhatten@pytnet.org".
-  - public/admin/config.yml (EDIT) — added "School / group booking email" to the Stories settings record; added "Line above the Tickets button" (tickets_intro) to the Stories productions collection.
-Tested: config.yml YAML valid; build 29 pages (was 23 — adds 6 Stories production pages). Parsed rendered HTML: Stories page mailto is mailto:lhatten@pytnet.org?subject=Group%20booking%20enquiry%20—%20<title> (subject auto-filled, correct); empty tickets_intro renders nothing (only the schools card's hardcoded intro shows — no weird gap); SIX show page Tickets jumps to #cast-schedule (section exists); Musicals shows the single "Tickets & details" button, old visible "See details" button gone (the "See details for X" left in HTML is only the poster's aria-label — a §6F false alarm, kept intentionally for screen readers).
-Notes: Stories productions' old school_bookings_url field is now unused by the page (kept in schema/CMS so nothing breaks; the new mailto button replaces it). Email subject uses an em-dash (—) like the show titles. PM to confirm the Studio Productions button merge was wanted.
+      updateHorizontalPadding();
+      updateVerticalPadding();
 
-Homepage spacing — equalise gap around "Upcoming shows" (2026-06-26)
-Goal (PM): the white space between the top hero photo and "Upcoming shows" was bigger than the space below "Upcoming shows" (down to "Ways to join"). Make them equal weight. (Homepage only — chose option (a); other pages already use a consistent section rhythm.)
-Cause: the top gap was three spacings stacked (hero padding-bottom + photo margin-top + section padding-top); the bottom gap is the normal two-section rhythm (section pb + next section pt). So top > bottom.
-Built (1 file): src/pages/index.astro (EDIT) — set .hero padding-bottom to match the section padding at each breakpoint (--space-xl mobile, --space-2xl desktop via the 720px media query); photo margin-bottom 0 (sits flush, its margin-top still separates text from photo inside the hero). Net effect: gap above "Upcoming shows" = hero pb + shows-strip pt = same value as section-to-section gap everywhere else.
-Tested: build 23 pages. Traced both breakpoints: mobile 8rem above vs 8rem reference; desktop 12rem above vs 12rem reference — EQUAL. Also holds in the no-photo case (gap comes from hero padding-bottom, doesn't collapse). NOT verifiable by me: on-screen — PM's check.
-Note: only the homepage was touched. Other pages use the standard .section rhythm and a consistent PageHero→content pattern; if the PM spots uneven spacing elsewhere while clicking around, fix those pages individually rather than a blanket change.
+      // Always open centered on "Center Stage Musicals" rather than a
+      // random card (PM preference) — and specifically the copy in the
+      // MIDDLE set, so there's a full set of cards to scroll to on
+      // either side right from the start. Falls back to the first card
+      // in the middle set if that title is ever missing or renamed.
+      const middleSetCards = cards.slice(SET_SIZE, SET_SIZE * 2);
+      const startCard =
+        middleSetCards.find(
+          (c) =>
+            (c.querySelector(".photo-strip-title")?.textContent || "")
+              .trim()
+              .toLowerCase() === "center stage musicals"
+        ) || middleSetCards[0];
+      startCard?.scrollIntoView({ inline: "center", block: "nearest" });
+      updateScale();
 
-Shows menu restructure — Musicals / Studio Productions / combined Shows page (2026-06-26)
-Goal (PM): split Shows into Musicals and Studio Productions; relabel the Shows dropdown to Musicals / Studio Productions / Stories on Stage; main Shows title lands on a combined page listing all three types in date order. New Studio Productions page with an editable intro. (PM: always capitalise "Studio Productions", both words.)
-Built (7 files):
-  - src/content.config.ts (EDIT) — added production_type field to shows schema: enum ["Musical","Studio Production"], default "Musical" (so existing shows keep showing until staff tag the studio ones).
-  - src/components/Header.astro (EDIT) — Shows dropdown children changed to Musicals (/musicals), Studio Productions (/studio-productions), Stories on Stage (/stories-on-stage). Main title still → /shows (combined).
-  - src/pages/shows/index.astro (EDIT, full rewrite) — now the COMBINED page: merges shows + storiesOnStage into one list sorted by start_date, each card shows a coloured type label (Musical / Studio Production / Stories on Stage). Stories cards link across to /stories-on-stage (PM choice 2B); show cards link to /shows/<id>.
-  - src/pages/musicals.astro (NEW) — filtered view, shows tagged Musical, reuses the original rich show-card (audition/tickets/detail buttons).
-  - src/pages/studio-productions.astro (NEW) — filtered view, shows tagged Studio Production, same card + an editable intro paragraph (PageHero lede) from settings.
-  - src/content/settings/studio-productions-page.json (NEW seed) — eyebrow/title/intro for the Studio Productions page.
-  - public/admin/config.yml (EDIT) — added "Production type" select (Musical / Studio Production, default Musical) to the Shows collection; added a "Studio Productions Page" settings record for the intro.
-Tested: config.yml YAML valid; build 23 pages (was 21 — adds /musicals + /studio-productions). Parsed rendered HTML: combined /shows lists 11 cards in true date order (5 shows + 6 stories interleaved), labels render 5 Musical + 6 Stories on Stage; /musicals shows 5 (all default to Musical); /studio-productions shows 0 cards + the empty message + the editable intro (correct — nothing tagged Studio yet). NOT verifiable by me: on-screen appearance + the new CMS "Production type" dropdown and "Studio Productions Page" record showing in /admin — PM's checks.
-Notes: all 5 existing shows currently default to Musical; PM will re-tag the studio ones in the CMS. The combined page's type-label colours are inline hex (green #eaf3de/#27500a, blue #e6f1fb/#0c447c) matching the logo green/blue tokens — fine for now, can fold into the Phase-5 palette later.
+      let scaleQueued = false;
+      const queueScale = () => {
+        if (scaleQueued) return;
+        scaleQueued = true;
+        requestAnimationFrame(() => {
+          updateScale();
+          scaleQueued = false;
+        });
+      };
+      strip.addEventListener("scroll", queueScale, { passive: true });
 
-New Press page under About (2026-06-26)
-Goal (PM): add a Press page under the About section listing links to outside coverage of PYT, with an unlimited CMS list to add new press as it's published.
-Built (4 files): src/pages/press.astro (NEW) — lists press cards newest-first, each links out (target=_blank); shows a staff-editable empty message when the list has no items. src/content/settings/press-page.json (NEW seed) — title, eyebrow, intro (editable), empty_message (editable), items: [] (seeded EMPTY on purpose, so it ships showing the coming-soon message). public/admin/config.yml (EDIT) — new "Press Page" record (intro line, empty message, and unlimited "Press coverage" list with fields headline / source / url / date[optional]); inserted before the gift-funds record. src/components/Header.astro (EDIT) — added { label: "Press", href: "/press" } as third child of the About dropdown (desktop + mobile).
-Tested: config.yml YAML valid; build 21 pages (was 20); parsed dist/press/index.html — title + intro render, empty-state paragraph renders with the seeded message, zero press <li> cards render while list is empty (verified via markup-aware parse, not raw grep — the string "press-card" also appears in the page CSS, a §6F false alarm). NOT verifiable by me: on-screen appearance + the live CMS record showing in /admin — PM's checks.
-Note: items seeded empty deliberately — do NOT re-push this seed over live CMS data once staff add press (Rule 2 / stale-content).
+      window.addEventListener("resize", () => {
+        updateHorizontalPadding();
+        updateVerticalPadding();
+        cards[currentIndex]?.scrollIntoView({ inline: "center", block: "nearest" });
+        updateScale();
+      });
 
-Support PYT dropdown — shorten labels (2026-06-23)
-Goal (PM): rename the Support PYT dropdown options to just Individual / Corporate / Sponsorship.
-Built (1 edit): src/components/Header.astro (EDIT) — navGroups Support PYT children labels changed "Individual giving"→"Individual", "Corporate Giving"→"Corporate" (Sponsorship unchanged). Hrefs (#individual/#corporate/#sponsor) untouched. Applies to both desktop dropdown and mobile pill rows.
-Tested: build 20 pages; both desktop + mobile render Individual/Corporate/Sponsorship with the same correct anchors. NOT verifiable by me: on-screen — PM's check.
-Next: PM edits-in-place src/components/Header.astro; Cloudflare rebuilds ~2 min; PM confirms the new labels in the menu.
+      // Arrow buttons: step to the next/previous card and re-center it.
+      // No edge-hiding logic anymore — the carousel loops continuously,
+      // so both arrows (and both edge fades) stay visible at all times
+      // on desktop; on mobile people just swipe, same as before.
+      if (prevBtn && nextBtn) {
+        prevBtn.addEventListener("click", () => {
+          const target = cards[currentIndex - 1];
+          if (target) animateScrollTo(target, 500);
+        });
+        nextBtn.addEventListener("click", () => {
+          const target = cards[currentIndex + 1];
+          if (target) animateScrollTo(target, 500);
+        });
+      }
 
-Support PYT — new "What Your Gift Funds" section + Support dropdown menu (2026-06-23)
-Goal (PM): (1) add a new section under Donor Benefits on the Support PYT page: a CMS-editable list of giving amounts, each "amount — what it pays for", each with a Donate button; NO visible heading (PM chose option a). (2) Turn the "Support PYT" menu item into a dropdown: Individual giving (top of page, covers Love PYT + Donor Benefits + the new list by scroll order), Corporate Giving (#corporate), Sponsorship (#sponsor).
-Built (4 edits + 1 new file):
-1. NEW src/content/settings/gift-funds.json — seed data, six items ($1,000 costumes / $1,800 Main Stage scholarship / $2,000 set design & build / $3,000 per month storage / $8,000 per month studio & rehearsal / $30 million new space). All amounts + descriptions fully CMS-editable afterward (PM confirmed this requirement).
-2. public/admin/config.yml (EDIT) — new record "gift-funds" labelled "Support PYT — What Your Gift Funds", placed in PAGE ORDER right after donor-tiers (Giving Levels) and before corporate-giving. Widget: list of {amount, description}, with hints. Description tells staff leaving the list empty hides the section. Field names/files of all other records untouched. Validated as YAML.
-3. src/pages/ways-to-support.astro (EDIT) — imported gift-funds with empty-safe guard (giftFundItems filters out blank rows; section renders ONLY when length > 0, so the live empty state shows nothing — Rule 2). New <section class="gift-funds-section"> inserted directly after the Donor Benefits tiers-section, NO heading, each row = amount (brand-pink, heading font) + description + a "Donate" btn to soapboxDonateUrl (the same general Soapbox link the page already uses). Added id="individual" to the top campaign-hero so the menu's Individual-giving link lands there. Added matching CSS (stacked rows, wrap on phones).
-4. src/components/Header.astro (EDIT) — navGroups "Support PYT" entry gained children: Individual giving → /ways-to-support#individual, Corporate Giving → #corporate, Sponsorship → #sponsor. Renders automatically as a desktop dropdown AND a mobile pill+rows (no markup change needed — both already map over children).
-Tested: build 20 pages; config valid YAML; rendered support page shows all six rows with correct amounts/descriptions + 6 Donate buttons → Soapbox; id="individual" present, #corporate/#sponsor intact (recognition is separately data-gated, empty in sandbox = expected). Desktop dropdown + mobile pill both show the 3 children with correct hrefs and match each other. NOT verifiable by me: on-screen look, the live CMS rendering of the new record, and anchor-scroll feel — PM's live checks.
-Next: PM uploads the NEW file gift-funds.json (via new/upload, NOT edit-in-place), then edits-in-place config.yml, ways-to-support.astro, Header.astro. Hard-refresh /admin to see the new record. Cloudflare rebuilds ~2 min. PM checks: new list under Donor Benefits (six rows, Donate buttons); Support PYT menu is now a dropdown (desktop) / pill with 3 rows (mobile) and each link jumps to the right part of the page.
+      // Hovering a non-hero card (mouse users only — real hover
+      // devices) re-centers it, making it the hero. Delegated on the
+      // strip so it works for every card without per-card listeners.
+      // Two things make this feel slow/controlled rather than the
+      // "too fast, out of control" behavior from before (PM feedback,
+      // 2026-08-19): (1) a short dwell delay — the mouse has to rest
+      // on a card for a moment before it's treated as a deliberate
+      // hover, so quickly passing the cursor across several cards
+      // doesn't re-trigger a scroll for every single one; (2) the
+      // scroll itself now runs over a longer, fixed duration via
+      // animateScrollTo rather than the browser's own (fast, and not
+      // fully controllable) native smooth-scroll.
+      const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (supportsHover) {
+        let hoverTimer: number | null = null;
+        let pendingCard: HTMLElement | null = null;
+        const clearPendingHover = () => {
+          if (hoverTimer !== null) {
+            clearTimeout(hoverTimer);
+            hoverTimer = null;
+          }
+          pendingCard = null;
+        };
+        strip.addEventListener("mouseover", (e) => {
+          const card = (e.target as HTMLElement)?.closest(".photo-strip-card") as HTMLElement | null;
+          if (!card) return;
+          const idx = cards.indexOf(card);
+          if (idx === -1 || idx === currentIndex || card === pendingCard) return;
+          clearPendingHover();
+          pendingCard = card;
+          hoverTimer = window.setTimeout(() => {
+            animateScrollTo(card, 700);
+            pendingCard = null;
+            hoverTimer = null;
+          }, 180);
+        });
+        strip.addEventListener("mouseleave", clearPendingHover);
+      }
 
-Home "PYT's impact" numbers — colour each by logo colour (2026-06-23)
-Goal (PM): the three big impact figures were all pink (--accent). PM wanted to introduce the logo's green & blue alongside the pink: 30+ blue, 10,000+ green, $100k pink. (Broader "green/blue across the whole site" deferred to Phase 5 by PM — this change is ONLY the impact numbers.)
-Colour sourcing: PM asked for the logo's actual colours. No green/blue existed in tokens.css (only pink accent + lilac nav + teal campaign-fill). Sampled public/uploads/pyt-logo.png by pixel frequency — dominant vivid colours: blue #48A8D0, pink #C02878 (≈ the existing --accent #c0287b, confirming the pink token was already logo-derived), green #68B050.
-Built (2 edits):
-1. src/styles/tokens.css (EDIT): added --brand-green:#68b050 and --brand-blue:#48a8d0 after the accent block, commented as logo-derived / Phase-5-adjustable. Defining only — no visible change on its own.
-2. src/pages/index.astro (EDIT): impact stats .map now uses the index; figure colour assigned BY POSITION via inline style from ["var(--brand-blue)","var(--brand-green)","var(--accent)"], cycling with i % 3. So 1st=blue, 2nd=green, 3rd=pink. Base .stat-figure color:var(--accent) left as the fallback. Sizes/labels/layout unchanged.
-Tradeoff (PM aware): colour follows POSITION, not the specific number. Current CMS order (30+, 10,000+, $100k) lands exactly as asked; if staff reorder/add a stat, colours cycle by position. Chose this over adding a per-stat CMS colour field (simpler, numbers rarely change).
-Tested: build 20 pages; both tokens present in built CSS (BaseLayout.*.css: brand-blue:#48a8d0, brand-green:#68b050); parsed rendered impact block — 30+ → var(--brand-blue), 10,000+ → var(--brand-green), $100K → var(--accent), in order. (Token grep first looked empty due to minified spacing — re-checked loosely, §6F false-alarm trap.) NOT verifiable by me: the on-screen colours — PM's live check.
-Next: PM edits-in-place tokens.css + index.astro; Cloudflare rebuilds ~2 min; PM checks the home "PYT's impact" section shows 30+ blue, 10,000+ green, $100k pink.
+      // Clicking a non-hero card re-centers it instead of following its
+      // link (PM preference, 2026-08-19) — only the card that's ALREADY
+      // the hero navigates through when clicked. Delegated on the strip
+      // so it covers every card, including the two extra loop copies.
+      strip.addEventListener("click", (e) => {
+        const card = (e.target as HTMLElement)?.closest(".photo-strip-card") as HTMLElement | null;
+        if (!card) return;
+        const idx = cards.indexOf(card);
+        if (idx !== -1 && idx !== currentIndex) {
+          e.preventDefault();
+          animateScrollTo(card, 500);
+        }
+      });
+    }
+  </script>
+ 
+  <!-- ============ DISCOVERY CARDS (square photo grid) ============ -->
+  <!-- "Find your role" — this now sits directly after the hero. The
+       old "Upcoming Shows"/"What's Next" section that used to be here
+       was removed entirely (code + CMS fields) per PM request,
+       2026-08-19. -->
+  <section class="section discovery-section">
+    <div class="container">
+      <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
 
-Mobile menu — redesign to uniform tappable pills (2026-06-23)
-Goal (PM): the mobile menu read as unclear/glitchy — section labels in small grey caps looked like the duplicate of their first child ("SHOWS / Shows"), and the two single links (Classes & Camps, Support PYT) used a different visual style from the grouped sections. PM wanted clearer hierarchy. Chose (via side-by-side mockups) Direction A "grouped", then refined: ALL six top-level items render as the same lilac nav-pill and ARE real links; each grouped item lists its pages (including the main page, intentionally duplicated) as quiet indented rows beneath the pill. PM explicitly asked that e.g. "Shows" be tappable both as the pill AND as a row, and that all six titles share one style. Donate stays top-bar only (PM confirmed).
-Built (1 edit): src/components/Header.astro (EDIT) — MOBILE markup + CSS only; desktop nav (.nav-wide) and the navGroups data are UNTOUCHED (data already had group.href + children incl. the main page as first child, so no data change needed). Markup: each group → `<a class="nav-mobile-pill">` (group.href) followed by its children as `<a class="nav-mobile-sublink">`; standalone items → `nav-mobile-pill nav-mobile-pill-solo`. Removed old .nav-mobile-link/.nav-mobile-heading and the grey-caps heading + top-border list style. CSS: pills use --nav-pill / --nav-pill-text / --nav-pill-hover tokens (so a Phase-5 palette change carries through), radius 12px; sublinks are indented quiet rows in --ink-soft → --accent-deep on hover; added 0.6rem padding to the .nav-mobile container. The earlier scroll fix (max-height + overflow-y) is preserved.
-Tested: build 20 pages; old classes (nav-mobile-heading/nav-mobile-link) gone from built CSS, new ones present; parsed rendered mobile block on index.html — every pill + row href correct (Shows/Stories on Stage, Audition/Casting, Classes&Camps, Shop/Rentals/Photos, About/Employment, Support PYT); confirmed desktop nav unchanged (6 top-level items + 9 dropdown links intact). NOT verifiable by me: the on-screen look + touch feel — PM's live check.
-Next: PM edits-in-place src/components/Header.astro; Cloudflare rebuilds ~2 min; PM opens the mobile menu and confirms it matches the approved mockup (uniform lilac pills, indented sub-rows, every item tappable) and that the desktop menu is unchanged.
+      <div class="card-grid">
+        {home.discovery_cards.map((card: any, i: number) => (
+          <a href={card.url} class="card">
+            {card.image ? (
+              <img src={card.image} alt="" class="card-photo" loading="lazy" />
+            ) : (
+              <div class={`card-photo card-photo-placeholder c-${placeholderColors[i % placeholderColors.length]}`}></div>
+            )}
+            <span class="card-overlay">
+              <span class="card-title">{card.title}</span>
+              {card.subtitle && <span class="card-subtitle">{card.subtitle}</span>}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ IMPACT STATS ============ -->
+  <section class="section impact">
+    <div class="container">
+      <h2 class={`section-head ${impact_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.impact_heading}</h2>
+ 
+      <div class="stat-grid">
+        {home.stats.map((stat, i) => {
+          /* Impact numbers are coloured by POSITION using the three logo
+             colours, cycling if there are ever more than three:
+             1st = blue, 2nd = green, 3rd = pink. Now also boxed in that
+             same colour (PM request, 2026-08-19), on the new dark
+             section background. */
+          const figureColors = ["var(--brand-blue)", "var(--brand-green)", "var(--accent)"];
+          const figureColor = figureColors[i % figureColors.length];
+          return (
+            <div class="stat" style={`border-color: ${figureColor}`}>
+              <p class="stat-figure" style={`color: ${figureColor}`}>{stat.figure}</p>
+              <p class="stat-label">{stat.label}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ============ DONATION TEASER ============ -->
+  <section class="section donate-teaser">
+    <div class="container">
+      <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
+      <p class="donate-lede">{home.donate_lede}</p>
+ 
+      <div class="thermo-row">
+        <!-- Thermometer -->
+        <div class="thermo" role="img"
+             aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
+          <p class="thermo-goal-label">${goal.toLocaleString()}</p>
+          <div class="thermo-tube">
+            <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
+          </div>
+          <div class="thermo-bulb"></div>
+        </div>
 
-Mobile menu — fix unreachable items (internal scroll) (2026-06-23)
-Goal (PM): on phones, the open hamburger menu cut off its bottom items (Employment / Support PYT) with NO way to scroll to them — neither the menu nor the page behind it moved. Diagnosed as a real functional bug, not just styling.
-Root cause: .site-header is position:sticky and the mobile menu (.nav-mobile) lives inside it with no height limit and no overflow handling. When the menu is taller than the viewport, the overflow hangs below the screen; because the header is pinned, the page can't scroll to reveal it either. Bottom items become unreachable.
-Built (1 edit): src/components/Header.astro (EDIT) — added to .nav-mobile: `max-height: calc(100vh - 6rem)` then `max-height: calc(100dvh - 6rem)` (dvh accounts for the mobile address bar; vh is the fallback for older browsers), `overflow-y: auto`, and `-webkit-overflow-scrolling: touch` for smooth iOS scrolling. 6rem ≈ the sticky header height. NO change to menu contents, links, order, or the redesign (that's a separate planned step).
-Tested: build 20 pages; confirmed rules landed in built CSS (dist/_astro/BaseLayout.*.css: nav-mobile{...max-height:calc(100vh - 6rem);max-height:calc(100dvh - 6rem)...overflow-y:auto}). Note: first greps against dist/index.html returned empty — the component CSS is in an EXTERNAL stylesheet, not inlined; found it under dist/_astro/ (avoided the §6F false-alarm trap). NOT verifiable by me: the live touch-scroll on the PM's iPhone — PM's check.
-Next: PM edits-in-place src/components/Header.astro; Cloudflare rebuilds ~2 min; PM opens the mobile menu and confirms they can now scroll within it to reach Employment and Support PYT. THEN: the separate mobile-menu redesign (pills/cards/hierarchy) the PM originally asked about.
+        <!-- Numbers -->
+        <div class="thermo-stats">
+          <p class="thermo-raised">${raised.toLocaleString()}</p>
+          <p class="thermo-goal">raised of ${goal.toLocaleString()} goal</p>
+          <p class="thermo-meta">
+            <strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal
+          </p>
+        </div>
+      </div>
+ 
+      <div class="donate-teaser-btn-wrap">
+        <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn donate-teaser-btn" target="_blank" rel="noopener">{home.donate_button_label}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+ 
+<style>
+  /* ---- Hero ---- */
+  .hero {
+    padding-top: var(--space-xl);
+    /* Bottom padding kept small on purpose: the section right after
+       (Discovery cards / "Find your role") already has its own
+       generous top padding via the shared .section class. Making
+       both edges large stacked into an oddly big gap. */
+    padding-bottom: var(--space-md);
+  }
+ 
+  .hero-heading {
+    /* Enlarged from the previous size (PM feedback) — scoped to the
+       homepage only, other pages' h1 sizes are unaffected. */
+    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    margin: 0;
+    position: relative;
+    grid-column: 1;
+    grid-row: 2;
+    /* PM tried a few playful font options and picked Baloo 2, caps —
+       scoped to just this homepage headline (via font-family here,
+       not the shared --font-heading token), so every other heading
+       on the site stays on Archivo Black.
+       Baloo 2's own font metrics reserve a lot of extra vertical
+       space (for lowercase ascenders/descenders this all-caps
+       headline never uses), which made the default line spacing
+       look oddly loose. line-height is set tight and explicit here
+       to compensate — this value was tuned by measuring the font's
+       actual rendered letter height directly (not just picked by
+       eye), but different headline text/length could still need a
+       revisit. */
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.82;
+  }
 
-Per-show "Sponsor This Show" buttons → route straight to Soapbox (2026-06-23)
-Goal (PM): finish the outstanding follow-up flagged in HANDOVER-2026-06-16 §8 and in a code note inside ways-to-support.astro — the per-show "Sponsor This Show" button still used the old two-step hop to /ways-to-support#sponsor, while every other sponsor/donate button on the site now goes straight to the hosted Soapbox donation page. PM chose Option A (point straight at Soapbox) and Option 1 (source the link from the same CMS field, not hardcode).
-Built (2 edits):
-1. src/pages/shows/[slug].astro (EDIT): added `import donatePage from "../../content/settings/donate-page.json"` and `const sponsorUrl = donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate"` (same field + same fallback the Support page uses, so one source of truth — if staff change the Soapbox URL in the CMS, the show buttons follow). Changed the button from `<a href="/ways-to-support#sponsor" class="btn btn-outline">` to
+  /* Logo + headline + intro text, laid out as a small grid so the
+     lede lines up under the HEADLINE (not the logo), and the logo's
+     own height (set in Logo.astro) matches the headline text block —
+     giving a clean top/bottom alignment between logo and headline
+     without the logo dwarfing anything. Stacked (logo, then headline,
+     then lede, all full width) on phones; side by side once there's
+     enough width for it to breathe. */
+  .hero-grid {
+    /* Anchor for the star-trail overlay SVG (position:absolute,
+       inset:0) added below — needs the grid itself to establish the
+       positioning context, since the trail spans across both the
+       logo and the headline text, not just one of them. */
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 0.6rem;
+  }
+
+  .hero-logo-wrap {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .hero-lede {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  @media (min-width: 720px) {
+    .hero-grid {
+      grid-template-columns: auto 1fr;
+      column-gap: var(--space-lg);
+      align-items: center;
+    }
+
+    .hero-logo-wrap {
+      grid-row: 1;
+    }
+
+    .hero-heading {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .hero-lede {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+
+  .accent-word {
+    position: relative;
+  }
+
+  /* Star trail overlay (2026-08-19, third redesign). Drawn entirely
+     at runtime by the script near the hero markup — this CSS just
+     positions the SVG to exactly cover .hero-grid so the coordinates
+     the script measures (relative to that same element) and the
+     coordinates it draws with line up with no extra scaling step.
+     inset:0 + width/height 100% means "cover the anchor element
+     exactly"; the script sets the viewBox to match the anchor's real
+     pixel size, so 1 SVG unit is always 1 real pixel here — no
+     separate "viewBox units vs. display size" conversion to get
+     wrong, which is what broke the two earlier attempts. */
+  .hero-star-trail {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .hero-lede {
+    /* Brought up to match the impact of the new bolder look — bigger,
+       heavier, and full-strength ink color instead of the muted gray
+       paragraphs normally use. Line-height/letter-spacing tightened
+       from the site's normal body defaults (1.6 leading, no tracking)
+       since at this size+weight the default reads loose — condensed
+       to feel more like a headline-adjacent block than body copy. */
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 60ch;
+    margin-bottom: var(--space-md);
+  }
+ 
+  /* Wide hero banner photo (legacy, not currently rendered — kept in
+     case hero_image is reused later) */
+  .hero-banner-img {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: 0;
+    display: block;
+    margin-top: var(--space-lg);
+    margin-bottom: 0;
+    box-shadow: var(--shadow-soft);
+    max-height: 520px;
+  }
+
+  /* ---- Hero photo strip ---- */
+  .photo-strip-wrap {
+    position: relative;
+    margin-top: var(--space-lg);
+  }
+
+  .photo-strip {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    overflow-x: auto;
+    /* "mandatory" (not "proximity") so the strip always settles on a
+       centered card, since that centered card's PHOTO is now the
+       visually "hero" one — see .photo-strip-photo scale below. */
+    scroll-snap-type: x mandatory;
+    /* Bottom room for the caption; top room is set dynamically by the
+       script (padding-top), sized to fit the hero photo's upward
+       growth without it being clipped by this scroll container. */
+    padding: 14px 0 0.6rem;
+    -webkit-overflow-scrolling: touch;
+    /* Hide the native scrollbar — replaced by the arrow buttons and
+       edge fades below. Swiping/dragging still works exactly the
+       same either way. */
+    scrollbar-width: none;
+  }
+
+  .photo-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-strip-fade {
+    display: none; /* shown on wider screens only, see media query below */
+    position: absolute;
+    /* Anchored from the bottom (by the caption) rather than the top,
+       since the container's top padding now varies (see script) to
+       fit the hero photo's growth — bottom-anchoring keeps the fade
+       lined up with the photo row regardless of that. */
+    bottom: 0.6rem;
+    height: 220px;
+    width: 48px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .photo-strip-fade-left {
+    left: 0;
+    background: linear-gradient(to right, var(--paper), transparent);
+  }
+
+  .photo-strip-fade-right {
+    right: 0;
+    background: linear-gradient(to left, var(--paper), transparent);
+  }
+
+  .photo-strip-arrow {
+    display: none; /* shown on wider screens only, see media query below */
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .photo-strip-arrow-prev {
+    left: -6px;
+  }
+
+  .photo-strip-arrow-next {
+    right: -6px;
+  }
+
+  /* No edge-hiding rules anymore — the carousel loops continuously in
+     both directions (see script), so the arrows and fades stay visible
+     at all times on desktop; there's no "end" to reach. */
+  @media (min-width: 720px) {
+    .photo-strip-fade,
+    .photo-strip-arrow {
+      display: flex;
+    }
+  }
+
+  .photo-strip-card {
+    flex: 0 0 220px;
+    display: block;
+    scroll-snap-align: center;
+    transition: opacity 0.25s ease;
+  }
+
+  .photo-strip-photo {
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    /* The hero-scale effect lives here (not on the whole card) so the
+       caption below never resizes or gets crowded. Anchored to the
+       bottom edge so growth happens upward, away from the caption —
+       see the script for the actual scale values. */
+    transform-origin: center bottom;
+    transition: transform 0.25s ease;
+  }
+
+  .photo-strip-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-strip-placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-strip-placeholder.c-accent { background: var(--accent); }
+  .photo-strip-placeholder.c-accent-deep { background: var(--accent-deep); }
+  .photo-strip-placeholder.c-brand-blue { background: var(--brand-blue); }
+  .photo-strip-placeholder.c-brand-green { background: var(--brand-green); }
+
+  .photo-strip-title {
+    display: block;
+    margin-top: 0.6rem;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  @media (max-width: 640px) {
+    .photo-strip-card {
+      flex-basis: 168px;
+    }
+  }
+ 
+  /* ---- Section heading ---- */
+  .section-head {
+    margin-block: 0.4rem var(--space-lg);
+    max-width: 20ch;
+  }
+
+  /* Caps toggle for section headings (NEW, 2026-08-19) — the PM can
+     now choose "as typed" (default) or UPPERCASE per heading in the
+     CMS. Applied by adding this class conditionally, not by forcing
+     text-transform on .section-head itself, so existing headings
+     that were typed in caps by hand (e.g. content already written in
+     capitals) aren't affected either way. */
+  .case-upper {
+    text-transform: uppercase;
+  }
+ 
+  /* ---- Discovery cards (square photo grid, redesigned 2026-08-19) ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+ 
+  .card {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.18s ease;
+  }
+ 
+  .card:hover {
+    transform: translateY(-2px);
+  }
+ 
+  .card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+ 
+  .card-photo-placeholder.c-accent { background: var(--accent); }
+  .card-photo-placeholder.c-accent-deep { background: var(--accent-deep); }
+  .card-photo-placeholder.c-brand-blue { background: var(--brand-blue); }
+  .card-photo-placeholder.c-brand-green { background: var(--brand-green); }
+ 
+  /* Title overlaid on the photo, bottom-anchored, dark gradient scrim
+     behind it for legibility on any photo. Big, bold, Baloo 2, white —
+     PM request, to match the homepage's other playful touches. */
+  .card-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.6rem 0.9rem 0.85rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+ 
+  .card-title {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: clamp(1.1rem, 3.4vw, 1.6rem);
+    line-height: 1.1;
+  }
+ 
+  .card-subtitle {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    color: #fff;
+    opacity: 0.9;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    line-height: 1.2;
+  }
+ 
+  /* ---- Impact stats ---- */
+  /* Black background matching the nav bar (PM request, 2026-08-19) —
+     was the site's warm off-white paper color before. Heading and
+     label text switch to light colors here since they're now on a
+     dark surface; the figures themselves already carry their own
+     brand color (blue/green/pink) which reads fine on black. */
+  .impact {
+    background: var(--nav-bg-dark);
+    border-block: none;
+  }
+
+  .impact .section-head {
+    color: var(--nav-text);
+  }
+ 
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+  }
+ 
+  .stat {
+    border: 2px solid var(--accent);
+    padding: 1.1rem 0.9rem;
+    text-align: center;
+  }
+
+  .stat-figure {
+    font-family: var(--font-heading);
+    font-size: 2.1rem;
+    font-weight: 400;
+    color: var(--accent);
+    line-height: 1;
+  }
+ 
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--nav-text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.35;
+  }
+ 
+  /* ---- Donation teaser ---- */
+  .donate-lede {
+    /* Matched to the hero intro paragraph's exact treatment (PM
+       request, 2026-08-19) — same size, weight, line-height, and
+       letter-spacing as "At Peninsula Youth Theatre..." up top,
+       instead of the site's default lighter/smaller paragraph style. */
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 60ch;
+    margin-bottom: var(--space-lg);
+  }
+ 
+  /* ---- Campaign progress thermometer ---- */
+  /* Bigger and centered (PM request, 2026-08-19) — was a smaller
+     thermometer sitting beside the numbers; now both sit stacked and
+     centered together, matching the bolder scale of the rest of the
+     homepage. This copy is scoped to the homepage only via Astro's
+     component-level CSS — the Support PYT page keeps its own smaller
+     version, untouched. */
+  .thermo-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .thermo {
+    position: relative;
+    width: 80px;
+    height: 320px;
+    flex-shrink: 0;
+  }
+
+  .thermo-goal-label {
+    position: absolute;
+    top: -28px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .thermo-tube {
+    position: absolute;
+    left: 16px;
+    top: 0;
+    width: 46px;
+    height: 268px;
+    border: 4px solid var(--accent);
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    overflow: hidden;
+  }
+
+  .thermo-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--campaign-fill);
+    border-radius: 0 0 var(--radius-pill) var(--radius-pill);
+    transition: height 0.4s ease;
+  }
+
+  .thermo-bulb {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 4px solid var(--accent);
+  }
+
+  .thermo-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .thermo-raised {
+    /* Same heading font as the "PYT in numbers" figures above, for
+       consistency across the two number-heavy sections of the page. */
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .thermo-goal {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin: 0.4rem 0 0;
+  }
+
+  .thermo-meta {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin: 0.5rem 0 0;
+  }
+
+  .thermo-meta strong {
+    color: var(--accent);
+  }
+
+  /* Wrapper just for centering — the button itself is inline-flex
+     (from the shared .btn class) so margin:auto alone wouldn't center
+     it; this wrapper does it reliably regardless of that. */
+  .donate-teaser-btn-wrap {
+    text-align: center;
+  }
+
+  /* Donate button under the thermometer: bright yellow to match the
+     nav's Donate button, bigger, and centered directly under the
+     thermometer (PM request, 2026-08-19) — was the standard pink
+     .btn-primary at the default button size, left-aligned under the
+     lede text. */
+  .donate-teaser-btn {
+    background: var(--highlight);
+    color: var(--highlight-text);
+    font-size: 1.35rem;
+    font-weight: 600;
+    padding: 1.15rem 2.8rem;
+  }
+
+  .donate-teaser-btn:hover {
+    background: var(--highlight);
+    filter: brightness(0.94);
+  }
+ 
+  /* ============ WIDER SCREENS ============ */
+  @media (min-width: 720px) {
+    .stat-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .card-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+ 
+  @media (min-width: 920px) {
+    .card-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
