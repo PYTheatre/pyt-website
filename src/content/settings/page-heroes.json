@@ -12,7 +12,8 @@
     },
     {
       "page": "/audition",
-      "image": "/uploads/development.jpg"
+      "image": "/uploads/development.jpg",
+      "focus": 20
     },
     {
       "page": "/judy-robe-spirits-awards",
