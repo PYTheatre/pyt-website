@@ -5,13 +5,34 @@
       "url": "/shows",
       "style": "tickets",
       "children": [
-        { "label": "All Shows", "url": "/shows" },
-        { "label": "Center Stage Musicals", "url": "/musicals" },
-        { "label": "Studio Shows", "url": "/studio-productions" },
-        { "label": "Stories on Stage", "url": "/stories-on-stage" },
-        { "label": "School Tickets", "url": "/school-tickets" },
-        { "label": "The Rules of Comedy", "url": "/shows/rules-of-comedy" },
-        { "label": "The Wizard of Oz", "url": "/shows/the-wizard-of-oz" }
+        {
+          "label": "All Shows",
+          "url": "/shows"
+        },
+        {
+          "label": "Center Stage Musicals",
+          "url": "/musicals"
+        },
+        {
+          "label": "Studio Shows",
+          "url": "/studio-productions"
+        },
+        {
+          "label": "Stories on Stage",
+          "url": "/stories-on-stage"
+        },
+        {
+          "label": "School Tickets",
+          "url": "/school-tickets"
+        },
+        {
+          "label": "The Rules of Comedy",
+          "url": "/shows/rules-of-comedy"
+        },
+        {
+          "label": "The Wizard of Oz",
+          "url": "/shows/the-wizard-of-oz"
+        }
       ]
     },
     {
@@ -21,12 +42,18 @@
       "children": []
     },
     {
-      "label": "Auditions",
+      "label": "Audition",
       "url": "/audition",
       "style": "none",
       "children": [
-        { "label": "Auditions", "url": "/audition" },
-        { "label": "Casting", "url": "/casting" }
+        {
+          "label": "Auditions",
+          "url": "/audition"
+        },
+        {
+          "label": "Casting",
+          "url": "/casting"
+        }
       ]
     },
     {
@@ -34,7 +61,10 @@
       "url": "/programs",
       "style": "none",
       "children": [
-        { "label": "Classes & Camps", "url": "/programs" }
+        {
+          "label": "Classes & Camps",
+          "url": "/programs"
+        }
       ]
     },
     {
@@ -42,9 +72,18 @@
       "url": "/school-tickets",
       "style": "none",
       "children": [
-        { "label": "School Play in a Box", "url": "/school-play-in-a-box" },
-        { "label": "School Tickets", "url": "/school-tickets" },
-        { "label": "Stories on Stage", "url": "/stories-on-stage" }
+        {
+          "label": "School Play in a Box",
+          "url": "/school-play-in-a-box"
+        },
+        {
+          "label": "School Tickets",
+          "url": "/school-tickets"
+        },
+        {
+          "label": "Stories on Stage",
+          "url": "/stories-on-stage"
+        }
       ]
     },
     {
@@ -52,9 +91,18 @@
       "url": "/shop",
       "style": "none",
       "children": [
-        { "label": "Shop", "url": "/shop" },
-        { "label": "Rentals", "url": "/rentals" },
-        { "label": "Photos", "url": "/photos" }
+        {
+          "label": "Shop",
+          "url": "/shop"
+        },
+        {
+          "label": "Rentals",
+          "url": "/rentals"
+        },
+        {
+          "label": "Photos",
+          "url": "/photos"
+        }
       ]
     },
     {
@@ -62,10 +110,22 @@
       "url": "/about",
       "style": "none",
       "children": [
-        { "label": "About PYT", "url": "/about" },
-        { "label": "Support", "url": "/ways-to-support" },
-        { "label": "Opportunities", "url": "/employment" },
-        { "label": "Press", "url": "/press" }
+        {
+          "label": "About PYT",
+          "url": "/about"
+        },
+        {
+          "label": "Support",
+          "url": "/ways-to-support"
+        },
+        {
+          "label": "Opportunities",
+          "url": "/employment"
+        },
+        {
+          "label": "Press",
+          "url": "/press"
+        }
       ]
     }
   ]
