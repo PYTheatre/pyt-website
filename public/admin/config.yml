@@ -217,6 +217,29 @@ collections:
         fields:
           - { name: "musicals_label", label: "\"Shows\" menu — Musicals item label", widget: "string", hint: "Shown in the Shows dropdown in the nav bar at the top of every page." }
           - { name: "studio_shows_label", label: "\"Shows\" menu — Studio Shows item label", widget: "string", hint: "Shown in the Shows dropdown in the nav bar at the top of every page." }
+          - { name: "site_origin", label: "Site address (for the ES translate button)", widget: "string", hint: "The site's own web address, no trailing slash — e.g. https://pytnet.org. Used only to build the 'back to English' link when someone uses the ES button. IMPORTANT: update this once the real pytnet.org domain is connected, or the 'back to English' link will point at the wrong place." }
+
+      # --- Navigation — Tickets menu (2026-08-19) ---
+      # The "Tickets" nav button (replaces the old "Shows" item) and
+      # its dropdown. Fully editable here since the PM expects to
+      # change this list often as shows change — add, remove, or
+      # reorder any of the label/link rows freely; nothing here is
+      # tied to the Shows collection, so you can point a row at any
+      # page, including a specific show's own page.
+      - name: "nav-tickets"
+        label: "Navigation — Tickets Menu"
+        file: "src/content/settings/nav-tickets.json"
+        description: "The blue 'Tickets' button in the nav bar and its dropdown menu. Change this often as shows come and go — nothing here is automatic."
+        fields:
+          - { name: "main_url", label: "Where the Tickets button itself goes", widget: "string", default: "/shows", hint: "Clicking the button's main label (not the dropdown) goes here." }
+          - name: "items"
+            label: "Dropdown items"
+            widget: "list"
+            summary: "{{fields.label}}"
+            hint: "One row per dropdown item, in the order they should appear."
+            fields:
+              - { name: "label", label: "Label", widget: "string", hint: "Example: The Wizard of Oz" }
+              - { name: "url", label: "Link", widget: "string", hint: "Example: /shows/the-wizard-of-oz, or /musicals for a whole category." }
 
       # --- Home Page ---
       # All editable copy on the home page. Layout/structure stays in
