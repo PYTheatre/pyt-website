@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "page": "/about",
+      "image": "/uploads/pyt-shrek.jpg",
+      "alt": ""
+    },
+    {
+      "page": "/casting",
+      "image": "/uploads/pyt-summer-camp.jpg",
+      "alt": ""
+    }
+  ]
+}
