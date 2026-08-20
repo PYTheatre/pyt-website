@@ -139,14 +139,31 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   </div>
  
   <!-- Mobile dropdown menu (phones only) -->
+  <!-- Accordion behavior (2026-08-20): a group with children now
+       renders as a real <button> that toggles its own panel open/
+       closed (aria-expanded + aria-controls, wired up in the script
+       below) instead of showing every group's children all the time.
+       Each group is independent — opening one doesn't close another.
+       A group with no children (Calendar) stays a plain link, same
+       as before. -->
   <nav class="nav-mobile" id="mobile-menu" aria-label="Mobile navigation" hidden>
-    {navGroups.map((group) => (
+    {navGroups.map((group, i) => (
       group.children && group.children.length > 0 ? (
         <div class="nav-mobile-group">
-          <a href={group.href} class={`nav-mobile-pill ${specialClass(group, "mobile")}`}>{group.label}</a>
-          {group.children.map((child) => (
-            <a href={child.href} class="nav-mobile-sublink">{child.label}</a>
-          ))}
+          <button
+            type="button"
+            class={`nav-mobile-pill nav-mobile-toggle ${specialClass(group, "mobile")}`}
+            aria-expanded="false"
+            aria-controls={`nav-mobile-panel-${i}`}
+          >
+            <span>{group.label}</span>
+            <svg class="mobile-caret" width="14" height="9" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-mobile-panel" id={`nav-mobile-panel-${i}`} hidden>
+            {group.children.map((child) => (
+              <a href={child.href} class="nav-mobile-sublink">{child.label}</a>
+            ))}
+          </div>
         </div>
       ) : (
         <a href={group.href} class={`nav-mobile-pill nav-mobile-pill-solo ${specialClass(group, "mobile")}`}>{group.label}</a>
@@ -536,26 +553,86 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     margin-bottom: 0.55rem;
   }
 
-  /* The lilac pill — every top-level item looks like this and is a real link. */
+  /* Base pill shape shared by every top-level row — both the plain
+     <a> (Calendar) and the accordion <button> (everything with
+     children). Deliberately no color here: color is layered on next,
+     split into "special" (Tickets/Calendar, still their own
+     blue/green) vs. the plain black-and-white treatment everyone
+     else now uses (2026-08-20 — replaces the old solid lilac fill on
+     Auditions/Classes & Camps/Educators/Shop/About, per PM request:
+     approved via a static mockup first, see option_a_accordion_bw.png). */
   .nav-mobile-pill {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    width: 100%;
     padding: 0.7rem 0.85rem;
     border-radius: var(--radius-btn);
-    background: var(--nav-pill);
-    color: var(--nav-pill-text);
     font-weight: 600;
     font-size: 0.95rem;
+    font-family: var(--font-body);
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
 
-  /* Standalone pills (Classes & Camps, Support PYT) — same pill, own spacing. */
+  /* The plain black-and-white treatment: white fill, black border,
+     black text — anything that ISN'T Tickets or Calendar. Written as
+     a :not() pair rather than a class so it can't silently stop
+     applying if a future item's classes are built slightly
+     differently — it's the true default, not an opt-in. */
+  .nav-mobile-pill:not(.tickets-btn-mobile):not(.calendar-btn-mobile) {
+    background: var(--paper);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+  }
+
+  .nav-mobile-pill:not(.tickets-btn-mobile):not(.calendar-btn-mobile):hover,
+  .nav-mobile-pill:not(.tickets-btn-mobile):not(.calendar-btn-mobile):focus-visible {
+    background: var(--paper-warm);
+    color: var(--ink);
+  }
+
+  /* An open accordion row gets the same soft fill as hover, so the
+     currently-expanded item stays visually identifiable even after
+     the pointer/focus moves down into its own children. Tied to the
+     real aria-expanded state rather than a separate JS-toggled class,
+     so the visual state can never drift out of sync with the a11y state. */
+  .nav-mobile-toggle[aria-expanded="true"]:not(.tickets-btn-mobile):not(.calendar-btn-mobile) {
+    background: var(--paper-warm);
+  }
+
+  /* Standalone pills (Calendar) — same pill, own spacing. */
   .nav-mobile-pill-solo {
     margin-bottom: 0.55rem;
+    display: block;
   }
 
-  .nav-mobile-pill:hover,
-  .nav-mobile-pill:focus-visible {
-    background: var(--nav-pill-hover);
-    color: var(--nav-pill-text);
+  /* Chevron on accordion toggles — rotates via the same real
+     aria-expanded attribute the JS sets, open = pointing up. */
+  .mobile-caret {
+    flex-shrink: 0;
+    transition: transform 0.18s ease;
+  }
+
+  .nav-mobile-toggle[aria-expanded="true"] .mobile-caret {
+    transform: rotate(180deg);
+  }
+
+  /* Each accordion's children — hidden by default (native [hidden]),
+     shown when its toggle is expanded. display rules set explicitly
+     rather than relying on the bare [hidden] attribute alone, so this
+     can't be silently overridden by a more specific rule elsewhere. */
+  .nav-mobile-panel {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.15rem;
+  }
+
+  .nav-mobile-panel[hidden] {
+    display: none;
   }
 
   /* Quiet indented sub-rows beneath a pill. */
@@ -603,6 +680,22 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
       menu.hidden = isOpen;
     });
   }
+
+  // Mobile nav accordion (2026-08-20). Each group with a dropdown
+  // renders as a <button aria-controls="nav-mobile-panel-N">; this
+  // just toggles that button's aria-expanded and its matching
+  // panel's [hidden]. Groups are independent — opening one doesn't
+  // close the others, so this is a plain per-button toggle rather
+  // than tracking a single "currently open" group.
+  document.querySelectorAll<HTMLButtonElement>(".nav-mobile-toggle").forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") === "true";
+      const panelId = toggle.getAttribute("aria-controls");
+      const panel = panelId ? document.getElementById(panelId) : null;
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+      if (panel) panel.hidden = isOpen;
+    });
+  });
 
   // EN/ES translate toggle. Routes the current page through Google's
   // free translate.goog domain-proxy (no sign-up, no script embed
