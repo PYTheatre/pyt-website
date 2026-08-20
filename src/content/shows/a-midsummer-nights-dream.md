@@ -16,5 +16,7 @@ synopsis: Shakespeare’s comedy of love, magic, and fairy mischief is a perfect
   this room will stay with you long after closing night. This is the kind of
   creative experience that bonds a group of performers together and genuinely
   levels up your acting.
+audition_start: 2027-03-24
+audition_end: 2027-03-24
 audition_display: March 24, 2027
 ---
