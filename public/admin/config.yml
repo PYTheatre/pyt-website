@@ -799,7 +799,7 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Calendar" }
           - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, default: "Stay in the loop" }
-          - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          - { name: "intro", label: "Page intro paragraph", widget: "text", required: false, hint: "Leave blank to hide this paragraph entirely." }
           - { name: "calendar_id", label: "Google Calendar ID", widget: "string", hint: "Looks like an email address, e.g. boardpresident@pytnet.org. Find it in Google Calendar → Settings and sharing → (pick the calendar) → Integrate calendar → Calendar ID. That calendar must also be set to public there, or this page will show blank to visitors." }
  
       # --- Stories on Stage page ---
