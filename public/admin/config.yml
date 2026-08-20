@@ -684,17 +684,24 @@ collections:
       - name: "audition-page"
         label: "Audition Page"
         file: "src/content/settings/audition-page.json"
-        description: "The /audition page wording. The shows currently casting are pulled automatically from your Shows — to change a show's description on this page, edit that show's 'Auditions page — short description'. The hero photo is set in Page Hero Images."
+        description: "The /audition page wording. The shows currently casting are pulled automatically from your Shows — to change a show's description on this page, edit that show's 'Auditions page — short description'. The hero photo is set in Page Hero Images. The link to the casting philosophy page now lives inside the intro paragraph below — add or edit it there."
         fields:
           - { name: "title", label: "Hero — page title", widget: "string", default: "Auditions" }
-          - { name: "intro", label: "Hero — intro paragraph", widget: "text", required: false }
+          - name: "intro"
+            label: "Hero — intro paragraph"
+            widget: "markdown"
+            required: false
+            # Limited toolbar on purpose: this is a short intro paragraph,
+            # not an article. Headings/lists/images here would fight the
+            # page title directly above it.
+            buttons: ["bold", "italic", "link"]
+            editor_components: []
+            hint: "The paragraph under the page title. To add a link (for example to the casting philosophy page): select the words you want to link, click the link button, and enter the address — use /casting for a page on this site. Links show in pink."
           - { name: "shows_heading", label: "Auditions column — heading", widget: "string", required: false, default: "Upcoming auditions", hint: "Sits above the audition cards on the left." }
           - { name: "no_open_message", label: "Message shown when no shows are currently casting", widget: "text", required: false, hint: "Shown under the cards when no Center Stage Musicals auditions are open. Stories on Stage still shows its own card. Example: There are no Center Stage Musicals auditions open right now — check back soon." }
           - { name: "sos_heading", label: "Stories on Stage card — heading", widget: "string", required: false, default: "Stories on Stage", hint: "Stories on Stage now appears as a card alongside the shows, in the same style." }
           - { name: "sos_blurb", label: "Stories on Stage card — description", widget: "text", required: false, hint: "The couple of lines under the heading, matching the show cards." }
           - { name: "sos_button_label", label: "Stories on Stage card — button label", widget: "string", required: false, default: "Auditions", hint: "Keep it short — the buttons are sized to their label." }
-          - { name: "casting_heading", label: "Casting philosophy — heading", widget: "string", required: false, default: "Our casting philosophy" }
-          - { name: "casting_link_label", label: "Casting philosophy — link text", widget: "string", required: false, default: "How we cast, and what to expect", hint: "The pink underlined link under the heading. This replaced the old paragraph + button: the casting panel is now a slim link rather than a full block of text." }
           - { name: "faq_heading", label: "FAQ column — heading", widget: "string", required: false, default: "Frequently asked questions", hint: "Sits above the FAQ list on the right." }
           - name: "faqs"
             label: "FAQ items"
