@@ -91,7 +91,7 @@ function starTrail(
     const dist = rand() * localSpread;
     const taperT = taperFrom === "end" ? t : 1 - t;
     const taper = 1 - taperT * 0.7;
-    const r = (0.5 + rand() * 1.3) * taper * 2.4;
+    const r = (0.5 + rand() * 1.3) * taper * 4.2;
     stars.push({
       cx: Number((base.x + Math.cos(angle) * dist).toFixed(1)),
       cy: Number((base.y + Math.sin(angle) * dist).toFixed(1)),
@@ -735,10 +735,20 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   .accent-stars {
+    /* Sized in real pixels rather than em, and much bigger than
+       before (PM feedback, 2026-08-19): the previous 7.4em width was
+       tiny relative to the SVG's own 610-unit-wide coordinate space,
+       which scaled every star down to near-invisible dust — the SVG
+       viewBox defines the coordinate system everything is drawn in,
+       and a small CSS display width shrinks all of it proportionally,
+       stars included. min(...) keeps it from overflowing narrow
+       phone screens while reaching close to the viewBox's natural
+       size (and beyond it) on wider screens, so the trail genuinely
+       spans a good stretch of the headline instead of a small corner. */
     position: absolute;
     left: 0;
     bottom: -0.3em;
-    width: 7.4em;
+    width: min(88vw, 640px);
     height: auto;
     overflow: visible;
     pointer-events: none;
@@ -782,11 +792,15 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
   /* Star trail, segment 2 (carousel entry) — see the markup comment
      above for why it's placed here. Overlaps the top-left corner
-     slightly on purpose, continuing the sweep down from the headline. */
+     slightly on purpose, continuing the sweep down from the headline.
+     Was 150px (PM feedback: nearly invisible against its 220-unit
+     viewBox) — now roughly doubled, with the position offsets scaled
+     to match so it still reads as "poking into" the corner rather
+     than swallowing it. */
   .trail-stars-carousel {
-    top: -60px;
-    left: -20px;
-    width: 150px;
+    top: -130px;
+    left: -40px;
+    width: 320px;
     height: auto;
   }
 
@@ -964,11 +978,13 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     position: relative;
   }
 
-  /* Star trail, segment 3 (discovery-grid entry). */
+  /* Star trail, segment 3 (discovery-grid entry). Roughly doubled
+     from the original 150px (PM feedback: too small to read as
+     stars), offsets scaled to match. */
   .trail-stars-discovery {
-    top: -34px;
-    left: -10px;
-    width: 150px;
+    top: -75px;
+    left: -20px;
+    width: 320px;
     height: auto;
   }
 
@@ -999,11 +1015,13 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   /* Star trail, segment 4 (the ending) — sits just outside the last
-     card's top-right corner. */
+     card's top-right corner. Roughly doubled from the original
+     100px (PM feedback: too small to read as stars), offsets scaled
+     to match. */
   .trail-stars-end {
-    top: -40px;
-    right: -24px;
-    width: 100px;
+    top: -90px;
+    right: -55px;
+    width: 220px;
     height: auto;
   }
  
