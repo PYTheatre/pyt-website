@@ -12,5 +12,6 @@ synopsis: This Hollywood classic is packed with hilarious situations, snappy
   toes and grinning from ear to ear. With dozens of featured roles, including
   silent film stars, dancers, comedians, and movie executives, there are
   opportunities for performers of all ages and experience levels to shine.
+audition_display: December 2026
 double_cast: false
 ---
