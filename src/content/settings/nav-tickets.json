@@ -1,12 +1,33 @@
 {
   "main_url": "/shows",
   "items": [
-    { "label": "All Shows", "url": "/shows" },
-    { "label": "Center Stage Musicals", "url": "/musicals" },
-    { "label": "Studio Shows", "url": "/studio-productions" },
-    { "label": "Stories on Stage", "url": "/stories-on-stage" },
-    { "label": "School Shows", "url": "/school-tickets" },
-    { "label": "The Rules of Comedy", "url": "/shows/rules-of-comedy" },
-    { "label": "The Wizard of Oz", "url": "/shows/the-wizard-of-oz" }
+    {
+      "label": "All Shows",
+      "url": "/shows"
+    },
+    {
+      "label": "Center Stage Musicals",
+      "url": "/musicals"
+    },
+    {
+      "label": "Studio Shows",
+      "url": "/studio-productions"
+    },
+    {
+      "label": "Stories on Stage",
+      "url": "/stories-on-stage"
+    },
+    {
+      "label": "School Tickets",
+      "url": "/school-tickets"
+    },
+    {
+      "label": "The Rules of Comedy",
+      "url": "/shows/rules-of-comedy"
+    },
+    {
+      "label": "The Wizard of Oz",
+      "url": "/shows/the-wizard-of-oz"
+    }
   ]
 }
