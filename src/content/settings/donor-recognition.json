@@ -1,21 +1,10 @@
 {
   "eyebrow": "",
   "heading": "Our Supporters",
-  "intro": "We are deeply grateful to the individuals, families, and businesses whose generosity makes PYT's work possible. Thank you.",
+  "intro": "",
   "groups": [
     {
-      "tier_name": "Friends of PYT"
-    },
-    {
-      "tier_name": "PYT Patrons",
-      "names": []
-    },
-    {
-      "tier_name": "PYT Champion",
-      "names": []
-    },
-    {
-      "tier_name": "PYT Founder",
+      "tier_name": "Twinkle Lights",
       "names": []
     },
     {
@@ -23,15 +12,14 @@
       "names": []
     },
     {
-      "tier_name": "Starlight Patrons",
+      "tier_name": "Limelights",
       "names": []
     },
     {
-      "tier_name": "Luminary Partners",
-      "names": []
+      "tier_name": "Marquee Lights"
     },
     {
-      "tier_name": "PYT Visionaries"
+      "tier_name": "Luminaries"
     },
     {
       "tier_name": "Show Sponsors"
