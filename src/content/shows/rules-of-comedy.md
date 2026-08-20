@@ -2,7 +2,7 @@
 audition_date: 2026-08-03
 title: THE RULES OF COMEDY
 production_type: Studio Production
-eyebrow: 2026 Studio Show
+eyebrow: Studio Show
 start_date: 2026-08-28
 end_date: 2026-08-28
 date_display: August 2026
