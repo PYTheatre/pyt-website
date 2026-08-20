@@ -51,6 +51,18 @@ const { size = "nav" } = Astro.props;
 
 <style>
   .logo {
+    /* Never let this shrink — without this, the logo's flex box could
+       get squeezed narrower than its own image needs whenever the
+       header ran low on space (mid-width screens, and mobile with
+       Register/Donate/ES/hamburger all competing for room). Once
+       squeezed, the site-wide "img { max-width: 100% }" reset (see
+       global.css) would clamp the image's WIDTH to fit the shrunk
+       box while its HEIGHT stayed locked at 44px/54px — that
+       width/height mismatch is what visibly squashed/distorted it.
+       This makes the logo's own box immovable, so that clamp never
+       triggers. (PM report, 2026-08-19: "no home button... unless you
+       squash the page down, and then a squashed logo appears.") */
+    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
   }
