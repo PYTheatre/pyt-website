@@ -37,17 +37,28 @@ const fillPct = Math.min(100, Math.max(0, pct));
 // computed from THIS page's own smaller thermo/tube sizes (see
 // .thermo/.thermo-tube below) — this page has always used a different
 // size than the homepage's version.
-const THERMO_H = 250;
+const THERMO_H = 331;   // whole graphic, incl. the star's headroom above the tube
+const TUBE_TOP = 81;    // tube's own top edge, leaving room for the star above it
 const TUBE_H = 210;
 const TUBE_W = 32;
-const TUBE_TOP_RADIUS = TUBE_W / 2;
-const USABLE_H = TUBE_H - TUBE_TOP_RADIUS;
-const TICK_BASE = THERMO_H - TUBE_H;
+
+// Scale runs from the tube's bottom to where its rounded cap begins —
+// not the cap's mathematical peak, where the edge curves inward and a
+// tick would visually float off the tube's side.
+const USABLE_H = TUBE_H - TUBE_W / 2;
+const TUBE_BOTTOM = TUBE_TOP + TUBE_H;
+const TICK_BASE = THERMO_H - TUBE_BOTTOM;
+
 const tickFractions = [0.25, 0.5, 0.75, 1];
 const thermoTicks = tickFractions.map((f) => ({
   amount: Math.round(goal * f),
   bottomPx: TICK_BASE + f * USABLE_H,
 }));
+
+// Fill in PIXELS on the same scale the ticks use — as a percentage of
+// the tube's full height it measured against a taller scale than the
+// ticks did, so the teal rose above its own matching tick mark.
+const fillPx = (fillPct / 100) * USABLE_H;
 
 function hexagramPoints(size: number): string {
   const cx = size / 2, cy = size / 2;
@@ -142,7 +153,7 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
         <div class="thermo" role="img"
              aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
           <div class="thermo-tube">
-            <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
+            <div class="thermo-fill" style={`height: ${fillPx}px`}></div>
           </div>
           <div class="thermo-bulb"></div>
           <div class="thermo-ticks" aria-hidden="true">
@@ -369,17 +380,22 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     margin-top: var(--space-md);
   }
  
+  /* Box is the STAR's width, with every piece inside centered on that
+     same centerline — so the tube, bulb, star and the stats beside them
+     all line up instead of the tube sitting far left inside a box sized
+     for the tick labels. Tick labels overhang to the right instead. */
   .thermo {
     position: relative;
-    width: 220px;
-    height: 313px;
+    width: 90px;
+    height: 331px;
     flex-shrink: 0;
   }
  
   .thermo-tube {
     position: absolute;
-    left: 12px;
-    top: 63px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 81px;
     width: 32px;
     height: 210px;
     border: 3px solid var(--accent);
@@ -398,10 +414,13 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     transition: height 0.4s ease;
   }
  
+  /* Shares the tube's centerline (was left:12px, which sat the bulb's
+     centerline right of the tube's). */
   .thermo-bulb {
     position: absolute;
     bottom: 0;
-    left: 12px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 56px;
     height: 56px;
     border-radius: 50%;
@@ -416,8 +435,8 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
      with it (same reasoning as the home page's version). */
   .thermo-ticks {
     position: absolute;
-    left: 12px;
-    width: 63px;
+    left: 50%;
+    width: 22px;
     top: 0;
     height: 100%;
   }
@@ -449,10 +468,12 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
 
   /* GOAL star badge — sits on top of the tube's rounded cap (later in
      the DOM = painted on top with default stacking). */
+  /* Raised so only its bottom tip overlaps the tube, matching the
+     approved mockup's proportion. */
   .thermo-goal-badge {
     position: absolute;
-    top: 17px;
-    left: 28px;
+    top: 5px;
+    left: 50%;
     transform: translateX(-50%);
     width: 90px;
     height: 90px;
