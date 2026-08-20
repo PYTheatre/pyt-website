@@ -1,0 +1,95 @@
+---
+/*
+  PAGE HERO IMAGE — the optional wide photo near the top of a page.
+
+  WHY THIS IS A LOOKUP RATHER THAN A PER-PAGE FIELD:
+  Every page's hero image lives in ONE CMS record (Site Settings →
+  Page Hero Images), as a list of "which page / which photo" rows.
+  This component matches the current URL against that list.
+
+  The alternative — a hero_image field on each page's own settings
+  record — would have meant editing ~20 page files and adding ~20
+  separate CMS fields (and creating settings records from scratch for
+  Shop and Subscribe, which don't have one at all). One list keeps it
+  to a single place to edit, in the CMS and in the code.
+
+  EMPTY BY DESIGN: if a page has no row, or its row has no photo, this
+  renders NOTHING AT ALL — no empty box, no gap. A page without a hero
+  image looks exactly as it does today.
+
+  SIZING: matches the banner already used on the About page — a wide
+  letterbox strip (21:6 on phones, opening out to 24:5 on wider
+  screens). The photo is cropped to fill that frame (object-fit:
+  cover), so staff can upload any reasonably wide photo without it
+  distorting or breaking the layout.
+*/
+import heroes from "../content/settings/page-heroes.json";
+
+// Normalize so "/about", "/about/" and "" all compare equal — Astro can
+// emit either form depending on the trailing-slash config, and a staff
+// member typing a path into the CMS may or may not include one.
+function normalizePath(p: string): string {
+  const trimmed = (p || "").trim().toLowerCase();
+  const noTrailing = trimmed.replace(/\/+$/, "");
+  return noTrailing === "" ? "/" : noTrailing;
+}
+
+const currentPath = normalizePath(Astro.url.pathname);
+
+const rows = ((heroes as any).items || []).filter(
+  (r: any) => r?.page?.trim() && r?.image?.trim()
+);
+
+// Exact match first. Then, for dynamic pages (e.g. /shows/the-wizard-of-oz),
+// fall back to a row whose path is a parent section (/shows) — so one row can
+// cover a whole set of generated pages without needing an entry per show.
+const exact = rows.find((r: any) => normalizePath(r.page) === currentPath);
+const parent = exact
+  ? null
+  : rows
+      .filter((r: any) => {
+        const rp = normalizePath(r.page);
+        return rp !== "/" && currentPath.startsWith(rp + "/");
+      })
+      // If several parents match, prefer the most specific (longest) one.
+      .sort((a: any, b: any) => normalizePath(b.page).length - normalizePath(a.page).length)[0];
+
+const match = exact || parent;
+const image = match?.image?.trim() || "";
+// Alt text is optional. Left blank the image is treated as decorative,
+// which is the correct accessibility behaviour for a mood/banner photo
+// that doesn't convey information the page text doesn't already give.
+const alt = match?.alt?.trim() || "";
+---
+
+{image && (
+  <section class="page-hero-image">
+    <div class="container">
+      <img src={image} alt={alt} class="page-hero-img" loading="lazy" decoding="async" />
+    </div>
+  </section>
+)}
+
+<style>
+  .page-hero-image {
+    margin-bottom: var(--space-lg);
+  }
+
+  .page-hero-img {
+    width: 100%;
+    /* Same proportions as the existing About page banner, so the site
+       keeps one consistent banner shape rather than gaining a second,
+       competing one. */
+    aspect-ratio: 21 / 6;
+    object-fit: cover;
+    border-radius: var(--radius);
+    display: block;
+    box-shadow: var(--shadow-soft);
+  }
+
+  @media (min-width: 720px) {
+    .page-hero-img {
+      aspect-ratio: 24 / 5;
+    }
+  }
+</style>
