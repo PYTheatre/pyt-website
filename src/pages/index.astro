@@ -402,7 +402,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        2026-08-19. -->
   <section class="section discovery-section">
     <div class="container">
-      <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
+      <div class="discovery-header-row">
+        <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
+        <!-- Calendar link (2026-08-19) — sits next to this heading,
+             matching the green ring-tab styling of the Calendar nav
+             button (see Header.astro's .calendar-btn) so the two read
+             as the same feature wherever you spot them. -->
+        <a href="/calendar" class="calendar-link-btn">Calendar</a>
+      </div>
 
       <div class="card-grid">
         {home.discovery_cards.map((card: any, i: number) => (
@@ -755,6 +762,65 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
  
   /* ---- Discovery cards (square photo grid, redesigned 2026-08-19) ---- */
+  /* Header row holding the section heading + the Calendar link
+     (2026-08-19) — wraps on narrow screens rather than squeezing the
+     button, since the heading's length varies (it's CMS-editable). */
+  .discovery-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .discovery-header-row .section-head {
+    margin-bottom: 0;
+  }
+
+  /* Same visual language as the nav's Calendar button (green, two
+     small "ring" tabs on top) — duplicated here rather than shared
+     with Header.astro since Astro scopes component styles per file;
+     kept deliberately identical in both places so it reads as one
+     feature. */
+  .calendar-link-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: var(--brand-green);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius-btn);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .calendar-link-btn:hover {
+    filter: brightness(1.08);
+  }
+
+  .calendar-link-btn::before,
+  .calendar-link-btn::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    width: 5px;
+    height: 11px;
+    background: #fff;
+    border-radius: 2px;
+  }
+
+  .calendar-link-btn::before {
+    left: 22%;
+  }
+
+  .calendar-link-btn::after {
+    right: 22%;
+  }
+
   .card-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
