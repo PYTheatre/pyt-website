@@ -332,6 +332,19 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         }
       };
 
+      // Center a card by setting the strip's own scrollLeft directly,
+      // rather than scrollIntoView. scrollIntoView scrolls EVERY
+      // scrollable ancestor as needed — including the page itself — so
+      // on a phone it could yank the whole page vertically. Combined
+      // with the resize handler below (which mobile browsers fire every
+      // time the address bar shows/hides during a normal scroll), that
+      // was causing the page to visibly jump around while scrolling.
+      // Setting scrollLeft only ever moves the strip horizontally.
+      const centerCardInstantly = (card: HTMLElement | undefined | null) => {
+        if (!card) return;
+        strip.scrollLeft = card.offsetLeft + card.offsetWidth / 2 - strip.clientWidth / 2;
+      };
+
       updateHorizontalPadding();
 
       // Always open centered on "Center Stage Musicals" rather than a
@@ -347,7 +360,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
               .trim()
               .toLowerCase() === "center stage musicals"
         ) || middleSetCards[0];
-      startCard?.scrollIntoView({ inline: "center", block: "nearest" });
+      centerCardInstantly(startCard);
       updateScale();
 
       let scaleQueued = false;
@@ -361,16 +374,26 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       };
       strip.addEventListener("scroll", queueScale, { passive: true });
 
+      // Only react to WIDTH changes. Mobile browsers fire `resize`
+      // constantly during normal page scrolling as the address bar
+      // collapses/expands — that's a height-only change that doesn't
+      // affect this layout at all, but re-centering on every one of
+      // them is what made the carousel feel like it was glitching and
+      // fighting the user mid-scroll.
+      let lastWidth = window.innerWidth;
       window.addEventListener("resize", () => {
+        if (window.innerWidth === lastWidth) return;
+        lastWidth = window.innerWidth;
         updateHorizontalPadding();
-        cards[currentIndex]?.scrollIntoView({ inline: "center", block: "nearest" });
+        centerCardInstantly(cards[currentIndex]);
         updateScale();
       });
 
       // Arrow buttons: step to the next/previous card and re-center it.
-      // No edge-hiding logic anymore — the carousel loops continuously,
-      // so both arrows (and both edge fades) stay visible at all times
-      // on desktop; on mobile people just swipe, same as before.
+      // No edge-hiding logic — the carousel loops continuously, so both
+      // arrows (and both edge fades) stay visible at all times. Shown on
+      // phones as well as desktop as of 2026-08-20, so there's a visible
+      // cue that more photos exist rather than relying on swipe discovery.
       if (prevBtn && nextBtn) {
         prevBtn.addEventListener("click", () => {
           const target = cards[currentIndex - 1];
@@ -715,7 +738,12 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   .photo-strip-arrow {
-    display: none; /* shown on wider screens only, see media query below */
+    /* Visible at every width as of 2026-08-20 (was desktop-only, with
+       the mobile rule added separately — which left a dead zone between
+       641px and 719px where neither rule applied and the arrows silently
+       vanished). Making "shown" the default and only varying the SIZE
+       per breakpoint removes that gap entirely. */
+    display: flex;
     position: absolute;
     top: 45%;
     transform: translateY(-50%);
@@ -742,12 +770,12 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     right: -6px;
   }
 
-  /* No edge-hiding rules anymore — the carousel loops continuously in
-     both directions (see script), so the arrows and fades stay visible
-     at all times on desktop; there's no "end" to reach. */
+  /* Edge fades are wide-screen only — on a phone the card fills nearly
+     the whole container, so a fade over its edges just dims the photo
+     rather than suggesting "more to scroll". The arrows (visible at all
+     widths, see above) carry that cue on mobile instead. */
   @media (min-width: 720px) {
-    .photo-strip-fade,
-    .photo-strip-arrow {
+    .photo-strip-fade {
       display: flex;
     }
   }
@@ -803,9 +831,34 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
   @media (max-width: 640px) {
     .photo-strip-card {
-      /* Same proportional bump as the desktop size (old 168px base *
-         1.7x hero scale * 4/3 ≈ 380px). */
-      flex-basis: 380px;
+      /* Was a fixed 380px, which was WIDER than the container's inner
+         width on a typical phone (390px viewport − 2×1.5rem padding =
+         342px). The card sat centered, so it hung ~19px off each edge
+         — and since the title is left-aligned inside the card, its
+         first characters were pushed off-screen ("CENTER STAGE
+         MUSICALS" rendered as "NTER STAGE MUSICALS"). Capping at 100%
+         of the available width fixes the clipped title at every phone
+         size rather than trading one hardcoded width for another. */
+      flex-basis: min(380px, 100%);
+    }
+
+    /* Arrows on phones (2026-08-20, PM request): bigger tap targets and
+       pulled in tight to the photo's edges. Vertically centered on the
+       PHOTO (33%), not the card — the card's height includes the caption
+       underneath, so centering on it would sit them visibly low. */
+    .photo-strip-arrow {
+      width: 38px;
+      height: 38px;
+      font-size: 1.4rem;
+      top: 33%;
+    }
+
+    .photo-strip-arrow-prev {
+      left: 2px;
+    }
+
+    .photo-strip-arrow-next {
+      right: 2px;
     }
   }
  
