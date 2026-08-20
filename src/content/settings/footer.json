@@ -1,6 +1,31 @@
 {
-  "address": "2510 Old Middlefield Way, Suite A, Mountain View, CA 94043.",
+  "address": "2510 Old Middlefield Way, Suite A,\nMountain View, CA 94043.",
   "privacy_link_label": "Privacy policy",
   "privacy_link_url": "https://tinyurl.com/pytprivacy",
-  "copyright_extra": "Peninsula Youth Theatre is a 501(c)(3) nonprofit. All gifts are tax-deductible to the extent allowed by law. EIN 77-0335126."
+  "copyright_extra": "Peninsula Youth Theatre is a 501(c)(3) nonprofit. All gifts are tax-deductible to the extent allowed by law. EIN 77-0335126.",
+  "columns": [
+    {
+      "title": "Explore",
+      "links": [
+        { "label": "Shows", "url": "/shows" },
+        { "label": "Classes & Camps", "url": "/programs" },
+        { "label": "Shop", "url": "/shop" }
+      ]
+    },
+    {
+      "title": "Community",
+      "links": [
+        { "label": "Rentals", "url": "/rentals" },
+        { "label": "Newsletter signup", "url": "/subscribe" }
+      ]
+    },
+    {
+      "title": "About",
+      "links": [
+        { "label": "About PYT", "url": "/about" },
+        { "label": "Support PYT", "url": "/ways-to-support" },
+        { "label": "Contact", "url": "/about#contact" }
+      ]
+    }
+  ]
 }
