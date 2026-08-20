@@ -27,6 +27,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import { renderMarkdown } from "../lib/markdown";
+import { productionTypeLabel } from "../lib/showLabels";
 import { getCollection } from "astro:content";
 import page from "../content/settings/audition-page.json";
 
@@ -89,7 +90,8 @@ function auditionBlurb(data: any): string {
   if (written) return written;
   const bits: string[] = [];
   if (data.eyebrow?.trim()) bits.push(data.eyebrow.trim());
-  else if (data.production_type) bits.push(data.production_type);
+  // Visitor-facing wording ("Center Stage Musical"), not the stored value.
+  else if (data.production_type) bits.push(productionTypeLabel(data.production_type));
 
   // Prefer the staff-written date text; fall back to formatting the real
   // audition date the show already has. Without this second step a show
