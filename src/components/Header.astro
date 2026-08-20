@@ -708,22 +708,50 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   // proxy's URL — reversing it is ambiguous whenever the real domain
   // itself contains a dash (true of the current pyt-website.pages.dev
   // address), so a known, CMS-set origin is used instead.
+  // Encode a real hostname into its translate.goog form.
+  //
+  // BUG FIX 2026-08-20 — this is why the ES button did nothing.
+  // Google's scheme is NOT simply "dots become dashes". Any dash that
+  // is already IN the hostname has to be DOUBLED first, otherwise
+  // Google decodes it back as a dot and fetches a different site.
+  // Our domain contains a dash, so it was hit by exactly this:
+  //
+  //   pyt-website.pages.dev
+  //     old code -> pyt-website-pages-dev.translate.goog
+  //                 which Google reads back as pyt.website.pages.dev
+  //                 — a site that doesn't exist, so nothing translated
+  //     correct  -> pyt--website-pages-dev.translate.goog
+  //                 which Google reads back as pyt-website.pages.dev
+  //
+  // Order matters: double the dashes BEFORE turning dots into dashes,
+  // or the new dashes get doubled too. Verified against the test table
+  // in Google's own docs (search "ad-network-and-translation"):
+  //   example.com     -> example-com
+  //   foo.example.com -> foo-example-com
+  //   foo-example.com -> foo--example-com
+  const toTranslateHost = (hostname: string) =>
+    hostname.replace(/-/g, "--").replace(/\./g, "-") + ".translate.goog";
+
   const langBtn = document.getElementById("lang-toggle") as HTMLAnchorElement | null;
   if (langBtn) {
     const onTranslatedPage = window.location.hostname.endsWith(".translate.goog");
     if (onTranslatedPage) {
       langBtn.textContent = "EN";
+      langBtn.setAttribute("aria-label", "View this site in English");
       const origin = langBtn.dataset.siteOrigin || "";
-      langBtn.href = origin + window.location.pathname;
+      langBtn.href = origin + window.location.pathname + window.location.hash;
     } else {
       langBtn.textContent = "ES";
-      langBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const translatedHost = window.location.hostname.replace(/\./g, "-") + ".translate.goog";
-        const sep = window.location.search ? "&" : "?";
-        window.location.href =
-          `https://${translatedHost}${window.location.pathname}${window.location.search}${sep}_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en`;
-      });
+      langBtn.setAttribute("aria-label", "Ver este sitio en espanol");
+      // Build the real href up front rather than only on click, so the
+      // button behaves like a normal link — right-click, middle-click,
+      // open-in-new-tab and "copy link" all work, and it still does
+      // something if the click handler never runs.
+      const sep = window.location.search ? "&" : "?";
+      langBtn.href =
+        `https://${toTranslateHost(window.location.hostname)}` +
+        `${window.location.pathname}${window.location.search}${sep}` +
+        `_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en${window.location.hash}`;
     }
   }
 </script>
