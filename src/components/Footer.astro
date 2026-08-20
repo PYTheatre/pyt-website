@@ -2,9 +2,11 @@
 /*
   FOOTER COMPONENT.
 
-  Matches the prototype: brand + tagline on the left, three
-  link columns, and a copyright line. The MailChimp email
-  signup form will be added here in a later phase.
+  Black background, matching the nav bar (PM request, 2026-08-19) —
+  was the site's warm off-white paper color before. Link columns are
+  deliberately curated rather than a full mirror of the nav (PM
+  choice) — a shorter, easier-to-scan set rather than every nav item
+  repeated. Bigger link type than before, also per PM request.
 */
 const year = new Date().getFullYear();
 
@@ -13,7 +15,7 @@ import footer from "../content/settings/footer.json";
 
 const columns = [
   {
-    title: "Experience",
+    title: "Explore",
     links: [
       { label: "Shows", href: "/shows" },
       { label: "Classes & Camps", href: "/programs" },
@@ -24,18 +26,22 @@ const columns = [
     title: "Community",
     links: [
       { label: "Rentals", href: "/rentals" },
-      { label: "Donate", href: "https://pyt.secure.nonprofitsoapbox.com/donate", external: true },
       { label: "Newsletter signup", href: "/subscribe" },
     ],
   },
   {
     title: "About",
     links: [
-      { label: "Our Story", href: "/about" },
+      { label: "About PYT", href: "/about" },
+      { label: "Support PYT", href: "/ways-to-support" },
       { label: "Contact", href: "/about#contact" },
     ],
   },
 ];
+
+const address = (footer as any).address || "";
+const privacyLabel = (footer as any).privacy_link_label || "";
+const privacyUrl = (footer as any).privacy_link_url || "";
 ---
 
 <footer class="site-footer">
@@ -44,9 +50,14 @@ const columns = [
       <div class="footer-logo-wrap">
         <Logo size="nav" />
       </div>
-      <p class="footer-tagline">
-        {footer.tagline}
-      </p>
+      {(address || (privacyLabel && privacyUrl)) && (
+        <p class="footer-address">
+          {address}{address && (privacyLabel && privacyUrl) && " "}
+          {privacyLabel && privacyUrl && (
+            <a href={privacyUrl} target="_blank" rel="noopener">{privacyLabel}</a>
+          )}
+        </p>
+      )}
     </div>
 
     <div class="footer-cols">
@@ -55,7 +66,7 @@ const columns = [
           <h4>{col.title}</h4>
           <ul>
             {col.links.map((link) => (
-              <li><a href={link.href} {...(link.external ? { target: "_blank", rel: "noopener" } : {})}>{link.label}</a></li>
+              <li><a href={link.href} {...((link as any).external ? { target: "_blank", rel: "noopener" } : {})}>{link.label}</a></li>
             ))}
           </ul>
         </div>
@@ -71,8 +82,8 @@ const columns = [
 <style>
   .site-footer {
     margin-top: var(--space-2xl);
-    background: var(--paper-warm);
-    border-top: 1px solid var(--line);
+    background: var(--nav-bg-dark);
+    border-top: none;
     padding-top: var(--space-xl);
   }
 
@@ -86,10 +97,16 @@ const columns = [
     margin-bottom: 0.8rem;
   }
 
-  .footer-tagline {
-    font-size: 0.92rem;
-    color: var(--ink-muted);
-    max-width: 32ch;
+  .footer-address {
+    font-size: 0.95rem;
+    color: var(--nav-text-muted);
+    max-width: 34ch;
+    line-height: 1.5;
+  }
+
+  .footer-address a {
+    color: var(--accent);
+    text-decoration: underline;
   }
 
   .footer-cols {
@@ -100,12 +117,12 @@ const columns = [
 
   .footer-col h4 {
     font-family: var(--font-body);
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ink-muted);
-    margin-bottom: 0.8rem;
+    color: var(--nav-text-muted);
+    margin-bottom: 0.9rem;
   }
 
   .footer-col ul {
@@ -113,27 +130,27 @@ const columns = [
   }
 
   .footer-col li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.65rem;
   }
 
   .footer-col a {
-    font-size: 0.95rem;
-    color: var(--ink-soft);
+    font-size: 1.05rem;
+    color: var(--nav-text);
   }
 
   .footer-col a:hover {
-    color: var(--accent-deep);
+    color: var(--accent);
   }
 
   .footer-bottom {
     margin-top: var(--space-lg);
     padding-block: var(--space-md);
-    border-top: 1px solid var(--line);
+    border-top: 1px solid rgba(245, 243, 239, 0.15);
   }
 
   .footer-bottom p {
-    font-size: 0.82rem;
-    color: var(--ink-muted);
+    font-size: 0.88rem;
+    color: var(--nav-text-muted);
   }
 
   @media (min-width: 720px) {
