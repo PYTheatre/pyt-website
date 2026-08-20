@@ -25,7 +25,6 @@ const shows = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/shows" }),
   schema: z.object({
     title: z.string(),
-    eyebrow: z.string().optional(),
     // Which kind of production this is. Drives the Musicals / Studio
     // Productions split. Defaults to Musical so existing shows keep
     // showing until staff tag the studio ones in the CMS.
@@ -99,7 +98,6 @@ const programs = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/programs" }),
   schema: z.object({
     name: z.string(),
-    eyebrow: z.string().optional(),
     program_type: z.enum(["Class", "Camp", "Studio Intensive"]),
     age_range: z.string(),
     season: z.enum(["Fall", "Spring", "Summer", "Year-round"]),
