@@ -18,6 +18,14 @@
         {
           "label": "Shop",
           "url": "/shop"
+        },
+        {
+          "url": "https://www.instagram.com/pyouththeatre/?hl=en",
+          "label": "Instagram"
+        },
+        {
+          "url": "https://www.facebook.com/PeninsulaYouthTheatre/",
+          "label": "Facebook"
         }
       ]
     },
@@ -39,14 +47,6 @@
         {
           "label": "Volunteer",
           "url": "/ways-to-support/"
-        },
-        {
-          "label": "Instagram",
-          "url": "https://www.instagram.com/pyouththeatre/?hl=en"
-        },
-        {
-          "label": "Facebook",
-          "url": "https://www.facebook.com/PeninsulaYouthTheatre/"
         }
       ]
     },
