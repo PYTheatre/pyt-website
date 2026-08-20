@@ -13,31 +13,14 @@ const year = new Date().getFullYear();
 import Logo from "./Logo.astro";
 import footer from "../content/settings/footer.json";
 
-const columns = [
-  {
-    title: "Explore",
-    links: [
-      { label: "Shows", href: "/shows" },
-      { label: "Classes & Camps", href: "/programs" },
-      { label: "Shop", href: "/shop" },
-    ],
-  },
-  {
-    title: "Community",
-    links: [
-      { label: "Rentals", href: "/rentals" },
-      { label: "Newsletter signup", href: "/subscribe" },
-    ],
-  },
-  {
-    title: "About",
-    links: [
-      { label: "About PYT", href: "/about" },
-      { label: "Support PYT", href: "/ways-to-support" },
-      { label: "Contact", href: "/about#contact" },
-    ],
-  },
-];
+// Footer link columns (2026-08-20): now fully CMS-editable —
+// titles, links, and the order of both columns and the links inside
+// them — via the "columns" field in footer.json, rather than the
+// hardcoded array that used to live here. Falls back to an empty
+// array if the field is ever missing, so an out-of-date footer.json
+// (e.g. mid-handoff, before this field exists) just shows no columns
+// instead of crashing the build.
+const columns = (footer as any).columns || [];
 
 const address = (footer as any).address || "";
 const privacyLabel = (footer as any).privacy_link_label || "";
@@ -50,23 +33,21 @@ const privacyUrl = (footer as any).privacy_link_url || "";
       <div class="footer-logo-wrap">
         <Logo size="nav" />
       </div>
-      {(address || (privacyLabel && privacyUrl)) && (
-        <p class="footer-address">
-          {address}{address && (privacyLabel && privacyUrl) && " "}
-          {privacyLabel && privacyUrl && (
-            <a href={privacyUrl} target="_blank" rel="noopener">{privacyLabel}</a>
-          )}
+      {address && <p class="footer-address">{address}</p>}
+      {privacyLabel && privacyUrl && (
+        <p class="footer-privacy">
+          <a href={privacyUrl} target="_blank" rel="noopener">{privacyLabel}</a>
         </p>
       )}
     </div>
 
     <div class="footer-cols">
-      {columns.map((col) => (
+      {columns.map((col: any) => (
         <div class="footer-col">
           <h4>{col.title}</h4>
           <ul>
-            {col.links.map((link) => (
-              <li><a href={link.href} {...((link as any).external ? { target: "_blank", rel: "noopener" } : {})}>{link.label}</a></li>
+            {(col.links || []).map((link: any) => (
+              <li><a href={link.url} {...((link as any).external ? { target: "_blank", rel: "noopener" } : {})}>{link.label}</a></li>
             ))}
           </ul>
         </div>
@@ -102,9 +83,19 @@ const privacyUrl = (footer as any).privacy_link_url || "";
     color: var(--nav-text-muted);
     max-width: 34ch;
     line-height: 1.5;
+    /* Preserves real line breaks typed into the CMS's address field
+       (a multi-line "text" widget) — by default HTML collapses
+       newlines to a single space, which is why editing the field
+       alone never visibly moved anything before this fix. */
+    white-space: pre-line;
   }
 
-  .footer-address a {
+  .footer-privacy {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .footer-privacy a {
     color: var(--accent);
     text-decoration: underline;
   }
