@@ -49,29 +49,68 @@ const openAuditions = shows.filter((show) => {
 });
 
 // --- Content fallbacks (page renders fully even with an empty CMS record) ---
-const eyebrow = page.eyebrow ?? "Get involved";
-const title = page.title ?? "Auditions";
+// Hero eyebrow removed 2026-08-20: the field was blank in the CMS and the
+// redesign drops it, but the old `?? "Get involved"` fallback meant
+// deleting the field would have made that text REAPPEAR rather than go
+// away. No eyebrow is passed to PageHero at all now.
+const title = page.title?.trim() || "Auditions";
 const intro =
-  page.intro ??
+  page.intro?.trim() ||
   "We'd love to see you audition. Below are the shows currently casting, plus how auditions work for Stories on Stage. New to PYT? Everyone is welcome — no experience required.";
 
 const noOpenMessage =
-  page.no_open_message ??
+  page.no_open_message?.trim() ||
   "There are no Center Stage Musicals auditions open right now. Check back soon, or explore Stories on Stage below.";
 
-const sosHeading = page.sos_heading ?? "Stories on Stage";
+const sosHeading = page.sos_heading?.trim() || "Stories on Stage";
 const sosBlurb =
-  page.sos_blurb ??
+  page.sos_blurb?.trim() ||
   "Our Stories on Stage season is cast from a single annual audition. Productions are short, often touring to local schools. Visit the Stories on Stage page for this year's audition details.";
-const sosButtonLabel = page.sos_button_label ?? "Stories on Stage auditions";
+const sosButtonLabel = page.sos_button_label?.trim() || "Auditions";
 
-const castingHeading = page.casting_heading ?? "Our casting philosophy";
-const castingBody =
-  page.casting_body ??
-  "We cast with care, fairness, and an eye for growth. Auditioning is meant to be a welcoming experience, not a stressful one. Read more about how we approach casting and what to expect.";
-const castingButtonLabel = page.casting_button_label ?? "Read about casting";
+// Casting philosophy is now a slim link callout rather than a full panel
+// (2026-08-20), so it needs a heading and one line of link text — the old
+// long body paragraph and separate button label are no longer shown.
+const castingHeading = page.casting_heading?.trim() || "Our casting philosophy";
+const castingLinkLabel =
+  page.casting_link_label?.trim() || "How we cast, and what to expect";
 
-const faqHeading = page.faq_heading ?? "Frequently asked questions";
+// Description line for a show's audition card. Uses the show's own
+// CMS-written blurb when there is one; otherwise assembles a readable
+// sentence from the data the show already has, so a card is never bare
+// and the blurb field stays genuinely optional.
+function auditionBlurb(data: any): string {
+  const written = (data.audition_blurb || "").trim();
+  if (written) return written;
+  const bits: string[] = [];
+  if (data.eyebrow?.trim()) bits.push(data.eyebrow.trim());
+  else if (data.production_type) bits.push(data.production_type);
+
+  // Prefer the staff-written date text; fall back to formatting the real
+  // audition date the show already has. Without this second step a show
+  // with a date but no display text produced a one-fragment blurb like
+  // "Center Stage Musical." — technically fine, but it read as an
+  // unfinished sentence on the card.
+  const displayDate = data.audition_display?.trim();
+  const realDate = data.audition_start ?? data.audition_end ?? data.audition_date;
+  if (displayDate) {
+    bits.push(`Auditions: ${displayDate}`);
+  } else if (realDate) {
+    bits.push(
+      `Auditions: ${new Date(realDate).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })}`
+    );
+  }
+
+  if (data.ages?.trim()) bits.push(data.ages.trim());
+  // Join into sentences so it reads as prose rather than a data dump.
+  return bits.length ? bits.join(". ") + "." : "";
+}
+
+const faqHeading = page.faq_heading?.trim() || "Frequently asked questions";
 
 // FAQ list: tolerant of missing/empty. Drop any item missing a question or
 // answer so one half-filled entry doesn't render a broken row.
@@ -84,47 +123,44 @@ const faqs = Array.isArray(page.faqs)
   title="Auditions — Peninsula Youth Theatre"
   description="Audition with Peninsula Youth Theatre. See which shows are currently casting, learn about Stories on Stage auditions, and read our casting philosophy."
 >
-  <PageHero eyebrow={eyebrow} title={title} lede={intro} />
+  <PageHero title={title} lede={intro} />
 
-  <!-- ===== Open Mainstage auditions ===== -->
-  <section class="section audition-shows-section">
-    <div class="container">
-      <h2 class="section-heading">{page.shows_heading ?? "Upcoming auditions"}</h2>
+  <!-- ===== Auditions + FAQs, side by side on wide screens =====
+       Redesigned 2026-08-20. Previously these were four stacked
+       full-width bands (shows, Stories on Stage, casting, FAQ), which
+       made the FAQ easy to miss and gave the casting panel more visual
+       weight than the auditions themselves. Now: every audition route
+       (including Stories on Stage) is an identical card in one column,
+       with the FAQ alongside it so both are visible without scrolling,
+       and casting philosophy reduced to a slim link underneath. -->
+  <section class="section auditions-main">
+    <div class="container auditions-columns">
 
-      {openAuditions.length === 0 ? (
-        <p class="empty-state">{noOpenMessage}</p>
-      ) : (
+      <!-- --- Column 1: every audition route, one shared card style --- -->
+      <div class="auditions-col">
+        <h2 class="section-heading">{page.shows_heading?.trim() || "Upcoming auditions"}</h2>
+
         <ul class="audition-list">
           {openAuditions.map((show) => (
             <li class="audition-row">
               <div class="audition-card">
-                <div class="audition-info">
-                  {show.data.eyebrow && (
-                    <p class="audition-eyebrow">{show.data.eyebrow}</p>
-                  )}
-                  <h3>{show.data.title}</h3>
-                  {show.data.audition_display && (
-                    <p class="audition-dates">
-                      Auditions: {show.data.audition_display}
-                    </p>
-                  )}
-                  {show.data.ages && (
-                    <p class="audition-meta">{show.data.ages}</p>
-                  )}
-                </div>
-                <div class="audition-actions">
+                <h3 class="audition-card-title">{show.data.title}</h3>
+                {auditionBlurb(show.data) && (
+                  <p class="audition-card-blurb">{auditionBlurb(show.data)}</p>
+                )}
+                <div class="audition-card-actions">
                   {show.data.audition_url ? (
                     <a
                       href={show.data.audition_url}
-                      class="btn btn-primary"
+                      class="btn btn-primary audition-btn"
                       target="_blank"
                       rel="noopener"
                     >
-                      Sign up to audition
+                      Sign up
                     </a>
                   ) : (
-                    <span class="btn btn-outline btn-disabled" aria-disabled="true">
-                      Registration coming soon
+                    <span class="btn btn-outline btn-disabled audition-btn" aria-disabled="true">
+                      Coming soon
                     </span>
                   )}
                   <a href={`/shows/${show.id}`} class="audition-link-cta">
@@ -134,58 +170,64 @@ const faqs = Array.isArray(page.faqs)
               </div>
             </li>
           ))}
+
+          {/* Stories on Stage is an audition route too, so it's the same
+              card as the shows above rather than a separate styled panel. */}
+          <li class="audition-row">
+            <div class="audition-card">
+              <h3 class="audition-card-title">{sosHeading}</h3>
+              {sosBlurb && <p class="audition-card-blurb">{sosBlurb}</p>}
+              <div class="audition-card-actions">
+                <a href="/stories-on-stage" class="btn btn-primary audition-btn">{sosButtonLabel}</a>
+              </div>
+            </div>
+          </li>
         </ul>
+
+        {openAuditions.length === 0 && noOpenMessage && (
+          <p class="empty-state">{noOpenMessage}</p>
+        )}
+      </div>
+
+      <!-- --- Column 2: FAQ, raised in priority (hidden when empty) --- -->
+      {faqs.length > 0 && (
+        <div class="faq-col">
+          <h2 class="section-heading">{faqHeading}</h2>
+          <div class="faq-list">
+            {faqs.map((faq) => (
+              <details class="faq-item">
+                <summary>
+                  <span class="faq-question">{faq.question}</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </summary>
+                <div class="faq-answer">
+                  <p>{faq.answer}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   </section>
 
-  <!-- ===== Stories on Stage panel ===== -->
-  <section class="section panel-section">
+  <!-- ===== Casting philosophy — slim link callout =====
+       Black and white with pink used only for the link itself, matching
+       the treatment used on the mobile nav. Deliberately narrower than
+       the content column and generously padded so it reads as a quiet
+       aside rather than a squashed banner. -->
+  <section class="casting-callout-section">
     <div class="container">
-      <div class="info-panel">
-        <div class="info-panel-text">
-          <h2>{sosHeading}</h2>
-          <p>{sosBlurb}</p>
-        </div>
-        <a href="/stories-on-stage" class="btn btn-outline">{sosButtonLabel}</a>
-      </div>
+      <a href="/casting" class="casting-callout">
+        <span class="casting-callout-heading">{castingHeading}</span>
+        <span class="casting-callout-link">
+          {castingLinkLabel}
+          <span class="casting-callout-arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
     </div>
   </section>
 
-  <!-- ===== Casting philosophy panel ===== -->
-  <section class="section panel-section">
-    <div class="container">
-      <div class="info-panel info-panel-accent">
-        <div class="info-panel-text">
-          <h2>{castingHeading}</h2>
-          <p>{castingBody}</p>
-        </div>
-        <a href="/casting" class="btn btn-outline">{castingButtonLabel}</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== FAQ ===== (hidden entirely when there are no FAQs) -->
-  {faqs.length > 0 && (
-    <section class="section faq-section">
-      <div class="container container-narrow">
-        <h2 class="section-heading">{faqHeading}</h2>
-        <div class="faq-list">
-          {faqs.map((faq) => (
-            <details class="faq-item">
-              <summary>
-                <span class="faq-question">{faq.question}</span>
-                <span class="faq-icon" aria-hidden="true"></span>
-              </summary>
-              <div class="faq-answer">
-                <p>{faq.answer}</p>
-              </div>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
 </BaseLayout>
 
 <style>
@@ -196,15 +238,27 @@ const faqs = Array.isArray(page.faqs)
   }
 
   .section-heading {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     margin-bottom: var(--space-lg);
   }
 
-  /* ---- Open auditions list ---- */
-  .audition-shows-section {
+  /* ---- Two-column shell ---- */
+  /* Mobile-first: one column, auditions then FAQ. The two-column split
+     only kicks in when there's genuinely room for it (see the media
+     query at the bottom) — forcing columns earlier squeezed both the
+     card text and the FAQ questions onto too many lines. */
+  .auditions-main {
     padding-bottom: var(--space-lg);
   }
 
+  .auditions-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl) var(--space-xl);
+    align-items: start;
+  }
+
+  /* ---- Audition cards (one shared style for every route) ---- */
   .audition-list {
     list-style: none;
     padding: 0;
@@ -219,13 +273,13 @@ const faqs = Array.isArray(page.faqs)
   }
 
   .audition-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background: var(--paper);
-    padding: var(--space-md);
+    /* Generous, even padding on all four sides — the old card used a
+       single --space-md all round with the button inline, which left the
+       text feeling tight once the blurb ran to two or three lines. */
+    padding: var(--space-lg);
     transition: border-color 0.18s ease, box-shadow 0.18s ease;
   }
 
@@ -234,38 +288,35 @@ const faqs = Array.isArray(page.faqs)
     box-shadow: var(--shadow-soft);
   }
 
-  .audition-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.35rem;
+  .audition-card-title {
+    font-size: 1.25rem;
+    line-height: 1.25;
+    margin: 0 0 0.55rem;
   }
 
-  .audition-info h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.35rem;
-  }
-
-  .audition-dates {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--ink);
-    margin-bottom: 0.25rem;
-  }
-
-  .audition-meta {
-    font-size: 0.92rem;
-    color: var(--ink-muted);
+  .audition-card-blurb {
     margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.55;
+    max-width: 46ch;
   }
 
-  .audition-actions {
+  /* Buttons sit UNDER the card text now (PM request: shorter buttons).
+     A short button parked in a wide right-hand column looked stranded,
+     and it also let the text column get narrow enough to wrap badly. */
+  .audition-card-actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.1rem;
+    margin-top: var(--space-md);
+  }
+
+  /* Short by design — sized to its label rather than stretching. */
+  .audition-btn {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.95rem;
   }
 
   .audition-link-cta {
@@ -280,50 +331,15 @@ const faqs = Array.isArray(page.faqs)
   }
 
   .empty-state {
+    margin-top: var(--space-md);
     padding: var(--space-lg);
     text-align: center;
-    color: var(--ink-muted);
-    background: var(--paper-warm);
-    border-radius: var(--radius);
-  }
-
-  /* ---- Info panels (Stories on Stage + Casting) ---- */
-  .panel-section {
-    padding-block: var(--space-md);
-  }
-
-  .info-panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    align-items: flex-start;
-    background: var(--paper-warm);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: var(--space-lg);
-  }
-
-  .info-panel-accent {
-    background: var(--accent-soft);
-    border-color: transparent;
-  }
-
-  .info-panel-text h2 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .info-panel-text p {
-    margin: 0;
     color: var(--ink-soft);
-    max-width: 60ch;
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
   }
 
   /* ---- FAQ ---- */
-  .container-narrow {
-    max-width: 720px;
-  }
-
   .faq-list {
     display: flex;
     flex-direction: column;
@@ -342,10 +358,12 @@ const faqs = Array.isArray(page.faqs)
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
-    padding: var(--space-md);
+    padding: 0.95rem var(--space-md);
     cursor: pointer;
     font-family: var(--font-heading);
     font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.35;
     list-style: none;
   }
 
@@ -397,23 +415,72 @@ const faqs = Array.isArray(page.faqs)
   .faq-answer p {
     margin: 0;
     color: var(--ink-soft);
+    line-height: 1.6;
   }
 
-  /* ---- Wider screens ---- */
-  @media (min-width: 720px) {
-    .audition-card {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .audition-actions {
-      align-items: flex-end;
-      flex-shrink: 0;
-    }
-    .info-panel {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+  /* ---- Casting philosophy callout ---- */
+  /* Black and white, pink only on the link (PM request). Narrower than
+     the content column, and padded generously top/bottom so the two
+     lines inside never feel squashed against the border. */
+  .casting-callout-section {
+    padding-bottom: var(--space-2xl);
+  }
+
+  .casting-callout {
+    display: block;
+    max-width: 520px;
+    padding: var(--space-lg);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    background: var(--paper);
+    text-decoration: none;
+    transition: background 0.18s ease;
+  }
+
+  .casting-callout:hover {
+    background: var(--paper-warm);
+  }
+
+  .casting-callout-heading {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    color: var(--ink);
+    /* Clear separation from the link line beneath it. */
+    margin-bottom: 0.6rem;
+  }
+
+  .casting-callout-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 600;
+    font-size: 0.98rem;
+    line-height: 1.4;
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .casting-callout-arrow {
+    transition: transform 0.18s ease;
+  }
+
+  .casting-callout:hover .casting-callout-arrow {
+    transform: translateX(3px);
+  }
+
+  /* ---- Wider screens: auditions and FAQ side by side ---- */
+  /* 960px, not the site's usual 720px: at 720 the two columns were only
+     ~330px each, which wrapped card titles awkwardly and pushed most FAQ
+     questions onto two lines. Below this the single-column stack reads
+     better than a cramped split. */
+  @media (min-width: 960px) {
+    .auditions-columns {
+      /* Auditions slightly wider than the FAQ — the cards carry more
+         text per row, and it keeps the button + link on one line. */
+      grid-template-columns: 1.05fr 1fr;
     }
   }
 </style>
