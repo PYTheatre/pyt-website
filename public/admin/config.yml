@@ -390,6 +390,49 @@ collections:
           - { name: "cta_label", label: "Button text", widget: "string", required: false, default: "Browse & buy photos" }
           - { name: "cta_note", label: "Small note under the button (optional)", widget: "string", required: false, hint: "Example: Opens our photo site in a new tab." }
  
+      # --- Page Hero Images (2026-08-20) ---
+      # One optional wide photo per page, all managed together here
+      # rather than scattered across each page's own record — several
+      # pages (Shop, Subscribe) have no settings record of their own,
+      # so this is the only place they can be given one.
+      - name: "page-heroes"
+        label: "Page Hero Images"
+        file: "src/content/settings/page-heroes.json"
+        description: "An optional wide photo near the top of any page (not the home page). Add a row per page. Any page without a row simply has no photo — nothing breaks and no empty space is left."
+        fields:
+          - name: "items"
+            label: "Hero images"
+            widget: "list"
+            summary: "{{fields.page}}"
+            hint: "One row per page. A page can only have one hero image. Best photo shape is wide and landscape — it's shown as a short banner strip and gets cropped to fit, so avoid anything where the important part is near the very top or bottom. Note: individual show pages already lead with the show's own poster, so they don't take a hero image."
+            fields:
+              - name: "page"
+                label: "Which page"
+                widget: "select"
+                hint: "Pick the page this photo belongs to."
+                options:
+                  - { label: "About", value: "/about" }
+                  - { label: "Auditions", value: "/audition" }
+                  - { label: "Calendar", value: "/calendar" }
+                  - { label: "Casting", value: "/casting" }
+                  - { label: "Center Stage Musicals", value: "/musicals" }
+                  - { label: "Judy Robe & Spirit Awards", value: "/judy-robe-spirits-awards" }
+                  - { label: "Newsletter signup", value: "/subscribe" }
+                  - { label: "Opportunities / Employment", value: "/employment" }
+                  - { label: "Photos", value: "/photos" }
+                  - { label: "Press", value: "/press" }
+                  - { label: "Classes & Camps", value: "/programs" }
+                  - { label: "Rentals", value: "/rentals" }
+                  - { label: "School Play in a Box", value: "/school-play-in-a-box" }
+                  - { label: "School Tickets", value: "/school-tickets" }
+                  - { label: "Shop", value: "/shop" }
+                  - { label: "Shows (the list page)", value: "/shows" }
+                  - { label: "Stories on Stage (and its production pages)", value: "/stories-on-stage" }
+                  - { label: "Studio Shows", value: "/studio-productions" }
+                  - { label: "Ways to Support", value: "/ways-to-support" }
+              - { name: "image", label: "Photo", widget: "image", hint: "A wide landscape photo works best. Leave a row out entirely rather than adding one with no photo." }
+              - { name: "alt", label: "Photo description (optional)", widget: "string", required: false, hint: "For screen readers. Leave blank if the photo is purely decorative and the page text already says everything important." }
+
       # --- Footer (tagline + copyright line) ---
       - name: "footer"
         label: "Footer (every page of site)"
