@@ -57,8 +57,13 @@ const artistMembers = (about as any).artist_members || [];
 const artistHeading = (about as any).artist_section_heading || "Artists";
 const artistBlurb = (about as any).artist_section_blurb || "";
 
-// Optional banner image at the top of the page.
-const bannerImage = (about as any).banner_image || "";
+// NOTE (2026-08-20): the banner image that used to live here now comes
+// from the shared PageHeroImage component (Site Settings → Page Hero
+// Images), so every page can have one and they're all managed in one
+// place. The About page's existing photo was carried over into that
+// record unchanged, so this page looks the same as before. The old
+// banner_image field is left in about-page.json for now rather than
+// deleted, so nothing is lost if the value is still wanted.
 
 // Build initials for the placeholder avatar (when a member has no photo yet).
 function getInitials(name: string): string {
@@ -75,14 +80,6 @@ function getInitials(name: string): string {
 
 <BaseLayout title={`${about.title} — Peninsula Youth Theatre`}>
   <PageHero eyebrow={about.eyebrow} title={about.title} />
-
-  {bannerImage && (
-    <section class="about-banner" aria-label="About banner image">
-      <div class="container">
-        <img src={bannerImage} alt="" class="about-banner-img" loading="lazy" />
-      </div>
-    </section>
-  )}
 
   <section class="section about-section">
     <div class="container about-grid">
@@ -223,20 +220,6 @@ function getInitials(name: string): string {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
-  }
-
-  /* ---- Banner image (contained, short strip) ---- */
-  .about-banner {
-    padding-top: var(--space-md);
-  }
-
-  .about-banner-img {
-    width: 100%;
-    aspect-ratio: 21 / 6;
-    object-fit: cover;
-    border-radius: var(--radius);
-    display: block;
-    box-shadow: var(--shadow-soft);
   }
 
   .about-awards-link {
@@ -398,12 +381,6 @@ function getInitials(name: string): string {
   @media (min-width: 1024px) {
     .board-grid {
       grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  @media (min-width: 720px) {
-    .about-banner-img {
-      aspect-ratio: 24 / 5;
     }
   }
 
