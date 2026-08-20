@@ -9,6 +9,7 @@
    - donate-page.json (intro copy + hosted Soapbox donation link)
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeroImage from "../components/PageHeroImage.astro";
 import campaign from "../content/settings/donation-campaign.json";
 import tiers from "../content/settings/donor-tiers.json";
 import donatePage from "../content/settings/donate-page.json";
@@ -147,6 +148,11 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
       <p class="eyebrow">{campaignLabel}</p>
       <h1>{donatePage.intro_heading}</h1>
       <p class="campaign-intro">{donatePage.intro_body}</p>
+
+      <!-- Optional hero image (2026-08-20) — shared component, managed in
+           Site Settings → Page Hero Images. Renders nothing if this page
+           has no photo set. -->
+      <PageHeroImage />
  
       <div class="thermo-row">
         <!-- Thermometer -->
