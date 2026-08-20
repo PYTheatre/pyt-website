@@ -2,7 +2,7 @@
 audition_date: 2026-08-29
 title: THE WIZARD OF OZ
 production_type: Musical
-eyebrow: CENTER STAGE MUSICAL
+eyebrow: ""
 start_date: 2026-11-14
 end_date: 2026-11-22
 date_display: November 2026
@@ -14,7 +14,7 @@ synopsis: Follow the yellow brick road to join Dorothy’s adventures with her
   Wicked contains the songs from the beloved MGM musical starring Judy Garland,
   and is a treat the whole family can enjoy.
 ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=765
-audition_start: ""
-audition_end: ""
-audition_display: ""
+audition_start: 2026-08-29
+audition_end: 2026-08-30
+audition_display: August 2026
 ---
