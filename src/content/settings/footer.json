@@ -7,24 +7,64 @@
     {
       "title": "Explore",
       "links": [
-        { "label": "Shows", "url": "/shows" },
-        { "label": "Classes & Camps", "url": "/programs" },
-        { "label": "Shop", "url": "/shop" }
+        {
+          "label": "Shows",
+          "url": "/shows"
+        },
+        {
+          "label": "Classes & Camps",
+          "url": "/programs"
+        },
+        {
+          "label": "Shop",
+          "url": "/shop"
+        }
       ]
     },
     {
       "title": "Community",
       "links": [
-        { "label": "Rentals", "url": "/rentals" },
-        { "label": "Newsletter signup", "url": "/subscribe" }
+        {
+          "label": "Rentals",
+          "url": "/rentals"
+        },
+        {
+          "label": "Newsletter signup",
+          "url": "/subscribe"
+        },
+        {
+          "label": "Contact",
+          "url": "/about/#contact"
+        },
+        {
+          "label": "Volunteer",
+          "url": "/ways-to-support/"
+        },
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/pyouththeatre/?hl=en"
+        },
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/PeninsulaYouthTheatre/"
+        }
       ]
     },
     {
       "title": "About",
       "links": [
-        { "label": "About PYT", "url": "/about" },
-        { "label": "Support PYT", "url": "/ways-to-support" },
-        { "label": "Contact", "url": "/about#contact" }
+        {
+          "label": "About PYT",
+          "url": "/about"
+        },
+        {
+          "label": "Support PYT",
+          "url": "/ways-to-support"
+        },
+        {
+          "label": "Contact",
+          "url": "/about#contact"
+        }
       ]
     }
   ]
