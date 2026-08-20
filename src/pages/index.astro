@@ -17,31 +17,6 @@ import Logo from "../components/Logo.astro";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
 
-// --- Star trail flourish (2026-08-19, third redesign) ---
-// PM feedback on the previous two versions: too small to read as
-// stars, and didn't reliably reach the intended spots. Root cause of
-// both: this was previously generated at BUILD time with fixed pixel/
-// viewBox coordinates guessed by hand, which can't account for how
-// the logo and headline text actually move relative to each other
-// across breakpoints (stacked on phones, side-by-side on wider
-// screens) or as font-loading shifts text slightly.
-//
-// This version drops build-time generation entirely and instead
-// measures the ACTUAL rendered positions of the logo and the specific
-// words in the browser (getBoundingClientRect), then draws the star
-// path directly in real pixel coordinates — see the <script> near the
-// hero markup below. That removes the whole class of scaling bugs the
-// earlier attempts kept hitting, since there's no separate "viewBox
-// units vs. display pixels" conversion to get wrong: 1 unit is always
-// 1 real pixel, measured fresh on load and again on resize.
-//
-// Path (PM spec, 2026-08-19): starts near the bottom-right corner of
-// the logo, runs under "FOR", continues under the first part of
-// "EVERYONE" ("EVER"), then curves up and arcs over the last part
-// ("ONE"). Same-size stars throughout (no tapering) — kept simple and
-// literal to what was asked, after two earlier attempts overcomplicated
-// this with tapering/color-variety that didn't read as intended.
- 
 // --- Section heading case (2026-08-19) ---
 // Every remaining homepage section heading is editable, with a
 // per-heading choice of "as typed" or "UPPERCASE". Each falls back to
@@ -129,16 +104,16 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   <!-- ============ HERO (intro text) ============ -->
   <section class="hero">
     <div class="container">
-      <div class="hero-grid" id="hero-grid">
-        <div class="hero-logo-wrap" id="hero-logo-wrap">
+      <div class="hero-grid">
+        <div class="hero-logo-wrap">
           <Logo size="hero" />
         </div>
         <h1 class="hero-heading">
           {headingItalic && headingLine2Lead ? (
             <>
               {headingLine1}<br />
-              <span id="hero-lead-word">{headingLine2Lead}</span>{" "}
-              <span class="accent-word" id="hero-accent-word">
+              {headingLine2Lead}{" "}
+              <span class="accent-word">
                 {headingItalic}
               </span>
               {headingAfter}
@@ -152,17 +127,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
           )}
         </h1>
         <p class="hero-lede">{home.hero_lede}</p>
-        <!-- Star trail: drawn entirely at runtime (see script below),
-             not at build time — it needs the ACTUAL rendered positions
-             of the logo and the words above, which shift between the
-             stacked mobile layout and the side-by-side desktop layout,
-             and can't be predicted with fixed coordinates. Path (PM
-             spec, 2026-08-19): starts near the logo's bottom-right
-             corner, runs under the lead word ("FOR"), continues under
-             the first part of the accent word ("EVER"), then curves up
-             and over the last part ("ONE"). Empty until the script
-             populates it; harmless if JS is off. -->
-        <svg id="hero-star-trail" class="hero-star-trail" aria-hidden="true"></svg>
       </div>
     </div>
  
@@ -212,125 +176,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       </div>
     )}
   </section>
-
-  <script>
-    // Hero star trail (2026-08-19, third redesign). Drawn entirely at
-    // runtime by measuring the ACTUAL rendered positions of the logo
-    // and the specific headline words, rather than guessing fixed
-    // coordinates at build time — that's what broke the two earlier
-    // attempts, since the logo and headline move relative to each
-    // other between the stacked mobile layout and the side-by-side
-    // desktop layout. Path (PM spec, 2026-08-19): starts near the
-    // logo's bottom-right corner, runs under the lead word ("FOR"),
-    // continues under the first part of the accent word ("EVER"),
-    // then curves up and over the last part ("ONE"). Same-size stars
-    // throughout — no tapering, kept deliberately simple.
-    function drawHeroStarTrail() {
-      const grid = document.getElementById("hero-grid");
-      const logoWrap = document.getElementById("hero-logo-wrap");
-      const leadWord = document.getElementById("hero-lead-word");
-      const accentWord = document.getElementById("hero-accent-word");
-      const svg = document.getElementById("hero-star-trail");
-      if (!grid || !logoWrap || !accentWord || !svg) return;
-
-      // Only draw when there's actually a lead word to run under (see
-      // headingLine2Lead in the frontmatter) — if the headline text
-      // changes enough that there's no word before the accent word on
-      // its line, skip drawing rather than draw a broken partial path.
-      if (!leadWord) {
-        svg.innerHTML = "";
-        return;
-      }
-
-      const gridRect = grid.getBoundingClientRect();
-      if (gridRect.width === 0 || gridRect.height === 0) return;
-
-      const rel = (r: DOMRect) => ({
-        left: r.left - gridRect.left,
-        right: r.right - gridRect.left,
-        top: r.top - gridRect.top,
-        bottom: r.bottom - gridRect.top,
-        width: r.width,
-      });
-      const logo = rel(logoWrap.getBoundingClientRect());
-      const lead = rel(leadWord.getBoundingClientRect());
-      const accent = rel(accentWord.getBoundingClientRect());
-
-      svg.setAttribute("viewBox", `0 0 ${gridRect.width} ${gridRect.height}`);
-
-      // Control points for the path, in the order the PM described:
-      // logo bottom-right -> under FOR -> under EVER -> up and over ONE.
-      const everMidX = accent.left + accent.width * 0.45;
-      const controlPoints = [
-        { x: logo.right - 8, y: logo.bottom - 6 },
-        { x: lead.left + lead.width * 0.4, y: lead.bottom + 6 },
-        { x: lead.right + 4, y: lead.bottom + 6 },
-        { x: everMidX, y: accent.bottom + 6 },
-        { x: everMidX + (accent.right - everMidX) * 0.35, y: accent.top - 4 },
-        { x: accent.left + accent.width * 0.85, y: accent.top - 16 },
-        { x: accent.right + 4, y: accent.top + 8 },
-      ];
-
-      const bezierPoint = (pts: { x: number; y: number }[], t: number): { x: number; y: number } => {
-        let arr = pts;
-        while (arr.length > 1) {
-          const next: { x: number; y: number }[] = [];
-          for (let i = 0; i < arr.length - 1; i++) {
-            next.push({
-              x: arr[i].x + (arr[i + 1].x - arr[i].x) * t,
-              y: arr[i].y + (arr[i + 1].y - arr[i].y) * t,
-            });
-          }
-          arr = next;
-        }
-        return arr[0];
-      };
-
-      const starPoints = (cx: number, cy: number, r: number, rot: number): string => {
-        const inner = r * 0.42;
-        const pts: string[] = [];
-        for (let i = 0; i < 10; i++) {
-          const angle = (Math.PI / 5) * i - Math.PI / 2 + rot;
-          const radius = i % 2 === 0 ? r : inner;
-          pts.push(`${(cx + radius * Math.cos(angle)).toFixed(1)},${(cy + radius * Math.sin(angle)).toFixed(1)}`);
-        }
-        return pts.join(" ");
-      };
-
-      // Deterministic seeded PRNG (not Math.random()) so the trail
-      // looks the same every time the page loads, not shifting around.
-      let seed = 707;
-      const rand = () => {
-        seed = (seed * 16807) % 2147483647;
-        return (seed - 1) / 2147483646;
-      };
-
-      const COUNT = 30;
-      const STAR_R = 9; // same size throughout — PM asked for uniform stars, no tapering
-      const SPREAD = 5;
-      let markup = "";
-      for (let i = 0; i < COUNT; i++) {
-        const t = i / (COUNT - 1);
-        const base = bezierPoint(controlPoints, t);
-        const jx = (rand() - 0.5) * SPREAD;
-        const jy = (rand() - 0.5) * SPREAD;
-        const rot = rand() * Math.PI;
-        markup += `<polygon points="${starPoints(base.x + jx, base.y + jy, STAR_R, rot)}" fill="#68b050" />`;
-      }
-      svg.innerHTML = markup;
-    }
-
-    drawHeroStarTrail();
-    window.addEventListener("load", drawHeroStarTrail);
-    if ((document as any).fonts && (document as any).fonts.ready) {
-      (document as any).fonts.ready.then(drawHeroStarTrail);
-    }
-    let heroTrailResizeTimer: number | undefined;
-    window.addEventListener("resize", () => {
-      window.clearTimeout(heroTrailResizeTimer);
-      heroTrailResizeTimer = window.setTimeout(drawHeroStarTrail, 150);
-    });
-  </script>
 
   <script>
     // Looping, centered photo carousel. Cards render as three
@@ -396,55 +241,32 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         strip.style.paddingRight = `${pad}px`;
       };
 
-      // The hero photo grows upward (see CSS transform-origin), so the
-      // track needs extra room above it to avoid being clipped by its
-      // own scroll container — sized to the tallest possible growth.
-      const updateVerticalPadding = () => {
-        const photo = cards[0]?.querySelector(".photo-strip-photo") as HTMLElement | null;
-        if (!photo) return;
-        const growth = photo.offsetHeight * (HERO_SCALE - 1);
-        strip.style.paddingTop = `${14 + growth}px`;
-      };
-
-      // HERO_SCALE: the centered "hero" photo — about a third bigger
-      // than the previous 1.28x hero size (PM feedback, 2026-08-19).
-      // NEIGHBOR_SCALE: matches the OLD hero size exactly, so the
-      // immediate neighbor cards keep looking the same as before —
-      // only the dead-center photo should look dramatically bigger.
-      // CORE_T is a small "still counts as centered" dead zone so the
-      // jump from HERO_SCALE down to the neighbor curve happens right
-      // at the center, not gradually across it.
-      const HERO_SCALE = 1.7;
-      const NEIGHBOR_SCALE = 1.28;
-      const MIN_SCALE = 0.82;
-      const CORE_T = 0.12;
+      // All cards are now the SAME size (PM request, 2026-08-19) — the
+      // earlier "hero photo scales up" version is gone entirely. The
+      // only thing that distinguishes the centered "hero" card from
+      // the rest now is opacity, applied to the whole card element
+      // (which covers both the photo AND its caption together, since
+      // CSS opacity affects an element's full subtree) — not a
+      // gradual falloff by distance, just hero = fully opaque,
+      // everything else = evenly faded.
+      const FADE_OPACITY = "0.4";
 
       const updateScale = () => {
         if (!cards.length) return;
         const centerX = strip.clientWidth / 2 + strip.scrollLeft;
-        const falloff = cards[0].offsetWidth * 1.35;
         let closestDist = Infinity;
         cards.forEach((card, i) => {
-          const photo = card.querySelector(".photo-strip-photo") as HTMLElement | null;
           const cardCenter = card.offsetLeft + card.offsetWidth / 2;
           const dist = Math.abs(cardCenter - centerX);
-          const t = Math.min(1, dist / falloff);
-          let scale: number;
-          if (t < CORE_T) {
-            scale = HERO_SCALE;
-          } else {
-            const t2 = (t - CORE_T) / (1 - CORE_T);
-            scale = NEIGHBOR_SCALE - (NEIGHBOR_SCALE - MIN_SCALE) * t2;
-          }
-          if (photo) photo.style.transform = `scale(${scale.toFixed(3)})`;
-          card.style.opacity = Math.max(0.75, 1 - t * 0.4).toFixed(2);
           if (dist < closestDist) {
             closestDist = dist;
             currentIndex = i;
           }
         });
         cards.forEach((card, i) => {
-          card.style.zIndex = i === currentIndex ? "2" : "1";
+          const isHero = i === currentIndex;
+          card.style.opacity = isHero ? "1" : FADE_OPACITY;
+          card.style.zIndex = isHero ? "2" : "1";
         });
 
         // Loop correction: if the centered card has drifted out of the
@@ -469,7 +291,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       };
 
       updateHorizontalPadding();
-      updateVerticalPadding();
 
       // Always open centered on "Center Stage Musicals" rather than a
       // random card (PM preference) — and specifically the copy in the
@@ -500,7 +321,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
       window.addEventListener("resize", () => {
         updateHorizontalPadding();
-        updateVerticalPadding();
         cards[currentIndex]?.scrollIntoView({ inline: "center", block: "nearest" });
         updateScale();
       });
@@ -706,11 +526,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      then lede, all full width) on phones; side by side once there's
      enough width for it to breathe. */
   .hero-grid {
-    /* Anchor for the star-trail overlay SVG (position:absolute,
-       inset:0) added below — needs the grid itself to establish the
-       positioning context, since the trail spans across both the
-       logo and the headline text, not just one of them. */
-    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 0.6rem;
@@ -750,26 +565,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
   .accent-word {
     position: relative;
-  }
-
-  /* Star trail overlay (2026-08-19, third redesign). Drawn entirely
-     at runtime by the script near the hero markup — this CSS just
-     positions the SVG to exactly cover .hero-grid so the coordinates
-     the script measures (relative to that same element) and the
-     coordinates it draws with line up with no extra scaling step.
-     inset:0 + width/height 100% means "cover the anchor element
-     exactly"; the script sets the viewBox to match the anchor's real
-     pixel size, so 1 SVG unit is always 1 real pixel here — no
-     separate "viewBox units vs. display size" conversion to get
-     wrong, which is what broke the two earlier attempts. */
-  .hero-star-trail {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    pointer-events: none;
-    z-index: 2;
   }
 
   .hero-lede {
@@ -814,12 +609,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     gap: 0.9rem;
     overflow-x: auto;
     /* "mandatory" (not "proximity") so the strip always settles on a
-       centered card, since that centered card's PHOTO is now the
-       visually "hero" one — see .photo-strip-photo scale below. */
+       centered card. */
     scroll-snap-type: x mandatory;
-    /* Bottom room for the caption; top room is set dynamically by the
-       script (padding-top), sized to fit the hero photo's upward
-       growth without it being clipped by this scroll container. */
     padding: 14px 0 0.6rem;
     -webkit-overflow-scrolling: touch;
     /* Hide the native scrollbar — replaced by the arrow buttons and
@@ -835,12 +626,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .photo-strip-fade {
     display: none; /* shown on wider screens only, see media query below */
     position: absolute;
-    /* Anchored from the bottom (by the caption) rather than the top,
-       since the container's top padding now varies (see script) to
-       fit the hero photo's growth — bottom-anchoring keeps the fade
-       lined up with the photo row regardless of that. */
+    top: 0;
     bottom: 0.6rem;
-    height: 220px;
     width: 48px;
     pointer-events: none;
     z-index: 1;
@@ -895,7 +682,15 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   .photo-strip-card {
-    flex: 0 0 220px;
+    /* All cards are now this SAME size (PM request, 2026-08-19) — the
+       old scale-up-the-center-card effect is gone. This size is
+       roughly the old hero size (220px base * 1.7x scale ≈ 374px)
+       increased again by about a third, so today's "hero" size is
+       what every card looks like now; only opacity (see script)
+       distinguishes the centered one. Not all cards fit on one
+       screen at this size — that's expected, swipe/arrows reveal
+       the rest. */
+    flex: 0 0 500px;
     display: block;
     scroll-snap-align: center;
     transition: opacity 0.25s ease;
@@ -906,12 +701,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     border-radius: 0;
     overflow: hidden;
     box-shadow: var(--shadow-soft);
-    /* The hero-scale effect lives here (not on the whole card) so the
-       caption below never resizes or gets crowded. Anchored to the
-       bottom edge so growth happens upward, away from the caption —
-       see the script for the actual scale values. */
-    transform-origin: center bottom;
-    transition: transform 0.25s ease;
   }
 
   .photo-strip-photo img {
@@ -943,7 +732,9 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
   @media (max-width: 640px) {
     .photo-strip-card {
-      flex-basis: 168px;
+      /* Same proportional bump as the desktop size (old 168px base *
+         1.7x hero scale * 4/3 ≈ 380px). */
+      flex-basis: 380px;
     }
   }
  
