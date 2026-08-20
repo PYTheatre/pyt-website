@@ -16,6 +16,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Logo from "../components/Logo.astro";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
+
+// --- Star trail flourish helper (2026-08-19) ---
+// Generates the SVG "points" for a simple 5-point star, used to build
+// the decorative star trail that now flows across several homepage
+// sections (see the four flourish clusters below: headline, carousel,
+// discovery-grid entry, and discovery-grid end). Centered at (cx, cy)
+// with outer point radius r. Keeping this as a small generator rather
+// than hand-typed polygon coordinates makes it easy to vary star size
+// and placement per cluster without arithmetic errors.
+function starPoints(cx: number, cy: number, r: number): string {
+  const inner = r * 0.42;
+  const pts: string[] = [];
+  for (let i = 0; i < 10; i++) {
+    const angle = (Math.PI / 5) * i - Math.PI / 2;
+    const radius = i % 2 === 0 ? r : inner;
+    pts.push(`${(cx + radius * Math.cos(angle)).toFixed(1)},${(cy + radius * Math.sin(angle)).toFixed(1)}`);
+  }
+  return pts.join(" ");
+}
  
 // --- Section heading case (2026-08-19) ---
 // Every remaining homepage section heading is editable, with a
@@ -115,18 +134,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
               {headingLine2Lead}{" "}
               <span class="accent-word">
                 {headingItalic}
-                <svg class="accent-stars" viewBox="0 -70 610 90" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
-                  <g fill="#68b050">
-                    <polygon points="12.9,-1.5 15.2,4.0 21.1,4.4 16.6,8.3 18.0,14.1 12.9,11.0 7.8,14.1 9.2,8.3 4.7,4.4 10.6,4.0" />
-                    <polygon points="55.7,2.2 57.6,6.7 62.5,7.1 58.7,10.3 59.9,15.0 55.7,12.5 51.5,15.0 52.7,10.3 48.9,7.1 53.8,6.7" />
-                    <polygon points="98.6,-2.2 100.7,2.8 106.1,3.3 102.0,6.8 103.2,12.1 98.6,9.3 94.0,12.1 95.2,6.8 91.1,3.3 96.5,2.8" />
-                    <polygon points="494.0,-5.0 495.9,-0.5 500.8,-0.1 497.0,3.1 498.2,7.8 494.0,5.3 489.8,7.8 491.0,3.1 487.2,-0.1 492.1,-0.5" />
-                    <polygon points="533.3,-19.3 535.0,-15.2 539.4,-14.9 536.0,-12.0 537.1,-7.7 533.3,-10.0 529.5,-7.7 530.6,-12.0 527.2,-14.9 531.6,-15.2" />
-                  </g>
-                  <g fill="#f2c419">
-                    <polygon points="569.0,-40.0 570.9,-35.5 575.8,-35.1 572.0,-31.9 573.2,-27.2 569.0,-29.7 564.8,-27.2 566.0,-31.9 562.2,-35.1 567.1,-35.5" />
-                    <polygon points="601.1,-57.9 602.4,-54.7 605.9,-54.4 603.2,-52.2 604.0,-48.9 601.1,-50.6 598.2,-48.9 599.0,-52.2 596.3,-54.4 599.8,-54.7" />
-                  </g>
+                <svg class="accent-stars" viewBox="0 -90 610 115" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
+                  <polygon points={starPoints(13, 6, 11)} fill="#68b050" />
+                  <polygon points={starPoints(56, 9, 10)} fill="#68b050" />
+                  <polygon points={starPoints(99, 8, 9)} fill="#68b050" />
+                  <polygon points={starPoints(494, 4, 10)} fill="#68b050" />
+                  <polygon points={starPoints(533, -12, 9)} fill="#68b050" />
+                  <polygon points={starPoints(569, -34, 10)} fill="#f2c419" />
+                  <polygon points={starPoints(601, -52, 8)} fill="#f2c419" />
                 </svg>
               </span>
               {headingAfter}
@@ -165,6 +180,15 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     {photoStrip.length > 0 && (
       <div class="container">
         <div class="photo-strip-wrap" id="photo-strip-wrap">
+          <!-- Star trail, segment 2 of 4: picks up the sweep from the
+               headline and carries it into the top-left corner of the
+               carousel. Purely decorative (aria-hidden), pointer-events
+               none so it never blocks the arrow button underneath it. -->
+          <svg class="trail-stars trail-stars-carousel" viewBox="0 0 160 100" aria-hidden="true">
+            <polygon points={starPoints(18, 14, 12)} fill="#68b050" />
+            <polygon points={starPoints(52, 30, 9)} fill="#68b050" />
+            <polygon points={starPoints(84, 12, 10)} fill="#f2c419" />
+          </svg>
           <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Scroll left">‹</button>
           <div class="photo-strip-fade photo-strip-fade-left" aria-hidden="true"></div>
 
@@ -395,24 +419,52 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        old "Upcoming Shows"/"What's Next" section that used to be here
        was removed entirely (code + CMS fields) per PM request,
        2026-08-19. -->
-  <section class="section">
+  <section class="section discovery-section">
+    <!-- Star trail, segment 3 of 4: picks up from the carousel and
+         sweeps into the top-left corner of this section, ahead of the
+         heading. -->
+    <svg class="trail-stars trail-stars-discovery" viewBox="0 0 160 90" aria-hidden="true">
+      <polygon points={starPoints(16, 46, 11)} fill="#f2c419" />
+      <polygon points={starPoints(48, 20, 13)} fill="#68b050" />
+      <polygon points={starPoints(84, 40, 9)} fill="#68b050" />
+    </svg>
     <div class="container">
       <h2 class={`section-head ${discovery_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.discovery_heading}</h2>
 
       <div class="card-grid">
-        {home.discovery_cards.map((card: any, i: number) => (
-          <a href={card.url} class="card">
-            {card.image ? (
-              <img src={card.image} alt="" class="card-photo" loading="lazy" />
-            ) : (
-              <div class={`card-photo card-photo-placeholder c-${placeholderColors[i % placeholderColors.length]}`}></div>
-            )}
-            <span class="card-overlay">
-              <span class="card-title">{card.title}</span>
-              {card.subtitle && <span class="card-subtitle">{card.subtitle}</span>}
-            </span>
-          </a>
-        ))}
+        {home.discovery_cards.map((card: any, i: number) => {
+          const isLastCard = i === home.discovery_cards.length - 1;
+          const cardEl = (
+            <a href={card.url} class="card">
+              {card.image ? (
+                <img src={card.image} alt="" class="card-photo" loading="lazy" />
+              ) : (
+                <div class={`card-photo card-photo-placeholder c-${placeholderColors[i % placeholderColors.length]}`}></div>
+              )}
+              <span class="card-overlay">
+                <span class="card-title">{card.title}</span>
+                {card.subtitle && <span class="card-subtitle">{card.subtitle}</span>}
+              </span>
+            </a>
+          );
+          return isLastCard ? (
+            <div class="card-trail-end-wrap">
+              {cardEl}
+              <!-- Star trail, segment 4 of 4 (the ending): anchored to
+                   whichever discovery card renders LAST — not to a
+                   fixed page position — so it always lands on the
+                   right card (Creepy Carrots today) even if the list
+                   is reordered or a card is added/removed later. -->
+              <svg class="trail-stars trail-stars-end" viewBox="0 0 120 90" aria-hidden="true">
+                <polygon points={starPoints(90, 20, 14)} fill="#f2c419" />
+                <polygon points={starPoints(55, 45, 10)} fill="#68b050" />
+                <polygon points={starPoints(95, 60, 8)} fill="#f2c419" />
+              </svg>
+            </div>
+          ) : (
+            cardEl
+          );
+        })}
       </div>
     </div>
   </section>
@@ -426,11 +478,13 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         {home.stats.map((stat, i) => {
           /* Impact numbers are coloured by POSITION using the three logo
              colours, cycling if there are ever more than three:
-             1st = blue, 2nd = green, 3rd = pink. */
+             1st = blue, 2nd = green, 3rd = pink. Now also boxed in that
+             same colour (PM request, 2026-08-19), on the new dark
+             section background. */
           const figureColors = ["var(--brand-blue)", "var(--brand-green)", "var(--accent)"];
           const figureColor = figureColors[i % figureColors.length];
           return (
-            <div class="stat">
+            <div class="stat" style={`border-color: ${figureColor}`}>
               <p class="stat-figure" style={`color: ${figureColor}`}>{stat.figure}</p>
               <p class="stat-label">{stat.label}</p>
             </div>
@@ -466,7 +520,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         </div>
       </div>
  
-      <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary" target="_blank" rel="noopener">{home.donate_button_label}</a>
+      <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn donate-teaser-btn" target="_blank" rel="noopener">{home.donate_button_label}</a>
     </div>
   </section>
 </BaseLayout>
@@ -609,6 +663,16 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .photo-strip-wrap {
     position: relative;
     margin-top: var(--space-lg);
+  }
+
+  /* Star trail, segment 2 (carousel entry) — see the markup comment
+     above for why it's placed here. Overlaps the top-left corner
+     slightly on purpose, continuing the sweep down from the headline. */
+  .trail-stars-carousel {
+    top: -26px;
+    left: -6px;
+    width: 100px;
+    height: auto;
   }
 
   .photo-strip {
@@ -766,7 +830,33 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     text-transform: uppercase;
   }
  
+  /* ---- Star trail flourish (shared base) ---- */
+  /* Purely decorative, so it never intercepts clicks/hover/scroll —
+     pointer-events: none on every segment. Built as four independent
+     absolutely-positioned clusters (see markup comments) rather than
+     one continuous shape, since a single page-spanning SVG breaks
+     easily whenever content reflows across breakpoints; positioning
+     each cluster relative to the section it decorates keeps every
+     piece correct regardless of screen width or content length. */
+  .trail-stars {
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+  }
+
   /* ---- Discovery cards (square photo grid, redesigned 2026-08-19) ---- */
+  .discovery-section {
+    position: relative;
+  }
+
+  /* Star trail, segment 3 (discovery-grid entry). */
+  .trail-stars-discovery {
+    top: -4px;
+    left: 4px;
+    width: 110px;
+    height: auto;
+  }
+
   .card-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -784,6 +874,22 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
  
   .card:hover {
     transform: translateY(-2px);
+  }
+
+  /* Wraps whichever discovery card renders last (see the .map logic
+     above) so the trail's ending star cluster can sit just outside
+     that card's own overflow:hidden without being clipped by it. */
+  .card-trail-end-wrap {
+    position: relative;
+  }
+
+  /* Star trail, segment 4 (the ending) — sits just outside the last
+     card's top-right corner. */
+  .trail-stars-end {
+    top: -22px;
+    right: -12px;
+    width: 76px;
+    height: auto;
   }
  
   .card-photo {
@@ -831,60 +937,92 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
  
   /* ---- Impact stats ---- */
+  /* Black background matching the nav bar (PM request, 2026-08-19) —
+     was the site's warm off-white paper color before. Heading and
+     label text switch to light colors here since they're now on a
+     dark surface; the figures themselves already carry their own
+     brand color (blue/green/pink) which reads fine on black. */
   .impact {
-    background: var(--paper-warm);
-    border-block: 1px solid var(--line);
+    background: var(--nav-bg-dark);
+    border-block: none;
+  }
+
+  .impact .section-head {
+    color: var(--nav-text);
   }
  
   .stat-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
   }
  
+  .stat {
+    border: 2px solid var(--accent);
+    padding: 1.1rem 0.9rem;
+    text-align: center;
+  }
+
   .stat-figure {
     font-family: var(--font-heading);
-    font-size: 3rem;
-    font-weight: 600;
+    font-size: 2.1rem;
+    font-weight: 400;
     color: var(--accent);
     line-height: 1;
   }
  
   .stat-label {
-    font-size: 0.98rem;
-    color: var(--ink-soft);
-    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--nav-text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.35;
   }
  
   /* ---- Donation teaser ---- */
   .donate-lede {
-    max-width: 54ch;
+    /* Matched to the hero intro paragraph's exact treatment (PM
+       request, 2026-08-19) — same size, weight, line-height, and
+       letter-spacing as "At Peninsula Youth Theatre..." up top,
+       instead of the site's default lighter/smaller paragraph style. */
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 60ch;
     margin-bottom: var(--space-lg);
   }
  
-  /* ---- Campaign progress thermometer (matches the Support PYT page) ---- */
+  /* ---- Campaign progress thermometer ---- */
+  /* Bigger and centered (PM request, 2026-08-19) — was a smaller
+     thermometer sitting beside the numbers; now both sit stacked and
+     centered together, matching the bolder scale of the rest of the
+     homepage. This copy is scoped to the homepage only via Astro's
+     component-level CSS — the Support PYT page keeps its own smaller
+     version, untouched. */
   .thermo-row {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--space-xl);
-    flex-wrap: wrap;
+    text-align: center;
+    gap: var(--space-md);
     margin-bottom: var(--space-lg);
   }
 
   .thermo {
     position: relative;
-    width: 56px;
-    height: 250px;
+    width: 80px;
+    height: 320px;
     flex-shrink: 0;
   }
 
   .thermo-tube {
     position: absolute;
-    left: 12px;
+    left: 16px;
     top: 0;
-    width: 32px;
-    height: 210px;
-    border: 3px solid var(--accent);
+    width: 46px;
+    height: 268px;
+    border: 4px solid var(--accent);
     border-radius: var(--radius-pill);
     background: var(--accent-soft);
     overflow: hidden;
@@ -904,21 +1042,25 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 56px;
-    height: 56px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     background: var(--accent);
-    border: 3px solid var(--accent);
+    border: 4px solid var(--accent);
   }
 
   .thermo-stats {
-    flex: 1;
-    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .thermo-raised {
-    font-size: 2.4rem;
-    font-weight: 600;
+    /* Same heading font as the "PYT in numbers" figures above, for
+       consistency across the two number-heavy sections of the page. */
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 400;
     color: var(--ink);
     line-height: 1.1;
     margin: 0;
@@ -926,24 +1068,41 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
   .thermo-goal {
     font-size: 1.05rem;
+    font-weight: 500;
     color: var(--ink-soft);
-    margin: 0.3rem 0 0;
+    margin: 0.4rem 0 0;
   }
 
   .thermo-meta {
     font-size: 1.05rem;
+    font-weight: 500;
     color: var(--ink-soft);
-    margin: 0.6rem 0 0;
+    margin: 0.5rem 0 0;
   }
 
   .thermo-meta strong {
     color: var(--accent);
   }
+
+  /* Donate button under the thermometer: bright yellow to match the
+     nav's Donate button, and bigger (PM request, 2026-08-19) — was
+     the standard pink .btn-primary at the default button size. */
+  .donate-teaser-btn {
+    background: var(--highlight);
+    color: var(--highlight-text);
+    font-size: 1.15rem;
+    padding: 1rem 2.2rem;
+  }
+
+  .donate-teaser-btn:hover {
+    background: var(--highlight);
+    filter: brightness(0.94);
+  }
  
   /* ============ WIDER SCREENS ============ */
   @media (min-width: 720px) {
     .stat-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
     .card-grid {
       grid-template-columns: repeat(2, 1fr);
