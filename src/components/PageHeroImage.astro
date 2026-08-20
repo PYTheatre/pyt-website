@@ -17,13 +17,21 @@
   renders NOTHING AT ALL — no empty box, no gap. A page without a hero
   image looks exactly as it does today.
 
-  SIZING: matches the banner already used on the About page — a wide
-  letterbox strip (21:6 on phones, opening out to 24:5 on wider
-  screens). The photo is cropped to fill that frame (object-fit:
-  cover), so staff can upload any reasonably wide photo without it
-  distorting or breaking the layout.
+  SIZING: a wide letterbox strip, 21:6 at every screen size. It used to
+  open out to 24:5 on wider screens, but that crop was severe enough to
+  cause real problems — a 24:5 frame keeps only ~31% of a typical
+  landscape photo's height, which sliced faces in half. 21:6 keeps
+  noticeably more of each photo while still reading as a banner, and
+  it's now consistent across screen sizes rather than changing shape at
+  720px (which meant a photo could look right on a phone and wrong on a
+  laptop).
+
+  FOCUS: each row can set which part of the photo to keep when it's
+  cropped (see ../lib/imageFocus.ts). Defaults to the middle, which is
+  exactly how this behaved before the field existed.
 */
 import heroes from "../content/settings/page-heroes.json";
+import { objectPosition } from "../lib/imageFocus";
 
 // Normalize so "/about", "/about/" and "" all compare equal — Astro can
 // emit either form depending on the trailing-slash config, and a staff
@@ -60,12 +68,21 @@ const image = match?.image?.trim() || "";
 // which is the correct accessibility behaviour for a mood/banner photo
 // that doesn't convey information the page text doesn't already give.
 const alt = match?.alt?.trim() || "";
+// Which part of the photo survives the crop. Defaults to the middle.
+const focus = objectPosition(match?.focus);
 ---
 
 {image && (
   <section class="page-hero-image">
     <div class="container">
-      <img src={image} alt={alt} class="page-hero-img" loading="lazy" decoding="async" />
+      <img
+        src={image}
+        alt={alt}
+        class="page-hero-img"
+        loading="lazy"
+        decoding="async"
+        style={`object-position: ${focus};`}
+      />
     </div>
   </section>
 )}
@@ -77,19 +94,14 @@ const alt = match?.alt?.trim() || "";
 
   .page-hero-img {
     width: 100%;
-    /* Same proportions as the existing About page banner, so the site
-       keeps one consistent banner shape rather than gaining a second,
-       competing one. */
+    /* One shape at every width (2026-08-20). The previous 24:5 desktop
+       variant cropped away ~69% of a landscape photo's height, which is
+       what cut the face off the Auditions hero. object-position is set
+       inline per-photo from the CMS focus field. */
     aspect-ratio: 21 / 6;
     object-fit: cover;
     border-radius: var(--radius);
     display: block;
     box-shadow: var(--shadow-soft);
-  }
-
-  @media (min-width: 720px) {
-    .page-hero-img {
-      aspect-ratio: 24 / 5;
-    }
   }
 </style>
