@@ -51,7 +51,16 @@ collections:
     sortable_fields: ["start_date", "title"]
     fields:
       - { name: "title", label: "Show title", widget: "string", hint: "Example: Dragons Love Tacos" }
-      - { name: "production_type", label: "Production type", widget: "select", default: "Musical", options: ["Musical", "Studio Production"], hint: "Musicals show on the Musicals page; Studio Productions show on the Studio Productions page. Both appear on the main Shows page." }
+      # Labels vs values (2026-08-20): the words staff SEE were changed to
+      # "Center Stage Musical" / "Studio Show", but the values SAVED into
+      # each show file are deliberately left as "Musical" / "Studio
+      # Production". Those saved values are what musicals.astro and
+      # studio-productions.astro filter on, and what every existing show
+      # file already contains — changing them would have silently emptied
+      # both pages until every show was re-saved by hand. The visitor-
+      # facing wording is handled separately (see PRODUCTION_TYPE_LABELS
+      # in src/lib/showLabels.ts).
+      - { name: "production_type", label: "Production type", widget: "select", default: "Musical", options: [{ label: "Center Stage Musical", value: "Musical" }, { label: "Studio Show", value: "Studio Production" }], hint: "Center Stage Musicals show on the Center Stage Musicals page; Studio Shows show on the Studio Shows page. Both appear on the main Shows page." }
       - { name: "eyebrow", label: "Eyebrow text", widget: "string", required: false, hint: "Small text above the title on the show page. Example: Spring 2026 Center Stage Musicals" }
       - { name: "start_date", label: "First performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { name: "end_date", label: "Last performance date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
