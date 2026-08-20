@@ -299,20 +299,28 @@ const navGroups = [
      into" the blue pill. This only works because the button always
      sits directly on that solid dark background — if this button is
      ever reused somewhere with a different/patterned background,
-     the notches will need a different technique (e.g. an SVG mask). */
+     the notches will need a different technique (e.g. an SVG mask).
+     background/color use !important: Astro auto-adds its scoping
+     attribute to EVERY class in a selector, so ".nav-wide .pill"
+     actually compiles to MORE specificity points than a plain
+     ".tickets-btn" (or even ".pill.tickets-btn") rule can match —
+     that's what caused the bug the PM caught live, where this button
+     silently rendered as a plain white pill like every other nav
+     item. !important sidesteps needing to out-calculate Astro's
+     auto-injected specificity. */
   .tickets-btn {
     position: relative;
-    background: var(--brand-blue);
-    color: #0d2733;
+    background: var(--brand-blue) !important;
+    color: #0d2733 !important;
     font-weight: 600;
     padding-inline: 1.3rem;
     z-index: 1;
   }
 
   .tickets-btn:hover {
-    background: var(--brand-blue);
+    background: var(--brand-blue) !important;
     filter: brightness(1.07);
-    color: #0d2733;
+    color: #0d2733 !important;
   }
 
   .tickets-btn::before,
@@ -367,11 +375,29 @@ const navGroups = [
   }
 
   /* ---- EN/ES translate toggle ---- */
+  /* Sits in .header-actions, OUTSIDE .nav-wide — so it never picked
+     up the ".nav-wide .pill" rule that gives the other nav items
+     their bright white color on this dark bar. Left on the base
+     .pill class alone, it fell back to --ink-soft (a muted gray tuned
+     for LIGHT backgrounds elsewhere on the site), which is why it
+     read as "too recessive" against the dark nav — this sets its own
+     color/background explicitly rather than relying on inheriting
+     from a rule that doesn't reach it, and adds a faint border
+     (matching the hamburger button's border treatment) so it reads
+     as a real button rather than plain dim text. */
   .lang-toggle {
     padding: 0.5rem 0.7rem;
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.02em;
+    color: var(--nav-text) !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--nav-text) !important;
   }
  
   .header-actions {
