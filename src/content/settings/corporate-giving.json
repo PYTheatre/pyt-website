@@ -1,34 +1,34 @@
 {
   "eyebrow": "",
   "heading": "Corporate Circle",
-  "intro": "Partner with PYT and invest in the next generation of Bay Area youth. Corporate gifts are tax-deductible and come with year-round recognition. ",
+  "intro": "Partner with PYT and invest in the next generation of Bay Area youth. Corporate gifts are tax-deductible and come with year-round recognition. All benefits good for one calendar year from the time of gift. Please contact Managing Dicretor Loryn Hatten to discuss tailored benefits and recognition.\n",
   "corporate_donate_url": "https://pyt.secure.nonprofitsoapbox.com/donate",
   "tiers": [
     {
-      "name": "Spotlight Circle",
-      "amount": "$2,500",
-      "description": "Name and logo recognition online (suited to your preference)."
+      "name": "Twinkle Lights",
+      "amount": "$500",
+      "description": "Name and logo recognition on our website.\nThank you on screen before all Center Stage Musical performances.\n"
     },
     {
-      "name": "Limelight Circle",
+      "name": "Limelights",
+      "amount": "$1,000",
+      "description": "Benefits from the $500 level plus...\nName and logo on our Center Stage Musical playbills.\n"
+    },
+    {
+      "name": "Spotlights",
       "amount": "$5,000",
-      "description": "Logo placement on printed programs, and a group of complimentary tickets to a production of your choice. Name and logo recognition online. Further benefits agreed tailored to your organisation."
+      "description": "Benefits from the $1000 level plus:\n2 VIP tickets to a performance of your choice.\nName and logo on Stories on Stage bookmarks and Studio Show programs.\n\n"
     },
     {
-      "name": "Starlight Patrons",
+      "name": "Marquee Lights",
       "amount": "$10,000",
-      "description": "Logo placement on lobby signage, printed programs and a group of complimentary tickets to a production of your choice. Name and logo recognition online. Further benefits agreed tailored to your organisation."
+      "description": "Benefits from $5,000 level plus:\n2 more VIP tickets to a performance of your choice.\n2 VIP tickets to either a Stories on Stage or Studio Show performance.\nInclusion in sponsor recognition display and lobby signage for all Center State Musical, Stories on Stage, or Studio Show performances.\n"
     },
     {
-      "name": "Luminary Partners",
-      "amount": "$25,000",
-      "description": "Logo placement on lobby signage, printed programs and a group of complimentary tickets to a production of your choice. Name and logo recognition online. Further benefits agreed tailored to your organisation."
-    },
-    {
-      "name": "PYT Visionaries",
-      "amount": "$50,000+",
-      "description": "Logo and name recognition and select copy across PYT materials on and offline. Presented and recognised as a founding partner to PYT. On stage recognition for every production and program. Select complimentary tickets to any production. Back stage and rehearsal tours. Further benefits agreed tailored to your organisation."
+      "name": "Luminaries",
+      "amount": "$25,000+",
+      "description": "All benefits from $10,000 plus:\nAdditional tickets or program gift certificates totalling up to no more than 2% fair market value of your donation.\nAdditional intangible benefits tailored to your company’s needs.\n"
     }
   ],
-  "contact_email": "lhatten@pytnet.org"
+  "contact_email": ""
 }
