@@ -128,13 +128,18 @@ const navGroups = [
     </nav>
  
     <div class="header-actions">
+      <a href="https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=ad16ecb8-2b37-477f-9cdc-8b959668e4df&e4p=22397909-9890-4b5f-8947-e4982093fc34&e4ts=1787101915&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=b318cf7ff23b5f8ebd7b7077a038eb52" class="btn btn-primary register-btn" target="_blank" rel="noopener">Register</a>
+      <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary donate-btn" target="_blank" rel="noopener">Donate</a>
+
       <!-- Simple EN/ES translate toggle (2026-08-19). Not a real
            bilingual site (that's a much bigger project — see the
            build log) — this routes the CURRENT page through Google's
            free translate.goog proxy, which needs no sign-up, no
            script embed, and no CMS content of its own. Label/behavior
            swap client-side (see script below) based on whether the
-           visitor is already viewing the translated version. -->
+           visitor is already viewing the translated version. Moved to
+           the far right, after Donate (PM request, 2026-08-19) — was
+           between the nav links and Register. -->
       <a
         href="#"
         id="lang-toggle"
@@ -142,8 +147,6 @@ const navGroups = [
         data-site-origin={(navLabels as any).site_origin || "https://pyt-website.pages.dev"}
         aria-label="Translate this site"
       >ES</a>
-      <a href="https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=ad16ecb8-2b37-477f-9cdc-8b959668e4df&e4p=22397909-9890-4b5f-8947-e4982093fc34&e4ts=1787101915&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=b318cf7ff23b5f8ebd7b7077a038eb52" class="btn btn-primary register-btn" target="_blank" rel="noopener">Register</a>
-      <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary donate-btn" target="_blank" rel="noopener">Donate</a>
  
       <!-- Hamburger button (phones only) -->
       <button
