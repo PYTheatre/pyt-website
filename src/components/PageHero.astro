@@ -15,17 +15,33 @@ import PageHeroImage from "./PageHeroImage.astro";
 interface Props {
   eyebrow?: string;
   title: string;
+  /** Plain-text intro. Use this unless the intro needs a link. */
   lede?: string;
+  /**
+   * Pre-rendered HTML intro, for pages whose intro is a CMS "markdown"
+   * field and can therefore contain links (2026-08-20). Pass the output
+   * of renderMarkdown(). Takes precedence over `lede` when both are set.
+   *
+   * Kept as a SEPARATE prop rather than making `lede` accept HTML,
+   * because ~18 pages pass plain strings to `lede` and rendering those
+   * as HTML would stop characters like & and < being escaped properly.
+   */
+  ledeHtml?: string;
 }
 
-const { eyebrow, title, lede } = Astro.props;
+const { eyebrow, title, lede, ledeHtml } = Astro.props;
+const hasHtmlLede = Boolean(ledeHtml && ledeHtml.trim());
 ---
 
 <section class="page-hero">
   <div class="container">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{title}</h1>
-    {lede && <p class="page-hero-lede">{lede}</p>}
+    {hasHtmlLede ? (
+      <div class="page-hero-lede page-hero-lede-rich" set:html={ledeHtml} />
+    ) : (
+      lede && <p class="page-hero-lede">{lede}</p>
+    )}
   </div>
 </section>
 
@@ -42,6 +58,30 @@ const { eyebrow, title, lede } = Astro.props;
     font-size: 1.08rem;
     max-width: 58ch;
     margin-top: var(--space-md);
+  }
+
+  /* The rich version is a <div> of rendered Markdown, so its paragraphs
+     need the spacing a bare <p> got for free. */
+  .page-hero-lede-rich :global(p) {
+    margin: 0;
+  }
+
+  .page-hero-lede-rich :global(p + p) {
+    margin-top: 0.7rem;
+  }
+
+  /* Links inside the intro: pink and underlined, so they read as links
+     rather than as emphasised text. :global() is required because this
+     HTML is injected with set:html and therefore doesn't carry Astro's
+     scoping attributes. */
+  .page-hero-lede-rich :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .page-hero-lede-rich :global(a:hover) {
+    color: var(--accent-deep);
   }
   @media (min-width: 720px) {
     .page-hero {
