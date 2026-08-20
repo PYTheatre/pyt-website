@@ -34,6 +34,48 @@ const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
 // Thermometer fill height, capped 0–100 so it never overflows the tube.
 const fillPct = Math.min(100, Math.max(0, pct));
+
+// --- Thermometer redesign (2026-08-20) — star badge + interval ticks ---
+// Approved via a static mockup first (thermometer_redesign_v4.png).
+// Tick marks sit at 25/50/75/100% of the GOAL (not of the current
+// raised amount) so they're fixed reference points on the scale,
+// generated from fractions rather than hardcoded dollar amounts so
+// this still makes sense if the goal itself ever changes via the CMS.
+// Geometry below matches this page's own thermo/tube pixel sizes
+// (see .thermo/.thermo-tube in the styles) — the Support page computes
+// its own version from ITS sizes, since the two pages have always
+// used different-sized thermometers.
+const THERMO_H = 320;
+const TUBE_H = 268;
+const TUBE_W = 46;
+const TUBE_TOP_RADIUS = TUBE_W / 2; // the tube's rounded cap — ticks stop here, not at the mathematical peak, or the top one visually "floats" off the tube
+const USABLE_H = TUBE_H - TUBE_TOP_RADIUS;
+const TICK_BASE = THERMO_H - TUBE_H; // tube's own bottom, in .thermo's bottom-up coordinate space
+const tickFractions = [0.25, 0.5, 0.75, 1];
+const thermoTicks = tickFractions.map((f) => ({
+  amount: Math.round(goal * f),
+  bottomPx: TICK_BASE + f * USABLE_H,
+}));
+
+// Hexagram ("Star of David" shape) outline for the GOAL badge — two
+// true equilateral triangles, generated as one 12-point polygon
+// (r_inner = r_outer / √3 is what makes the points properly
+// 60°-equilateral rather than a generic 5/6-point star). Drawn as a
+// single polygon rather than two overlapping triangles so there's no
+// stray line where they'd otherwise cross in the middle.
+function hexagramPoints(size: number): string {
+  const cx = size / 2, cy = size / 2;
+  const rOuter = size / 2;
+  const rInner = rOuter / Math.sqrt(3);
+  const pts: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    const r = i % 2 === 0 ? rOuter : rInner;
+    const angle = (Math.PI / 180) * (-90 + i * 30);
+    pts.push(`${(cx + r * Math.cos(angle)).toFixed(2)},${(cy + r * Math.sin(angle)).toFixed(2)}`);
+  }
+  return pts.join(" ");
+}
+const goalStarPoints = hexagramPoints(200);
  
 // Donation-teaser heading. CMS-editable (home.donate_heading). If the
 // field is empty, fall back to the original goal-based wording so the
@@ -464,17 +506,39 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         <!-- Thermometer -->
         <div class="thermo" role="img"
              aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
-          <p class="thermo-goal-label">${goal.toLocaleString()}</p>
           <div class="thermo-tube">
             <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
           </div>
           <div class="thermo-bulb"></div>
+          <!-- Interval ticks — drawn as their own layer (not inside
+               .thermo-tube, which needs overflow:hidden for the fill's
+               rounded corners) so they aren't clipped. -->
+          <div class="thermo-ticks" aria-hidden="true">
+            {thermoTicks.map((t) => (
+              <div class="thermo-tick" style={`bottom: ${t.bottomPx}px`}>
+                <span class="thermo-tick-dash"></span>
+                <span class="thermo-tick-label">${t.amount.toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+          <!-- GOAL star badge — sits ON TOP of the tube's rounded cap
+               (drawn after it in the DOM, overlapping down onto it),
+               replacing the old plain "$200,000" text label. -->
+          <div class="thermo-goal-badge" aria-hidden="true">
+            <svg viewBox="0 0 200 200" class="thermo-star">
+              <polygon points={goalStarPoints} />
+            </svg>
+            <span class="thermo-goal-badge-text">Goal</span>
+          </div>
         </div>
 
-        <!-- Numbers -->
+        <!-- Numbers — just donors + % now (2026-08-20): the big raised
+             figure and the "raised of $X goal" line were both removed
+             per PM feedback (the thermometer itself already shows
+             progress visually); this now uses the same weight/color
+             treatment as the hero intro paragraph instead of the
+             muted gray other captions use. -->
         <div class="thermo-stats">
-          <p class="thermo-raised">${raised.toLocaleString()}</p>
-          <p class="thermo-goal">raised of ${goal.toLocaleString()} goal</p>
           <p class="thermo-meta">
             <strong>{donorCount}</strong> donors &middot; <strong>{pct}%</strong> of goal
           </p>
@@ -957,30 +1021,22 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     margin-bottom: var(--space-lg);
   }
 
+  /* Extra height reserved at the TOP for the star badge (2026-08-20).
+     The tube/bulb keep their original 320px relationship to each
+     other (bulb still bottom:0, tube's own height/overlap with it
+     unchanged) — this just adds room above them. Ticks sit off to the
+     right, wide enough for the longest label ($200,000-ish). */
   .thermo {
     position: relative;
-    width: 80px;
-    height: 320px;
+    width: 300px;
+    height: 410px;
     flex-shrink: 0;
-  }
-
-  .thermo-goal-label {
-    position: absolute;
-    top: -28px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-family: var(--font-heading);
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: var(--ink-soft);
-    margin: 0;
   }
 
   .thermo-tube {
     position: absolute;
     left: 16px;
-    top: 0;
+    top: 90px;
     width: 46px;
     height: 268px;
     border: 4px solid var(--accent);
@@ -1002,12 +1058,95 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .thermo-bulb {
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 16px;
     width: 80px;
     height: 80px;
     border-radius: 50%;
     background: var(--accent);
     border: 4px solid var(--accent);
+  }
+
+  /* Interval ticks (2026-08-20) — positioned in their own layer
+     (siblings of .thermo-tube, not inside it) since the tube needs
+     overflow:hidden for the fill's rounded corners, which would
+     otherwise clip a tick mark poking out to its right. Each tick's
+     `bottom` (in px, computed in the frontmatter from this page's own
+     tube dimensions) stops at the tube's straight sides rather than
+     its mathematically-rounded top — placing the highest tick at the
+     literal top of the tube left it looking like it had floated off
+     the edge, since the real edge curves inward there. */
+  .thermo-ticks {
+    position: absolute;
+    left: 16px;
+    /* Wider than the tube itself (46px) — the star badge is wider than
+       the tube and its bottom half overlaps the same vertical band as
+       the topmost tick, so ticks need enough clearance to sit past the
+       star's edge rather than starting flush with the tube. */
+    width: 90px;
+    top: 0;
+    height: 100%;
+  }
+
+  .thermo-tick {
+    position: absolute;
+    left: 100%;
+    transform: translateY(50%);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+
+  .thermo-tick-dash {
+    display: inline-block;
+    width: 14px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .thermo-tick-label {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* GOAL star badge (2026-08-20) — replaces the old plain "$200,000"
+     text label above the tube. Sits on top of the tube's rounded cap
+     (later in the DOM = painted on top with default stacking, no
+     z-index needed) rather than the tube cutting across it. */
+  .thermo-goal-badge {
+    position: absolute;
+    top: 25px;
+    left: 39px; /* centered over the tube's own centerline (tube's left:16px + half its 46px width) */
+    transform: translateX(-50%);
+    width: 130px;
+    height: 130px;
+  }
+
+  .thermo-star {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .thermo-star polygon {
+    fill: var(--highlight);
+    stroke: var(--campaign-fill);
+    stroke-width: 6;
+    stroke-linejoin: round;
+  }
+
+  .thermo-goal-badge-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--accent);
+    text-transform: uppercase;
   }
 
   .thermo-stats {
@@ -1016,29 +1155,19 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     align-items: center;
   }
 
-  .thermo-raised {
-    /* Same heading font as the "PYT in numbers" figures above, for
-       consistency across the two number-heavy sections of the page. */
-    font-family: var(--font-heading);
-    font-size: 2.8rem;
-    font-weight: 400;
-    color: var(--ink);
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  .thermo-goal {
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: var(--ink-soft);
-    margin: 0.4rem 0 0;
-  }
-
+  /* Now the ONLY line here (2026-08-20) — the big raised-amount figure
+     and the muted "raised of $X goal" line were both removed per PM
+     feedback (the thermometer already shows progress visually).
+     Styled to match the hero-lede paragraph under the headline
+     (same font, same full-strength ink color, same weight) instead of
+     the muted gray other captions use, with real margin above it so
+     it doesn't crowd the bulb the way the old grey line used to. */
   .thermo-meta {
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: var(--ink-soft);
-    margin: 0.5rem 0 0;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--space-sm);
   }
 
   .thermo-meta strong {
