@@ -50,6 +50,11 @@ const shows = defineCollection({
     audition_start: z.coerce.date().optional().catch(undefined),
     audition_end: z.coerce.date().optional().catch(undefined),
     audition_display: z.string().optional(),
+    // Optional short description shown on the Auditions page card for this
+    // show (2026-08-20). When blank, the card falls back to a sentence
+    // assembled from the show's own type/dates/ages, so a card is never
+    // empty and this field is genuinely optional.
+    audition_blurb: z.string().optional(),
     // Legacy single-date field from before the range change. Kept so old
     // content files that still have it don't break the build. Falls back to
     // acting as the end date when the new fields are absent.
