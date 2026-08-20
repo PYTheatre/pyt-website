@@ -24,7 +24,6 @@ const volunteer = page.volunteer_opportunities || [];
   description="Paid roles and volunteer opportunities at Peninsula Youth Theatre."
 >
   <PageHero
-    eyebrow={page.eyebrow}
     title={page.title}
     lede={page.intro}
   />
@@ -33,7 +32,6 @@ const volunteer = page.volunteer_opportunities || [];
   {roles.length > 0 && (
     <section class="section roles-section">
       <div class="container">
-        <p class="eyebrow">Paid positions</p>
         <h2 class="section-head">{page.roles_heading}</h2>
         {page.roles_intro && <p class="section-blurb">{page.roles_intro}</p>}
 
@@ -69,7 +67,6 @@ const volunteer = page.volunteer_opportunities || [];
   {volunteer.length > 0 && (
     <section class="section volunteer-section">
       <div class="container">
-        <p class="eyebrow">Ways to help</p>
         <h2 class="section-head">{page.volunteer_heading}</h2>
         {page.volunteer_intro && <p class="section-blurb">{page.volunteer_intro}</p>}
 
