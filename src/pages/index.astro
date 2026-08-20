@@ -37,25 +37,36 @@ const fillPct = Math.min(100, Math.max(0, pct));
 
 // --- Thermometer redesign (2026-08-20) — star badge + interval ticks ---
 // Approved via a static mockup first (thermometer_redesign_v4.png).
-// Tick marks sit at 25/50/75/100% of the GOAL (not of the current
-// raised amount) so they're fixed reference points on the scale,
-// generated from fractions rather than hardcoded dollar amounts so
-// this still makes sense if the goal itself ever changes via the CMS.
-// Geometry below matches this page's own thermo/tube pixel sizes
-// (see .thermo/.thermo-tube in the styles) — the Support page computes
-// its own version from ITS sizes, since the two pages have always
-// used different-sized thermometers.
-const THERMO_H = 320;
+// All the geometry below is derived from these four numbers, so the
+// ticks, the fill, and the star can't drift out of agreement with each
+// other the way they did on the first attempt.
+const THERMO_H = 435;   // whole graphic, incl. the star's headroom above the tube
+const TUBE_TOP = 115;   // tube's own top edge, leaving room for the star above it
 const TUBE_H = 268;
 const TUBE_W = 46;
-const TUBE_TOP_RADIUS = TUBE_W / 2; // the tube's rounded cap — ticks stop here, not at the mathematical peak, or the top one visually "floats" off the tube
-const USABLE_H = TUBE_H - TUBE_TOP_RADIUS;
-const TICK_BASE = THERMO_H - TUBE_H; // tube's own bottom, in .thermo's bottom-up coordinate space
+const BULB = 80;
+const TUBE_BULB_OVERLAP = 28; // preserved from the original design, so the tube/bulb joint looks unchanged
+
+// The measuring scale runs from the tube's bottom up to where its
+// rounded cap begins — NOT to the cap's mathematical peak, since the
+// tube's edge curves inward there and a tick placed at the true top
+// visually floats off the side of the tube.
+const USABLE_H = TUBE_H - TUBE_W / 2;
+const TUBE_BOTTOM = TUBE_TOP + TUBE_H;
+const TICK_BASE = THERMO_H - TUBE_BOTTOM; // tube's bottom, in the bottom-up coord space the ticks/fill use
+
 const tickFractions = [0.25, 0.5, 0.75, 1];
 const thermoTicks = tickFractions.map((f) => ({
   amount: Math.round(goal * f),
   bottomPx: TICK_BASE + f * USABLE_H,
 }));
+
+// Fill height in PIXELS on that same USABLE_H scale — not a percentage
+// of the tube's full height. Using a percentage made the fill measure
+// against a taller scale than the ticks did, so at 75% the teal rose
+// visibly ABOVE its own $150,000 tick. Sharing one scale is what keeps
+// "75% of goal" and "level with the $150,000 mark" the same place.
+const fillPx = (fillPct / 100) * USABLE_H;
 
 // Hexagram ("Star of David" shape) outline for the GOAL badge — two
 // true equilateral triangles, generated as one 12-point polygon
@@ -530,7 +541,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         <div class="thermo" role="img"
              aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete`}>
           <div class="thermo-tube">
-            <div class="thermo-fill" style={`height: ${fillPct}%`}></div>
+            <div class="thermo-fill" style={`height: ${fillPx}px`}></div>
           </div>
           <div class="thermo-bulb"></div>
           <!-- Interval ticks — drawn as their own layer (not inside
@@ -1079,17 +1090,26 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      other (bulb still bottom:0, tube's own height/overlap with it
      unchanged) — this just adds room above them. Ticks sit off to the
      right, wide enough for the longest label ($200,000-ish). */
+  /* Box is exactly the STAR's width, and every piece inside is centered
+     on that same centerline (left:50% + translateX(-50%)). That's what
+     makes the tube, the bulb, the star, the stats line and the Donate
+     button all share one vertical axis — the previous version sized this
+     box wide enough to also contain the tick labels, so the flex row
+     centered the BOX while the tube itself sat far off to the left of
+     everything stacked beneath it. Tick labels now overhang to the
+     right instead (see .thermo-ticks). */
   .thermo {
     position: relative;
-    width: 300px;
-    height: 410px;
+    width: 130px;
+    height: 435px;
     flex-shrink: 0;
   }
 
   .thermo-tube {
     position: absolute;
-    left: 16px;
-    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 115px;
     width: 46px;
     height: 268px;
     border: 4px solid var(--accent);
@@ -1108,10 +1128,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     transition: height 0.4s ease;
   }
 
+  /* Shares the tube's centerline. Was left:16px, which put the bulb's
+     own centerline 17px to the RIGHT of the tube's — clearly visible as
+     an off-centre blob hanging off the bottom of the tube. */
   .thermo-bulb {
     position: absolute;
     bottom: 0;
-    left: 16px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -1128,14 +1152,17 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      its mathematically-rounded top — placing the highest tick at the
      literal top of the tube left it looking like it had floated off
      the edge, since the real edge curves inward there. */
+  /* Ticks hang off the tube's right side. Anchored to the tube's own
+     centerline and given half the tube's width plus a small gap, so
+     each dash starts just clear of the tube's edge. With the star now
+     sitting properly high (its bottom tip stops above the topmost
+     tick's height), the ticks no longer need to be pushed far right to
+     dodge it. Overflows the .thermo box on purpose — the box is sized
+     to the star so the tube stays centered under the stats/button. */
   .thermo-ticks {
     position: absolute;
-    left: 16px;
-    /* Wider than the tube itself (46px) — the star badge is wider than
-       the tube and its bottom half overlaps the same vertical band as
-       the topmost tick, so ticks need enough clearance to sit past the
-       star's edge rather than starting flush with the tube. */
-    width: 90px;
+    left: 50%;
+    width: 29px;
     top: 0;
     height: 100%;
   }
@@ -1169,10 +1196,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      text label above the tube. Sits on top of the tube's rounded cap
      (later in the DOM = painted on top with default stacking, no
      z-index needed) rather than the tube cutting across it. */
+  /* Raised so only its bottom tip overlaps the tube (~20px, matching the
+     approved mockup's proportion). It previously sank 65px into the
+     tube — half the star's own height — which read as the star sitting
+     far too low rather than perched on top. */
   .thermo-goal-badge {
     position: absolute;
-    top: 25px;
-    left: 39px; /* centered over the tube's own centerline (tube's left:16px + half its 46px width) */
+    top: 5px;
+    left: 50%;
     transform: translateX(-50%);
     width: 130px;
     height: 130px;
