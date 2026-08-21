@@ -4,6 +4,10 @@ show_in_nav: true
 nav_parent: About
 draft: false
 ---
+
+
+
+
 As a nonprofit organization, PYT offers a limited number of scholarships for our programs, based on need and availability.
 
 Scholarships are for families experiencing financial difficulties and who want to participate in PYT activities. Each family may apply for two scholarships per child per season – one for a class or camp, and one for participation in a production. Please note that scholarships only cover the participation fee for productions, and are not available to cover expenses such as costumes, cast party ticket, etc.
