@@ -9,6 +9,7 @@
    - donate-page.json (intro copy + hosted Soapbox donation link)
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import PageHeroImage from "../components/PageHeroImage.astro";
 import campaign from "../content/settings/donation-campaign.json";
 import tiers from "../content/settings/donor-tiers.json";
@@ -93,7 +94,8 @@ const sponsorSeasonPrice = donatePage.sponsor_season_price || "";
 const corporateDonateUrl = corporate.corporate_donate_url || "";
 const corporateLinkLive = corporateDonateUrl.trim().length > 0;
 // Optional contact email shown under the corporate intro as a mailto link.
-const corporateEmail = (corporate as any).contact_email || "";
+// corporateEmail removed 2026-08-20 — corporate giving now uses the
+// contact form (development route) instead of a published address.
  
 // Recognition: only show groups that actually have at least one name,
 // so empty tiers don't render as bare headings.
@@ -218,11 +220,15 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     <div class="container">
       <h2 class="section-head">{corporate.heading}</h2>
       {corporate.intro && <p class="corporate-intro">{corporate.intro}</p>}
-      {corporateEmail && (
-        <p class="corporate-contact">
-          To discuss corporate giving, email <a href={`mailto:${corporateEmail}`}>{corporateEmail}</a>.
-        </p>
-      )}
+      {/* Replaced a published address (2026-08-20). Routed to the
+          "development" inbox, where corporateEmail used to point. */}
+      <ContactForm
+        route="development"
+        source="Ways to Support — corporate giving"
+        subject="Corporate giving enquiry"
+        intro="To discuss corporate giving, send us a message."
+        submitLabel="Send enquiry"
+      />
  
       <ul class="tier-list">
         {corporate.tiers.map((tier) => (
