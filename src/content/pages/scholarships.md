@@ -1,5 +1,7 @@
 ---
 title: Scholarships
+hero_image: /uploads/screenshot-2026-03-31-at-12.37.06.png
+hero_focus: 40
 show_in_nav: true
 nav_parent: About
 draft: false
