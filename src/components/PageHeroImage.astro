@@ -42,6 +42,18 @@ function normalizePath(p: string): string {
   return noTrailing === "" ? "/" : noTrailing;
 }
 
+interface Props {
+  /* Optional overrides (2026-08-21). Staff-created pages set their photo
+     ON the page itself, because the Page Hero Images list is a fixed
+     dropdown of the hand-built pages and can't know about pages that
+     don't exist yet. When these are passed they win; otherwise the
+     lookup below runs exactly as before. */
+  image?: string;
+  focus?: number | string;
+  alt?: string;
+}
+const { image: imageProp, focus: focusProp, alt: altProp } = Astro.props;
+
 const currentPath = normalizePath(Astro.url.pathname);
 
 const rows = ((heroes as any).items || []).filter(
@@ -61,13 +73,13 @@ const rows = ((heroes as any).items || []).filter(
 // Now a page gets a hero only if it has its own row. To give one
 // individual production page a hero, add a row for its exact address.
 const match = rows.find((r: any) => normalizePath(r.page) === currentPath);
-const image = match?.image?.trim() || "";
+const image = (imageProp || "").trim() || match?.image?.trim() || "";
 // Alt text is optional. Left blank the image is treated as decorative,
 // which is the correct accessibility behaviour for a mood/banner photo
 // that doesn't convey information the page text doesn't already give.
-const alt = match?.alt?.trim() || "";
+const alt = (altProp || "").trim() || match?.alt?.trim() || "";
 // Which part of the photo survives the crop. Defaults to the middle.
-const focus = objectPosition(match?.focus);
+const focus = objectPosition(focusProp !== undefined && focusProp !== null && focusProp !== "" ? focusProp : match?.focus);
 ---
 
 {image && (
