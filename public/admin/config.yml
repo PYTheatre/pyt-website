@@ -473,6 +473,12 @@ collections:
           - { name: "address", label: "Address (shown under the logo)", widget: "text", hint: "Press Enter/Return inside this box for a real line break — it's now preserved exactly as typed (e.g. street on one line, city/zip on the next). The Privacy Policy link always renders on its own line below this, so you don't need to add it here." }
           - { name: "privacy_link_label", label: "Privacy policy — link text", widget: "string", default: "Privacy policy", hint: "The clickable words. Leave blank to hide the Privacy Policy link entirely. Always shown on its own line, under the address." }
           - { name: "privacy_link_url", label: "Privacy policy — link URL", widget: "string", required: false, hint: "Where the Privacy Policy link goes." }
+          # --- Social links (2026-08-20) ---
+          # Shown as icons only, in the footer only. Leave one blank and
+          # only the other icon appears; leave both blank and the row
+          # disappears entirely.
+          - { name: "instagram_url", label: "Instagram link", widget: "string", required: false, hint: "Full address of the PYT Instagram page. Leave blank to hide the Instagram icon." }
+          - { name: "facebook_url", label: "Facebook link", widget: "string", required: false, hint: "Full address of the PYT Facebook page. Leave blank to hide the Facebook icon." }
           - { name: "copyright_extra", label: "Copyright extra text", widget: "string", hint: "Shown after the year. Example: 501(c)(3) · EIN 77-0335126" }
           - name: "columns"
             label: "Footer link columns"
