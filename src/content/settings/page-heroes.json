@@ -41,7 +41,8 @@
     },
     {
       "page": "/volunteer",
-      "image": "/uploads/volunteers.jpg"
+      "image": "/uploads/volunteers.jpg",
+      "focus": 40
     }
   ]
 }
