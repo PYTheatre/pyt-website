@@ -16,6 +16,7 @@
   JSON; per-production content comes from the storiesOnStage collection.
 */
 import { getCollection } from "astro:content";
+import ContactForm from "../../components/ContactForm.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import settings from "../../content/settings/stories-on-stage-page.json";
@@ -34,11 +35,11 @@ export async function getStaticPaths() {
 const { prod } = Astro.props;
 const data = prod.data;
 
-// Editable school/group booking email (falls back to the known address).
-const bookingEmail =
-  (settings as any).school_booking_email || "lhatten@pytnet.org";
-const subject = encodeURIComponent(`Group booking enquiry — ${data.title}`);
-const mailto = `mailto:${bookingEmail}?subject=${subject}`;
+// Group bookings go through the contact form (2026-08-20) rather than a
+// published address, routed to the "education" inbox where
+// school_booking_email used to point. The show title prefills the subject
+// so staff can see which production at a glance.
+const bookingSubject = `Group booking enquiry — ${data.title}`;
 
 // Optional editable line above the Tickets button — empty by default.
 const ticketsIntro = (data as any).tickets_intro || "";
@@ -92,11 +93,14 @@ const ticketsIntro = (data as any).tickets_intro || "";
         <div class="booking-card">
           <h2>Schools and groups</h2>
           <p class="booking-intro">
-            Bringing a class or group? Email us to arrange a booking.
+            Bringing a class or group? Send us a message to arrange a booking.
           </p>
-          <a href={mailto} class="btn btn-outline">
-            Email about a group booking
-          </a>
+          <ContactForm
+            route="education"
+            source={`Stories on Stage booking — ${data.title}`}
+            subject={bookingSubject}
+            submitLabel="Send booking enquiry"
+          />
         </div>
       </div>
     </div>
