@@ -172,4 +172,40 @@ const castPages = defineCollection({
 });
  
 // Expose the collections so Astro can discover them.
-export const collections = { shows, programs, storiesOnStage, castPages };
+/*
+  PAGES (2026-08-21)
+  ------------------
+  Staff-created pages. Each one becomes a real page at /its-slug, laid
+  out exactly like the Casting page: title, optional hero photo, then a
+  body of rich text, with an optional pull-quote and call-to-action at
+  the end.
+
+  These are a FOLDER collection, not the fixed one-record-per-page setup
+  used elsewhere, because the whole point is that staff can add as many
+  as they like without a developer creating a file for each.
+*/
+const pages = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/pages" }),
+  schema: z.object({
+    title: z.string(),
+    // Optional short line above the title, same idea as the Casting page.
+    intro: z.string().optional(),
+    // Body is the Markdown underneath the frontmatter, so it isn't here.
+    closing_quote: z.string().optional(),
+    cta_label: z.string().optional(),
+    cta_url: z.string().optional(),
+    // --- Navigation ---
+    // When true the page is added to the nav automatically, into the
+    // dropdown named by nav_parent. Left false, the page still exists
+    // and can be linked to by hand.
+    show_in_nav: z.boolean().optional().default(false),
+    nav_parent: z.string().optional(),
+    // Overrides the page title in the nav, for when the full title is
+    // too long to sit in a menu.
+    nav_label: z.string().optional(),
+    // Hides the page without deleting it.
+    draft: z.boolean().optional().default(false),
+  }),
+});
+
+export const collections = { shows, programs, storiesOnStage, castPages, pages };
