@@ -1,7 +1,7 @@
 ---
 title: "Young Performers "
 hero_image: /uploads/ype-frog-toad.jpg
-cta_label: Shows with YPs
+cta_label: YP opportunities
 cta_url: /musicals/
 show_in_nav: true
 nav_parent: About
