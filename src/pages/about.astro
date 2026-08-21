@@ -100,20 +100,31 @@ function getInitials(name: string): string {
 
       <aside class="contact-card" id="contact">
         <h2>Get in touch</h2>
-        <dl>
-          <div>
-            <dt>Address</dt>
-            <dd>{about.address}</dd>
-          </div>
-          <div>
-            <dt>Phone</dt>
-            <dd><a href={`tel:${about.phone.replace(/[^+\d]/g, "")}`}>{about.phone}</a></dd>
-          </div>
-          <div>
-            <dt>Tax ID (EIN)</dt>
-            <dd>{about.ein}</dd>
-          </div>
-        </dl>
+        {/* Phone removed 2026-08-20 along with the site-wide removal of
+            published contact details.
+
+            Each remaining row also hides when its field is blank. Making a
+            field clearable in the CMS is only half the job — without this
+            guard, emptying it left a label with nothing under it, which is
+            what "the CMS won't let me delete the phone number" really came
+            down to: the field was marked required AND the row had no
+            empty-state. Both are fixed. */}
+        {(about.address?.trim() || about.ein?.trim()) && (
+          <dl>
+            {about.address?.trim() && (
+              <div>
+                <dt>Address</dt>
+                <dd>{about.address}</dd>
+              </div>
+            )}
+            {about.ein?.trim() && (
+              <div>
+                <dt>Tax ID (EIN)</dt>
+                <dd>{about.ein}</dd>
+              </div>
+            )}
+          </dl>
+        )}
         <p class="nonprofit-note">
           Peninsula Youth Theatre is a 501(c)(3) nonprofit corporation.
         </p>
