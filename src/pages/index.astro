@@ -487,29 +487,43 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   </section>
  
   <!-- ============ IMPACT STATS ============ -->
+  {(home.impact_heading?.trim() || (home.stats || []).length > 0) && (
   <section class="section impact">
     <div class="container">
-      <h2 class={`section-head ${impact_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.impact_heading}</h2>
+      {home.impact_heading?.trim() && (
+        <h2 class={`section-head ${impact_heading_case === "uppercase" ? "case-upper" : ""}`}>{home.impact_heading}</h2>
+      )}
  
+      {/* Hide the grid entirely when there are no stats, rather than
+          leaving an empty grid under the heading. */}
+      {(home.stats || []).filter((s) => s?.figure?.trim() || s?.label?.trim()).length > 0 && (
       <div class="stat-grid">
-        {home.stats.map((stat, i) => {
-          /* Impact numbers are coloured by POSITION using the three logo
-             colours, cycling if there are ever more than three:
-             1st = blue, 2nd = green, 3rd = pink. Now also boxed in that
-             same colour (PM request, 2026-08-19), on the new dark
-             section background. */
-          const figureColors = ["var(--brand-blue)", "var(--brand-green)", "var(--accent)"];
-          const figureColor = figureColors[i % figureColors.length];
+        {(home.stats || []).filter((s) => s?.figure?.trim() || s?.label?.trim()).map((stat, i) => {
+          /* Each stat sits in a SOLID box in one of the brand colours,
+             cycling by position (2026-08-21, replaces the outlined box).
+             Full-strength brand colours rather than pastels, so the type
+             inside stays light — a pale box would need dark type instead.
+             A fourth colour was added so the four current stats don't
+             repeat blue immediately; beyond four it cycles. */
+          const boxColors = [
+            "var(--brand-blue)",
+            "var(--brand-green)",
+            "var(--accent)",
+            "var(--stat-gold)",
+          ];
+          const boxColor = boxColors[i % boxColors.length];
           return (
-            <div class="stat" style={`border-color: ${figureColor}`}>
-              <p class="stat-figure" style={`color: ${figureColor}`}>{stat.figure}</p>
+            <div class="stat" style={`background: ${boxColor}`}>
+              <p class="stat-figure">{stat.figure}</p>
               <p class="stat-label">{stat.label}</p>
             </div>
           );
         })}
       </div>
+      )}
     </div>
   </section>
+  )}
  
   <!-- ============ VALUES ============ -->
   <!-- Added 2026-08-20, sits between "PYT in numbers" and the donation
@@ -532,7 +546,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
                  same approach as the impact figures above, so a fourth
                  value doesn't need a code change or a colour field in
                  the CMS. */
-              const pastels = ["var(--pastel-pink)", "var(--pastel-blue)", "var(--pastel-green)"];
+              const pastels = ["var(--values-pink)", "var(--values-blue)", "var(--values-green)"];
               return (
                 <li class="values-item" style={`color: ${pastels[i % pastels.length]}`}>{phrase}</li>
               );
@@ -592,10 +606,29 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 <style>
   /* Pastel tints of the three PYT logo colours, used by the Values
      section. Kept local to this page because nothing else uses them. */
+  .impact {
+    /* Fourth box colour, so four stats don't repeat blue side by side.
+       A deepened gold rather than the bright --highlight yellow, which
+       is reserved for the Donate button and is too light to carry white
+       type. */
+    --stat-gold: #c9971a;
+  }
+
+  /* Values band (2026-08-21). Pale lilac ground, chosen because it's the
+     nav-pill colour and so already part of the palette rather than a new
+     one — and because it separates this section from the plain-white
+     thermometer section directly below it.
+
+     The word colours are DEEPENED brand colours, not the pastels first
+     tried: pastels on any pale ground measure ~1.5-2.2 contrast, well
+     under the 3.0 minimum for large display text, and visibly washed
+     out. These sit around 3.8. The pastel range moved up to the stat
+     boxes, where the dark band behind them supports it. */
   .values {
-    --pastel-pink: #e88ab8;
-    --pastel-blue: #8fcbe4;
-    --pastel-green: #9ed48a;
+    --values-pink: #a82169;
+    --values-blue: #2f7fa3;
+    --values-green: #4a8038;
+    background: #efeaf8;
   }
 
   /* ---- Hero ---- */
@@ -1050,24 +1083,39 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     gap: 0.9rem;
   }
  
+  /* Solid colour boxes (2026-08-21). Figure and label are both centred,
+     the figure sitting above the label. A min-height keeps all four boxes
+     equal even though the labels differ a lot in length — without it the
+     shortest ("Audience members") made a visibly stubbier box. */
   .stat {
-    border: 2px solid var(--accent);
-    padding: 1.1rem 0.9rem;
+    background: var(--accent);
+    padding: 1.4rem 1rem;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    min-height: 132px;
   }
 
   .stat-figure {
     font-family: var(--font-heading);
     font-size: 2.1rem;
     font-weight: 400;
-    color: var(--accent);
+    /* Light type on a saturated box. */
+    color: #fff;
     line-height: 1;
+    margin: 0;
   }
  
   .stat-label {
     font-size: 0.85rem;
-    color: var(--nav-text-muted);
-    margin-top: 0.5rem;
+    /* Slightly softened white rather than the muted grey used before:
+       that grey was tuned for the dark band behind, and on a saturated
+       box it dropped below a comfortable contrast. */
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0.55rem 0 0;
     line-height: 1.35;
   }
  
@@ -1110,6 +1158,27 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     gap: 0.15rem;
   }
 
+  /* Staggered: each line steps across so the block reads as movement
+     rather than a stacked list. Indents are in `em` so they scale with
+     the type and hold their proportion at any screen size. The pattern
+     repeats every three, matching the colour rotation. */
+  .values-item:nth-child(3n + 2) {
+    margin-left: 1.6em;
+  }
+
+  .values-item:nth-child(3n + 3) {
+    margin-left: 0.8em;
+  }
+
+  @media (max-width: 560px) {
+    /* On a phone the indents would push the longest phrase off the
+       edge, so the stagger flattens out. */
+    .values-item:nth-child(3n + 2),
+    .values-item:nth-child(3n + 3) {
+      margin-left: 0;
+    }
+  }
+
   .values-item {
     /* Baloo 2 is already loaded site-wide (see the font import in
        global.css) and is the same playful face used in the hero, so
@@ -1125,7 +1194,10 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     font-style: italic;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: clamp(2.1rem, 6vw, 3.4rem);
+    /* Bigger than before (was capped at 3.4rem, which read as a list
+       rather than a statement). Scales with the viewport so it shrinks
+       on a phone instead of wrapping mid-phrase. */
+    font-size: clamp(2.4rem, 8vw, 5rem);
     /* Baloo 2 reserves a lot of vertical space in its own metrics, so a
        tight line-height keeps the three phrases as a close-set block
        rather than a loose, drifting list. */
@@ -1140,6 +1212,11 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .thermo {
     position: relative;
     margin-bottom: var(--space-md);
+    /* Matches the Ways to Support page (2026-08-21). Width is the ONLY
+       change: the bar previously stretched the full container while the
+       copy above it did not, and that mismatch is what made it look
+       oversized. Position, height, colours and the button are untouched. */
+    max-width: 620px;
   }
 
   /* "Goal" sits above the right-hand end of the bar. */
