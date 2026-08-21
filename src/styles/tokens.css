@@ -18,7 +18,12 @@
 :root {
   /* ---- INK (text colors) ---- */
   --ink: #111111;          /* near-black, main text            */
-  --ink-soft: #4a4a4a;     /* secondary text                   */
+  /* Secondary text is now the SAME black as primary body text
+     (2026-08-21, PM request: "everywhere across the site the text that's
+     grey should all be black"). Kept as its own token rather than being
+     removed, so the ~40 places that use it don't all need editing, and so
+     a softer secondary tone could be reintroduced in one place later. */
+  --ink-soft: #111111;     /* secondary text (same as --ink)   */
   --ink-muted: #8a8a8a;    /* captions, hints                  */
  
   /* ---- PAPER (background colors) ---- */
@@ -58,7 +63,12 @@
   /* ---- DARK NAV (new bolder header direction — colors still PLACEHOLDER) ---- */
   --nav-bg-dark: #17151a;         /* header background */
   --nav-text: #f5f3ef;            /* nav link text on the dark header */
-  --nav-text-muted: rgba(245, 243, 239, 0.7);
+  /* The footer's secondary text. This one canNOT go black — it sits on
+     the near-black footer, where black would be invisible. Per the same
+     request's own exception ("unless they're overlaying black and need
+     contrast"), the greyness is removed by taking it to FULL strength
+     light instead of a 70% wash. */
+  --nav-text-muted: rgba(245, 243, 239, 1);
   --highlight: #f2c419;           /* bright CTA color (Donate button), PLACEHOLDER */
   --highlight-text: #1a1a1a;      /* text on the highlight color */
  
