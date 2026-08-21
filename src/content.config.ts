@@ -190,6 +190,12 @@ const pages = defineCollection({
     title: z.string(),
     // Optional short line above the title, same idea as the Casting page.
     intro: z.string().optional(),
+    // Hero photo, set on the page itself rather than in the Page Hero
+    // Images list — that list is a fixed dropdown of the hand-built
+    // pages and can't offer pages that don't exist yet.
+    hero_image: z.string().optional(),
+    hero_focus: z.number().optional(),
+    hero_alt: z.string().optional(),
     // Body is the Markdown underneath the frontmatter, so it isn't here.
     closing_quote: z.string().optional(),
     cta_label: z.string().optional(),
