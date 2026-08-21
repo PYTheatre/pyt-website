@@ -27,6 +27,7 @@
 import Logo from "./Logo.astro";
 import navLabels from "../content/settings/nav-labels.json";
 import navMenu from "../content/settings/nav-menu.json";
+import { getCollection } from "astro:content";
 
 // On the homepage, the logo has moved down into the hero (next to the
 // new playful headline treatment) instead of sitting in the nav bar.
@@ -46,16 +47,48 @@ const isHomepage = Astro.url.pathname === "/";
 // renders as a plain link, checked with `.length > 0` rather than
 // bare truthiness (an empty array is still truthy in JS — see
 // BUILD_LOG.md, this bit a previous session).
+// --- Staff-created pages that opted into the nav (2026-08-21) ---
+// A page made in the CMS can tick "Add to the navigation menu" and
+// choose which dropdown it belongs under. Drafts are excluded, matching
+// the page route itself, so an unfinished page never appears in the nav.
+const cmsPages = (await getCollection("pages"))
+  .filter((pg) => !pg.data.draft && pg.data.show_in_nav)
+  .map((pg) => ({
+    label: (pg.data.nav_label?.trim() || pg.data.title || "").trim(),
+    href: `/${pg.id}`,
+    parent: (pg.data.nav_parent || "").trim(),
+  }))
+  .filter((pg) => pg.label && pg.href !== "/");
+
 const navGroups = ((navMenu as any).items || [])
   .filter((g: any) => g?.label?.trim() && g?.url?.trim())
-  .map((g: any) => ({
-    label: g.label,
-    href: g.url,
-    special: g.style && g.style !== "none" ? g.style : undefined,
-    children: (g.children || [])
+  .map((g: any) => {
+    const children = (g.children || [])
       .filter((i: any) => i?.label?.trim() && i?.url?.trim())
-      .map((i: any) => ({ label: i.label, href: i.url })),
-  }));
+      .map((i: any) => ({ label: i.label, href: i.url }));
+
+    // Append any CMS page that named THIS menu as its parent. Matched on
+    // the menu's label, case-insensitively, since that's what staff pick
+    // from the dropdown.
+    const added = cmsPages.filter(
+      (pg) => pg.parent.toLowerCase() === String(g.label).trim().toLowerCase()
+    );
+
+    // Skip anything already listed by hand in Navigation → Full Menu, so
+    // a page that's been placed manually (for precise ordering) doesn't
+    // also get appended and appear twice.
+    const existing = new Set(children.map((i: any) => String(i.href).replace(/\/+$/, "")));
+    const newOnes = added
+      .filter((pg) => !existing.has(pg.href.replace(/\/+$/, "")))
+      .map((pg) => ({ label: pg.label, href: pg.href }));
+
+    return {
+      label: g.label,
+      href: g.url,
+      special: g.style && g.style !== "none" ? g.style : undefined,
+      children: [...children, ...newOnes],
+    };
+  });
 
 // Maps a navGroup's `special` flag to its CSS class (desktop pill
 // vs. mobile pill use different class names for the same visual
