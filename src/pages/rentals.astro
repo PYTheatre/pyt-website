@@ -25,7 +25,8 @@
   FORM NOTE:
   The form posts to the Formspree endpoint stored in the CMS field
   `form_endpoint`. If that field is ever blank, the form is replaced
-  with a plain mailto fallback so the page never shows a dead form.
+  with a short holding note (NOT an email address) so the page never
+  shows a dead form.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
@@ -131,10 +132,12 @@ const formEndpoint = page.form_endpoint || "";
           </form>
         ) : (
           <div class="form-fallback">
-            <p>To inquire about a rental, please email us at
-              <a href="mailto:info@pytnet.org?subject=Rental%20inquiry"> info@pytnet.org</a>
-              with details about your production and what you're looking for.</p>
-            <a href="mailto:info@pytnet.org?subject=Rental%20inquiry" class="btn btn-primary">Email us</a>
+            {/* Deliberately shows NO email address (2026-08-20). This
+                fallback only appears if the endpoint above is blank, and
+                printing an inbox here would reintroduce exactly what the
+                site-wide switch to forms removed. */}
+            <p>Our rental inquiry form is being set up. Please check back shortly,
+              or call the office during opening hours.</p>
           </div>
         )}
       </div>
