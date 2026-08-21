@@ -628,7 +628,9 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     --values-pink: #a82169;
     --values-blue: #2f7fa3;
     --values-green: #4a8038;
-    background: #efeaf8;
+    /* Same token as every other panel on the site, so the Values band
+       and the panels elsewhere can never drift apart. */
+    background: var(--paper-warm);
   }
 
   /* ---- Hero ---- */
