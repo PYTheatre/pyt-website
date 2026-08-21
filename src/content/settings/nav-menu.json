@@ -115,7 +115,7 @@
           "url": "/about"
         },
         {
-          "label": "Support",
+          "label": "Support PYT",
           "url": "/ways-to-support"
         },
         {
@@ -125,6 +125,14 @@
         {
           "label": "Press",
           "url": "/press"
+        },
+        {
+          "label": "Contact",
+          "url": "/#contact"
+        },
+        {
+          "label": "Scholarships",
+          "url": "/about"
         }
       ]
     }
