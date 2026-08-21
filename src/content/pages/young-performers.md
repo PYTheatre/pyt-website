@@ -4,7 +4,7 @@ hero_image: /uploads/ype-frog-toad.jpg
 cta_label: Shows with YPs
 cta_url: /musicals/
 show_in_nav: false
-nav_parent: Audition
+nav_parent: About
 nav_label: Young Performers (K-2)
 draft: false
 ---
