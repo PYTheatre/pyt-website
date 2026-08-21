@@ -639,9 +639,8 @@ collections:
           - { name: "casting_link_lead", label: "Casting sentence — text before the link", widget: "string", required: false, hint: "Example: \"Curious how we cast our shows? Read about\". The next field is the clickable part." }
           - { name: "casting_link_label", label: "Casting sentence — clickable link text", widget: "string", required: false, hint: "The clickable words linking to the Casting page. Leave blank to hide this whole sentence." }
           - { name: "casting_link_tail", label: "Casting sentence — text after the link", widget: "string", required: false, hint: "Example: \".\" — any text after the link, including final punctuation." }
-          - { name: "address", label: "Street address", widget: "string", default: "2500 Old Middlefield Way, Mountain View, CA 94043" }
-          - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
-          - { name: "ein", label: "EIN (tax ID)", widget: "string", default: "77-0335126" }
+          - { name: "address", label: "Street address", widget: "string", required: false, default: "2500 Old Middlefield Way, Mountain View, CA 94043", hint: "Leave blank to hide this row from the Get in touch card." }
+          - { name: "ein", label: "EIN (tax ID)", widget: "string", required: false, default: "77-0335126", hint: "Leave blank to hide this row from the Get in touch card." }
           - { name: "staff_section_heading", label: "Staff section heading", widget: "string", required: false, default: "Our Staff" }
           - { name: "staff_section_blurb", label: "Staff section description (optional)", widget: "text", required: false, hint: "Optional short text under the Staff heading. Leave blank to omit." }
           - name: "staff_members"
