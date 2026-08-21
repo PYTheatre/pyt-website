@@ -12,6 +12,7 @@
   /admin → Site Settings → Employment Page.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import PageHero from "../components/PageHero.astro";
 import page from "../content/settings/employment-page.json";
 
@@ -103,9 +104,11 @@ const volunteer = page.volunteer_opportunities || [];
     <section class="section">
       <div class="container">
         <p class="empty-state">
-          No openings or opportunities posted right now. Please check back, or email
-          <a href="mailto:info@pytnet.org"> info@pytnet.org</a>.
+          No openings or opportunities posted right now. Please check back, or send
+          us a message below.
         </p>
+        {/* Replaced a published info@ address (2026-08-20). */}
+        <ContactForm route="general" source="Employment page" submitLabel="Send message" />
       </div>
     </section>
   )}
