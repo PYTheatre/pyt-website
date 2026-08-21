@@ -477,7 +477,7 @@ collections:
             label: "Hero images"
             widget: "list"
             summary: "{{fields.page}}"
-            hint: "One row per page. A page can only have one hero image. Best photo shape is wide and landscape — it's shown as a short banner strip and gets cropped to fit, so avoid anything where the important part is near the very top or bottom. Note: individual show pages already lead with the show's own poster, so they don't take a hero image."
+            hint: "One row per page. A page can only have one hero image. Best photo shape is wide and landscape — it's shown as a short banner strip and gets cropped to fit, so avoid anything where the important part is near the very top or bottom. Each page needs its own row — a photo set here applies to that page only, and does not carry down to pages beneath it. Individual show and production pages already open with their own poster and details, so they're deliberately not listed."
             fields:
               - name: "page"
                 label: "Which page"
@@ -500,7 +500,7 @@ collections:
                   - { label: "School Tickets", value: "/school-tickets" }
                   - { label: "Shop", value: "/shop" }
                   - { label: "Shows (the list page)", value: "/shows" }
-                  - { label: "Stories on Stage (and its production pages)", value: "/stories-on-stage" }
+                  - { label: "Stories on Stage (the list page)", value: "/stories-on-stage" }
                   - { label: "Studio Shows", value: "/studio-productions" }
                   - { label: "Ways to Support", value: "/ways-to-support" }
               - { name: "image", label: "Photo", widget: "image", hint: "A wide landscape photo works best. Leave a row out entirely rather than adding one with no photo." }
