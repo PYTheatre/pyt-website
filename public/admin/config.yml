@@ -766,6 +766,13 @@ collections:
           - { name: "sos_heading", label: "Stories on Stage card — heading", widget: "string", required: false, default: "Stories on Stage", hint: "Stories on Stage now appears as a card alongside the shows, in the same style." }
           - { name: "sos_blurb", label: "Stories on Stage card — description", widget: "text", required: false, hint: "The couple of lines under the heading, matching the show cards." }
           - { name: "sos_button_label", label: "Stories on Stage card — button label", widget: "string", required: false, default: "Auditions", hint: "Keep it short — the buttons are sized to their label." }
+          # --- Card buttons and links (2026-08-21) ---
+          # These were previously fixed in the code, which is why only the
+          # Stories on Stage button could be edited.
+          - { name: "signup_button_label", label: "Show cards — sign-up button text", widget: "string", required: false, default: "Sign up", hint: "Shown when a show has an audition sign-up link. Keep it short — buttons are sized to their label." }
+          - { name: "coming_soon_label", label: "Show cards — button text when sign-up isn't open yet", widget: "string", required: false, default: "Coming soon", hint: "Shown instead of the sign-up button when a show has no sign-up link yet. It isn't clickable." }
+          - { name: "about_show_link_label", label: "Show cards — link text next to the button", widget: "string", required: false, default: "About this show", hint: "The pink link beside the button, going to that show's own page. An arrow is added automatically." }
+          - { name: "button_case", label: "Card buttons — capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed", hint: "Applies to all three card buttons together, so they stay consistent. 'As typed' shows exactly what you wrote above." }
           - { name: "faq_heading", label: "FAQ column — heading", widget: "string", required: false, default: "Frequently asked questions", hint: "Sits above the FAQ list on the right." }
           - name: "faqs"
             label: "FAQ items"
