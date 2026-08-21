@@ -296,7 +296,7 @@ collections:
               - { name: "subtitle", label: "Subtitle (smaller, under the title — optional)", widget: "string", required: false, hint: "Example: Grade K-8, or Tickets" }
               - { name: "image", label: "Photo", widget: "image", required: false, hint: "Leave empty for a colored placeholder." }
               - { name: "url", label: "Link", widget: "string", hint: "Example: /shows, or a full https:// link" }
-          - { name: "impact_heading", label: "Impact section — heading", widget: "string" }
+          - { name: "impact_heading", label: "Impact section — heading", widget: "string", required: false, hint: "Leave blank to hide just the heading. Remove all the numbers below to hide the whole section." }
           - { name: "impact_heading_case", label: "Impact section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           # --- Values section (2026-08-20) ---
           # Sits between "PYT in numbers" and the donation section.
@@ -316,7 +316,9 @@ collections:
           - name: "stats"
             label: "Impact stats"
             widget: "list"
+            required: false
             summary: "{{fields.figure}} — {{fields.label}}"
+            hint: "Each one becomes a coloured box. Colours are applied automatically in rotation (blue, green, pink, gold), so there's nothing to choose — add a fifth and the rotation starts again. Remove them all to hide the whole section."
             fields:
               - { name: "figure", label: "Big number", widget: "string", hint: "Example: 30+ or $45K" }
               - { name: "label", label: "Description", widget: "string" }
