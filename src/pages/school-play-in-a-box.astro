@@ -5,18 +5,18 @@
   PYT's after-school drama program for schools. All content is editable
   via the CMS at /admin → Site Settings → School Play in a Box Page.
 
-  The inquiry uses an "Email to inquire" button (mailto, pre-addressed
-  to the editable Education Program Manager email with a subject line)
-  rather than an embedded form — the static site has no form backend,
-  and the old site's form just emailed this address anyway.
+  Inquiries use the shared ContactForm component (2026-08-20). The page
+  previously published the Education Program Manager's email address as
+  a mailto link; that address is no longer shown anywhere on the site.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import PageHero from "../components/PageHero.astro";
 import page from "../content/settings/school-play-in-a-box-page.json";
 
-const inquiryEmail = (page as any).inquiry_email || "caitlyn@pytnet.org";
-const inquirySubject = encodeURIComponent("School Play in a Box inquiry");
-const inquiryMailto = `mailto:${inquiryEmail}?subject=${inquirySubject}`;
+// Enquiries now go through the contact form (2026-08-20) rather than a
+// published mailto address. Routed to the "education" inbox, which is
+// where inquiry_email used to point.
 
 const showsList = ((page as any).shows_list || "")
   .split("\n")
@@ -67,7 +67,7 @@ const showsList = ((page as any).shows_list || "")
         <h2>Bring it to your school</h2>
         {(page as any).inquiry_intro && <p>{(page as any).inquiry_intro}</p>}
         <div class="spib-cta-actions">
-          <a href={inquiryMailto} class="btn btn-primary">Email to inquire</a>
+          <a href="#spib-inquiry" class="btn btn-primary">Make an inquiry</a>
           {(page as any).current_sessions_url && (
             <a href={(page as any).current_sessions_url} class="btn btn-outline" target="_blank" rel="noopener">
               Current sessions
@@ -100,6 +100,19 @@ const showsList = ((page as any).shows_list || "")
           ))}
         </div>
       )}
+    </div>
+  </section>
+
+  {/* Replaces the old "Email to inquire" mailto button (2026-08-20). */}
+  <section class="section" id="spib-inquiry">
+    <div class="container">
+      <h2 class="section-head">Make an inquiry</h2>
+      <ContactForm
+        route="education"
+        source="School Play in a Box"
+        subject="School Play in a Box inquiry"
+        submitLabel="Send inquiry"
+      />
     </div>
   </section>
 </BaseLayout>
