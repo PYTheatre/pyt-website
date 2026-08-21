@@ -61,6 +61,41 @@
       ]
     },
     {
+      "style": "none",
+      "label": "Shows",
+      "url": "/shows/",
+      "children": [
+        {
+          "label": "Stories on Stage",
+          "url": "/stories-on-stage/"
+        },
+        {
+          "label": "Center Stage Musicals",
+          "url": "/musicals/"
+        },
+        {
+          "label": "Studio Shows",
+          "url": "/studio-productions/"
+        },
+        {
+          "url": "/school-tickets/",
+          "label": "School Tickets"
+        },
+        {
+          "label": "The Rules of Comedy",
+          "url": "/shows/rules-of-comedy/"
+        },
+        {
+          "label": "The Wizard of Oz",
+          "url": "/shows/the-wizard-of-oz/"
+        },
+        {
+          "url": "/stories-on-stage/creepy-carrots/",
+          "label": "Creepy Carrots"
+        }
+      ]
+    },
+    {
       "label": "Classes & Camps",
       "url": "/programs",
       "style": "none",
@@ -126,41 +161,6 @@
         {
           "label": "School Play in a Box",
           "url": "/school-play-in-a-box/"
-        }
-      ]
-    },
-    {
-      "style": "none",
-      "label": "Shows",
-      "url": "/shows/",
-      "children": [
-        {
-          "label": "Stories on Stage",
-          "url": "/stories-on-stage/"
-        },
-        {
-          "label": "Center Stage Musicals",
-          "url": "/musicals/"
-        },
-        {
-          "label": "Studio Shows",
-          "url": "/studio-productions/"
-        },
-        {
-          "url": "/school-tickets/",
-          "label": "School Tickets"
-        },
-        {
-          "label": "The Rules of Comedy",
-          "url": "/shows/rules-of-comedy/"
-        },
-        {
-          "label": "The Wizard of Oz",
-          "url": "/shows/the-wizard-of-oz/"
-        },
-        {
-          "url": "/stories-on-stage/creepy-carrots/",
-          "label": "Creepy Carrots"
         }
       ]
     }
