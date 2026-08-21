@@ -119,19 +119,22 @@
           "url": "/ways-to-support"
         },
         {
+          "label": "Volunteer",
+          "url": "/volunteer"
+        },
+        {
           "label": "Press",
           "url": "/press"
         },
         {
           "label": "Contact",
           "url": "/#contact"
+        },
+        {
+          "label": "Scholarships",
+          "url": "/about"
         }
       ]
-    },
-    {
-      "style": "none",
-      "label": "Shows",
-      "url": "/shows/"
     }
   ]
 }
