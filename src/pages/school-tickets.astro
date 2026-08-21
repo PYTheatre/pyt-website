@@ -14,6 +14,7 @@
   is added.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import PageHero from "../components/PageHero.astro";
 import page from "../content/settings/school-tickets-page.json";
 
@@ -53,12 +54,13 @@ const listings = page.listings || [];
           ))}
         </ul>
       ) : (
-        <p class="empty-state">
-          {page.empty_state_text}
-          {page.contact_email && (
-            <> <a href={`mailto:${page.contact_email}`}>{page.contact_email}</a></>
-          )}
-        </p>
+        <>
+          <p class="empty-state">{page.empty_state_text}</p>
+          {/* Replaced a published contact address (2026-08-20). A ternary
+              branch can only return ONE element, so these two are wrapped
+              in a fragment. */}
+          <ContactForm route="education" source="School Tickets page" subject="School tickets enquiry" submitLabel="Send enquiry" />
+        </>
       )}
     </div>
   </section>
