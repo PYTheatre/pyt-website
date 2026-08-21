@@ -48,21 +48,19 @@ const rows = ((heroes as any).items || []).filter(
   (r: any) => r?.page?.trim() && r?.image?.trim()
 );
 
-// Exact match first. Then, for dynamic pages (e.g. /shows/the-wizard-of-oz),
-// fall back to a row whose path is a parent section (/shows) — so one row can
-// cover a whole set of generated pages without needing an entry per show.
-const exact = rows.find((r: any) => normalizePath(r.page) === currentPath);
-const parent = exact
-  ? null
-  : rows
-      .filter((r: any) => {
-        const rp = normalizePath(r.page);
-        return rp !== "/" && currentPath.startsWith(rp + "/");
-      })
-      // If several parents match, prefer the most specific (longest) one.
-      .sort((a: any, b: any) => normalizePath(b.page).length - normalizePath(a.page).length)[0];
-
-const match = exact || parent;
+// EXACT MATCH ONLY (changed 2026-08-21).
+//
+// This used to fall back to a parent section: a row for /stories-on-stage
+// also gave a hero to /stories-on-stage/creepy-carrots and every other
+// production page. That sounded convenient but was wrong in practice —
+// those pages already open with the production's own poster and details,
+// so a second wide banner above it looked bad, and there was no way to
+// switch it off for the children without also losing it on the section
+// page the PM did want it on.
+//
+// Now a page gets a hero only if it has its own row. To give one
+// individual production page a hero, add a row for its exact address.
+const match = rows.find((r: any) => normalizePath(r.page) === currentPath);
 const image = match?.image?.trim() || "";
 // Alt text is optional. Left blank the image is treated as decorative,
 // which is the correct accessibility behaviour for a mood/banner photo
