@@ -38,7 +38,7 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.props;
-const { title, intro, closing_quote, cta_label, cta_url } = page.data;
+const { title, intro, closing_quote, cta_label, cta_url, hero_image, hero_focus, hero_alt } = page.data;
 const bodyHtml = renderMarkdown(page.body || "");
 ---
 
@@ -53,9 +53,10 @@ const bodyHtml = renderMarkdown(page.body || "");
     </div>
   </section>
 
-  {/* Optional hero photo, set in Site Settings → Page Hero Images
-      against this page's address. */}
-  <PageHeroImage />
+  {/* Optional hero photo, set on the page itself (see the Photo field
+      in the CMS). Falls back to the Page Hero Images list if a row
+      happens to exist for this address. */}
+  <PageHeroImage image={hero_image} focus={hero_focus} alt={hero_alt} />
 
   <section class="section page-body">
     <div class="container page-prose" set:html={bodyHtml} />
