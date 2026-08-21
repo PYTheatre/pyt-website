@@ -139,16 +139,20 @@
           "url": "/ways-to-support"
         },
         {
+          "label": "Young Performers (5-7yrs)",
+          "url": "/"
+        },
+        {
           "label": "School Play in a Box",
           "url": "/school-play-in-a-box/"
         },
         {
-          "label": "Volunteer",
-          "url": "/volunteer"
-        },
-        {
           "label": "School tickets",
           "url": "/school-tickets/"
+        },
+        {
+          "label": "Volunteer",
+          "url": "/volunteer"
         },
         {
           "label": "Press",
@@ -157,10 +161,6 @@
         {
           "label": "Contact",
           "url": "/#contact"
-        },
-        {
-          "label": "Young Performers (5-7yrs)",
-          "url": "/"
         }
       ]
     }
