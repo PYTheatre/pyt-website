@@ -1,8 +1,10 @@
 {
   "hero_eyebrow": "NONE",
   "hero_secondary_label": "Programs",
+  "values_heading": "PYT Values",
   "impact_heading_case": "as-typed",
   "impact_heading": "PYT in numbers",
+  "values_heading_case": "as-typed",
   "donate_lede": "Every gift brings theater and community to the Bay Area and beyond.",
   "photo_strip": [
     {
@@ -32,6 +34,7 @@
     }
   ],
   "hero_primary_url": "/shows",
+  "values_intro": "These three things will get you anywhere and everywhere! We love working with people of all ages who are kind above all, always work hard to be prepared, and are brave in making acting and life choices. ",
   "impact_eyebrow": "PYT in numbers",
   "donate_heading": "Help us bring theater to everyone!",
   "hero_primary_label": "Shows",
@@ -88,10 +91,21 @@
   ],
   "hero_image": "",
   "shows_heading_case": "as-typed",
-  "hero_heading_italic_word": "EVERYONE!",
+  "hero_heading_italic_word": "",
   "donate_button_label": "Donate",
   "discovery_eyebrow": "Welcome!",
   "now_playing_label": "Now playing",
+  "values_list": [
+    {
+      "phrase": "Be kind"
+    },
+    {
+      "phrase": "Be prepared"
+    },
+    {
+      "phrase": "Be brave"
+    }
+  ],
   "discovery_heading_case": "as-typed",
   "hero_heading": "YOUTH THEATER FOR EVERYONE!",
   "donate_heading_case": "as-typed",
@@ -114,19 +128,5 @@
       "label": "OPERATING COSTS SUPPORTED BY DONORS & SPONSORS - LIKE YOU!"
     }
   ],
-  "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs, for the widest audiences possible. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!",
-  "values_heading": "Our values",
-  "values_heading_case": "as-typed",
-  "values_intro": "Every child who walks through our doors is met with the same three promises — the ones we ask of them, and of ourselves.",
-  "values_list": [
-    {
-      "phrase": "Be kind"
-    },
-    {
-      "phrase": "Be prepared"
-    },
-    {
-      "phrase": "Be brave"
-    }
-  ]
+  "hero_lede": "At Peninsula Youth Theatre, young people across the Bay Area produce and perform in outstanding theater and educational programs, for the widest audiences possible. We believe character is built on stage, and there's a role for everyone. We'd love you to join us!"
 }
