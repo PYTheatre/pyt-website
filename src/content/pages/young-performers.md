@@ -3,9 +3,9 @@ title: "Young Performers "
 hero_image: /uploads/ype-frog-toad.jpg
 cta_label: Shows with YPs
 cta_url: /musicals/
-show_in_nav: false
+show_in_nav: true
 nav_parent: About
-nav_label: Young Performers (K-2)
+nav_label: Young Performers (5-7yrs)
 draft: false
 ---
 The Young Performers Ensemble (YPs) is for children ages of 5-7, who participate in Center Stage Musicals. No audition is required to be a Young Performer, and everyone who registers will be able to participate provided they do not have more than 2 calendar conflict dates). Spots are limited, as we're only able to cast a maximum of 20 per shows (10 for each cast). 
