@@ -1,0 +1,11 @@
+# Cloudflare Pages redirects.
+#
+# One rule per line:  <old path>  <new path>  <status>
+# 301 means "moved permanently", which is what search engines and
+# browsers should remember.
+#
+# 2026-08-21: the Employment page became the Volunteer page. Anything
+# already linking to /employment (old emails, printed material, search
+# results, other people's websites) keeps working instead of hitting a
+# "page not found".
+/employment  /volunteer  301
