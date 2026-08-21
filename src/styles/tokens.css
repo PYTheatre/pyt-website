@@ -28,7 +28,23 @@
  
   /* ---- PAPER (background colors) ---- */
   --paper: #ffffff;        /* main background                  */
-  --paper-warm: #faf8f4;   /* soft warm panel background       */
+  /* Panel background, site-wide (2026-08-21). Changed from a warm
+     off-white (#faf8f4) to the pale lilac already used by the Values
+     band on the home page — the off-white sat so close to plain white
+     that panels barely read as panels. This one token covers ~25 panels
+     across 15 pages.
+
+     It is the SAME value the Values band uses, and that band now points
+     at this token rather than repeating the hex, so the two can't drift
+     apart. Lilac is the nav-pill colour, so it was already in the
+     palette rather than being a new colour. */
+  --paper-warm: #efeaf8;   /* pale lilac panel background      */
+
+  /* A genuinely neutral soft grey, for the few places that must stay
+     black-and-white and would be broken by a colour — currently the
+     mobile nav accordion's hover and open states, which the PM asked to
+     be black-and-white with pink accents only. */
+  --neutral-soft: #f4f3f1;
  
   /* ---- LINE (borders & dividers) ---- */
   --line: #e8e6e1;
