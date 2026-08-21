@@ -26,6 +26,18 @@ const discovery_heading_case = (home as any).discovery_heading_case || "as-typed
 const impact_heading_case = (home as any).impact_heading_case || "as-typed";
 const donate_heading_case = (home as any).donate_heading_case || "as-typed";
 
+// --- Values section (2026-08-20) ---
+// Heading, intro and the list of phrases are all CMS-editable. Blank
+// entries are filtered out so an empty row left in the CMS list can't
+// render an empty line.
+const valuesHeading = (home as any).values_heading?.trim() || "";
+const valuesIntro = (home as any).values_intro?.trim() || "";
+const valuesList: string[] = ((home as any).values_list || [])
+  .map((v: any) => (typeof v === "string" ? v : v?.phrase || ""))
+  .map((s: string) => s.trim())
+  .filter(Boolean);
+const values_heading_case = (home as any).values_heading_case || "as-typed";
+
 // --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
@@ -499,6 +511,38 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     </div>
   </section>
  
+  <!-- ============ VALUES ============ -->
+  <!-- Added 2026-08-20, sits between "PYT in numbers" and the donation
+       section. Heading, intro and the value phrases themselves are all
+       CMS-editable; the whole section hides if the heading and phrases
+       are both empty, so it can be switched off without leaving a gap. -->
+  {(valuesHeading || valuesList.length > 0) && (
+    <section class="section values">
+      <div class="container">
+        {valuesHeading && (
+          <h2 class={`section-head ${values_heading_case === "uppercase" ? "case-upper" : ""}`}>{valuesHeading}</h2>
+        )}
+        {valuesIntro && <p class="values-intro">{valuesIntro}</p>}
+
+        {valuesList.length > 0 && (
+          <ul class="values-list">
+            {valuesList.map((phrase, i) => {
+              /* Coloured by POSITION in pastel tints of the three logo
+                 colours, cycling if there are ever more than three —
+                 same approach as the impact figures above, so a fourth
+                 value doesn't need a code change or a colour field in
+                 the CMS. */
+              const pastels = ["var(--pastel-pink)", "var(--pastel-blue)", "var(--pastel-green)"];
+              return (
+                <li class="values-item" style={`color: ${pastels[i % pastels.length]}`}>{phrase}</li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    </section>
+  )}
+
   <!-- ============ DONATION TEASER ============ -->
   <section class="section donate-teaser">
     <div class="container">
@@ -546,6 +590,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 </BaseLayout>
  
 <style>
+  /* Pastel tints of the three PYT logo colours, used by the Values
+     section. Kept local to this page because nothing else uses them. */
+  .values {
+    --pastel-pink: #e88ab8;
+    --pastel-blue: #8fcbe4;
+    --pastel-green: #9ed48a;
+  }
+
   /* ---- Hero ---- */
   .hero {
     padding-top: var(--space-xl);
@@ -553,7 +605,13 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        (Discovery cards / "Find your role") already has its own
        generous top padding via the shared .section class. Making
        both edges large stacked into an oddly big gap. */
-    padding-bottom: var(--space-md);
+    /* Was --space-md (1.5rem), which made every gap on the page 8rem
+       EXCEPT the one after the carousel, which came out at 5.5rem.
+       That small value was right when the hero was text-only and wanted
+       to sit close to what followed; the carousel was later added inside
+       this section and inherited it. Matching --space-xl makes the
+       hero/carousel -> next-section gap 8rem, same as every other. */
+    padding-bottom: var(--space-xl);
   }
  
   .hero-heading {
@@ -1035,6 +1093,46 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      homepage. This copy is scoped to the homepage only via Astro's
      component-level CSS — the Support PYT page keeps its own smaller
      version, untouched. */
+  /* ---- Values ---- */
+  .values-intro {
+    font-size: 1.08rem;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 var(--space-lg);
+  }
+
+  .values-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .values-item {
+    /* Baloo 2 is already loaded site-wide (see the font import in
+       global.css) and is the same playful face used in the hero, so
+       this needs no new font request.
+
+       NOTE ON THE SLANT: Baloo 2 ships no italic cut at all. `font-style:
+       italic` therefore produces a browser-SYNTHESISED oblique — the
+       upright letterforms sheared over — not a designed italic. That is
+       the intended look here (it's what the approved mockup shows), but
+       it's worth knowing it isn't a real italic if the rendering ever
+       looks slightly off in a particular browser. */
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-style: italic;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(2.1rem, 6vw, 3.4rem);
+    /* Baloo 2 reserves a lot of vertical space in its own metrics, so a
+       tight line-height keeps the three phrases as a close-set block
+       rather than a loose, drifting list. */
+    line-height: 1.12;
+    letter-spacing: 0.01em;
+  }
+
   /* ---- Campaign progress bar (horizontal, 2026-08-20) ---- */
   /* Replaces the vertical tube. Sized in percentages off the container
      width rather than fixed pixels, so it fills whatever column it
