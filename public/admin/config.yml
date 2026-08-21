@@ -35,6 +35,47 @@ commit_messages:
 collections:
  
   # ============================================================
+  # PAGES — staff-created pages (2026-08-21).
+  # A folder collection, so staff can add as many as they like
+  # without a developer creating a file for each. Every page is
+  # laid out like the Casting page and can add itself to the nav.
+  # ============================================================
+  - name: "pages"
+    label: "Pages"
+    label_singular: "Page"
+    folder: "src/content/pages"
+    create: true
+    delete: true
+    # The filename becomes the web address, so it's built from the title
+    # and cleaned up automatically — no spaces or capitals to get wrong.
+    slug: "{{slug}}"
+    identifier_field: "title"
+    summary: "{{title}}{{#if draft}}  —  DRAFT{{/if}}"
+    description: "Add your own pages to the website. Each one looks like the Casting page: a title, an optional photo, and as much text as you like. You can also add it straight to the navigation menu."
+    sortable_fields: ["title"]
+    fields:
+      - { name: "title", label: "Page title", widget: "string", hint: "Also becomes the web address. 'Summer Intensive' gives peninsulayouththeatre.org/summer-intensive. Avoid reusing an address that already exists (about, shows, casting, rentals and so on) — the original page would win and yours would never show." }
+      - { name: "intro", label: "Short line above the title (optional)", widget: "string", required: false, hint: "A brief line that sits above the page title. Leave blank to hide it." }
+      - name: "body"
+        label: "Page content"
+        widget: "markdown"
+        required: false
+        hint: "The main text. Use the toolbar for headings, bold, italic, lists, links and images — the same as the Casting page."
+      - { name: "closing_quote", label: "Pull quote at the end (optional)", widget: "text", required: false, hint: "A short highlighted line after the main text. Leave blank to hide it." }
+      - { name: "cta_label", label: "Button text (optional)", widget: "string", required: false, hint: "A button at the foot of the page. Needs BOTH this and the link below to appear." }
+      - { name: "cta_url", label: "Button link (optional)", widget: "string", required: false, hint: "Where the button goes. Example: /shows" }
+      # --- Navigation ---
+      - { name: "show_in_nav", label: "Add to the navigation menu", widget: "boolean", default: false, required: false, hint: "Tick to add this page to the menu at the top of every page. It appears at the end of whichever menu you choose below." }
+      - name: "nav_parent"
+        label: "Which menu should it appear under"
+        widget: "select"
+        required: false
+        options: ["Tickets", "Calendar", "Audition", "Classes & Camps", "Educators", "Shop", "About"]
+        hint: "Only used if the box above is ticked. To place it somewhere specific in the order instead, leave the box unticked and add a row by hand in Site Settings → Navigation — Full Menu."
+      - { name: "nav_label", label: "Shorter name for the menu (optional)", widget: "string", required: false, hint: "Use if the full page title is too long to sit in a menu. Leave blank to use the page title." }
+      - { name: "draft", label: "Draft — hide from the website", widget: "boolean", default: false, required: false, hint: "Tick while you're still writing. The page won't appear on the website or in the menu until you untick it." }
+
+  # ============================================================
   # SHOWS — one entry per Center Stage Musicals production.
   # Folder collection: each show becomes its own file under
   # src/content/shows/, and the site generates a detail page
