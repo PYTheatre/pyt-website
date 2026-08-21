@@ -357,7 +357,6 @@ collections:
           - { name: "summer_scholarships_note", label: "Summer block — scholarships note", widget: "string", required: false }
           - { name: "summer_cancellation_heading", label: "Summer block — cancellation heading", widget: "string", required: false, default: "Cancellation & transfer policy" }
           - { name: "summer_cancellation_body", label: "Summer block — cancellation policy", widget: "text", required: false }
-          - { name: "summer_cancellation_email", label: "Summer block — cancellation email", widget: "string", required: false, default: "caitlyn@pytnet.org" }
  
       # --- School Play in a Box Page (For Educators) ---
       - name: "school-play-in-a-box-page"
@@ -371,7 +370,6 @@ collections:
           - { name: "pyt_provides", label: "PYT provides", widget: "text", required: false }
           - { name: "school_provides", label: "The school provides", widget: "text", required: false }
           - { name: "inquiry_intro", label: "Inquiry — intro line", widget: "text", required: false }
-          - { name: "inquiry_email", label: "Inquiry — email address", widget: "string", default: "caitlyn@pytnet.org", hint: "The 'Email to inquire' button sends here." }
           - { name: "current_sessions_intro", label: "Current sessions — note", widget: "text", required: false }
           - { name: "current_sessions_url", label: "Current sessions — link", widget: "string", required: false }
           - { name: "shows_heading", label: "Shows — heading", widget: "string", required: false, default: "Some School Play in a Box shows" }
@@ -405,6 +403,23 @@ collections:
           - { name: "cta_label", label: "Button text", widget: "string", required: false, default: "Browse & buy photos" }
           - { name: "cta_note", label: "Small note under the button (optional)", widget: "string", required: false, hint: "Example: Opens our photo site in a new tab." }
  
+      # --- Contact Form Endpoints (2026-08-20) ---
+      # Published email addresses were removed from the site and replaced
+      # with contact forms. Enquiries used to reach different people, so
+      # there are three separate destinations rather than one shared inbox.
+      # Each is a Formspree form — create one per destination at
+      # formspree.io, set its notification email to the address shown
+      # below, then paste its endpoint URL here.
+      - name: "contact-forms"
+        label: "Contact Form Endpoints"
+        file: "src/content/settings/contact-forms.json"
+        description: "Where the contact forms on the site send their messages. Each box is a Formspree form address. Until a box is filled in, forms using it show a short holding message instead."
+        fields:
+          - { name: "general", label: "General enquiries", widget: "string", required: false, hint: "Used by: About/Contact, Employment, Stories on Stage. Previously went to info@pytnet.org. Paste the Formspree endpoint, e.g. https://formspree.io/f/abcdwxyz" }
+          - { name: "education", label: "Schools, bookings & education", widget: "string", required: false, hint: "Used by: School Play in a Box, School Tickets, Stories on Stage bookings, Classes & Camps. Previously went to caitlyn@pytnet.org and lhatten@pytnet.org." }
+          - { name: "development", label: "Sponsorship & corporate giving", widget: "string", required: false, hint: "Used by: Ways to Support (corporate giving). Previously went to lhatten@pytnet.org." }
+          - { name: "unavailable_note", label: "Message shown if an address above is blank", widget: "text", required: false, hint: "Shown in place of the form. Deliberately does NOT include an email address — publishing one is what these forms replace." }
+
       # --- Page Hero Images (2026-08-20) ---
       # One optional wide photo per page, all managed together here
       # rather than scattered across each page's own record — several
@@ -584,7 +599,6 @@ collections:
         fields:
           - { name: "heading", label: "Section heading", widget: "string", default: "Corporate Giving" }
           - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
-          - { name: "contact_email", label: "Contact email (optional)", widget: "string", required: false, hint: "Optional. Shown under the intro as a clickable email link, e.g. lhatten@pytnet.org. Leave blank to hide." }
           - { name: "corporate_donate_url", label: "Corporate Soapbox donation link", widget: "string", required: false, hint: "The web address of PYT's corporate Soapbox donation page. While this is blank, the tier buttons show \"Coming soon\". Paste the link here once the page exists to make the buttons live." }
           - name: "tiers"
             label: "Corporate tiers"
@@ -627,7 +641,6 @@ collections:
           - { name: "casting_link_tail", label: "Casting sentence — text after the link", widget: "string", required: false, hint: "Example: \".\" — any text after the link, including final punctuation." }
           - { name: "address", label: "Street address", widget: "string", default: "2500 Old Middlefield Way, Mountain View, CA 94043" }
           - { name: "phone", label: "Phone", widget: "string", default: "(650) 988-8798" }
-          - { name: "email", label: "Email", widget: "string", default: "info@pytnet.org" }
           - { name: "ein", label: "EIN (tax ID)", widget: "string", default: "77-0335126" }
           - { name: "staff_section_heading", label: "Staff section heading", widget: "string", required: false, default: "Our Staff" }
           - { name: "staff_section_blurb", label: "Staff section description (optional)", widget: "text", required: false, hint: "Optional short text under the Staff heading. Leave blank to omit." }
@@ -823,7 +836,6 @@ collections:
               - { name: "link_label", label: "Button label", widget: "string", default: "Book tickets" }
               - { name: "link_url", label: "Button link", widget: "string", required: false, hint: "Link to the booking form or ticket page. Leave blank to hide the button." }
           - { name: "empty_state_text", label: "Message shown when no shows are listed yet", widget: "text", default: "No school-discount shows are listed yet. Check back soon, or get in touch below." }
-          - { name: "contact_email", label: "Contact email shown in the empty state", widget: "string", required: false, default: "caitlyn@pytnet.org" }
 
  
       # --- Rentals page ---
@@ -883,7 +895,6 @@ collections:
         description: "The /stories-on-stage page — intro copy, auditions section, and the explainer block. (The 6 productions themselves are edited in 'Stories on Stage Productions' above.)"
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Stories on Stage" }
-          - { name: "school_booking_email", label: "School / group booking email", widget: "string", default: "lhatten@pytnet.org", hint: "The email address the 'Email about a group booking' button on each production page sends to." }
           - { name: "intro_lede", label: "Intro paragraph (under the title)", widget: "text" }
           - { name: "auditions_strip_text", label: "Audition strip — text at the top of the page", widget: "string", default: "Auditioning for the next Stories on Stage company?" }
           - { name: "auditions_strip_link_text", label: "Audition strip — link text", widget: "string", default: "Jump to auditions" }
