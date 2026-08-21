@@ -16,6 +16,7 @@
   Site Settings JSON file.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import PageHero from "../components/PageHero.astro";
 import { getCollection } from "astro:content";
 import page from "../content/settings/stories-on-stage-page.json";
@@ -132,10 +133,14 @@ const productions = (await getCollection("storiesOnStage")).sort(
             </a>
           </>
         ) : (
-          <p class="auditions-form-pending">
-            Registration opens soon. Check back, or email
-            <a href="mailto:info@pytnet.org"> info@pytnet.org</a> with questions.
-          </p>
+          <>
+            <p class="auditions-form-pending">
+              Registration opens soon. Check back, or send us a message below.
+            </p>
+            {/* Replaced a published info@ address (2026-08-20). Wrapped in
+                a fragment: a ternary branch returns one element only. */}
+            <ContactForm route="general" source="Stories on Stage — auditions" subject="Stories on Stage auditions" submitLabel="Send message" />
+          </>
         )}
       </div>
     </div>
