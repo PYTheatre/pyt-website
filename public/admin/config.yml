@@ -56,6 +56,12 @@ collections:
     fields:
       - { name: "title", label: "Page title", widget: "string", hint: "Also becomes the web address. 'Summer Intensive' gives peninsulayouththeatre.org/summer-intensive. Avoid reusing an address that already exists (about, shows, casting, rentals and so on) — the original page would win and yours would never show." }
       - { name: "intro", label: "Short line above the title (optional)", widget: "string", required: false, hint: "A brief line that sits above the page title. Leave blank to hide it." }
+      # Hero photo lives HERE rather than in Page Hero Images, because
+      # that list is a fixed dropdown of the hand-built pages and can't
+      # offer a page that doesn't exist yet.
+      - { name: "hero_image", label: "Photo at the top (optional)", widget: "image", required: false, hint: "A wide landscape photo works best — it's shown as a banner under the title. Leave blank for no photo." }
+      - { name: "hero_focus", label: "Photo — vertical focus (%)", widget: "number", required: false, value_type: "int", min: 0, max: 100, step: 5, hint: "Which part of the photo to keep when it's cropped to the banner shape. 0 = top, 50 = middle (the default), 100 = bottom. If a face is cut off at the top, lower this — 15-25 usually does it." }
+      - { name: "hero_alt", label: "Photo description (optional)", widget: "string", required: false, hint: "For screen readers. Leave blank if the photo is decorative." }
       - name: "body"
         label: "Page content"
         widget: "markdown"
@@ -491,7 +497,7 @@ collections:
                   - { label: "Center Stage Musicals", value: "/musicals" }
                   - { label: "Judy Robe & Spirit Awards", value: "/judy-robe-spirits-awards" }
                   - { label: "Newsletter signup", value: "/subscribe" }
-                  - { label: "Opportunities / Employment", value: "/employment" }
+                  - { label: "Volunteer", value: "/volunteer" }
                   - { label: "Photos", value: "/photos" }
                   - { label: "Press", value: "/press" }
                   - { label: "Classes & Camps", value: "/programs" }
@@ -825,13 +831,20 @@ collections:
       # Two parallel lists: paid roles and volunteer opportunities.
       # Each section's heading and intro are editable. If a section's
       # list is empty, that section automatically hides on the page.
-      - name: "employment-page"
-        label: "Employment Page"
-        file: "src/content/settings/employment-page.json"
-        description: "The Employment page — paid roles and volunteer opportunities. Each section auto-hides if empty."
+      - name: "volunteer-page"
+        label: "Volunteer Page"
+        file: "src/content/settings/volunteer-page.json"
+        description: "The Volunteer page (/volunteer). Volunteer opportunities and, if there are any, paid roles. Each section hides itself automatically when its list is empty. Set the photo at the top in Site Settings → Page Hero Images."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Work with us" }
           - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          # Free-form body text (2026-08-21) — the page previously had
+          # only short one-line intros with nowhere to explain properly.
+          - name: "body"
+            label: "Main text"
+            widget: "markdown"
+            required: false
+            hint: "As much text as you like, under the intro and above the opportunities. Use the toolbar for headings, bold, lists and links. Leave blank to hide it entirely."
  
           - { name: "roles_heading", label: "Paid roles — section heading", widget: "string", default: "Roles with PYT" }
           - { name: "roles_intro", label: "Paid roles — section intro (optional)", widget: "text", required: false }
@@ -879,6 +892,13 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "School Tickets" }
           - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          # Free-form body text (2026-08-21) — the page previously had
+          # only short one-line intros with nowhere to explain properly.
+          - name: "body"
+            label: "Main text"
+            widget: "markdown"
+            required: false
+            hint: "As much text as you like, under the intro and above the opportunities. Use the toolbar for headings, bold, lists and links. Leave blank to hide it entirely."
           - name: "listings"
             label: "School-discount shows"
             widget: "list"
@@ -906,6 +926,13 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Costume & Prop Rentals" }
           - { name: "intro", label: "Page intro paragraph", widget: "text" }
+          # Free-form body text (2026-08-21) — the page previously had
+          # only short one-line intros with nowhere to explain properly.
+          - name: "body"
+            label: "Main text"
+            widget: "markdown"
+            required: false
+            hint: "As much text as you like, under the intro and above the opportunities. Use the toolbar for headings, bold, lists and links. Leave blank to hide it entirely."
           - { name: "categories_heading", label: "Categories — section heading", widget: "string", default: "What we rent" }
           - { name: "categories_blurb", label: "Categories — section description (optional)", widget: "text", required: false }
           - name: "categories"
