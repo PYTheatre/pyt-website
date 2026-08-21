@@ -298,6 +298,21 @@ collections:
               - { name: "url", label: "Link", widget: "string", hint: "Example: /shows, or a full https:// link" }
           - { name: "impact_heading", label: "Impact section — heading", widget: "string" }
           - { name: "impact_heading_case", label: "Impact section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
+          # --- Values section (2026-08-20) ---
+          # Sits between "PYT in numbers" and the donation section.
+          # Leave the heading blank AND remove all the phrases to hide
+          # the whole section.
+          - { name: "values_heading", label: "Values section — heading", widget: "string", required: false, default: "Our values", hint: "Same size as the other section headings." }
+          - { name: "values_heading_case", label: "Values section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
+          - { name: "values_intro", label: "Values section — intro paragraph", widget: "text", required: false, hint: "A short paragraph under the heading, introducing the values below." }
+          - name: "values_list"
+            label: "Values section — the phrases"
+            widget: "list"
+            required: false
+            summary: "{{fields.phrase}}"
+            hint: "Shown large, in capitals, in a playful slanted font. They are coloured automatically in rotation (pink, blue, green), so you don't need to pick colours — add a fourth and it starts the rotation again. Keep them short; long phrases wrap and lose impact."
+            fields:
+              - { name: "phrase", label: "Phrase", widget: "string", hint: "Example: Be kind" }
           - name: "stats"
             label: "Impact stats"
             widget: "list"
