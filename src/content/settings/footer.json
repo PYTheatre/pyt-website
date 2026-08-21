@@ -14,14 +14,6 @@
         {
           "label": "Classes & Camps",
           "url": "/programs"
-        },
-        {
-          "url": "https://www.instagram.com/pyouththeatre/?hl=en",
-          "label": "Instagram"
-        },
-        {
-          "url": "https://www.facebook.com/PeninsulaYouthTheatre/",
-          "label": "Facebook"
         }
       ]
     },
@@ -38,7 +30,7 @@
         },
         {
           "label": "For schools",
-          "url": "https://pyt-website.pages.dev/school-tickets/"
+          "url": "/school-tickets/"
         }
       ]
     },
@@ -59,5 +51,7 @@
         }
       ]
     }
-  ]
+  ],
+  "instagram_url": "https://www.instagram.com/pyouththeatre/?hl=en",
+  "facebook_url": "https://www.facebook.com/PeninsulaYouthTheatre/"
 }
