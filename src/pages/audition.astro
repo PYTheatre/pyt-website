@@ -76,6 +76,29 @@ const sosBlurb =
   "Our Stories on Stage season is cast from a single annual audition. Productions are short, often touring to local schools. Visit the Stories on Stage page for this year's audition details.";
 const sosButtonLabel = page.sos_button_label?.trim() || "Auditions";
 
+// --- Card button + link wording (2026-08-21) ---
+// These were hardcoded in the markup, which is why they couldn't be
+// found in the CMS — and why the Stories on Stage button was the only
+// one anyone could change, leaving it SHOUTING while the others weren't.
+const signUpLabel = page.signup_button_label?.trim() || "Sign up";
+const comingSoonLabel = page.coming_soon_label?.trim() || "Coming soon";
+const aboutShowLabel = page.about_show_link_label?.trim() || "About this show";
+
+// Capitalization is a presentation choice, applied with CSS rather than
+// by changing the stored text — so switching back to "As typed" restores
+// exactly what was written, with nothing lost.
+const buttonCase = page.button_case === "uppercase" ? "case-upper" : "";
+
+// Coloured type tag, reusing the All Shows colours so the two pages
+// agree. Keyed off the STORED production_type value, not the displayed
+// label, so re-wording the label can't break the colour.
+function typeTagClass(value: string | undefined): string {
+  const v = (value || "").trim();
+  if (v === "Studio Production") return "label-studio";
+  if (v === "Musical") return "label-musical";
+  return "label-other";
+}
+
 // NOTE (2026-08-20): the casting-philosophy callout box was removed
 // entirely. The link to /casting now lives inside the intro paragraph
 // above, written by staff in the CMS. Nothing here reads casting_* any
@@ -89,9 +112,10 @@ function auditionBlurb(data: any): string {
   const written = (data.audition_blurb || "").trim();
   if (written) return written;
   const bits: string[] = [];
-  if (data.eyebrow?.trim()) bits.push(data.eyebrow.trim());
-  // Visitor-facing wording ("Center Stage Musical"), not the stored value.
-  else if (data.production_type) bits.push(productionTypeLabel(data.production_type));
+  // NOTE (2026-08-21): the show TYPE is no longer folded into this
+  // sentence — it's shown as a coloured tag above the title instead,
+  // matching the All Shows page. Leaving it here too would say the same
+  // thing twice.
 
   // Prefer the staff-written date text; fall back to formatting the real
   // audition date the show already has. Without this second step a show
@@ -151,6 +175,11 @@ const faqs = Array.isArray(page.faqs)
           {openAuditions.map((show) => (
             <li class="audition-row">
               <div class="audition-card">
+                {show.data.production_type && (
+                  <span class={`type-label ${typeTagClass(show.data.production_type)}`}>
+                    {productionTypeLabel(show.data.production_type)}
+                  </span>
+                )}
                 <h3 class="audition-card-title">{show.data.title}</h3>
                 {auditionBlurb(show.data) && (
                   <p class="audition-card-blurb">{auditionBlurb(show.data)}</p>
@@ -159,19 +188,19 @@ const faqs = Array.isArray(page.faqs)
                   {show.data.audition_url ? (
                     <a
                       href={show.data.audition_url}
-                      class="btn btn-primary audition-btn"
+                      class={`btn btn-primary audition-btn ${buttonCase}`}
                       target="_blank"
                       rel="noopener"
                     >
-                      Sign up
+                      {signUpLabel}
                     </a>
                   ) : (
-                    <span class="btn btn-outline btn-disabled audition-btn" aria-disabled="true">
-                      Coming soon
+                    <span class={`btn btn-outline btn-disabled audition-btn ${buttonCase}`} aria-disabled="true">
+                      {comingSoonLabel}
                     </span>
                   )}
                   <a href={`/shows/${show.id}`} class="audition-link-cta">
-                    About this show →
+                    {aboutShowLabel} →
                   </a>
                 </div>
               </div>
@@ -179,13 +208,16 @@ const faqs = Array.isArray(page.faqs)
           ))}
 
           {/* Stories on Stage is an audition route too, so it's the same
-              card as the shows above rather than a separate styled panel. */}
+              card as the shows above rather than a separate styled panel.
+              Deliberately has NO coloured type tag (PM request 2026-08-21):
+              its title already says "Stories on Stage", so a tag saying the
+              same thing directly above it would just repeat itself. */}
           <li class="audition-row">
             <div class="audition-card">
               <h3 class="audition-card-title">{sosHeading}</h3>
               {sosBlurb && <p class="audition-card-blurb">{sosBlurb}</p>}
               <div class="audition-card-actions">
-                <a href="/stories-on-stage" class="btn btn-primary audition-btn">{sosButtonLabel}</a>
+                <a href="/stories-on-stage" class={`btn btn-primary audition-btn ${buttonCase}`}>{sosButtonLabel}</a>
               </div>
             </div>
           </li>
@@ -277,6 +309,45 @@ const faqs = Array.isArray(page.faqs)
   .audition-card:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-soft);
+  }
+
+  /* Coloured show-type tag (2026-08-21). Same shape and colours as the
+     tags on the All Shows page, so the two pages describe a show the
+     same way. Replaces the type being folded into the blurb sentence. */
+  .type-label {
+    display: inline-block;
+    width: fit-content;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.18rem 0.5rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0.5rem;
+  }
+
+  .label-musical {
+    color: var(--accent-deep);
+    background: var(--accent-soft);
+  }
+
+  .label-studio {
+    color: #27500a;
+    background: #eaf3de;
+  }
+
+  /* Fallback for any future production type that isn't one of the two
+     above — a neutral tag rather than no tag at all. */
+  .label-other {
+    color: var(--ink);
+    background: var(--neutral-soft);
+  }
+
+  /* Applied to the buttons when the CMS capitalization is set to
+     UPPERCASE. Done in CSS, not by changing the stored text, so
+     switching back to "As typed" restores exactly what was written. */
+  .case-upper {
+    text-transform: uppercase;
   }
 
   .audition-card-title {
