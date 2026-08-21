@@ -7,6 +7,7 @@
   with a tiny bit of vanilla JavaScript — no React/Vue needed.
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/ContactForm.astro";
 import PageHero from "../components/PageHero.astro";
 import { getCollection } from "astro:content";
 import pageContent from "../content/settings/programs-page.json";
@@ -88,14 +89,10 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
               {(pageContent as any).summer_cancellation_body.split("\n\n").map((para: string) => (
                 <p>{para}</p>
               ))}
-              {(pageContent as any).summer_cancellation_email && (
-                <p>
-                  Requests:{" "}
-                  <a href={`mailto:${(pageContent as any).summer_cancellation_email}`}>
-                    {(pageContent as any).summer_cancellation_email}
-                  </a>
-                </p>
-              )}
+              {/* Cancellation requests used to publish an email address
+                  here (2026-08-20). They now go through the contact form
+                  at the foot of this page. */}
+              <p>Cancellation requests: please use the contact form below.</p>
             </details>
           )}
         </div>
@@ -189,6 +186,20 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
       <p id="no-results" class="no-results" hidden>
         No programs match those filters. Try clearing them.
       </p>
+    </div>
+  </section>
+
+  {/* Questions and cancellation requests — replaces the email address
+      that used to be printed in the Summer Camps block (2026-08-20). */}
+  <section class="section">
+    <div class="container">
+      <h2 class="section-head">Questions about classes &amp; camps?</h2>
+      <ContactForm
+        route="education"
+        source="Classes &amp; Camps page"
+        intro="Including cancellation and transfer requests."
+        submitLabel="Send message"
+      />
     </div>
   </section>
 </BaseLayout>
