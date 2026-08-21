@@ -32,6 +32,10 @@
         {
           "label": "The Wizard of Oz",
           "url": "/shows/the-wizard-of-oz"
+        },
+        {
+          "url": "/stories-on-stage/creepy-carrots/",
+          "label": "Creepy Carrots"
         }
       ]
     },
