@@ -52,7 +52,7 @@ const {
 
 const endpoint = ((endpoints as any)[route] || (endpoints as any).general || "").trim();
 const fallbackNote = ((endpoints as any).unavailable_note || "").trim() ||
-  "Our contact form is being set up. Please try again shortly, or reach us by phone during office hours.";
+  "Our contact form is being set up. Please check back shortly.";
 
 // IDs must be unique: several pages could render more than one of these,
 // and duplicate ids would break the label/input pairing for screen
