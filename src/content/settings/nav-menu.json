@@ -131,6 +131,11 @@
           "url": "/#contact"
         }
       ]
+    },
+    {
+      "style": "none",
+      "label": "Shows",
+      "url": "/shows/"
     }
   ]
 }
