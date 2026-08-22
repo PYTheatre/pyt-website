@@ -553,6 +553,16 @@ collections:
           - { name: "raised_amount", label: "Amount raised so far (whole dollars, no commas)", widget: "number", value_type: "int", min: 0, default: 76420 }
           - { name: "donor_count", label: "Number of donors", widget: "number", value_type: "int", min: 0, default: 142 }
           - { name: "campaign_label", label: "Campaign name shown on the home page", widget: "string", default: "2026 Annual Campaign" }
+          # The three sentences under the bar on the Support page. Write the
+          # words; the FIGURES are placeholders filled in from the numbers
+          # above, so they can never go out of date. Available placeholders:
+          #   {raised}   the amount raised, e.g. $149,000
+          #   {goal}     the goal amount, e.g. $200,000
+          #   {donors}   the number of donors, e.g. 139
+          #   {percent}  progress towards the goal, e.g. 75%
+          - { name: "stat_raised", label: "Sentence 1 — amount raised", widget: "string", required: false, default: "{raised} raised of this year's {goal} goal", hint: "Type the words; use {raised} and {goal} where the figures should appear — they fill in automatically. Leave blank to hide this sentence." }
+          - { name: "stat_donors", label: "Sentence 2 — donors", widget: "string", required: false, default: "{donors} donors", hint: "Use {donors} for the number. Leave blank to hide this sentence." }
+          - { name: "stat_percent", label: "Sentence 3 — progress", widget: "string", required: false, default: "{percent} of goal", hint: "Use {percent} for the percentage. Leave blank to hide this sentence." }
  
       # --- Support PYT — Main Page (intro copy, Soapbox URL, sponsorship) ---
       #
@@ -660,13 +670,10 @@ collections:
       - name: "corporate-giving"
         label: "Support PYT — Corporate Sponsorship"
         file: "src/content/settings/corporate-giving.json"
-        description: "The Corporate Sponsorship section on the Support PYT page — intro copy, the corporate Soapbox link, the tier ladder, the button wording, and the \"talk to us\" contact box beneath it."
+        description: "The Corporate Sponsorship section on the Support PYT page — intro copy, the tier ladder, and the enquiry box beneath it. The tiers have no buttons: enquiries come through the form."
         fields:
           - { name: "heading", label: "Section heading", widget: "string", required: false, default: "Corporate Sponsorship" }
           - { name: "intro", label: "Intro paragraph", widget: "markdown", required: false, hint: "Accepts links — to another page, or to a section of this one such as /ways-to-support#sponsor" }
-          - { name: "corporate_donate_url", label: "Corporate Soapbox donation link", widget: "string", required: false, hint: "The web address of PYT's corporate Soapbox donation page. While this is blank, the tier buttons show the \"Coming soon\" wording below instead. Paste the link here to make the buttons live." }
-          - { name: "button_label", label: "Tier button text", widget: "string", required: false, default: "Become a sponsor", hint: "The wording on every tier button once the link above is set. Defaults to \"Become a sponsor\" if left blank." }
-          - { name: "coming_soon_label", label: "Tier button text while the link is blank", widget: "string", required: false, default: "Coming soon", hint: "Shown on the greyed-out buttons while the donation link above is empty." }
           - name: "tiers"
             label: "Corporate tiers"
             widget: "list"
@@ -675,7 +682,7 @@ collections:
             fields:
               - { name: "name", label: "Tier name", widget: "string", hint: "Example: Spotlights" }
               - { name: "amount", label: "Amount", widget: "string", hint: "Example: $2,500" }
-              - { name: "description", label: "Benefits / description", widget: "markdown", required: false, hint: "A bulleted list reads best here. Press Return once for a new line within the same benefit." }
+              - { name: "description", label: "Benefits", widget: "markdown", required: false, hint: "Use the bulleted-list button in the toolbar — one bullet per benefit. That is how the ladder is laid out." }
           - { name: "contact_heading", label: "Contact box — heading", widget: "string", required: false, default: "Talk to us about sponsorship", hint: "The framed box under the tiers. Leave blank to show no heading on it." }
           - { name: "contact_intro", label: "Contact box — paragraph", widget: "markdown", required: false, hint: "The line above the enquiry form. Leave blank to hide it. (The form itself only appears once the Development endpoint is set in Contact Form Endpoints.)" }
  
