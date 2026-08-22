@@ -1,20 +1,23 @@
 {
+  "heading": "Every gift, every level.",
+  "intro": "",
+  "button_label": "Donate",
   "items": [
     {
       "amount": "$650",
-      "description": "  The cost of a scholarship for one actor for a Center Stage Musical."
+      "description": "The cost of a scholarship for one actor for a Center Stage Musical."
     },
     {
       "amount": "$950",
-      "description": "  The cost of a scholarship for one actor to go to summer camp."
+      "description": "The cost of a scholarship for one actor to go to summer camp."
     },
     {
       "amount": "$2,000",
-      "description": "  The cost of costumes for a Center Stage Musical."
+      "description": "The cost of costumes for a Center Stage Musical."
     },
     {
       "amount": "$12,000",
-      "description": "  the cost of royalties costs for a Center Stage Musical."
+      "description": "the cost of royalties costs for a Center Stage Musical."
     },
     {
       "amount": "$24,000",
@@ -22,7 +25,7 @@
     },
     {
       "amount": "$30 million",
-      "description": "  The cost for development of a dedicated studio and theater space!"
+      "description": "The cost for development of a dedicated studio and theater space!"
     }
   ]
 }
