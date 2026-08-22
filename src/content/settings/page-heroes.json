@@ -33,7 +33,8 @@
     },
     {
       "page": "/stories-on-stage",
-      "image": "/uploads/uglyduckling-pyt-.jpg"
+      "image": "/uploads/uglyduckling-pyt-.jpg",
+      "focus": 40
     },
     {
       "page": "/studio-productions",
