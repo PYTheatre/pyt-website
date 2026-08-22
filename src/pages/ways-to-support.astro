@@ -189,19 +189,35 @@ const recognitionGroups = (recognition.groups || []).filter(
   <!-- ============ INDIVIDUAL GIVING / CAMPAIGN ============ -->
   <section class="section campaign-hero" id="individual">
     <div class="container">
-      <h1>{donatePage.intro_heading}</h1>
+      <!-- Heading and intro on the left, Donate top-right — the same
+           header row the Giving Levels section uses, so the two Donate
+           buttons line up on the same right edge down the page. -->
+      <div class="campaign-head">
+        <div class="campaign-head-text">
+          <h1>{donatePage.intro_heading}</h1>
 
-      {md(donatePage.intro_body) && (
-        <div class="campaign-intro rich" set:html={md(donatePage.intro_body)} />
-      )}
+          {md(donatePage.intro_body) && (
+            <div class="campaign-intro rich" set:html={md(donatePage.intro_body)} />
+          )}
+        </div>
+
+        <a
+          href={soapboxDonateUrl}
+          class="btn btn-highlight campaign-donate"
+          target="_blank"
+          rel="noopener"
+        >
+          Donate
+        </a>
+      </div>
 
       <!-- Optional hero image — Site Settings -> Page Hero Images. Renders
            nothing if this page has no photo set. -->
       <PageHeroImage />
 
-      <!-- Bar and Donate sit side by side from 900px up, with the button
-           centred against the height of the bar block. Below that they
-           stack, button last. -->
+      <!-- Bar and stats. The Donate button used to sit to the right of
+           this block; it moved up into the header row above (2026-08-21)
+           so it lines up with the one in Giving Levels. -->
       <div class="campaign-progress">
         <div class="campaign-progress-main">
           <div class="thermo" role="img"
@@ -240,15 +256,6 @@ const recognitionGroups = (recognition.groups || []).filter(
             </p>
           )}
         </div>
-
-        <a
-          href={soapboxDonateUrl}
-          class="btn btn-highlight campaign-donate"
-          target="_blank"
-          rel="noopener"
-        >
-          Donate
-        </a>
       </div>
     </div>
   </section>
@@ -474,18 +481,19 @@ const recognitionGroups = (recognition.groups || []).filter(
     background: var(--paper);
   }
 
-  /* Bar block and Donate side by side on wide screens. Below 900px they
-     stack and the button sits under the stats. */
-  .campaign-progress {
+  /* Heading + intro on the left, Donate top-right (2026-08-21). Mirrors
+     .giving-head exactly, including the breakpoint, so both buttons sit on
+     the same right edge and appear at the same point in each section. */
+  .campaign-head {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-md);
+    margin-bottom: var(--space-lg);
   }
 
-  .campaign-progress-main {
-    width: 100%;
-    max-width: 620px;
+  .campaign-head-text {
+    min-width: 0;
   }
 
   .campaign-donate {
@@ -494,27 +502,33 @@ const recognitionGroups = (recognition.groups || []).filter(
     flex-shrink: 0;
   }
 
-  @media (min-width: 900px) {
-    .campaign-progress {
+  @media (min-width: 720px) {
+    .campaign-head {
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
+      justify-content: space-between;
       gap: var(--space-xl);
     }
+  }
 
-    .campaign-progress-main {
-      flex: 0 1 620px;
-    }
+  .campaign-progress-main {
+    width: 100%;
+    max-width: 620px;
   }
 
   .campaign-hero h1 {
     margin-block: 0.6rem var(--space-md);
   }
 
+  /* The gap below the intro is now owned by .campaign-head (the row that
+     wraps the heading, intro and button), so the intro itself carries no
+     bottom margin — otherwise the two would stack and open a double gap
+     above the thermometer. */
   .campaign-intro {
     color: var(--ink-soft);
     max-width: 60ch;
     font-size: 1.08rem;
-    margin-bottom: var(--space-lg);
+    margin-bottom: 0;
   }
 
   .section-head {
