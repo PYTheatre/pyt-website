@@ -1,0 +1,86 @@
+---
+/*
+  THANK YOU PAGE  ( /thank-you )
+
+  WHY THIS EXISTS (2026-08-21):
+  The site's contact forms are plain HTML forms that POST to Formspree.
+  Formspree's default behaviour is to answer with ITS OWN "Thank You"
+  page — so a visitor who filled in a form on pytnet was dropped onto a
+  formspree.io page with none of PYT's branding and no way back. Every
+  form now carries a hidden `_next` field pointing here instead, so the
+  visitor lands back on PYT's own site.
+
+  ONE PAGE FOR ALL THE FORMS. The routes (general / education /
+  development) all come here rather than having a thank-you page each —
+  the message is the same, and one page is one thing for staff to keep
+  up to date rather than three.
+
+  NOT IN THE NAV, deliberately: it is only ever reached by submitting a
+  form. It is a normal page though, so it can be visited directly and
+  won't 404 if someone bookmarks it.
+
+  All of its wording is CMS-editable (Site Settings → Thank You Page).
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { renderMarkdown } from "../lib/markdown";
+import thankYou from "../content/settings/thank-you-page.json";
+
+const txt = (v?: string | null): string => (typeof v === "string" ? v.trim() : "");
+
+const title = txt(thankYou.title) || "Thank you";
+const bodyHtml = renderMarkdown(txt(thankYou.body));
+const buttonLabel = txt(thankYou.button_label);
+const buttonUrl = txt(thankYou.button_url) || "/";
+---
+
+<BaseLayout
+  title={`${title} — Peninsula Youth Theatre`}
+  description="Thank you for contacting Peninsula Youth Theatre."
+>
+  <PageHero title={title} />
+
+  <section class="section thanks-section">
+    <div class="container thanks">
+      {bodyHtml && <div class="thanks-body" set:html={bodyHtml} />}
+
+      {buttonLabel && (
+        <a href={buttonUrl} class="btn btn-primary thanks-btn">{buttonLabel}</a>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .thanks {
+    max-width: 56ch;
+  }
+
+  .thanks-body {
+    font-size: 1.08rem;
+    color: var(--ink-soft);
+  }
+
+  .thanks-body :global(p) {
+    margin-bottom: 0.9rem;
+  }
+
+  .thanks-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .thanks-body :global(a) {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .thanks-body :global(a:hover) {
+    color: var(--accent-deep);
+  }
+
+  .thanks-btn {
+    margin-top: var(--space-lg);
+  }
+</style>
