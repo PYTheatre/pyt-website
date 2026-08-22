@@ -10,6 +10,10 @@
       "year": "2026",
       "shows": [
         {
+          "show": " A Year With Frog & Toad",
+          "judy_robe": "Estela Garcia Figueroa"
+        },
+        {
           "show": "SIX The Musical",
           "judy_robe": "Macie Northam Schulze",
           "spirit_awards": [
@@ -46,6 +50,10 @@
             "Nora Chen",
             "Neela Menon"
           ]
+        },
+        {
+          "show": "Tuck Everlasting",
+          "judy_robe": "Erin Grignon"
         }
       ]
     },
@@ -71,6 +79,69 @@
             "Hadley Crain",
             "Lily Jai"
           ]
+        },
+        {
+          "show": "Seussical",
+          "judy_robe": "Julia Escober"
+        }
+      ]
+    },
+    {
+      "year": "2023",
+      "shows": [
+        {
+          "show": "Elf",
+          "judy_robe": "Ellie Saham"
+        },
+        {
+          "show": "Matilda",
+          "judy_robe": "Chloe Culver "
+        },
+        {
+          "show": "The Lightning Thief",
+          "judy_robe": "Caitlyn Bowman "
+        }
+      ]
+    },
+    {
+      "year": "2022",
+      "shows": [
+        {
+          "show": "The SpongeBob Musical",
+          "judy_robe": "Audriana Berenberg – The SpongeBob Musical,"
+        },
+        {
+          "show": "Frozen Jr.",
+          "judy_robe": "Sivan Radwin – Frozen Jr., 2022",
+          "spirit_awards": [
+            null
+          ]
+        },
+        {
+          "show": "Fiddler on the Roof Jr.",
+          "judy_robe": "Oliver LeBlanc"
+        },
+        {
+          "show": "Descendants: The Musical",
+          "judy_robe": "Nola Byrne"
+        }
+      ]
+    },
+    {
+      "year": "2021",
+      "shows": [
+        {
+          "show": "All Together Now!",
+          "judy_robe": "Avni Lochan – All Together Now!, 2021"
+        }
+      ]
+    },
+    {
+      "year": "2020",
+      "shows": [
+        {
+          "show": "Newsies",
+          "judy_robe": "Sierra Prochniak"
         }
       ]
     }
