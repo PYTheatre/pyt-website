@@ -2,27 +2,27 @@
   "items": [
     {
       "amount": "$650",
-      "description": "A scholarship for one actor for a Center Stage Musical."
+      "description": "  The cost of a scholarship for one actor for a Center Stage Musical."
     },
     {
       "amount": "$950",
-      "description": "A scholarship for one actor to go to summer camp."
+      "description": "  The cost of a scholarship for one actor to go to summer camp."
     },
     {
       "amount": "$2,000",
-      "description": "Costumes for a Center Stage Musical."
+      "description": "  The cost of costumes for a Center Stage Musical."
     },
     {
       "amount": "$12,000",
-      "description": "Royalties costs for a Center Stage Musical."
+      "description": "  the cost of royalties costs for a Center Stage Musical."
     },
     {
       "amount": "$24,000",
-      "description": "One month's rent for studio and rehearsal space."
+      "description": "The cost of one month's rent for studio and rehearsal space."
     },
     {
       "amount": "$30 million",
-      "description": "could pay for development of a new, larger space for studios to reach more families"
+      "description": "  The cost for development of a dedicated studio and theater space!"
     }
   ]
 }
