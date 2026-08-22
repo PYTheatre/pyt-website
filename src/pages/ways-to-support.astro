@@ -2,130 +2,157 @@
 /*
   WAYS TO SUPPORT PAGE  ( /ways-to-support )
   (formerly /donate — renamed 2026-06-03; URL is now /ways-to-support)
- 
-  Reads three CMS-managed files:
-   - donation-campaign.json (progress numbers — also used on home)
-   - donor-tiers.json (the tier cards)
-   - donate-page.json (intro copy + hosted Soapbox donation link)
+
+  REDESIGNED 2026-08-21. What changed and why:
+
+  1. The "Every gift, every level." heading used to belong to a SEPARATE
+     "Giving Levels" section (donor-tiers.json) which had no tiers in it.
+     The page therefore rendered a heading, an empty list, and then a
+     second section holding the gift amounts — about 168px of dead space
+     between the heading and the first amount, and a heading that lived in
+     a different CMS record from the list it appeared to introduce. Those
+     two sections are now ONE section, in one CMS record (gift-funds.json).
+     donor-tiers.json is deleted.
+
+  2. The amounts are a rule-separated list, not six bordered boxes with a
+     Donate button each. Amounts sit right-aligned in their own column so
+     the figures line up, with a real gutter between figure and text (the
+     old inline "$650 The cost of..." was cramped on anything but a phone).
+     ONE Donate button now sits at the end of the list.
+
+  3. Every paragraph field on this page is a MARKDOWN field, so staff can
+     put links in body copy — to other sections of this page (#anchors),
+     to other pages, or to outside sites such as Soapbox.
+
+  4. Every section has a STABLE ID so it can be linked from anywhere:
+       #individual      — donation thermometer + Donate
+       #giving-levels   — the gift amounts list
+       #corporate       — corporate sponsorship
+       #sponsor         — show & season sponsorship
+       #recognition     — donor recognition wall
+     e.g. /ways-to-support#corporate. These are part of the public URL, so
+     do not rename them casually.
+
+  5. Sponsorship is now a REPEATABLE CMS list, not two hard-coded cards, so
+     staff can add levels (a Stories on Stage season, say) in the same
+     format, each with its own price, title, description and button label.
+
+  6. The 501(c)(3)/EIN strip that used to sit at the bottom was removed —
+     the same details are in the footer on every page.
+
+  MARKDOWN HELPERS are defined locally rather than in src/lib/markdown.ts,
+  because this page needs two variants the shared helper does not have:
+  single-newline line breaks (the corporate benefit lists are written that
+  way), and inline-only rendering for list rows that must not be wrapped in
+  a <p>. Worth promoting to src/lib/ if a second page ever needs them.
 */
+import { marked } from "marked";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ContactForm from "../components/ContactForm.astro";
 import PageHeroImage from "../components/PageHeroImage.astro";
 import campaign from "../content/settings/donation-campaign.json";
-import tiers from "../content/settings/donor-tiers.json";
 import donatePage from "../content/settings/donate-page.json";
 import corporate from "../content/settings/corporate-giving.json";
 import recognition from "../content/settings/donor-recognition.json";
 import giftFunds from "../content/settings/gift-funds.json";
 
-// "What your gift funds" — list under Donor Benefits. Empty-safe: if the
-// live data has no items yet (or the record is absent), the whole section
-// simply doesn't render. Each row's Donate button uses the same general
-// Soapbox link as the rest of the page.
-const giftFundItems = (giftFunds?.items ?? []).filter(
-  (it) => it && (it.amount || it.description)
-);
- 
+/* Block Markdown -> HTML. breaks: true so a single newline inside a CMS
+   field becomes a line break, which is what staff expect when they press
+   Return once. */
+const md = (input?: string | null): string =>
+  input && input.trim()
+    ? (marked.parse(input.trim(), { breaks: true, gfm: true }) as string)
+    : "";
+
+/* Inline Markdown -> HTML, with NO wrapping <p>. Used inside list rows and
+   anywhere a block-level <p> would break the layout. */
+const mdInline = (input?: string | null): string =>
+  input && input.trim() ? (marked.parseInline(input.trim(), { gfm: true }) as string) : "";
+
+const txt = (v?: string | null): string => (typeof v === "string" ? v.trim() : "");
+
+/* ---------------- Campaign thermometer (unchanged) ---------------- */
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
 const donorCount = campaign.donor_count;
-const campaignLabel = campaign.campaign_label;
 const pct = Math.round((raised / goal) * 100);
-// Clamp the visible fill so an over-goal campaign can't overflow the tube.
+// Clamp the visible fill so an over-goal campaign can't overflow the bar.
 const fillPct = Math.min(100, Math.max(0, pct));
 
-// --- Thermometer: HORIZONTAL (2026-08-20) ---
-// Same rewrite as the home page, approved via thermo_horizontal_v2.png.
-// Both pages now share the same bar; unlike the vertical version there
-// are no per-page pixel dimensions to keep in sync, because the bar
-// simply fills whatever column it's placed in.
+// Horizontal bar, shared with the home page. Ticks at 25/50/75% only — a
+// 100% tick lands on the bar's rounded end; the GOAL badge marks that end.
 const tickFractions = [0.25, 0.5, 0.75];
 const thermoTicks = tickFractions.map((f) => ({
   label: `$${Math.round((goal * f) / 1000)}k`,
   leftPct: f * 100,
 }));
-// No tick at 100% — it lands on the bar's rounded end; the GOAL badge
-// marks that end instead.
- 
+
 const soapboxDonateUrl =
-  donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
- 
-/*
-  SPONSORSHIP — now routes to the hosted Soapbox donation page (NOT Shopify).
-  Decided 2026-06-15: sponsorship stays tax-deductible, so both "Sponsor a
-  Show" and "Sponsor a Season" buttons point at the general Soapbox donation
-  page (same one the Donate button uses). The flexible Soapbox form lets the
-  giver enter their own amount and recognition name, so one page serves
-  individuals + both sponsorship types. (Reverses the earlier Shopify plan,
-  which would not have been tax-deductible.)
-  The per-show "Sponsor This Show" buttons now route to the same Soapbox
-  page directly (done 2026-06-23). shows/index.astro has no sponsor button.
-*/
-const sponsorDonateUrl =
-  donatePage.soapbox_donate_url || "https://pyt.secure.nonprofitsoapbox.com/donate";
- 
-// Sponsorship panel text — CMS-editable (Support PYT record), with
-// fallbacks so the panel reads correctly before staff fill the fields.
-// Eyebrow is fully opt-in: shows only when the field has text (no fallback),
-// so clearing it in the CMS removes it.
-const sponsorEyebrow = donatePage.sponsor_eyebrow || "";
-const sponsorHeading =
-  donatePage.sponsor_heading || "Sponsor a show or a season.";
-const sponsorShowTitle = donatePage.sponsor_show_title || "Sponsor a Show";
-const sponsorShowDescription =
-  donatePage.sponsor_show_description ||
-  "Back a single Center Stage Musicals production and receive recognition tied to that show — program advertising, lobby signage, and on-stage thank-yous.";
-const sponsorSeasonTitle = donatePage.sponsor_season_title || "Sponsor a Season";
-const sponsorSeasonDescription =
-  donatePage.sponsor_season_description ||
-  "Support the full season of productions and education programs, with recognition across the whole year of PYT performances.";
-// Optional price labels for each sponsor card — shown only when set
-// (replaces the old hardcoded "Show-level / Season-level" labels).
-const sponsorShowPrice = donatePage.sponsor_show_price || "";
-const sponsorSeasonPrice = donatePage.sponsor_season_price || "";
- 
-/*
-  CORPORATE GIVING — also routes to Soapbox (tax-deductible).
-  The dedicated corporate Soapbox page does not exist yet, so
-  corporate_donate_url is empty for now. While empty, the tier buttons
-  render as a non-clickable "Coming soon" pill. Once the PM creates the
-  Soapbox corporate page and fills the link in the CMS, the buttons go live.
-*/
-const corporateDonateUrl = corporate.corporate_donate_url || "";
-const corporateLinkLive = corporateDonateUrl.trim().length > 0;
-// Optional contact email shown under the corporate intro as a mailto link.
-// corporateEmail removed 2026-08-20 — corporate giving now uses the
-// contact form (development route) instead of a published address.
- 
-// Recognition: only show groups that actually have at least one name,
-// so empty tiers don't render as bare headings.
-const recognitionGroups = (recognition.groups || []).filter(
-  (g) => Array.isArray(g.names) && g.names.filter((n) => n && n.trim()).length > 0
+  txt(donatePage.soapbox_donate_url) || "https://pyt.secure.nonprofitsoapbox.com/donate";
+
+/* ---------------- Giving levels / what your gift funds ---------------- */
+const giftItems = (giftFunds?.items ?? []).filter(
+  (it: any) => it && (txt(it.amount) || txt(it.description))
 );
- 
-// Giving-levels section headings — CMS-editable (Support PYT record).
-// Heading keeps a sensible fallback. The eyebrow is fully OPT-IN: it shows
-// only when the field has text. Missing or blank → no eyebrow. (No fallback,
-// so clearing it in the CMS genuinely removes it.)
-const tiersEyebrow = donatePage.tiers_eyebrow || "";
-const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
+const giftHeading = txt((giftFunds as any)?.heading);
+const giftIntro = txt((giftFunds as any)?.intro);
+const giftButtonLabel = txt((giftFunds as any)?.button_label) || "Donate";
+// The employer-matching note. This has been saved in the CMS for months but
+// was never rendered anywhere; it is shown here, under the list.
+const matchingNote = txt((donatePage as any).matching_note);
+const showGiving = giftItems.length > 0 || !!giftHeading || !!giftIntro;
+
+/* ---------------- Corporate sponsorship ---------------- */
+const corporateDonateUrl = txt(corporate.corporate_donate_url);
+const corporateLinkLive = corporateDonateUrl.length > 0;
+const corporateTiers = (corporate?.tiers ?? []).filter(
+  (t: any) => t && (txt(t.name) || txt(t.amount) || txt(t.description))
+);
+const corporateHeading = txt(corporate.heading);
+const corporateIntro = txt(corporate.intro);
+const corporateButtonLabel = txt((corporate as any).button_label) || "Become a sponsor";
+const corporateComingSoonLabel = txt((corporate as any).coming_soon_label) || "Coming soon";
+const corporateContactHeading = txt((corporate as any).contact_heading);
+const corporateContactIntro = txt((corporate as any).contact_intro);
+const showCorporate =
+  !!corporateHeading || !!corporateIntro || corporateTiers.length > 0;
+
+/* ---------------- Show & season sponsorship ----------------
+   Was two hard-coded cards (Show / Season); now a repeatable CMS list.
+   Each item carries its own button label, and may override the
+   destination link; otherwise it uses the same Soapbox page as everything
+   else here (sponsorship stays tax-deductible — decided 2026-06-15,
+   reversing an earlier Shopify plan). */
+const sponsorHeading = txt(donatePage.sponsor_heading);
+const sponsorIntro = txt((donatePage as any).sponsor_intro);
+const sponsorItems = ((donatePage as any).sponsor_items ?? []).filter(
+  (s: any) => s && (txt(s.title) || txt(s.description) || txt(s.price))
+);
+const showSponsor = sponsorItems.length > 0 || !!sponsorHeading || !!sponsorIntro;
+
+/* ---------------- Recognition ---------------- */
+const recognitionGroups = (recognition.groups || []).filter(
+  (g: any) => Array.isArray(g.names) && g.names.filter((n: string) => n && n.trim()).length > 0
+);
 ---
- 
+
 <BaseLayout
   title="Ways to Support — Peninsula Youth Theatre"
   description="Support the next generation of Bay Area performers. Your gift to Peninsula Youth Theatre funds scholarships, productions, and school touring."
 >
-  <!-- Light hero: campaign progress as a thermometer + Donate button -->
+  <!-- ============ INDIVIDUAL GIVING / CAMPAIGN ============ -->
   <section class="section campaign-hero" id="individual">
     <div class="container">
       <h1>{donatePage.intro_heading}</h1>
-      <p class="campaign-intro">{donatePage.intro_body}</p>
 
-      <!-- Optional hero image (2026-08-20) — shared component, managed in
-           Site Settings → Page Hero Images. Renders nothing if this page
-           has no photo set. -->
+      {md(donatePage.intro_body) && (
+        <div class="campaign-intro rich" set:html={md(donatePage.intro_body)} />
+      )}
+
+      <!-- Optional hero image — Site Settings -> Page Hero Images. Renders
+           nothing if this page has no photo set. -->
       <PageHeroImage />
- 
+
       <div class="thermo" role="img"
            aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete, from ${donorCount} donors`}>
         <p class="thermo-goal-flag" aria-hidden="true">Goal</p>
@@ -165,140 +192,154 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
       </a>
     </div>
   </section>
- 
-  <!-- Donor tiers -->
-  <section class="section tiers-section">
-    <div class="container">
-      <h2 class="section-head">{tiersHeading}</h2>
- 
-      <ul class="tier-list">
-        {tiers.tiers.map((tier) => (
-          <li class="tier-card">
-            <p class="tier-range">{tier.range}</p>
-            <h3>{tier.name}</h3>
-            <p class="tier-description">{tier.description}</p>
-            <a href={soapboxDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-              Join
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
 
-  <!-- ============ WHAT YOUR GIFT FUNDS ============ -->
+  <!-- ============ GIVING LEVELS / WHAT YOUR GIFT FUNDS ============ -->
   <!--
-    Sits directly under Donor Benefits. No visible heading (by design).
-    A plain list of "amount — what it pays for" rows, each with a Donate
-    button to the general Soapbox page. Renders ONLY when the CMS list has
-    items, so the live empty state shows nothing rather than a bare section.
+    One section, one CMS record (Support PYT — Giving Levels). Heading,
+    intro, the amounts and the button label all live together. The whole
+    section disappears if staff clear the heading, the intro AND the list.
   -->
-  {giftFundItems.length > 0 && (
-    <section class="section gift-funds-section">
+  {showGiving && (
+    <section class="section giving-section" id="giving-levels">
       <div class="container">
-        <ul class="gift-funds-list">
-          {giftFundItems.map((item) => (
-            <li class="gift-funds-row">
-              <div class="gift-funds-text">
-                <span class="gift-funds-amount">{item.amount}</span>
-                {item.description && (
-                  <span class="gift-funds-desc"> {item.description}</span>
+        {giftHeading && <h2 class="section-head">{giftHeading}</h2>}
+
+        {giftIntro && <div class="giving-intro rich" set:html={md(giftIntro)} />}
+
+        {giftItems.length > 0 && (
+          <ul class="giving-list">
+            {giftItems.map((item: any) => (
+              <li class="giving-row">
+                <span class="giving-amount">{txt(item.amount)}</span>
+                {txt(item.description) && (
+                  <span class="giving-desc rich-inline" set:html={mdInline(item.description)} />
                 )}
-              </div>
-              <a href={soapboxDonateUrl} class="btn btn-primary gift-funds-btn" target="_blank" rel="noopener">
-                Donate
-              </a>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {matchingNote && <div class="giving-matching rich" set:html={md(matchingNote)} />}
+
+        <a
+          href={soapboxDonateUrl}
+          class="btn btn-primary giving-donate"
+          target="_blank"
+          rel="noopener"
+        >
+          {giftButtonLabel}
+        </a>
       </div>
     </section>
   )}
 
-  <!-- ============ CORPORATE GIVING ============ -->
-  <section class="section corporate-section" id="corporate">
-    <div class="container">
-      <h2 class="section-head">{corporate.heading}</h2>
-      {corporate.intro && <p class="corporate-intro">{corporate.intro}</p>}
-      {/* Replaced a published address (2026-08-20). Routed to the
-          "development" inbox, where corporateEmail used to point. */}
-      <ContactForm
-        route="development"
-        source="Ways to Support — corporate giving"
-        subject="Corporate giving enquiry"
-        intro="To discuss corporate giving, send us a message."
-        submitLabel="Send enquiry"
-      />
- 
-      <ul class="tier-list">
-        {corporate.tiers.map((tier) => (
-          <li class="tier-card">
-            <p class="tier-range">{tier.amount}</p>
-            <h3>{tier.name}</h3>
-            <p class="tier-description">{tier.description}</p>
-            {corporateLinkLive ? (
-              <a href={corporateDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-                Join
-              </a>
-            ) : (
-              <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
-                Coming soon
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
- 
-  <!-- ============ SPONSORSHIP ============ -->
-  <!--
-    Sponsorship routes to the general Soapbox donation page (tax-deductible).
-    The per-card "Show-level/Season-level" labels were replaced with an
-    OPTIONAL price field (sponsor_show_price / sponsor_season_price) that
-    only renders when set — for when price levels are decided.
-  -->
-  <section class="section sponsor-section" id="sponsor">
-    <div class="container">
-      <h2 class="section-head">{sponsorHeading}</h2>
- 
-      <ul class="tier-list sponsor-list">
-        <li class="tier-card">
-          {sponsorShowPrice && <p class="tier-range">{sponsorShowPrice}</p>}
-          <h3>{sponsorShowTitle}</h3>
-          <p class="tier-description">{sponsorShowDescription}</p>
-          <a href={sponsorDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-            {sponsorShowTitle}
-          </a>
-        </li>
- 
-        <li class="tier-card">
-          {sponsorSeasonPrice && <p class="tier-range">{sponsorSeasonPrice}</p>}
-          <h3>{sponsorSeasonTitle}</h3>
-          <p class="tier-description">{sponsorSeasonDescription}</p>
-          <a href={sponsorDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-            {sponsorSeasonTitle}
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
- 
+  <!-- ============ CORPORATE SPONSORSHIP ============ -->
+  {showCorporate && (
+    <section class="section corporate-section" id="corporate">
+      <div class="container">
+        {corporateHeading && <h2 class="section-head">{corporateHeading}</h2>}
+        {corporateIntro && (
+          <div class="corporate-intro rich" set:html={md(corporateIntro)} />
+        )}
+
+        {corporateTiers.length > 0 && (
+          <ul class="tier-list corporate-list">
+            {corporateTiers.map((tier: any) => (
+              <li class="tier-card">
+                {txt(tier.amount) && <p class="tier-range">{txt(tier.amount)}</p>}
+                {txt(tier.name) && <h3>{txt(tier.name)}</h3>}
+                {txt(tier.description) && (
+                  <div class="tier-description rich" set:html={md(tier.description)} />
+                )}
+                {corporateLinkLive ? (
+                  <a href={corporateDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
+                    {corporateButtonLabel}
+                  </a>
+                ) : (
+                  <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
+                    {corporateComingSoonLabel}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <!--
+          Contact block. Sits BELOW the tier ladder — it used to sit above
+          it as a narrow card, which read as an interruption. The frame is
+          drawn here and the shared ContactForm's own card styling is
+          switched off inside it, so the two don't nest as two boxes.
+        -->
+        <div class="corp-contact">
+          {corporateContactHeading && (
+            <h3 class="corp-contact-head">{corporateContactHeading}</h3>
+          )}
+          {corporateContactIntro && (
+            <div class="corp-contact-intro rich" set:html={md(corporateContactIntro)} />
+          )}
+          <ContactForm
+            route="development"
+            source="Ways to Support — corporate sponsorship"
+            subject="Corporate sponsorship enquiry"
+            submitLabel="Send enquiry"
+          />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ============ SHOW & SEASON SPONSORSHIP ============ -->
+  {showSponsor && (
+    <section class="section sponsor-section" id="sponsor">
+      <div class="container">
+        {sponsorHeading && <h2 class="section-head">{sponsorHeading}</h2>}
+        {sponsorIntro && <div class="sponsor-intro rich" set:html={md(sponsorIntro)} />}
+
+        {sponsorItems.length > 0 && (
+          <ul class="tier-list sponsor-list">
+            {sponsorItems.map((item: any) => (
+              <li class="tier-card">
+                {txt(item.price) && <p class="tier-range">{txt(item.price)}</p>}
+                {txt(item.title) && <h3>{txt(item.title)}</h3>}
+                {txt(item.description) && (
+                  <div class="tier-description rich" set:html={md(item.description)} />
+                )}
+                <a
+                  href={txt(item.button_url) || soapboxDonateUrl}
+                  class="btn btn-primary sponsor-btn"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {txt(item.button_label) || txt(item.title) || "Sponsor"}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </section>
+  )}
+
   <!-- ============ DONOR & SPONSOR RECOGNITION ============ -->
   {recognitionGroups.length > 0 && (
     <section class="section recognition-section" id="recognition">
       <div class="container">
-        <h2 class="section-head">{recognition.heading}</h2>
-        {recognition.intro && <p class="recognition-intro">{recognition.intro}</p>}
- 
+        {txt(recognition.heading) && (
+          <h2 class="section-head">{txt(recognition.heading)}</h2>
+        )}
+        {txt(recognition.intro) && (
+          <div class="recognition-intro rich" set:html={md(recognition.intro)} />
+        )}
+
         <div class="recognition-groups">
-          {recognitionGroups.map((group) => (
+          {recognitionGroups.map((group: any) => (
             <div class="recognition-group">
               <h3 class="recognition-tier">{group.tier_name}</h3>
               <ul class="recognition-names">
                 {group.names
-                  .filter((n) => n && n.trim())
-                  .map((name) => (
+                  .filter((n: string) => n && n.trim())
+                  .map((name: string) => (
                     <li>{name}</li>
                   ))}
               </ul>
@@ -308,43 +349,74 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
       </div>
     </section>
   )}
- 
-  <!-- 501(c)(3) / EIN note — applies to ALL giving on this page, so it
-       sits at the very bottom rather than under the donor tiers. -->
-  <section class="section ein-section">
-    <div class="container">
-      <p class="ein-note">
-        Peninsula Youth Theatre is a 501(c)(3) nonprofit. All gifts are tax-deductible to
-        the extent allowed by law. EIN 77-0335126.
-      </p>
-    </div>
-  </section>
+
+  <!-- The 501(c)(3) / EIN strip that used to sit here was removed
+       2026-08-21: the same details are in the footer on every page. -->
 </BaseLayout>
- 
+
 <style>
+  /* Anchor targets sit under the sticky header, so every linkable section
+     gets the same offset used elsewhere on the site. */
+  .campaign-hero,
+  .giving-section,
+  .corporate-section,
+  .sponsor-section,
+  .recognition-section {
+    scroll-margin-top: 6rem;
+  }
+
+  /* ---- Rich text rendered from CMS Markdown fields ---- */
+  .rich :global(p) {
+    margin-bottom: 0.8rem;
+  }
+
+  .rich :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .rich :global(a),
+  .rich-inline :global(a) {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .rich :global(a:hover),
+  .rich-inline :global(a:hover) {
+    color: var(--accent-deep);
+  }
+
+  .rich :global(ul),
+  .rich :global(ol) {
+    margin: 0 0 0.8rem 1.1rem;
+  }
+
+  .rich :global(li) {
+    margin-bottom: 0.25rem;
+  }
+
   /* ---- Light campaign hero with thermometer ---- */
   .campaign-hero {
     background: var(--paper);
   }
- 
+
   .campaign-hero h1 {
     margin-block: 0.6rem var(--space-md);
   }
- 
+
   .campaign-intro {
     color: var(--ink-soft);
     max-width: 60ch;
     font-size: 1.08rem;
     margin-bottom: var(--space-lg);
   }
- 
+
   .section-head {
-    margin-block: 0.4rem var(--space-lg);
+    margin-block: 0.4rem var(--space-md);
   }
- 
+
   /* ---- Campaign progress bar (horizontal, 2026-08-20) ---- */
-  /* Identical to the home page's bar. Percentage-based, so it fills
-     whatever column it's in and needs no per-page dimensions. */
   .thermo {
     position: relative;
     margin-bottom: var(--space-md);
@@ -428,7 +500,6 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     white-space: nowrap;
   }
 
-  /* One font throughout — body font, numbers picked out in pink. */
   .thermo-meta {
     font-family: var(--font-body);
     font-size: 1.05rem;
@@ -472,59 +543,88 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     font-size: 1.1rem;
     padding: 0.85rem 2.4rem;
   }
- 
-  /* ---- Donor tiers ---- */
-  .tiers-section {
+
+  /* ============ GIVING LEVELS / WHAT YOUR GIFT FUNDS ============ */
+  .giving-section {
     background: var(--paper-warm);
     border-top: 1px solid var(--line);
+    /* The site's --line is a warm grey that all but vanishes on the lilac
+       panel. --nav-pill is the next step down in the same lilac family and
+       reads as a clean hairline here. */
+    --giving-rule: var(--nav-pill);
   }
 
-  /* ---- What your gift funds (list under Donor Benefits) ---- */
-  .gift-funds-section {
-    background: var(--paper-warm);
+  .giving-intro {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin-bottom: var(--space-lg);
   }
 
-  .gift-funds-list {
+  .giving-list {
     list-style: none;
     padding: 0;
     margin: 0;
+    border-top: 1px solid var(--giving-rule);
+  }
+
+  /*
+    MOBILE FIRST: amount above description, full width. The two-column
+    version is added at 640px and up, which is where the old inline
+    "$650 The cost of..." started to look cramped.
+  */
+  .giving-row {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: 0.15rem;
+    padding-block: var(--space-sm);
+    border-bottom: 1px solid var(--giving-rule);
   }
 
-  .gift-funds-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-    padding: var(--space-md);
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-  }
-
-  .gift-funds-text {
-    flex: 1 1 16rem;
-    line-height: 1.4;
-  }
-
-  .gift-funds-amount {
+  .giving-amount {
     font-family: var(--font-heading);
-    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.2;
     color: var(--accent);
-    font-size: 1.15rem;
   }
 
-  .gift-funds-desc {
+  .giving-desc {
+    color: var(--ink);
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+
+  .giving-matching {
     color: var(--ink-soft);
+    font-size: 0.98rem;
+    max-width: 62ch;
+    margin-top: var(--space-md);
   }
 
-  .gift-funds-btn {
-    flex-shrink: 0;
+  .giving-donate {
+    margin-top: var(--space-lg);
+    font-size: 1.1rem;
+    padding: 0.85rem 2.4rem;
   }
- 
+
+  @media (min-width: 640px) {
+    .giving-row {
+      /* Fixed amount column + generous gutter, so the figures line up on a
+         clean right edge and never crowd the description. */
+      display: grid;
+      grid-template-columns: 9.5rem 1fr;
+      column-gap: var(--space-lg);
+      align-items: baseline;
+      padding-block: var(--space-md);
+    }
+
+    .giving-amount {
+      text-align: right;
+      font-size: 1.45rem;
+    }
+  }
+
+  /* ---- Shared card grid (corporate + sponsorship) ---- */
   .tier-list {
     list-style: none;
     padding: 0;
@@ -533,7 +633,7 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
- 
+
   .tier-card {
     padding: var(--space-md);
     background: var(--paper);
@@ -543,81 +643,120 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     flex-direction: column;
   }
 
-  /* Push the button to the bottom so cards with longer/shorter text
-     still line their buttons up evenly. */
+  /* Push the button to the bottom so cards with longer/shorter text still
+     line their buttons up evenly. */
   .tier-card .sponsor-btn {
     margin-top: auto;
     align-self: flex-start;
   }
 
-  /* Keep a little breathing room above the button even when text is short. */
+  /* Keep breathing room above the button even when the text is short. */
   .tier-card .tier-description {
     margin-bottom: var(--space-md);
   }
 
-  .corporate-contact {
-    color: var(--ink-soft);
-    font-size: 1rem;
-    margin-bottom: var(--space-lg);
-  }
-
-  .corporate-contact a {
-    color: var(--accent);
-    font-weight: 600;
-  }
- 
   .tier-range {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--accent);
     margin-bottom: 0.3rem;
   }
- 
+
   .tier-card h3 {
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
   }
- 
+
   .tier-description {
     font-size: 0.95rem;
     color: var(--ink-soft);
   }
- 
-  .ein-section {
-    border-top: 1px solid var(--line);
-  }
- 
-  .ein-note {
-    font-size: 0.85rem;
-    color: var(--ink-muted);
-    text-align: center;
-    margin: 0;
-  }
- 
+
   @media (min-width: 720px) {
     .tier-list {
       grid-template-columns: repeat(2, 1fr);
     }
   }
- 
+
+  /*
+    auto-fit rather than a fixed column count: the corporate ladder has five
+    tiers, and the old repeat(4, 1fr) left the fifth stranded alone on a
+    second row. This fits as many as will hold their minimum width, so
+    adding or removing a tier in the CMS can't strand one again.
+  */
   @media (min-width: 1024px) {
     .tier-list {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     }
   }
- 
-  /* ---- Sponsorship section (Shopify) ---- */
-  .sponsor-section {
+
+  /* ---- Corporate sponsorship ---- */
+  .corporate-section {
     background: var(--paper);
     border-top: 1px solid var(--line);
   }
- 
-  /* Only two sponsorship cards — cap at 2 columns even on wide screens */
-  .sponsor-list {
-    max-width: 760px;
+
+  .corporate-intro {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin-bottom: var(--space-lg);
   }
- 
-  /* Disabled "Coming soon" sponsor button */
+
+  /* The contact block. The frame lives here; the shared ContactForm's own
+     card styling is switched off inside it so they don't nest as two boxes.
+     :global() is required — ContactForm's styles are scoped to that
+     component, and this rule has to reach into it. */
+  .corp-contact {
+    margin-top: var(--space-lg);
+    background: var(--paper);
+    border: 2px solid var(--accent);
+    border-left-width: 8px;
+    border-radius: var(--radius);
+    padding: var(--space-lg);
+  }
+
+  .corp-contact :global(.contact-form-card) {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    max-width: none;
+  }
+
+  .corp-contact-head {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .corp-contact-intro {
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin-bottom: var(--space-md);
+  }
+
+  /* ---- Show & season sponsorship ---- */
+  .sponsor-section {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--line);
+  }
+
+  .sponsor-intro {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Sponsorship cards are wordier than corporate tiers, so they get a
+     larger minimum width — three sit in a row, four wrap sensibly. */
+  @media (min-width: 1024px) {
+    .sponsor-list {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+  }
+
+  /* Disabled "Coming soon" button */
   .sponsor-btn.is-disabled {
     background: var(--line);
     color: var(--ink-muted);
@@ -625,45 +764,26 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     pointer-events: none;
     display: inline-block;
   }
- 
-  @media (min-width: 1024px) {
-    .sponsor-list {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
- 
-  /* ---- Corporate Giving ---- */
-  .corporate-section {
+
+  /* ---- Donor & sponsor recognition ---- */
+  .recognition-section {
     background: var(--paper);
     border-top: 1px solid var(--line);
   }
- 
-  .corporate-intro {
-    color: var(--ink-soft);
-    max-width: 60ch;
-    font-size: 1.05rem;
-    margin-bottom: var(--space-lg);
-  }
- 
-  /* ---- Donor & sponsor recognition ---- */
-  .recognition-section {
-    background: var(--paper-warm);
-    border-top: 1px solid var(--line);
-  }
- 
+
   .recognition-intro {
     color: var(--ink-soft);
-    max-width: 60ch;
+    max-width: 62ch;
     font-size: 1.05rem;
     margin-bottom: var(--space-lg);
   }
- 
+
   .recognition-groups {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }
- 
+
   .recognition-tier {
     font-size: 1.15rem;
     color: var(--accent);
@@ -671,25 +791,25 @@ const tiersHeading = donatePage.tiers_heading || "Every gift, every level.";
     padding-bottom: 0.4rem;
     border-bottom: 1px solid var(--line);
   }
- 
+
   .recognition-names {
     list-style: none;
     padding: 0;
     margin: 0;
   }
- 
+
   .recognition-names li {
     font-size: 1rem;
     color: var(--ink);
     padding: 0.2rem 0;
   }
- 
+
   @media (min-width: 720px) {
     .recognition-groups {
       grid-template-columns: repeat(2, 1fr);
     }
   }
- 
+
   @media (min-width: 1024px) {
     .recognition-groups {
       grid-template-columns: repeat(3, 1fr);
