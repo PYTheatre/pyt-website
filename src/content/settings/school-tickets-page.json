@@ -1,8 +1,23 @@
 {
   "eyebrow": "For schools",
   "title": "School Tickets",
-  "intro": "This page is a placeholder — add an intro paragraph and list your discounted school-trip shows below in the CMS.",
-  "listings": [],
+  "intro": "PYT offers discounted tickets for school group bookings, for all Center Stage Musicals and Stories on Stage productions. Shows currently offering school tickets are listed below.",
+  "listings": [
+    {
+      "link_label": "Book tickets",
+      "title": "CREEPY CARROTS!",
+      "dates": "Oct 9-10 (School Matinees October 9)",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767",
+      "description": "Jasper Rabbit loves carrots, especially the ones from Crackenhopper Field. He eats them everywhere he goes. Until the day they start following him... or do they? Based on the beloved book by Aaron Reynolds and illustrated by Peter Brown, this funny and slightly spooky tale is the perfect fall treat for our youngest community members and their families.\n\nThis performance is 45 minutes long, with no intermission, and is appropriate for all ages."
+    },
+    {
+      "link_label": "Book tickets",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=765",
+      "title": "THE WIZARD OF OZ",
+      "dates": "Nov 14-22 (School Matinees November 19 & 20)",
+      "description": "Follow the yellow brick road to join Dorothy’s adventures with her friends as they brave the Wizard in the Emerald City. This inspiration for Wicked contains the songs from the beloved MGM musical starring Judy Garland, and is a treat the whole family can enjoy."
+    }
+  ],
   "empty_state_text": "No school-discount shows are listed yet. Check back soon, or get in touch below.",
   "contact_email": ""
 }
