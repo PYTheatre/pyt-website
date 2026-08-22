@@ -469,6 +469,20 @@ collections:
           - { name: "development", label: "Sponsorship & corporate giving", widget: "string", required: false, hint: "Used by: Ways to Support (corporate giving). Previously went to lhatten@pytnet.org." }
           - { name: "unavailable_note", label: "Message shown if an address above is blank", widget: "text", required: false, hint: "Shown in place of the form. Deliberately does NOT include an email address — publishing one is what these forms replace." }
 
+      # --- Thank You page (where the contact forms land) ---
+      # Every contact form on the site sends the visitor here after they
+      # submit, instead of to Formspree's own unbranded page. The page
+      # lives at /thank-you and is not in the nav on purpose.
+      - name: "thank-you-page"
+        label: "Thank You Page"
+        file: "src/content/settings/thank-you-page.json"
+        description: "The page visitors land on after sending any contact form on the site. One page serves all the forms."
+        fields:
+          - { name: "title", label: "Heading", widget: "string", required: false, default: "Thank you — we've got your message" }
+          - { name: "body", label: "Message", widget: "markdown", required: false, hint: "Accepts links — a good place to point people at what's on next. Leave blank to show the heading only." }
+          - { name: "button_label", label: "Button text", widget: "string", required: false, default: "Back to the home page", hint: "Leave blank to hide the button." }
+          - { name: "button_url", label: "Button link", widget: "string", required: false, default: "/", hint: "Where the button goes. Use a path such as / or /shows" }
+
       # --- Page Hero Images (2026-08-20) ---
       # One optional wide photo per page, all managed together here
       # rather than scattered across each page's own record — several
