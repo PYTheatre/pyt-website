@@ -87,6 +87,47 @@ const thermoTicks = tickFractions.map((f) => ({
   leftPct: f * 100,
 }));
 
+/*
+  THE STAT SENTENCES UNDER THE BAR (2026-08-21, second pass).
+  Previously hard-coded as "$X raised · N donors · P% of goal". Staff now
+  write each sentence themselves, but the FIGURES are not typed in — they
+  are placeholders filled from the thermometer settings above, so a
+  sentence can never drift out of date the way "of this year's $200,000
+  goal" typed as literal text would. Any sentence left blank is dropped,
+  and the separators only appear between the sentences that survive.
+*/
+const statTokens: Record<string, string> = {
+  raised: `$${raised.toLocaleString()}`,
+  goal: `$${goal.toLocaleString()}`,
+  donors: `${donorCount}`,
+  percent: `${pct}%`,
+};
+
+/* Split a template into plain text and figure parts, so the figures can be
+   picked out in the accent colour. An unrecognised {token} is left alone as
+   literal text rather than silently vanishing. */
+function statParts(template: string): { text: string; figure: boolean }[] {
+  const parts: { text: string; figure: boolean }[] = [];
+  const re = /\{(raised|goal|donors|percent)\}/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(template)) !== null) {
+    if (m.index > last) parts.push({ text: template.slice(last, m.index), figure: false });
+    parts.push({ text: statTokens[m[1]], figure: true });
+    last = m.index + m[0].length;
+  }
+  if (last < template.length) parts.push({ text: template.slice(last), figure: false });
+  return parts;
+}
+
+const statLines = [
+  txt((campaign as any).stat_raised),
+  txt((campaign as any).stat_donors),
+  txt((campaign as any).stat_percent),
+]
+  .filter(Boolean)
+  .map(statParts);
+
 const soapboxDonateUrl =
   txt(donatePage.soapbox_donate_url) || "https://pyt.secure.nonprofitsoapbox.com/donate";
 
@@ -102,16 +143,21 @@ const giftButtonLabel = txt((giftFunds as any)?.button_label) || "Donate";
 const matchingNote = txt((donatePage as any).matching_note);
 const showGiving = giftItems.length > 0 || !!giftHeading || !!giftIntro;
 
-/* ---------------- Corporate sponsorship ---------------- */
-const corporateDonateUrl = txt(corporate.corporate_donate_url);
-const corporateLinkLive = corporateDonateUrl.length > 0;
+/* ---------------- Corporate sponsorship ----------------
+   The five tiers are a LADDER, not a row of cards (2026-08-21, second
+   pass). Two reasons: the benefits are cumulative ("benefits from the
+   $500 level plus…"), which reads top-to-bottom rather than side-by-side;
+   and the descriptions vary from 89 to 291 characters, so as equal-height
+   columns the short tiers were left half empty.
+
+   The per-tier buttons are gone — enquiries go through the form below
+   instead — which also retired corporate_donate_url, button_label and
+   coming_soon_label from the CMS. */
 const corporateTiers = (corporate?.tiers ?? []).filter(
   (t: any) => t && (txt(t.name) || txt(t.amount) || txt(t.description))
 );
 const corporateHeading = txt(corporate.heading);
 const corporateIntro = txt(corporate.intro);
-const corporateButtonLabel = txt((corporate as any).button_label) || "Become a sponsor";
-const corporateComingSoonLabel = txt((corporate as any).coming_soon_label) || "Coming soon";
 const corporateContactHeading = txt((corporate as any).contact_heading);
 const corporateContactIntro = txt((corporate as any).contact_intro);
 const showCorporate =
@@ -153,43 +199,57 @@ const recognitionGroups = (recognition.groups || []).filter(
            nothing if this page has no photo set. -->
       <PageHeroImage />
 
-      <div class="thermo" role="img"
-           aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete, from ${donorCount} donors`}>
-        <p class="thermo-goal-flag" aria-hidden="true">Goal</p>
+      <!-- Bar and Donate sit side by side from 900px up, with the button
+           centred against the height of the bar block. Below that they
+           stack, button last. -->
+      <div class="campaign-progress">
+        <div class="campaign-progress-main">
+          <div class="thermo" role="img"
+               aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete, from ${donorCount} donors`}>
+            <p class="thermo-goal-flag" aria-hidden="true">Goal</p>
 
-        <div class="thermo-track-row">
-          <span class="thermo-bulb" aria-hidden="true"></span>
-          <div class="thermo-track">
-            <div class="thermo-fill" style={`width: ${fillPct}%`}></div>
+            <div class="thermo-track-row">
+              <span class="thermo-bulb" aria-hidden="true"></span>
+              <div class="thermo-track">
+                <div class="thermo-fill" style={`width: ${fillPct}%`}></div>
+              </div>
+            </div>
+
+            <div class="thermo-ticks" aria-hidden="true">
+              {thermoTicks.map((t) => (
+                <span class="thermo-tick" style={`left: ${t.leftPct}%`}>
+                  <span class="thermo-tick-mark"></span>
+                  <span class="thermo-tick-label">{t.label}</span>
+                </span>
+              ))}
+            </div>
           </div>
+
+          {statLines.length > 0 && (
+            <p class="thermo-meta">
+              {statLines.map((parts, i) => (
+                <>
+                  {i > 0 && <span class="thermo-sep" aria-hidden="true">&middot;</span>}
+                  <span class="thermo-stat">
+                    {parts.map((p) =>
+                      p.figure ? <strong>{p.text}</strong> : <Fragment>{p.text}</Fragment>
+                    )}
+                  </span>
+                </>
+              ))}
+            </p>
+          )}
         </div>
 
-        <div class="thermo-ticks" aria-hidden="true">
-          {thermoTicks.map((t) => (
-            <span class="thermo-tick" style={`left: ${t.leftPct}%`}>
-              <span class="thermo-tick-mark"></span>
-              <span class="thermo-tick-label">{t.label}</span>
-            </span>
-          ))}
-        </div>
+        <a
+          href={soapboxDonateUrl}
+          class="btn btn-highlight campaign-donate"
+          target="_blank"
+          rel="noopener"
+        >
+          Donate
+        </a>
       </div>
-
-      <p class="thermo-meta">
-        <strong>${raised.toLocaleString()}</strong> raised
-        <span class="thermo-sep" aria-hidden="true">&middot;</span>
-        <strong>{donorCount}</strong> donors
-        <span class="thermo-sep" aria-hidden="true">&middot;</span>
-        <strong>{pct}%</strong> of goal
-      </p>
-
-      <a
-        href={soapboxDonateUrl}
-        class="btn btn-primary thermo-donate"
-        target="_blank"
-        rel="noopener"
-      >
-        Donate
-      </a>
     </div>
   </section>
 
@@ -202,9 +262,23 @@ const recognitionGroups = (recognition.groups || []).filter(
   {showGiving && (
     <section class="section giving-section" id="giving-levels">
       <div class="container">
-        {giftHeading && <h2 class="section-head">{giftHeading}</h2>}
+        <!-- Heading and intro on the left, Donate top-right on wide
+             screens; stacked in that order on a phone. -->
+        <div class="giving-head">
+          <div class="giving-head-text">
+            {giftHeading && <h2 class="section-head">{giftHeading}</h2>}
+            {giftIntro && <div class="giving-intro rich" set:html={md(giftIntro)} />}
+          </div>
 
-        {giftIntro && <div class="giving-intro rich" set:html={md(giftIntro)} />}
+          <a
+            href={soapboxDonateUrl}
+            class="btn btn-highlight giving-donate"
+            target="_blank"
+            rel="noopener"
+          >
+            {giftButtonLabel}
+          </a>
+        </div>
 
         {giftItems.length > 0 && (
           <ul class="giving-list">
@@ -220,15 +294,6 @@ const recognitionGroups = (recognition.groups || []).filter(
         )}
 
         {matchingNote && <div class="giving-matching rich" set:html={md(matchingNote)} />}
-
-        <a
-          href={soapboxDonateUrl}
-          class="btn btn-primary giving-donate"
-          target="_blank"
-          rel="noopener"
-        >
-          {giftButtonLabel}
-        </a>
       </div>
     </section>
   )}
@@ -243,23 +308,16 @@ const recognitionGroups = (recognition.groups || []).filter(
         )}
 
         {corporateTiers.length > 0 && (
-          <ul class="tier-list corporate-list">
+          <ul class="corp-ladder">
             {corporateTiers.map((tier: any) => (
-              <li class="tier-card">
-                {txt(tier.amount) && <p class="tier-range">{txt(tier.amount)}</p>}
-                {txt(tier.name) && <h3>{txt(tier.name)}</h3>}
-                {txt(tier.description) && (
-                  <div class="tier-description rich" set:html={md(tier.description)} />
-                )}
-                {corporateLinkLive ? (
-                  <a href={corporateDonateUrl} class="btn btn-primary sponsor-btn" target="_blank" rel="noopener">
-                    {corporateButtonLabel}
-                  </a>
-                ) : (
-                  <span class="btn btn-primary sponsor-btn is-disabled" aria-disabled="true" role="link" tabindex="-1">
-                    {corporateComingSoonLabel}
-                  </span>
-                )}
+              <li class="corp-tier">
+                <span class="corp-amount">{txt(tier.amount)}</span>
+                <div class="corp-body">
+                  {txt(tier.name) && <h3 class="corp-name">{txt(tier.name)}</h3>}
+                  {txt(tier.description) && (
+                    <div class="corp-benefits rich" set:html={md(tier.description)} />
+                  )}
+                </div>
               </li>
             ))}
           </ul>
@@ -283,6 +341,7 @@ const recognitionGroups = (recognition.groups || []).filter(
             source="Ways to Support — corporate sponsorship"
             subject="Corporate sponsorship enquiry"
             submitLabel="Send enquiry"
+            compact={true}
           />
         </div>
       </div>
@@ -396,9 +455,55 @@ const recognitionGroups = (recognition.groups || []).filter(
     margin-bottom: 0.25rem;
   }
 
+  /* ---- Yellow Donate buttons (2026-08-21) ----
+     The same pairing the navbar Donate uses, so the two read as the same
+     action. Kept local to this page for now; promote to global.css if a
+     third place ever needs it. */
+  .btn-highlight {
+    background: var(--highlight);
+    color: var(--highlight-text);
+  }
+
+  .btn-highlight:hover {
+    background: var(--highlight);
+    filter: brightness(0.92);
+  }
+
   /* ---- Light campaign hero with thermometer ---- */
   .campaign-hero {
     background: var(--paper);
+  }
+
+  /* Bar block and Donate side by side on wide screens. Below 900px they
+     stack and the button sits under the stats. */
+  .campaign-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .campaign-progress-main {
+    width: 100%;
+    max-width: 620px;
+  }
+
+  .campaign-donate {
+    font-size: 1.1rem;
+    padding: 0.85rem 2.4rem;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 900px) {
+    .campaign-progress {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+
+    .campaign-progress-main {
+      flex: 0 1 620px;
+    }
   }
 
   .campaign-hero h1 {
@@ -500,17 +605,26 @@ const recognitionGroups = (recognition.groups || []).filter(
     white-space: nowrap;
   }
 
+  /* Sizes raised 2026-08-21 (PM request): 1.05rem -> 1.25rem, and 0.98rem
+     -> 1.12rem on small screens. */
   .thermo-meta {
     font-family: var(--font-body);
-    font-size: 1.05rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--ink);
-    margin: 0 0 var(--space-md);
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.3rem;
     max-width: 620px;
+  }
+
+  /* Each sentence wraps as a unit, so a longer one such as "$149,000
+     raised of this year's $200,000 goal" never breaks across the middle
+     dot from the sentence after it. */
+  .thermo-stat {
+    display: inline-block;
   }
 
   .thermo-meta strong {
@@ -535,13 +649,8 @@ const recognitionGroups = (recognition.groups || []).filter(
       margin-left: 20px;
     }
     .thermo-meta {
-      font-size: 0.98rem;
+      font-size: 1.12rem;
     }
-  }
-
-  .thermo-donate {
-    font-size: 1.1rem;
-    padding: 0.85rem 2.4rem;
   }
 
   /* ============ GIVING LEVELS / WHAT YOUR GIFT FUNDS ============ */
@@ -554,11 +663,41 @@ const recognitionGroups = (recognition.groups || []).filter(
     --giving-rule: var(--nav-pill);
   }
 
+  /* Heading + intro on the left, Donate on the right (2026-08-21). Stacks
+     on a phone, where the button lands under the intro rather than at the
+     very bottom of the list. */
+  .giving-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .giving-head-text {
+    min-width: 0;
+  }
+
   .giving-intro {
     color: var(--ink-soft);
     max-width: 62ch;
     font-size: 1.05rem;
-    margin-bottom: var(--space-lg);
+    margin-bottom: 0;
+  }
+
+  .giving-donate {
+    font-size: 1.1rem;
+    padding: 0.85rem 2.4rem;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 720px) {
+    .giving-head {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-xl);
+    }
   }
 
   .giving-list {
@@ -599,12 +738,6 @@ const recognitionGroups = (recognition.groups || []).filter(
     font-size: 0.98rem;
     max-width: 62ch;
     margin-top: var(--space-md);
-  }
-
-  .giving-donate {
-    margin-top: var(--space-lg);
-    font-size: 1.1rem;
-    padding: 0.85rem 2.4rem;
   }
 
   @media (min-width: 640px) {
@@ -703,6 +836,63 @@ const recognitionGroups = (recognition.groups || []).filter(
     margin-bottom: var(--space-lg);
   }
 
+  /* ---- Corporate tier ladder (2026-08-21) ----
+     Was five equal-height cards in a row. The benefits are cumulative and
+     vary a lot in length, so as columns the short tiers were left half
+     empty. Same rule-separated shape as the giving levels list above. */
+  .corp-ladder {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .corp-tier {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding-block: var(--space-md);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .corp-amount {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--accent);
+  }
+
+  .corp-name {
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .corp-benefits {
+    color: var(--ink);
+    font-size: 1rem;
+  }
+
+  .corp-benefits :global(ul) {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 640px) {
+    .corp-tier {
+      display: grid;
+      grid-template-columns: 9.5rem 1fr;
+      column-gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .corp-amount {
+      text-align: right;
+      font-size: 1.35rem;
+      /* Nudge onto the tier name's baseline — the heading face has a
+         taller cap height than the name below it. */
+      padding-top: 0.1rem;
+    }
+  }
+
   /* The contact block. The frame lives here; the shared ContactForm's own
      card styling is switched off inside it so they don't nest as two boxes.
      :global() is required — ContactForm's styles are scoped to that
@@ -754,15 +944,6 @@ const recognitionGroups = (recognition.groups || []).filter(
     .sponsor-list {
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
-  }
-
-  /* Disabled "Coming soon" button */
-  .sponsor-btn.is-disabled {
-    background: var(--line);
-    color: var(--ink-muted);
-    cursor: not-allowed;
-    pointer-events: none;
-    display: inline-block;
   }
 
   /* ---- Donor & sponsor recognition ---- */
