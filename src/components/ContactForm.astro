@@ -40,6 +40,18 @@ interface Props {
   /** Optional short line above the form. */
   intro?: string;
   submitLabel?: string;
+  /*
+    COMPACT (2026-08-21): a deliberately small version for places where the
+    full form takes over the page. Drops the Organization box and the
+    "typically reply within a few business days" line, puts name and email
+    side by side, and turns Subject into a hidden value — so staff still
+    see what an enquiry is about in their inbox without the visitor having
+    to fill in another box.
+
+    Defaults to FALSE, so every existing use of this component renders
+    exactly as it did before.
+  */
+  compact?: boolean;
 }
 
 const {
@@ -48,6 +60,7 @@ const {
   source = "",
   intro = "",
   submitLabel = "Send message",
+  compact = false,
 } = Astro.props;
 
 const endpoint = ((endpoints as any)[route] || (endpoints as any).general || "").trim();
@@ -60,37 +73,47 @@ const fallbackNote = ((endpoints as any).unavailable_note || "").trim() ||
 const uid = Math.random().toString(36).slice(2, 8);
 ---
 
-<div class="contact-form-card">
+<div class:list={["contact-form-card", compact && "is-compact"]}>
   {intro && <p class="contact-form-intro">{intro}</p>}
 
   {endpoint ? (
     <form action={endpoint} method="POST" class="contact-form">
-      <div class="field-group">
-        <label for={`cf-name-${uid}`}>Your name <span class="required-mark" aria-label="required">*</span></label>
-        <input type="text" name="name" id={`cf-name-${uid}`} autocomplete="name" required />
+      <div class:list={["field-row", !compact && "is-stacked"]}>
+        <div class="field-group">
+          <label for={`cf-name-${uid}`}>Your name <span class="required-mark" aria-label="required">*</span></label>
+          <input type="text" name="name" id={`cf-name-${uid}`} autocomplete="name" required />
+        </div>
+
+        <div class="field-group">
+          <label for={`cf-email-${uid}`}>Email address <span class="required-mark" aria-label="required">*</span></label>
+          <input type="email" name="email" id={`cf-email-${uid}`} autocomplete="email" required />
+        </div>
       </div>
 
-      <div class="field-group">
-        <label for={`cf-email-${uid}`}>Email address <span class="required-mark" aria-label="required">*</span></label>
-        <input type="email" name="email" id={`cf-email-${uid}`} autocomplete="email" required />
-      </div>
-
-      <div class="field-group">
-        <label for={`cf-org-${uid}`}>Organization (optional)</label>
-        <input type="text" name="organization" id={`cf-org-${uid}`} autocomplete="organization" />
-      </div>
+      {!compact && (
+        <div class="field-group">
+          <label for={`cf-org-${uid}`}>Organization (optional)</label>
+          <input type="text" name="organization" id={`cf-org-${uid}`} autocomplete="organization" />
+        </div>
+      )}
 
       {/* Subject sits ABOVE the message (PM request 2026-08-20): the two
-          swapped places compared with the rentals form they were modelled on. */}
-      <div class="field-group">
-        <label for={`cf-subject-${uid}`}>Subject <span class="required-mark" aria-label="required">*</span></label>
-        <input type="text" name="subject" id={`cf-subject-${uid}`} value={subject} required
-          placeholder="What is your message about?" />
-      </div>
+          swapped places compared with the rentals form they were modelled
+          on. In the compact form it becomes a hidden value instead — the
+          enquiry still arrives labelled, without another box to fill in. */}
+      {compact ? (
+        <input type="hidden" name="subject" value={subject || "Website enquiry"} />
+      ) : (
+        <div class="field-group">
+          <label for={`cf-subject-${uid}`}>Subject <span class="required-mark" aria-label="required">*</span></label>
+          <input type="text" name="subject" id={`cf-subject-${uid}`} value={subject} required
+            placeholder="What is your message about?" />
+        </div>
+      )}
 
       <div class="field-group">
         <label for={`cf-message-${uid}`}>Your message <span class="required-mark" aria-label="required">*</span></label>
-        <textarea name="message" id={`cf-message-${uid}`} rows="5" required
+        <textarea name="message" id={`cf-message-${uid}`} rows={compact ? "4" : "5"} required
           placeholder="How can we help?"></textarea>
       </div>
 
@@ -105,7 +128,9 @@ const uid = Math.random().toString(36).slice(2, 8);
 
       <div class="submit-row">
         <button type="submit" class="btn btn-primary">{submitLabel}</button>
-        <p class="submit-note">We typically reply within a few business days.</p>
+        {!compact && (
+          <p class="submit-note">We typically reply within a few business days.</p>
+        )}
       </div>
     </form>
   ) : (
@@ -128,8 +153,43 @@ const uid = Math.random().toString(36).slice(2, 8);
     color: var(--ink-soft);
   }
 
+  /*
+    Name and email share a row in the compact form and stack everywhere
+    else. .is-stacked keeps the non-compact forms byte-identical to how
+    they rendered before this wrapper existed.
+  */
+  .field-row.is-stacked {
+    display: block;
+  }
+
+  .field-row:not(.is-stacked) {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 var(--space-md);
+  }
+
+  @media (min-width: 520px) {
+    .field-row:not(.is-stacked) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
   .field-group {
     margin-bottom: var(--space-md);
+  }
+
+  /* The compact card is framed by whatever contains it (on the Support
+     page, the corporate contact block), so it drops its own box. */
+  .contact-form-card.is-compact {
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    max-width: 520px;
+  }
+
+  .contact-form-card.is-compact .field-group {
+    margin-bottom: var(--space-sm);
   }
 
   .field-group label {
