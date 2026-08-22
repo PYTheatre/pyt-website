@@ -2,5 +2,8 @@
   "goal_amount": 200000,
   "raised_amount": 149000,
   "donor_count": 139,
-  "campaign_label": "2026 Annual Campaign"
+  "campaign_label": "2026 Annual Campaign",
+  "stat_raised": "{raised} raised of this year's {goal} goal",
+  "stat_donors": "{donors} donors",
+  "stat_percent": "{percent} of goal"
 }
