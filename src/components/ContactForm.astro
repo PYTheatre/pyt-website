@@ -67,6 +67,24 @@ const endpoint = ((endpoints as any)[route] || (endpoints as any).general || "")
 const fallbackNote = ((endpoints as any).unavailable_note || "").trim() ||
   "Our contact form is being set up. Please check back shortly.";
 
+/*
+  WHERE THE VISITOR LANDS AFTER SUBMITTING (2026-08-21).
+  These are plain HTML forms, so Formspree answers with ITS OWN "Thank
+  You" page by default — dumping someone who filled in a PYT form onto a
+  formspree.io page with no branding and no way back. The `_next` field
+  below overrides that and returns them to /thank-you on this site.
+
+  Formspree requires `_next` to be an ABSOLUTE url, so it is built from
+  the `site` value in astro.config.mjs. That means it follows the real
+  domain automatically at go-live — one place to change, not eight. The
+  fallback is only there so a missing `site` can't produce a broken
+  relative URL.
+*/
+const thankYouUrl = new URL(
+  "/thank-you/",
+  Astro.site ?? "https://pyt-website.pages.dev"
+).href;
+
 // IDs must be unique: several pages could render more than one of these,
 // and duplicate ids would break the label/input pairing for screen
 // readers and make clicking a label focus the wrong box.
@@ -120,6 +138,10 @@ const uid = Math.random().toString(36).slice(2, 8);
       {/* Tells staff which page the enquiry came from, since several
           pages share one inbox. */}
       {source && <input type="hidden" name="sent_from" value={source} />}
+
+      {/* Sends the visitor to PYT's own thank-you page instead of
+          Formspree's. Applies to every form on the site. */}
+      <input type="hidden" name="_next" value={thankYouUrl} />
 
       {/* Honeypot: hidden from real users, filled in by bots, which
           Formspree then discards. */}
