@@ -1,8 +1,8 @@
 {
   "title": "Press",
   "eyebrow": "",
-  "intro": "Coverage of Peninsula Youth Theatre and our productions from across the press.",
-  "empty_message": "Press coverage coming soon — check back as PYT makes headlines.",
+  "intro": "Coverage of Peninsula Youth Theatre and our productions.",
+  "empty_message": "Coming soon.",
   "items": [
     {
       "headline": "\"The critically acclaimed music and story will have everyone in the audience losing their heads. Six the Musical is true HER-story.\" SIX the musical.",
@@ -15,6 +15,11 @@
       "headline": "\"You’ll never see another show that’s so unique.\" SIX the musical.",
       "source": "Los Altos Town Crier",
       "date": "June 2026"
+    },
+    {
+      "url": "https://www.losaltosonline.com/stepping_out/pyt-s-reluctant-dragon-runs-online-this-weekend/article_3e0da5dc-2619-11ec-918c-e75acb1340ea.html",
+      "source": "Los Altos Town Crier",
+      "headline": "PYT’s ‘Reluctant Dragon’ runs online this weekend"
     }
   ]
 }
