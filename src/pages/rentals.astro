@@ -34,6 +34,20 @@ import page from "../content/settings/rentals-page.json";
 
 const categories = page.categories || [];
 const formEndpoint = page.form_endpoint || "";
+
+/*
+  This page has its OWN form rather than using the shared ContactForm
+  component, and its own Formspree endpoint (rentals-page.json →
+  form_endpoint) rather than one of the three in Contact Form Endpoints.
+  It therefore needs the `_next` redirect added here separately —
+  otherwise this would be the one form on the site that still dumps the
+  visitor on Formspree's own page. Built from astro.config.mjs `site` so
+  it follows the real domain at go-live, exactly as ContactForm does.
+*/
+const thankYouUrl = new URL(
+  "/thank-you/",
+  Astro.site ?? "https://pyt-website.pages.dev"
+).href;
 ---
 
 <BaseLayout
@@ -120,6 +134,10 @@ const formEndpoint = page.form_endpoint || "";
 
             {/* Sets the email subject line in PYT's inbox */}
             <input type="hidden" name="_subject" value="New rental inquiry from pytnet.org" />
+
+            {/* Sends the visitor to PYT's own thank-you page rather than
+                Formspree's unbranded one. */}
+            <input type="hidden" name="_next" value={thankYouUrl} />
 
             {/* Honeypot anti-spam field (hidden from real users) */}
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
