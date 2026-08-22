@@ -555,37 +555,38 @@ collections:
           - { name: "campaign_label", label: "Campaign name shown on the home page", widget: "string", default: "2026 Annual Campaign" }
  
       # --- Support PYT — Main Page (intro copy, Soapbox URL, sponsorship) ---
+      #
+      # LINKING TO A SECTION OF THE SUPPORT PAGE: any of the paragraph
+      # fields below is Markdown, so a link is written [like this](/url).
+      # The Support page's own sections have fixed addresses:
+      #   /ways-to-support#individual      the donation thermometer
+      #   /ways-to-support#giving-levels   the gift amounts list
+      #   /ways-to-support#corporate       corporate sponsorship
+      #   /ways-to-support#sponsor         show & season sponsorship
+      #   /ways-to-support#recognition     the donor recognition wall
       - name: "donate-page"
         label: "Support PYT — Main Page"
         file: "src/content/settings/donate-page.json"
-        description: "The Support PYT page — intro text, employer matching note, the Soapbox donation link, and the sponsorship section wording."
+        description: "The top of the Support PYT page — heading and intro, the Soapbox donation link, the employer-matching note, and the Show & Season Sponsorship section. Paragraph fields accept links."
         fields:
           - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
-          - { name: "intro_body", label: "Intro paragraph", widget: "text" }
+          - { name: "intro_body", label: "Intro paragraph", widget: "markdown", required: false, hint: "Use the link button in the toolbar to link to another page or to a section of this one — e.g. /ways-to-support#corporate" }
           - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate AND sponsorship buttons open. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
-          - { name: "tiers_heading", label: "Giving levels — section heading", widget: "string", required: false, default: "Every gift, every level." }
-          - { name: "sponsor_heading", label: "Sponsorship — section heading", widget: "string", required: false, default: "Sponsor a show or a season." }
-          - { name: "sponsor_show_title", label: "Sponsorship — \"Show\" card title", widget: "string", required: false, default: "Sponsor a Show" }
-          - { name: "sponsor_show_price", label: "Sponsorship — \"Show\" price (optional)", widget: "string", required: false, hint: "Optional. e.g. \"$5,000\". Leave blank to show no price on the Show card." }
-          - { name: "sponsor_show_description", label: "Sponsorship — \"Show\" card description", widget: "text", required: false }
-          - { name: "sponsor_season_title", label: "Sponsorship — \"Season\" card title", widget: "string", required: false, default: "Sponsor a Season" }
-          - { name: "sponsor_season_price", label: "Sponsorship — \"Season\" price (optional)", widget: "string", required: false, hint: "Optional. e.g. \"$15,000\". Leave blank to show no price on the Season card." }
-          - { name: "sponsor_season_description", label: "Sponsorship — \"Season\" card description", widget: "text", required: false }
- 
-      # --- Support PYT — Giving Levels (donor tiers) ---
-      - name: "donor-tiers"
-        label: "Support PYT — Giving Levels"
-        file: "src/content/settings/donor-tiers.json"
-        description: "The list of giving tiers shown on the Support PYT page (Friend, Supporter, etc.)."
-        fields:
-          - name: "tiers"
-            label: "Tiers"
+          - { name: "matching_note", label: "Employer matching note", widget: "markdown", required: false, hint: "Shown under the gift amounts list. Leave blank to hide it. A good place for a link to your employer-matching lookup." }
+          - { name: "sponsor_heading", label: "Sponsorship — section heading", widget: "string", required: false, default: "Show & Season Sponsorship" }
+          - { name: "sponsor_intro", label: "Sponsorship — intro paragraph", widget: "markdown", required: false, hint: "Optional. Shown under the sponsorship heading. Leave blank to hide it." }
+          - name: "sponsor_items"
+            label: "Sponsorship levels"
             widget: "list"
-            summary: "{{fields.name}} — {{fields.range}}"
+            required: false
+            summary: "{{fields.title}} — {{fields.price}}"
+            hint: "Each one is a card. Add as many as you like — a Stories on Stage season, for example — and drag to reorder."
             fields:
-              - { name: "name", label: "Tier name", widget: "string" }
-              - { name: "range", label: "Amount range", widget: "string", hint: "Example: $50–$249" }
-              - { name: "description", label: "Description", widget: "text" }
+              - { name: "title", label: "Card title", widget: "string", hint: "Example: Season Sponsor" }
+              - { name: "price", label: "Price (optional)", widget: "string", required: false, hint: "Optional. Example: $1,500+. Leave blank to show no price on this card." }
+              - { name: "description", label: "Description", widget: "markdown", required: false }
+              - { name: "button_label", label: "Button text", widget: "string", required: false, hint: "Example: Sponsor a season. Falls back to the card title if left blank." }
+              - { name: "button_url", label: "Button link (optional)", widget: "string", required: false, hint: "Optional. Leave blank to use the Soapbox donation page set above — which is what every other button on this page uses." }
 
       # --- Musicals Page (Shows → Musicals) ---
       - name: "musicals-page"
@@ -632,37 +633,51 @@ collections:
               - { name: "url", label: "Link", widget: "string", hint: "The full web address of the article, starting with https://" }
               - { name: "date", label: "Date", widget: "string", required: false, hint: "Optional. Example: May 2026" }
 
-      # --- Support PYT — What Your Gift Funds (sits under Donor Benefits) ---
+      # --- Support PYT — Giving Levels ("Every gift, every level.") ---
+      # This record owns the WHOLE section: its heading, its intro, the list
+      # of amounts, and the Donate button under them. Before 2026-08-21 the
+      # heading lived in "Support PYT — Main Page" while the list lived
+      # here, which is why the heading appeared to be uneditable and why a
+      # large gap sat between the two.
       - name: "gift-funds"
-        label: "Support PYT — What Your Gift Funds"
+        label: "Support PYT — Giving Levels"
         file: "src/content/settings/gift-funds.json"
-        description: "The list of giving amounts on the Support PYT page (under Donor Benefits) — each line is an amount plus what it pays for. Edit, reorder, add or remove lines freely. Leave the whole list empty to hide the section."
+        description: "The \"Every gift, every level.\" section on the Support PYT page — the heading, an optional intro paragraph, the list of example amounts, and the Donate button beneath them. Clear the heading, the intro AND the list to hide the whole section."
         fields:
+          - { name: "heading", label: "Section heading", widget: "string", required: false, default: "Every gift, every level.", hint: "Leave blank to show no heading." }
+          - { name: "intro", label: "Intro paragraph", widget: "markdown", required: false, hint: "Optional. Sits between the heading and the list. Accepts links — e.g. to /ways-to-support#corporate or an outside page. Leave blank to hide it." }
+          - { name: "button_label", label: "Donate button text", widget: "string", required: false, default: "Donate", hint: "The single button under the list. Defaults to \"Donate\" if left blank." }
           - name: "items"
             label: "Gift amounts"
             widget: "list"
+            required: false
             summary: "{{fields.amount}} — {{fields.description}}"
             fields:
               - { name: "amount", label: "Amount", widget: "string", hint: "Example: $1,000  or  $3,000 per month" }
-              - { name: "description", label: "What it pays for", widget: "text", hint: "Example: pays for costumes for a Center Stage Musicals show" }
+              - { name: "description", label: "What it pays for", widget: "text", hint: "Example: The cost of costumes for a Center Stage Musical. Links are allowed here too, written [like this](/casting)." }
 
-      # --- Corporate Giving panel (Support PYT page) ---
+      # --- Corporate Sponsorship panel (Support PYT page) ---
       - name: "corporate-giving"
-        label: "Support PYT — Corporate Giving"
+        label: "Support PYT — Corporate Sponsorship"
         file: "src/content/settings/corporate-giving.json"
-        description: "The Corporate Giving panel on the Support PYT page — intro copy, the corporate Soapbox donation link, and the corporate tiers (Partner, Patron, etc.)."
+        description: "The Corporate Sponsorship section on the Support PYT page — intro copy, the corporate Soapbox link, the tier ladder, the button wording, and the \"talk to us\" contact box beneath it."
         fields:
-          - { name: "heading", label: "Section heading", widget: "string", default: "Corporate Giving" }
-          - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
-          - { name: "corporate_donate_url", label: "Corporate Soapbox donation link", widget: "string", required: false, hint: "The web address of PYT's corporate Soapbox donation page. While this is blank, the tier buttons show \"Coming soon\". Paste the link here once the page exists to make the buttons live." }
+          - { name: "heading", label: "Section heading", widget: "string", required: false, default: "Corporate Sponsorship" }
+          - { name: "intro", label: "Intro paragraph", widget: "markdown", required: false, hint: "Accepts links — to another page, or to a section of this one such as /ways-to-support#sponsor" }
+          - { name: "corporate_donate_url", label: "Corporate Soapbox donation link", widget: "string", required: false, hint: "The web address of PYT's corporate Soapbox donation page. While this is blank, the tier buttons show the \"Coming soon\" wording below instead. Paste the link here to make the buttons live." }
+          - { name: "button_label", label: "Tier button text", widget: "string", required: false, default: "Become a sponsor", hint: "The wording on every tier button once the link above is set. Defaults to \"Become a sponsor\" if left blank." }
+          - { name: "coming_soon_label", label: "Tier button text while the link is blank", widget: "string", required: false, default: "Coming soon", hint: "Shown on the greyed-out buttons while the donation link above is empty." }
           - name: "tiers"
             label: "Corporate tiers"
             widget: "list"
+            required: false
             summary: "{{fields.name}} — {{fields.amount}}"
             fields:
-              - { name: "name", label: "Tier name", widget: "string", hint: "Example: Partner" }
+              - { name: "name", label: "Tier name", widget: "string", hint: "Example: Spotlights" }
               - { name: "amount", label: "Amount", widget: "string", hint: "Example: $2,500" }
-              - { name: "description", label: "Benefits / description", widget: "text" }
+              - { name: "description", label: "Benefits / description", widget: "markdown", required: false, hint: "A bulleted list reads best here. Press Return once for a new line within the same benefit." }
+          - { name: "contact_heading", label: "Contact box — heading", widget: "string", required: false, default: "Talk to us about sponsorship", hint: "The framed box under the tiers. Leave blank to show no heading on it." }
+          - { name: "contact_intro", label: "Contact box — paragraph", widget: "markdown", required: false, hint: "The line above the enquiry form. Leave blank to hide it. (The form itself only appears once the Development endpoint is set in Contact Form Endpoints.)" }
  
       # --- Donor & sponsor recognition (Support PYT page) ---
       - name: "donor-recognition"
@@ -670,8 +685,8 @@ collections:
         file: "src/content/settings/donor-recognition.json"
         description: "The recognition wall at the bottom of the Support PYT page. Each group is a heading with a list of names. A group with no names is hidden automatically. Use the \"Supporters\" group for donors who want to be recognized but not have their giving level shown."
         fields:
-          - { name: "heading", label: "Section heading", widget: "string", default: "Our Donors & Sponsors" }
-          - { name: "intro", label: "Intro paragraph", widget: "text", required: false }
+          - { name: "heading", label: "Section heading", widget: "string", required: false, default: "Our Donors & Sponsors" }
+          - { name: "intro", label: "Intro paragraph", widget: "markdown", required: false, hint: "Accepts links — e.g. back up to /ways-to-support#corporate" }
           - name: "groups"
             label: "Recognition groups"
             widget: "list"
