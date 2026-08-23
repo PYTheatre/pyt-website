@@ -25,10 +25,6 @@
           "url": "/subscribe"
         },
         {
-          "label": "Volunteer",
-          "url": "/volunteer"
-        },
-        {
           "label": "For schools",
           "url": "/school-tickets/"
         }
@@ -40,10 +36,6 @@
         {
           "label": "About PYT",
           "url": "/about"
-        },
-        {
-          "label": "Support PYT",
-          "url": "/ways-to-support"
         },
         {
           "label": "Contact",
