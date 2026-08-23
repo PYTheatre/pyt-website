@@ -40,6 +40,15 @@ const hasHtmlLede = Boolean(ledeHtml && ledeHtml.trim());
     ) : (
       lede && <p class="page-hero-lede">{lede}</p>
     )}
+    {/* Optional button row (2026-08-22), used by the Sponsorship /
+        Scholarships links. Deliberately INSIDE this container and
+        ABOVE <PageHeroImage />, so the buttons sit directly under the
+        heading on every page whether or not that page has a hero
+        photo. Placing them after <PageHero /> in the page instead
+        would drop them below the photo on the pages that have one and
+        under the heading on the pages that don't — inconsistent.
+        Renders nothing at all when no page passes slot="actions". */}
+    <slot name="actions" />
   </div>
 </section>
 
