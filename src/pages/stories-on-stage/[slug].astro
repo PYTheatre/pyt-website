@@ -21,6 +21,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import settings from "../../content/settings/stories-on-stage-page.json";
 import showsPage from "../../content/settings/shows-page.json";
+import SupportLinks from "../../components/SupportLinks.astro";
 
 const ticketFeeNotice = (showsPage as any).ticket_fee_notice || "";
 
@@ -77,15 +78,24 @@ const ticketsIntro = (data as any).tickets_intro || "";
         <div class="booking-card">
           <h2>Public performances</h2>
           {ticketsIntro && <p class="booking-intro">{ticketsIntro}</p>}
-          {data.public_ticketing_url ? (
-            <a href={data.public_ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
-              Tickets
-            </a>
-          ) : (
-            <span class="btn btn-outline btn-disabled" aria-disabled="true">
-              Tickets coming soon
-            </span>
-          )}
+          {/* Tickets and Sponsor share one row (PM request, 2026-08-22)
+              so the sponsor button reads as a peer of Tickets rather
+              than as a stray afterthought below the card. The row
+              wrapper is always present even when SupportLinks renders
+              nothing (blank CMS label), which is harmless: an empty
+              flex row collapses to the height of its one child. */}
+          <div class="booking-actions">
+            {data.public_ticketing_url ? (
+              <a href={data.public_ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
+                Tickets
+              </a>
+            ) : (
+              <span class="btn btn-outline btn-disabled" aria-disabled="true">
+                Tickets coming soon
+              </span>
+            )}
+            <SupportLinks sponsor context="show" />
+          </div>
           {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
         </div>
 
@@ -150,6 +160,16 @@ const ticketsIntro = (data as any).tickets_intro || "";
 
   .prod-synopsis p {
     margin: 0 0 var(--space-sm);
+  }
+
+  /* Button row inside the Public performances card. Wraps on narrow
+     screens so Tickets and Sponsor stack rather than overflowing the
+     card. Same 0.7rem gap as .show-ctas on the musical show pages, so
+     the two page types match. */
+  .booking-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
   }
 
   .booking-card {
