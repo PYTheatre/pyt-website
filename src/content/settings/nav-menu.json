@@ -103,6 +103,10 @@
         {
           "label": "Classes & Camps",
           "url": "/programs"
+        },
+        {
+          "label": "School Play in a Box",
+          "url": "/school-play-in-a-box/"
         }
       ]
     },
@@ -141,18 +145,6 @@
         {
           "label": "Young Performers (5-7yrs)",
           "url": "/young-performers/"
-        },
-        {
-          "label": "School Play in a Box",
-          "url": "/school-play-in-a-box/"
-        },
-        {
-          "label": "School tickets",
-          "url": "/school-tickets/"
-        },
-        {
-          "label": "Volunteer",
-          "url": "/volunteer"
         },
         {
           "label": "Press",
