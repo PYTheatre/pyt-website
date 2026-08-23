@@ -12,6 +12,10 @@ const year = new Date().getFullYear();
 
 import Logo from "./Logo.astro";
 import footer from "../content/settings/footer.json";
+// Site address, used by the EN/ES translate toggle below to build the
+// link back to the untranslated site. Same CMS field the header used
+// when the toggle lived up there (Site Settings -> Navigation Labels).
+import navLabels from "../content/settings/nav-labels.json";
 
 // Footer link columns (2026-08-20): now fully CMS-editable —
 // titles, links, and the order of both columns and the links inside
@@ -91,12 +95,91 @@ const privacyUrl = (footer as any).privacy_link_url || "";
     </div>
   </div>
 
+  <!-- EN/ES translate toggle. MOVED HERE from the nav bar on
+       2026-08-23: it was the only item in that bar that wasn't
+       navigation or a call to action, and the row had stopped fitting
+       on one line. The PM asked for it to be prominent here rather
+       than tucked away, hence its own full-width band with a label
+       and a proper-sized button, above the copyright line — not a
+       small link lost among the footer columns.
+
+       Not a real bilingual site (that's a much bigger project — see
+       BUILD_LOG.md); this routes the CURRENT page through Google's
+       free translate.goog proxy, which needs no sign-up and no script
+       embed. The label and behaviour swap client-side depending on
+       whether the visitor is already on the translated version. -->
+  <div class="lang-band">
+    <div class="container lang-band-inner">
+      <p class="lang-band-text" id="lang-band-text">Read this site in Spanish</p>
+      <a
+        href="#"
+        id="lang-toggle"
+        class="lang-btn"
+        data-site-origin={(navLabels as any).site_origin || "https://pyt-website.pages.dev"}
+        aria-label="Translate this site"
+      >Español</a>
+    </div>
+  </div>
+
   <div class="container footer-bottom">
     <p>&copy; {year} Peninsula Youth Theatre &middot; {footer.copyright_extra}</p>
   </div>
 </footer>
 
 <style>
+  /* ---- EN/ES language band (2026-08-23) ---- */
+  /* Given its own full-width band, a label, and a real button so it
+     reads as an offer rather than as fine print — the toggle used to
+     sit in the nav bar and must not become less findable by moving.
+     Sits directly above the copyright line, so it's the last thing
+     before the very bottom of every page. */
+  .lang-band {
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    margin-top: var(--space-lg);
+    padding-block: var(--space-md);
+  }
+
+  .lang-band-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    text-align: center;
+  }
+
+  .lang-band-text {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--nav-text);
+  }
+
+  /* Deliberately NOT .btn: this needs to read clearly on the dark
+     footer, and the shared button styles are tuned for light
+     backgrounds. Sized like a real button rather than the small
+     40px-wide "ES" pill it was in the nav. */
+  .lang-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.5rem;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    color: var(--nav-bg-dark);
+    background: var(--nav-text);
+    border-radius: var(--radius-btn);
+    border: 1.5px solid var(--nav-text);
+    transition: background 0.16s ease, color 0.16s ease;
+  }
+
+  .lang-btn:hover,
+  .lang-btn:focus-visible {
+    background: transparent;
+    color: var(--nav-text);
+  }
+
   .site-footer {
     margin-top: var(--space-2xl);
     background: var(--nav-bg-dark);
@@ -226,3 +309,69 @@ const privacyUrl = (footer as any).privacy_link_url || "";
     }
   }
 </style>
+
+<script>
+  // EN/ES translate toggle. Routes the current page through Google's
+  // free translate.goog domain-proxy (no sign-up, no script embed
+  // needed) — e.g. example.com/shows becomes
+  // example-com.translate.goog/shows with a couple of query params
+  // telling Google which languages to use. If the visitor is ALREADY
+  // on the translated version, the button instead links back to the
+  // real site, built from the "site address" set in the CMS (Site
+  // Settings → Navigation Labels) rather than trying to reverse the
+  // proxy's URL — reversing it is ambiguous whenever the real domain
+  // itself contains a dash (true of the current pyt-website.pages.dev
+  // address), so a known, CMS-set origin is used instead.
+  // Encode a real hostname into its translate.goog form.
+  //
+  // BUG FIX 2026-08-20 — this is why the ES button did nothing.
+  // Google's scheme is NOT simply "dots become dashes". Any dash that
+  // is already IN the hostname has to be DOUBLED first, otherwise
+  // Google decodes it back as a dot and fetches a different site.
+  // Our domain contains a dash, so it was hit by exactly this:
+  //
+  //   pyt-website.pages.dev
+  //     old code -> pyt-website-pages-dev.translate.goog
+  //                 which Google reads back as pyt.website.pages.dev
+  //                 — a site that doesn't exist, so nothing translated
+  //     correct  -> pyt--website-pages-dev.translate.goog
+  //                 which Google reads back as pyt-website.pages.dev
+  //
+  // Order matters: double the dashes BEFORE turning dots into dashes,
+  // or the new dashes get doubled too. Verified against the test table
+  // in Google's own docs (search "ad-network-and-translation"):
+  //   example.com     -> example-com
+  //   foo.example.com -> foo-example-com
+  //   foo-example.com -> foo--example-com
+  const toTranslateHost = (hostname: string) =>
+    hostname.replace(/-/g, "--").replace(/\./g, "-") + ".translate.goog";
+
+  const langBtn = document.getElementById("lang-toggle") as HTMLAnchorElement | null;
+  if (langBtn) {
+    const onTranslatedPage = window.location.hostname.endsWith(".translate.goog");
+    // Full words, not the old two-letter "ES"/"EN" codes: in the nav
+    // bar the button had to be tiny, but in the footer band it has
+    // room to say what it actually does (2026-08-23).
+    const bandText = document.getElementById("lang-band-text");
+    if (onTranslatedPage) {
+      langBtn.textContent = "English";
+      if (bandText) bandText.textContent = "Ver este sitio en ingl\u00e9s";
+      langBtn.setAttribute("aria-label", "View this site in English");
+      const origin = langBtn.dataset.siteOrigin || "";
+      langBtn.href = origin + window.location.pathname + window.location.hash;
+    } else {
+      langBtn.textContent = "Espa\u00f1ol";
+      if (bandText) bandText.textContent = "Read this site in Spanish";
+      langBtn.setAttribute("aria-label", "Ver este sitio en espa\u00f1ol");
+      // Build the real href up front rather than only on click, so the
+      // button behaves like a normal link — right-click, middle-click,
+      // open-in-new-tab and "copy link" all work, and it still does
+      // something if the click handler never runs.
+      const sep = window.location.search ? "&" : "?";
+      langBtn.href =
+        `https://${toTranslateHost(window.location.hostname)}` +
+        `${window.location.pathname}${window.location.search}${sep}` +
+        `_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en${window.location.hash}`;
+    }
+  }
+</script>
