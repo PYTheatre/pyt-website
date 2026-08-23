@@ -214,23 +214,67 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
  
+  /* The header row is allowed to be WIDER than the site's body
+     container (2026-08-22). This is deliberate and it is the fix for a
+     horizontal-scroll bug, not a cosmetic tweak:
+
+     .header-inner carries .container, which caps at --max-width
+     (1140px) minus 2x2.5rem padding = 1060px of usable room. The wide
+     nav needs, on a page that also shows the logo:
+         logo 98 + nav 789 + actions 255 + two 16px gaps = 1174px
+     ...which is 114px MORE than 1060. So the row never fitted the
+     container at ANY viewport width. On big screens the excess simply
+     spilled into the page's side margins and nobody noticed; once the
+     viewport got small enough that those margins ran out, the spill
+     turned into a horizontal scrollbar on every page of the site.
+
+     Raising the cap here (and ONLY here — the body container is
+     untouched) gives the row the room it always needed. The dark bar
+     is full-bleed anyway, so its contents sitting slightly wider than
+     the article column below reads as normal nav-bar behaviour.
+
+     Keep this comfortably above the sum above if nav items are ever
+     added in the CMS. */
   .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
     padding-block: 1.1rem;
+    max-width: 1240px;
+    /* SAFETY NET. The nav is CMS-driven (Navigation -> Full Menu), so
+       its width is not fixed by this code — adding a menu item makes it
+       wider and could re-break the fit. With wrap, an over-long row
+       drops onto a second line and the header just gets taller, which
+       is untidy but harmless. Without it, the overflow becomes a
+       site-wide horizontal scrollbar again. Do not remove this to
+       "clean up" the layout. */
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
   }
  
   /* Wide-screen nav is hidden on phones by default */
   .nav-wide {
     display: none;
     align-items: center;
-    gap: 0.9rem;
+    /* Tightened from 0.9rem (2026-08-22) as part of getting the row to
+       fit — see the note on .header-inner. Six gaps between seven
+       items, so this is worth ~29px. */
+    gap: 0.6rem;
+    /* Wraps rather than overflowing if the CMS menu grows. min-width:0
+       lets this flex item actually shrink to the space available;
+       without it a flex item refuses to go below its content width and
+       pushes the row wide instead of wrapping. */
+    flex-wrap: wrap;
+    min-width: 0;
   }
  
   .nav-wide .pill {
-    padding: 0.55rem 1.05rem;
+    /* Horizontal padding tightened from 1.05rem (2026-08-22). Seven
+       items x two sides, so this is worth ~56px — the single biggest
+       saving available without touching font-size. Don't go below
+       ~0.7rem or the pills stop reading as buttons. */
+    padding: 0.55rem 0.8rem;
     font-size: 0.95rem;
     white-space: nowrap;
     font-family: var(--font-heading);
@@ -304,6 +348,32 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     transform: rotate(180deg);
   }
  
+  /* The dropdowns near the END of the bar open INWARD (right-aligned to
+     their trigger) instead of rightward (2026-08-22).
+
+     This is a real bug fix, not styling. A .nav-dropdown is hidden with
+     opacity + visibility, NOT display:none — that's what allows it to
+     animate open. But `visibility: hidden` elements still take part in
+     layout and still count towards the document's scrollWidth. The
+     last group sits near the right end of the bar, so its 200px-wide
+     panel, anchored with `left: 0`, stuck out past the viewport edge
+     and produced a horizontal scrollbar on every non-homepage — even
+     though nothing was visible there. It cost ~85px.
+
+     Anchoring the trailing two groups to `right: 0` puts the panel's
+     right edge against its trigger's right edge, which is always
+     inside the viewport. It's also better behaviour when open: a menu
+     that would run off-screen now opens inward instead.
+
+     nth-last-child rather than naming a group, because the menu order
+     is CMS-driven (Navigation -> Full Menu) and whichever items happen
+     to be last need this. If a future menu is much wider, widen the
+     -n+2 to cover more trailing groups. */
+  .nav-group:nth-last-child(-n + 2) .nav-dropdown {
+    left: auto;
+    right: 0;
+  }
+
   .nav-dropdown-link {
     padding: 0.55rem 0.7rem;
     border-radius: var(--radius-btn);
@@ -682,7 +752,30 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     color: var(--accent-deep);
   }
   /* ---- Wide screens: show inline nav, hide hamburger ---- */
-  @media (min-width: 1000px) {
+  /* Raised from 1000px to 1240px (2026-08-22), and this number is
+     MEASURED, not estimated. At 1000px the inline nav did not come
+     close to fitting: it overflowed and produced a horizontal
+     scrollbar on every page from 1000px up to roughly 1225px — worse
+     on pages other than the homepage, which also show the logo in the
+     bar. That band covers 1024x768 laptops and iPad landscape, so it
+     was reaching real visitors.
+
+     Why 1240 specifically: with the tightened spacing above, the row
+     needs logo 98 + nav 759 + actions 255 + two 16px gaps = 1144px to
+     sit on ONE line, plus 2x2.5rem of container padding. Below about
+     1224px it cannot, and drops onto a second row. 1240 clears that
+     and matches the max-width on .header-inner.
+
+     Between 1000px and 1240px the hamburger now takes over. That is a
+     deliberate trade: the hamburger is fully functional and was
+     already what those visitors got below 1000px, whereas the
+     alternatives were a visibly squashed nav or a sideways-scrolling
+     page.
+
+     If nav items are added or removed in the CMS, re-check this:
+     measure .header-inner's height at a few widths just above the
+     breakpoint and confirm it stays on one row (~89px, not ~141px). */
+  @media (min-width: 1240px) {
     .nav-wide {
       display: flex;
     }
