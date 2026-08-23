@@ -258,6 +258,22 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
        pushes the row wide instead of wrapping. */
     flex-wrap: wrap;
     min-width: 0;
+    /* SPREAD ACROSS THE AVAILABLE SPACE (PM choice, 2026-08-23).
+       .header-inner is justify-content: space-between, and it has THREE
+       children on most pages (logo, nav, buttons) but only TWO on the
+       homepage, where the logo moves down into the hero instead. With
+       the logo absent nothing held the left-hand side, so the menu fell
+       against the left edge and left ~151px of dead air before
+       Register: the homepage nav looked bunched while every other page
+       looked fine.
+
+       Letting the nav grow (flex: 1) and distributing its own items
+       (space-between) makes it fill whatever space it is handed, so the
+       homepage and the rest of the site now agree. The `gap` above
+       still acts as the MINIMUM spacing, so as the window narrows the
+       items close up to that and no further rather than colliding. */
+    flex: 1 1 auto;
+    justify-content: space-between;
   }
  
   .nav-wide .pill {
@@ -488,7 +504,22 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     color: #ffffff !important;
     font-weight: 600;
     padding-inline: 1.2rem;
-    margin-top: 6px;
+    /* NO vertical offset (2026-08-23). This used to be `margin-top: 6px`,
+       which nudged Calendar down so the button PLUS its little hanging
+       tabs read as optically centred. The side effect: Calendar sat 3px
+       lower than every other item in the bar — and because Calendar and
+       Tickets are the only two solid colour blocks, and sit side by
+       side, the eye read TICKETS as floating too high rather than
+       Calendar as sitting low. That is the bug the PM reported.
+
+       Aligning the button bodies matters more than optically centring
+       one item's tabs: all seven nav items now share a top edge. The
+       tabs just extend a little further up into the bar's own padding
+       (1.1rem, so there is ample room and nothing is clipped).
+
+       If you reinstate an offset here, apply the SAME value to
+       .tickets-btn or the two blocks will disagree again. */
+    margin-top: 0;
   }
 
   .calendar-btn:hover {
