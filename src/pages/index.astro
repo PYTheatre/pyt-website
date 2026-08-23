@@ -635,18 +635,26 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 
   /* ---- Hero ---- */
   .hero {
+    /* Matches the top padding of every other band on the page. This is
+       bumped to --space-2xl at >=720px in the media query below,
+       because .section does exactly the same switch — before that,
+       .hero sat 2rem tighter under the nav than any other section. */
     padding-top: var(--space-xl);
-    /* Bottom padding kept small on purpose: the section right after
-       (Discovery cards / "Find your role") already has its own
-       generous top padding via the shared .section class. Making
-       both edges large stacked into an oddly big gap. */
-    /* Was --space-md (1.5rem), which made every gap on the page 8rem
-       EXCEPT the one after the carousel, which came out at 5.5rem.
-       That small value was right when the hero was text-only and wanted
-       to sit close to what followed; the carousel was later added inside
-       this section and inherited it. Matching --space-xl makes the
-       hero/carousel -> next-section gap 8rem, same as every other. */
-    padding-bottom: var(--space-xl);
+    /* ZERO on purpose (2026-08-22). The gap below the carousel is now
+       supplied ENTIRELY by the following .section's own padding-top,
+       which is exactly how the Discovery -> Impact gap already works.
+
+       History, because this has been "fixed" once already and the old
+       comment here was wrong: the value used to be --space-xl (4rem).
+       On mobile that was right — .section's padding is also --space-xl
+       there, so 4 + 4 = 8rem and the gap matched. But .section switches
+       to --space-2xl (6rem) at >=720px and .hero did not, so on DESKTOP
+       the gap came out at 4 + 6 = 10rem (~187px measured) against 6rem
+       (96px) everywhere else — visibly the largest gap on the page.
+       Setting this to 0 evens it at BOTH breakpoints in one value, so
+       there is no need for a second responsive rule here. If you ever
+       reintroduce padding on this edge, check it at >=720px too. */
+    padding-bottom: 0;
   }
  
   .hero-heading {
@@ -699,24 +707,47 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   @media (min-width: 720px) {
+    /* Hero top padding tracks .section, which also switches to
+       --space-2xl at this breakpoint. See the note on .hero above. */
+    .hero {
+      padding-top: var(--space-2xl);
+    }
+
+    /* CENTRED HERO (PM choice, 2026-08-22 — "Option B").
+       This used to be a two-column `auto 1fr` grid with the logo beside
+       the headline. It is now a single centred column at every width:
+       logo, then headline, then lede, all centred over the carousel
+       below. The stacking order is already correct in the base (mobile)
+       rules, so this only needs to STOP the old two-column switch and
+       add the centring — the grid-row assignments are inherited.
+
+       Note the row-gap: the headline's line-height is 0.82, so its box
+       is SHORTER than the letters it contains and the ink overflows top
+       and bottom. That is why the old 0.6rem gap read as the lede being
+       jammed into the headline's descenders. Anything set here is
+       box-to-box, so it buys less optical space than the number
+       suggests — 1.9rem lands at roughly 1.1rem of visible air. */
     .hero-grid {
-      grid-template-columns: auto 1fr;
-      column-gap: var(--space-lg);
-      align-items: center;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+      row-gap: 1.9rem;
     }
 
+    /* Extra space under the logo only. The logo -> headline step wants
+       to be bigger than the headline -> lede step, and row-gap is a
+       single value for the whole grid, so the difference is added here
+       rather than by splitting the grid up. */
     .hero-logo-wrap {
-      grid-row: 1;
-    }
-
-    .hero-heading {
-      grid-column: 2;
-      grid-row: 1;
+      margin-bottom: 1.1rem;
     }
 
     .hero-lede {
-      grid-column: 2;
-      grid-row: 2;
+      /* Wider than the 60ch used when this sat in a narrow right-hand
+         column — a centred block that stops at 60ch looks pinched
+         against the full-width carousel under it. 75ch is the top of
+         the comfortable measure range; don't push it further. */
+      max-width: 75ch;
     }
   }
 
@@ -1144,11 +1175,25 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      component-level CSS — the Support PYT page keeps its own smaller
      version, untouched. */
   /* ---- Values ---- */
+  /* Heading centred to match the list below it (2026-08-22). The
+     shared .section-head carries `max-width: 20ch`, so text-align alone
+     would centre the TEXT inside a box still pinned to the left edge —
+     the margin-inline: auto is what actually centres the box. */
+  .values .section-head {
+    margin-inline: auto;
+    text-align: center;
+  }
+
   .values-intro {
     font-size: 1.08rem;
     color: var(--ink-soft);
     max-width: 62ch;
-    margin: 0 0 var(--space-lg);
+    /* Was `0 0 var(--space-lg)`; the auto sides centre the block now
+       that the heading and phrases either side of it are centred.
+       Currently empty in the CMS, so this only matters if the PM fills
+       the Values intro field in later. */
+    margin: 0 auto var(--space-lg);
+    text-align: center;
   }
 
   .values-list {
@@ -1158,27 +1203,17 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
-  }
-
-  /* Staggered: each line steps across so the block reads as movement
-     rather than a stacked list. Indents are in `em` so they scale with
-     the type and hold their proportion at any screen size. The pattern
-     repeats every three, matching the colour rotation. */
-  .values-item:nth-child(3n + 2) {
-    margin-left: 1.6em;
-  }
-
-  .values-item:nth-child(3n + 3) {
-    margin-left: 0.8em;
-  }
-
-  @media (max-width: 560px) {
-    /* On a phone the indents would push the longest phrase off the
-       edge, so the stagger flattens out. */
-    .values-item:nth-child(3n + 2),
-    .values-item:nth-child(3n + 3) {
-      margin-left: 0;
-    }
+    /* CENTRED (PM choice, 2026-08-22). This replaces a staggered
+       layout where each phrase stepped across by an `em`-based
+       margin-left (1.6em / 0.8em, repeating every three to match the
+       colour rotation). The stagger and centring are mutually
+       exclusive — indented centred lines just read as a mistake — so
+       the indents were removed rather than kept and overridden. If the
+       stagger is ever wanted back, it needs left alignment back too.
+       The phone-width rule that used to flatten the indents went with
+       them; centring needs no such exception. */
+    align-items: center;
+    text-align: center;
   }
 
   .values-item {
@@ -1196,14 +1231,20 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     font-style: italic;
     font-weight: 700;
     text-transform: uppercase;
-    /* Bigger than before (was capped at 3.4rem, which read as a list
-       rather than a statement). Scales with the viewport so it shrinks
-       on a phone instead of wrapping mid-phrase. */
-    font-size: clamp(2.4rem, 8vw, 5rem);
+    /* Enlarged again 2026-08-22 (PM request) — was clamp(2.4rem, 8vw,
+       5rem), before that capped at 3.4rem. Scales with the viewport so
+       it shrinks on a phone instead of wrapping mid-phrase. The cap is
+       the number to watch: at 6.4rem the longest phrase ("BE PREPARED")
+       is comfortable inside the 1140px container, but a longer phrase
+       added in the CMS could wrap. Check any new phrase at ~1400px
+       viewport width before shipping it. */
+    font-size: clamp(2.8rem, 9.5vw, 6.4rem);
     /* Baloo 2 reserves a lot of vertical space in its own metrics, so a
        tight line-height keeps the three phrases as a close-set block
-       rather than a loose, drifting list. */
-    line-height: 1.12;
+       rather than a loose, drifting list. Tightened from 1.12 alongside
+       the size increase — leading that read as close-set at 5rem reads
+       as loose at 6.4rem. */
+    line-height: 1.05;
     letter-spacing: 0.01em;
   }
 
