@@ -30,6 +30,25 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
 }
+
+/* ANCHOR LINKS AND THE STICKY HEADER (2026-08-23).
+   The site header is sticky, so a link like /about#contact scrolls the
+   target to y=0 — which is UNDERNEATH the header. The top of the
+   contact box, including its "Get in touch" heading, was hidden behind
+   the nav bar.
+
+   scroll-margin-top tells the browser to stop that much earlier when
+   scrolling an element into view. It affects nothing else: no layout
+   shift, no visual change, it only applies when jumping to an anchor.
+
+   Applied to anything with an id rather than to one element, so any
+   anchor added later is covered automatically. 6.5rem (104px) clears
+   the header at its tallest (82px measured) and leaves a little air
+   above the target so it doesn't sit flush against the bar. If the
+   header's height ever changes substantially, revisit this. */
+[id] {
+  scroll-margin-top: 6.5rem;
+}
  
 body {
   font-family: var(--font-body);
