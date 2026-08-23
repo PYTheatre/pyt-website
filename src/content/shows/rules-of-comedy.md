@@ -2,7 +2,6 @@
 audition_date: 2026-08-03
 title: THE RULES OF COMEDY
 production_type: Studio Production
-eyebrow: Studio Show
 start_date: 2026-08-28
 end_date: 2026-08-28
 date_display: August 2026
@@ -10,6 +9,8 @@ venue: PYT Studio, Old Middlefield Way
 runtime_minutes: 60
 ages: ""
 poster: /uploads/rules-of-comey.jpg
+ticketing_url: https://www.eventbrite.com/e/the-rules-of-comedy-tickets-1998260751700?aff=oddtdtcreator&mc_cid=1a1f4d7b29&mc_eid=d02e355d90
+eyebrow: Studio Show
 synopsis: What happens when you apply the Rules of Comedy to one of
   Shakespeare’s greatest tragedies? This physical comedy showcase inserts comedy
   rules directly into Hamlet, and then asks performers to turn on a dime and
