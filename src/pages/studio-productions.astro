@@ -11,6 +11,7 @@ import PageHero from "../components/PageHero.astro";
 import AuditionsPromo from "../components/AuditionsPromo.astro";
 import { getCollection } from "astro:content";
 import page from "../content/settings/studio-productions-page.json";
+import SupportLinks from "../components/SupportLinks.astro";
 
 const shows = (await getCollection("shows"))
   .filter((s) => s.data.production_type === "Studio Production")
@@ -28,7 +29,9 @@ const now = new Date();
   <PageHero
     title={page.title}
     lede={page.intro}
-  />
+  >
+    <SupportLinks slot="actions" sponsor row />
+  </PageHero>
 
   <section class="section show-list-section">
     <div class="container">
