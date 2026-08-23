@@ -2,8 +2,9 @@
   "items": [
     {
       "page": "/about",
-      "image": "/uploads/pyt-community.jpg",
-      "alt": ""
+      "image": "/uploads/csm-newsies-4.jpg",
+      "alt": "",
+      "focus": 40
     },
     {
       "page": "/casting",
