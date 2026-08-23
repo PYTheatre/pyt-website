@@ -423,6 +423,8 @@ collections:
           - { name: "summer_locations", label: "Summer block — locations (one per line)", widget: "text", required: false }
           - { name: "summer_pricing", label: "Summer block — pricing (one per line)", widget: "text", required: false }
           - { name: "summer_scholarships_note", label: "Summer block — scholarships note", widget: "string", required: false }
+          - { name: "contact_heading", label: "Contact card — heading", widget: "string", required: false, default: "Questions?", hint: "The third box in the programme grid, next to the programme cards. Leave blank to fall back to 'Questions?'." }
+          - { name: "contact_intro", label: "Contact card — intro line", widget: "text", required: false, default: "Including cancellation and transfer requests.", hint: "One short line under the contact card heading, above the form." }
           - { name: "summer_cancellation_heading", label: "Summer block — cancellation heading", widget: "string", required: false, default: "Cancellation & transfer policy" }
           - { name: "summer_cancellation_body", label: "Summer block — cancellation policy", widget: "text", required: false }
  
