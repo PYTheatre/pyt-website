@@ -1,7 +1,7 @@
 ---
-title: SINGIN' IN THE RAIN
 production_type: Musical
 eyebrow: ""
+title: SINGIN' IN THE RAIN
 start_date: 2027-03-13
 end_date: 2027-03-21
 date_display: March 2027
@@ -12,6 +12,8 @@ synopsis: This Hollywood classic is packed with hilarious situations, snappy
   toes and grinning from ear to ear. With dozens of featured roles, including
   silent film stars, dancers, comedians, and movie executives, there are
   opportunities for performers of all ages and experience levels to shine.
+audition_start: 2026-12-05
+audition_end: 2026-12-06
 audition_display: December 2026
 double_cast: false
 ---
