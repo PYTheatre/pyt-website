@@ -38,7 +38,8 @@
     },
     {
       "page": "/studio-productions",
-      "image": "/uploads/pyt-christmas-carol.jpg"
+      "image": "/uploads/pyt-christmas-carol.jpg",
+      "focus": 55
     },
     {
       "page": "/volunteer",
