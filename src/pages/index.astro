@@ -693,12 +693,24 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .hero-grid {
     display: grid;
     grid-template-columns: 1fr;
-    row-gap: 0.6rem;
+    /* MOBILE spacing (2026-08-23). Was 0.6rem, which read as cramped on
+       a phone for the same reason it did on desktop: .hero-heading has
+       line-height 0.82, so its box is SHORTER than the letters inside
+       it and the ink overflows top and bottom. A gap set here is
+       box-to-box, so it buys noticeably less optical space than the
+       number suggests — 1.4rem lands at roughly 0.7rem of visible air.
+       The >=720px rule below raises this again for desktop. */
+    row-gap: 1.4rem;
   }
 
   .hero-logo-wrap {
     grid-column: 1;
     grid-row: 1;
+    /* The logo -> headline step wants to be larger than the
+       headline -> lede step, and row-gap is a single value for the
+       whole grid, so the difference is added here. Raised again at
+       >=720px. */
+    margin-bottom: 0.7rem;
   }
 
   .hero-lede {
@@ -839,8 +851,27 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        per breakpoint removes that gap entirely. */
     display: flex;
     position: absolute;
-    top: 45%;
-    transform: translateY(-50%);
+    /* Centred on the PHOTOS, not on the whole strip (2026-08-23).
+       Percentages here were measured against .photo-strip-wrap, which
+       is taller than the images because it also contains the strip's
+       own top padding and the caption underneath — so 45% (and 33% on
+       wide screens) sat visibly above or below the true middle of the
+       picture, and the two breakpoints disagreed with each other.
+
+       Instead of guessing a percentage: pin the button between the top
+       of the photos and the top of the captions, then let `margin-block:
+       auto` centre it in exactly that band. The offsets are the strip's
+       own padding and the caption block, written as the same values
+       those rules use, so if the caption size changes this follows it.
+         top    = .photo-strip padding-top
+         bottom = .photo-strip padding-bottom
+                + .photo-strip-title margin-top
+                + one line of .photo-strip-title (0.95rem x 1.25)
+       This needs no knowledge of the card width, so it holds at every
+       breakpoint and needs no per-breakpoint override. */
+    top: 14px;
+    bottom: calc(0.6rem + 0.6rem + (0.95rem * 1.25));
+    margin-block: auto;
     z-index: 2;
     width: 34px;
     height: 34px;
@@ -944,7 +975,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       width: 38px;
       height: 38px;
       font-size: 1.4rem;
-      top: 33%;
+      /* No `top` here any more — the base rule centres the arrows on
+         the photos at every width. */
     }
 
     .photo-strip-arrow-prev {
@@ -1121,6 +1153,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      equal even though the labels differ a lot in length — without it the
      shortest ("Audience members") made a visibly stubbier box. */
   .stat {
+    /* Grid items default to min-width:auto, which means a track can
+       never shrink below its longest UNBREAKABLE word. The longest
+       label here contains "SCHOLARSHIPS" and "SPONSORS", which forced
+       both columns wider than the container on a 320px phone and gave
+       the whole page a sideways scroll. min-width:0 lets the track
+       shrink; the break-word on .stat-label below then wraps the word
+       instead of overflowing. (2026-08-23) */
+    min-width: 0;
     background: var(--accent);
     padding: 1.4rem 1rem;
     border-radius: var(--radius);
@@ -1143,6 +1183,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
  
   .stat-label {
+    /* Pairs with min-width:0 on .stat above — see the note there. */
+    overflow-wrap: break-word;
     font-size: 0.85rem;
     /* Slightly softened white rather than the muted grey used before:
        that grey was tuned for the dark band behind, and on a saturated
