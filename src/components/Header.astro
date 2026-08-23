@@ -139,22 +139,12 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
       <a href="https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=ad16ecb8-2b37-477f-9cdc-8b959668e4df&e4p=22397909-9890-4b5f-8947-e4982093fc34&e4ts=1787101915&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=b318cf7ff23b5f8ebd7b7077a038eb52" class="btn btn-primary register-btn" target="_blank" rel="noopener">Register</a>
       <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary donate-btn" target="_blank" rel="noopener">Donate</a>
 
-      <!-- Simple EN/ES translate toggle (2026-08-19). Not a real
-           bilingual site (that's a much bigger project — see the
-           build log) — this routes the CURRENT page through Google's
-           free translate.goog proxy, which needs no sign-up, no
-           script embed, and no CMS content of its own. Label/behavior
-           swap client-side (see script below) based on whether the
-           visitor is already viewing the translated version. Moved to
-           the far right, after Donate (PM request, 2026-08-19) — was
-           between the nav links and Register. -->
-      <a
-        href="#"
-        id="lang-toggle"
-        class="pill lang-toggle"
-        data-site-origin={(navLabels as any).site_origin || "https://pyt-website.pages.dev"}
-        aria-label="Translate this site"
-      >ES</a>
+      <!-- The EN/ES translate toggle used to live here. Moved to the
+           FOOTER on 2026-08-23. It was the only item in this bar that
+           is neither navigation nor a call to action, and removing it
+           was part of getting the row back onto one line — see the
+           breakpoint note below. Its markup and its script now live
+           together in Footer.astro; nothing here references it. -->
  
       <!-- Hamburger button (phones only) -->
       <button
@@ -233,15 +223,16 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      is full-bleed anyway, so its contents sitting slightly wider than
      the article column below reads as normal nav-bar behaviour.
 
-     Keep this comfortably above the sum above if nav items are ever
-     added in the CMS. */
+     UPDATE 2026-08-23: the row now fits the SITE-STANDARD container
+     again, so the widened cap has been removed and .header-inner is
+     back on --max-width like every other container. That restores the
+     nav's left edge to line up with the page content beneath it. */
   .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
     padding-block: 1.1rem;
-    max-width: 1240px;
     /* SAFETY NET. The nav is CMS-driven (Navigation -> Full Menu), so
        its width is not fixed by this code — adding a menu item makes it
        wider and could re-break the fit. With wrap, an over-long row
@@ -257,10 +248,10 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   .nav-wide {
     display: none;
     align-items: center;
-    /* Tightened from 0.9rem (2026-08-22) as part of getting the row to
-       fit — see the note on .header-inner. Six gaps between seven
-       items, so this is worth ~29px. */
-    gap: 0.6rem;
+    /* Tightened again 2026-08-23 (0.9 -> 0.6 -> 0.45rem). Six gaps
+       between seven items. See the sizing note on the breakpoint
+       below for why every one of these small savings was needed. */
+    gap: 0.45rem;
     /* Wraps rather than overflowing if the CMS menu grows. min-width:0
        lets this flex item actually shrink to the space available;
        without it a flex item refuses to go below its content width and
@@ -270,12 +261,13 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   }
  
   .nav-wide .pill {
-    /* Horizontal padding tightened from 1.05rem (2026-08-22). Seven
-       items x two sides, so this is worth ~56px — the single biggest
-       saving available without touching font-size. Don't go below
-       ~0.7rem or the pills stop reading as buttons. */
-    padding: 0.55rem 0.8rem;
-    font-size: 0.95rem;
+    /* Tightened again 2026-08-23. Padding 1.05 -> 0.8 -> 0.65rem, and
+       font-size 0.95 -> 0.88rem. Together across seven items these are
+       worth ~120px, the largest single saving available. 0.88rem is
+       about as small as Archivo Black can go here and still read
+       comfortably on the dark bar — don't reduce it further. */
+    padding: 0.55rem 0.65rem;
+    font-size: 0.88rem;
     white-space: nowrap;
     font-family: var(--font-heading);
     font-weight: 400;
@@ -297,10 +289,18 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   .nav-group-trigger {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    /* 0.4 -> 0.2rem (2026-08-23). Six dropdown groups, so the gap and
+       the smaller caret below are worth ~43px between them. */
+    gap: 0.2rem;
   }
  
   .caret {
+    /* Rendered at 13x8 in the markup; scaled down here (2026-08-23)
+       rather than in the SVG so the icon stays crisp and only one
+       number has to change. Still clearly a dropdown affordance at
+       this size — the arrow shouldn't be removed entirely. */
+    width: 9px;
+    height: 6px;
     transition: transform 0.18s ease;
   }
  
@@ -542,36 +542,21 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     right: 28%;
   }
 
-  /* ---- EN/ES translate toggle ---- */
-  /* Sits in .header-actions, OUTSIDE .nav-wide — so it never picked
-     up the ".nav-wide .pill" rule that gives the other nav items
-     their bright white color on this dark bar. Left on the base
-     .pill class alone, it fell back to --ink-soft (a muted gray tuned
-     for LIGHT backgrounds elsewhere on the site), which is why it
-     read as "too recessive" against the dark nav — this sets its own
-     color/background explicitly rather than relying on inheriting
-     from a rule that doesn't reach it, and adds a faint border
-     (matching the hamburger button's border treatment) so it reads
-     as a real button rather than plain dim text. */
-  .lang-toggle {
-    padding: 0.5rem 0.7rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--nav-text) !important;
-    background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+ 
+  /* Nav logo trimmed 54px -> 44px tall (2026-08-23), worth ~18px of
+     width. Scoped to the header on purpose: Footer.astro renders the
+     SAME <Logo size="nav" /> and should keep the larger size, so this
+     must not be changed inside Logo.astro. :global() is required
+     because the logo's own classes come from that component and don't
+     carry this file's scoping attribute. */
+  .header-inner :global(.logo-nav .logo-mark) {
+    height: 44px;
   }
 
-  .lang-toggle:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: var(--nav-text) !important;
-  }
- 
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.5rem;
   }
  
   /* Donate keeps the bright highlight color. Register uses PYT's
@@ -752,30 +737,36 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     color: var(--accent-deep);
   }
   /* ---- Wide screens: show inline nav, hide hamburger ---- */
-  /* Raised from 1000px to 1240px (2026-08-22), and this number is
-     MEASURED, not estimated. At 1000px the inline nav did not come
-     close to fitting: it overflowed and produced a horizontal
-     scrollbar on every page from 1000px up to roughly 1225px — worse
-     on pages other than the homepage, which also show the logo in the
-     bar. That band covers 1024x768 laptops and iPad landscape, so it
-     was reaching real visitors.
+  /* 1000 -> 1240 -> 1100 (2026-08-23).
 
-     Why 1240 specifically: with the tightened spacing above, the row
-     needs logo 98 + nav 759 + actions 255 + two 16px gaps = 1144px to
-     sit on ONE line, plus 2x2.5rem of container padding. Below about
-     1224px it cannot, and drops onto a second row. 1240 clears that
-     and matches the max-width on .header-inner.
+     IMPORTANT — why this moved twice. The 1240 value was measured in a
+     browser where the Google Fonts stylesheet had not loaded, so the
+     nav was being measured in a FALLBACK face. Archivo Black is
+     substantially wider: the real nav is ~845px, not the ~759px that
+     measurement suggested. The result was a header that wrapped onto
+     two rows at every desktop width. If you ever re-measure this,
+     confirm the webfont has actually loaded first
+     (document.fonts.check('16px "Archivo Black"') is not enough on its
+     own — it returns true for a fallback; check that
+     [...document.fonts] actually contains a loaded Archivo face).
 
-     Between 1000px and 1240px the hamburger now takes over. That is a
-     deliberate trade: the hamburger is fully functional and was
-     already what those visitors got below 1000px, whereas the
-     alternatives were a visibly squashed nav or a sideways-scrolling
-     page.
+     Re-measured with the real font, the row needed 1249px of content
+     against the 1160px available — it could never fit. Four changes
+     brought it down to roughly 1000px:
+       - the EN/ES toggle moved to the footer      ~48px
+       - nav type 0.95 -> 0.88rem, less padding    ~120px
+       - smaller dropdown carets and trigger gap   ~43px
+       - nav logo 54px -> 44px tall                ~18px
+     Re-measured after those changes the row needs 1021px of content,
+     i.e. a 1101px viewport. 1120 is used rather than 1101 so there is
+     ~19px of slack — enough to absorb a scrollbar or a slightly wider
+     glyph without tipping back into two rows. Down from 1240, so
+     laptops and tablets in landscape get the full menu again.
 
-     If nav items are added or removed in the CMS, re-check this:
-     measure .header-inner's height at a few widths just above the
-     breakpoint and confirm it stays on one row (~89px, not ~141px). */
-  @media (min-width: 1240px) {
+     If nav items are added in the CMS, re-check: load a page above
+     1100px with the fonts loaded and confirm .header-inner stays on
+     one row (~83px tall, not ~143px). */
+  @media (min-width: 1120px) {
     .nav-wide {
       display: flex;
     }
@@ -787,8 +778,10 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     }
     .donate-btn,
     .register-btn {
-      padding: 0.55rem 1.3rem;
-      font-size: 0.95rem;
+      /* 1.3 -> 1rem padding, 0.95 -> 0.88rem type (2026-08-23), to
+         match the nav pills beside them and claw back ~40px. */
+      padding: 0.5rem 1rem;
+      font-size: 0.88rem;
     }
   }
 </style>
@@ -822,62 +815,4 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
       if (panel) panel.hidden = isOpen;
     });
   });
-
-  // EN/ES translate toggle. Routes the current page through Google's
-  // free translate.goog domain-proxy (no sign-up, no script embed
-  // needed) — e.g. example.com/shows becomes
-  // example-com.translate.goog/shows with a couple of query params
-  // telling Google which languages to use. If the visitor is ALREADY
-  // on the translated version, the button instead links back to the
-  // real site, built from the "site address" set in the CMS (Site
-  // Settings → Navigation Labels) rather than trying to reverse the
-  // proxy's URL — reversing it is ambiguous whenever the real domain
-  // itself contains a dash (true of the current pyt-website.pages.dev
-  // address), so a known, CMS-set origin is used instead.
-  // Encode a real hostname into its translate.goog form.
-  //
-  // BUG FIX 2026-08-20 — this is why the ES button did nothing.
-  // Google's scheme is NOT simply "dots become dashes". Any dash that
-  // is already IN the hostname has to be DOUBLED first, otherwise
-  // Google decodes it back as a dot and fetches a different site.
-  // Our domain contains a dash, so it was hit by exactly this:
-  //
-  //   pyt-website.pages.dev
-  //     old code -> pyt-website-pages-dev.translate.goog
-  //                 which Google reads back as pyt.website.pages.dev
-  //                 — a site that doesn't exist, so nothing translated
-  //     correct  -> pyt--website-pages-dev.translate.goog
-  //                 which Google reads back as pyt-website.pages.dev
-  //
-  // Order matters: double the dashes BEFORE turning dots into dashes,
-  // or the new dashes get doubled too. Verified against the test table
-  // in Google's own docs (search "ad-network-and-translation"):
-  //   example.com     -> example-com
-  //   foo.example.com -> foo-example-com
-  //   foo-example.com -> foo--example-com
-  const toTranslateHost = (hostname: string) =>
-    hostname.replace(/-/g, "--").replace(/\./g, "-") + ".translate.goog";
-
-  const langBtn = document.getElementById("lang-toggle") as HTMLAnchorElement | null;
-  if (langBtn) {
-    const onTranslatedPage = window.location.hostname.endsWith(".translate.goog");
-    if (onTranslatedPage) {
-      langBtn.textContent = "EN";
-      langBtn.setAttribute("aria-label", "View this site in English");
-      const origin = langBtn.dataset.siteOrigin || "";
-      langBtn.href = origin + window.location.pathname + window.location.hash;
-    } else {
-      langBtn.textContent = "ES";
-      langBtn.setAttribute("aria-label", "Ver este sitio en espanol");
-      // Build the real href up front rather than only on click, so the
-      // button behaves like a normal link — right-click, middle-click,
-      // open-in-new-tab and "copy link" all work, and it still does
-      // something if the click handler never runs.
-      const sep = window.location.search ? "&" : "?";
-      langBtn.href =
-        `https://${toTranslateHost(window.location.hostname)}` +
-        `${window.location.pathname}${window.location.search}${sep}` +
-        `_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en${window.location.hash}`;
-    }
-  }
 </script>
