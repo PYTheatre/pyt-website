@@ -85,7 +85,13 @@ const bodyHtml = renderMarkdown(page.body || "");
   /* Mirrors the Casting page's layout so staff-made pages sit alongside
      the hand-built ones without looking like a different website. */
   .page-title {
-    padding-block: var(--space-xl) 0;
+    /* Bottom padding matches .page-hero in PageHero.astro
+       (--space-lg). It was 0, which jammed the hero photo directly
+       against the heading with no gap at all — visibly different from
+       every page that uses the shared PageHero component. Keep these
+       two values in step: this block exists to imitate that component,
+       so if its spacing changes, change this too. */
+    padding-block: var(--space-xl) var(--space-lg);
   }
 
   .page-title h1 {
