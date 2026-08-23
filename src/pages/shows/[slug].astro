@@ -10,6 +10,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
 import donatePage from "../../content/settings/donate-page.json";
 import showsPage from "../../content/settings/shows-page.json";
+import SupportLinks from "../../components/SupportLinks.astro";
 
 // Global ticket-fee notice (CMS-editable, one place, applies everywhere
 // tickets are sold). Empty-safe: renders nothing when blank.
@@ -125,9 +126,7 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
               </a>
             )
           )}
-          <a href={sponsorUrl} class="btn btn-outline" target="_blank" rel="noopener">
-            Sponsor This Show
-          </a>
+          <SupportLinks sponsor scholarship context="show" />
           {data.cast_page_url && (
             <a href={data.cast_page_url} class="btn btn-outline">
               Cast Page
