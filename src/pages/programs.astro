@@ -22,6 +22,15 @@ const programs = (await getCollection("programs")).sort((a, b) =>
 // add new programs the filters update automatically.
 const programTypes = [...new Set(programs.map((p) => p.data.program_type))];
 const seasons = [...new Set(programs.map((p) => p.data.season))];
+
+// Contact card shown as the third box in the programmes grid
+// (2026-08-23). Heading and intro are CMS-editable and optional, with
+// sensible fallbacks so the card is never blank or headless.
+const contactHeading =
+  ((pageContent as any).contact_heading || "").trim() || "Questions?";
+const contactIntro =
+  ((pageContent as any).contact_intro || "").trim() ||
+  "Including cancellation and transfer requests.";
 ---
 
 <BaseLayout
@@ -105,28 +114,12 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
 
   <section class="section programs-section">
     <div class="container">
-      <!-- Filters -->
-      <form class="program-filters" id="program-filters" aria-label="Filter programs">
-        <div class="filter-group">
-          <label for="filter-type">Type</label>
-          <select id="filter-type" name="type">
-            <option value="">All types</option>
-            {programTypes.map((t) => <option value={t}>{t}</option>)}
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="filter-season">Season</label>
-          <select id="filter-season" name="season">
-            <option value="">All seasons</option>
-            {seasons.map((s) => <option value={s}>{s}</option>)}
-          </select>
-        </div>
-        <button type="button" id="filter-clear" class="filter-clear">Clear filters</button>
-      </form>
-
-      <p class="filter-count" id="filter-count" aria-live="polite">
-        Showing all {programs.length} programs
-      </p>
+      {/* The Type / Season filter dropdowns and the "Showing all N
+          programs" counter were removed 2026-08-23 (PM request). With
+          only a couple of programs listed they were more furniture
+          than help. The cards still carry their data-type and
+          data-season attributes, so if filtering is ever wanted back
+          the markup it needs is still here. */}
 
       <!-- Program cards -->
       <ul class="program-list" id="program-list">
@@ -184,27 +177,34 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
             </div>
           </li>
         ))}
+
+        {/* CONTACT CARD (2026-08-23). Deliberately the last <li> of the
+            SAME <ul> as the programme cards, not a separate block
+            beside it — that's what makes it land in the same grid
+            column, at the same width, with its top edge aligned to the
+            other cards. A sibling element outside the list could only
+            ever be lined up by hand and would drift the moment a
+            programme is added or the breakpoint changes.
+
+            It carries no data-type / data-season attributes, so if the
+            filters are ever restored this card must be excluded from
+            them (it should never be filtered away). */}
+        <li class="program-card program-card-contact">
+          <h2>{contactHeading}</h2>
+          {contactIntro && <p class="program-description">{contactIntro}</p>}
+          <div class="program-contact-form">
+            <ContactForm
+              route="education"
+              source="Classes &amp; Camps page"
+              submitLabel="Send message"
+            />
+          </div>
+        </li>
       </ul>
 
-      <p id="no-results" class="no-results" hidden>
-        No programs match those filters. Try clearing them.
-      </p>
     </div>
   </section>
 
-  {/* Questions and cancellation requests — replaces the email address
-      that used to be printed in the Summer Camps block (2026-08-20). */}
-  <section class="section">
-    <div class="container">
-      <h2 class="section-head">Questions about classes &amp; camps?</h2>
-      <ContactForm
-        route="education"
-        source="Classes &amp; Camps page"
-        intro="Including cancellation and transfer requests."
-        submitLabel="Send message"
-      />
-    </div>
-  </section>
 </BaseLayout>
 
 <style>
@@ -300,69 +300,6 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
     }
   }
 
-  /* ---- Filters ---- */
-  .program-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-    align-items: flex-end;
-    padding: var(--space-md);
-    background: var(--paper-warm);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    margin-bottom: var(--space-md);
-  }
-
-  .filter-group {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 140px;
-  }
-
-  .filter-group label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    margin-bottom: 0.4rem;
-  }
-
-  .filter-group select {
-    padding: 0.55rem 0.8rem;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    cursor: pointer;
-  }
-
-  .filter-clear {
-    padding: 0.55rem 1rem;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--ink-soft);
-    background: transparent;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    cursor: pointer;
-  }
-
-  .filter-clear:hover {
-    color: var(--accent-deep);
-    border-color: var(--accent);
-  }
-
-  .filter-count {
-    font-size: 0.85rem;
-    color: var(--ink-muted);
-    margin-bottom: var(--space-md);
-  }
-
   /* ---- Program cards ---- */
   .program-list {
     list-style: none;
@@ -384,6 +321,52 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
 
   .program-card.hidden {
     display: none;
+  }
+
+  /* Contact card. Same box as the programme cards — the border,
+     padding and radius all come from .program-card above, so the three
+     boxes match by construction rather than by duplicated numbers.
+     Only the tinted background distinguishes it, marking it as an
+     action rather than a programme. */
+  .program-card-contact {
+    background: var(--paper-warm);
+  }
+
+  /* Pushes the form to the BOTTOM of the card, so it lines up with the
+     Register buttons in the cards beside it (.program-cta uses
+     margin-top:auto for the same reason) rather than floating
+     mid-card when the neighbouring cards are taller. */
+  .program-contact-form {
+    margin-top: auto;
+    padding-top: var(--space-sm);
+  }
+
+  /* The form's own inputs sit inside a narrow card, so let them use
+     the full width rather than the wider default measure they get on
+     a full-width section. :global() is needed because this markup
+     comes from ContactForm.astro and doesn't carry this file's
+     scoping attribute. */
+  .program-contact-form :global(input),
+  .program-contact-form :global(textarea),
+  .program-contact-form :global(select) {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .program-contact-form :global(form) {
+    max-width: 100%;
+  }
+
+  /* ContactForm renders itself inside its own bordered white card.
+     Nested inside THIS card that reads as a box-in-a-box, so its
+     chrome is stripped here and the form sits directly on the tinted
+     background. Scoped to this page only — the same component is used
+     full-width elsewhere and should keep its card there. */
+  .program-contact-form :global(.contact-form-card) {
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
   }
 
 
@@ -463,13 +446,6 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
     cursor: not-allowed;
   }
 
-  .no-results {
-    padding: var(--space-lg);
-    text-align: center;
-    color: var(--ink-muted);
-    background: var(--paper-warm);
-    border-radius: var(--radius);
-  }
 
   .staff-tip {
     margin-top: var(--space-xl);
@@ -498,46 +474,3 @@ const seasons = [...new Set(programs.map((p) => p.data.season))];
     }
   }
 </style>
-
-<script>
-  // Filter logic — purely client-side, no framework.
-  // Reads the data-type and data-season attributes on each card
-  // and shows/hides them based on the dropdown selections.
-  const typeSelect = document.getElementById("filter-type") as HTMLSelectElement | null;
-  const seasonSelect = document.getElementById("filter-season") as HTMLSelectElement | null;
-  const clearBtn = document.getElementById("filter-clear");
-  const list = document.getElementById("program-list");
-  const noResults = document.getElementById("no-results");
-  const countEl = document.getElementById("filter-count");
-
-  function applyFilters() {
-    if (!list || !typeSelect || !seasonSelect) return;
-    const type = typeSelect.value;
-    const season = seasonSelect.value;
-    const cards = Array.from(list.querySelectorAll<HTMLLIElement>(".program-card"));
-    let visible = 0;
-    cards.forEach((card) => {
-      const cardType = card.getAttribute("data-type") || "";
-      const cardSeason = card.getAttribute("data-season") || "";
-      const matches = (!type || cardType === type) && (!season || cardSeason === season);
-      card.classList.toggle("hidden", !matches);
-      if (matches) visible++;
-    });
-    if (noResults) noResults.hidden = visible !== 0;
-    if (countEl) {
-      const total = cards.length;
-      countEl.textContent =
-        visible === total
-          ? `Showing all ${total} programs`
-          : `Showing ${visible} of ${total} programs`;
-    }
-  }
-
-  typeSelect?.addEventListener("change", applyFilters);
-  seasonSelect?.addEventListener("change", applyFilters);
-  clearBtn?.addEventListener("click", () => {
-    if (typeSelect) typeSelect.value = "";
-    if (seasonSelect) seasonSelect.value = "";
-    applyFilters();
-  });
-</script>
