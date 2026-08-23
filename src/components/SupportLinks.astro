@@ -1,0 +1,119 @@
+---
+/*
+  SUPPORT LINKS — optional "Sponsor" and "Scholarships" buttons.
+  (2026-08-22)
+
+  One component used in two different ways:
+
+  1. INLINE (row={false}, the default) — returns bare <a> buttons with
+     no wrapper, so they can be dropped INTO an existing button row
+     (e.g. .show-ctas on a show page, next to Buy Tickets / Auditions)
+     and inherit that row's gap and wrapping.
+
+  2. AS ITS OWN ROW (row) — wraps the buttons in a flex row of their
+     own. Used on the overview and intro pages, passed into PageHero's
+     "actions" slot so the row lands directly beneath the heading and
+     above the hero photo.
+
+  WHICH PAGES GET WHICH BUTTON is decided by the PAGE, not the CMS —
+  each page passes sponsor / scholarship explicitly. That keeps the
+  per-page list in one readable place per template rather than as a
+  pile of CMS toggles staff have to keep straight.
+
+  WHAT THE CMS CONTROLS is the wording and the destinations, in
+  Site Settings -> Support Buttons. Every field there is optional, and
+  a BLANK LABEL HIDES THAT BUTTON EVERYWHERE — that's the intended
+  off-switch. A blank URL falls back to the built-in default rather
+  than producing a link to nowhere.
+
+  Three sponsor labels, chosen by the `context` a page passes
+  (PM, 2026-08-22):
+    context="show"     -> "Sponsor This Show"    one production
+    context="general"  -> "Sponsor This Season"  overview / intro pages
+    context="programs" -> "Sponsor"              Classes & Camps only
+  "programs" is a deliberate one-page exception: Classes & Camps isn't
+  a show or a season, so neither of the other two labels reads right
+  there. There is deliberately no per-show or per-page label field —
+  wording changes in ONE place for each of the three contexts.
+*/
+import support from "../content/settings/support-buttons.json";
+
+interface Props {
+  /** Render the sponsorship button. */
+  sponsor?: boolean;
+  /** Render the scholarships button. */
+  scholarship?: boolean;
+  /** Which sponsor wording to use. */
+  context?: "show" | "general" | "programs";
+  /** Wrap in its own row (for pages with no existing button row). */
+  row?: boolean;
+  /** Extra classes on the row wrapper. */
+  class?: string;
+}
+
+const {
+  sponsor = false,
+  scholarship = false,
+  context = "general",
+  row = false,
+  class: extraClass = "",
+} = Astro.props;
+
+// trim() so a field containing only spaces counts as blank — staff
+// clearing a field by hand often leaves whitespace behind.
+const txt = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+
+const s = support as Record<string, unknown>;
+
+const sponsorLabel =
+  context === "show"
+    ? txt(s.sponsor_label_show)
+    : context === "programs"
+      ? txt(s.sponsor_label_programs)
+      : txt(s.sponsor_label_general);
+const scholarshipLabel = txt(s.scholarship_label);
+
+// Defaults matter here: if someone empties the URL field the button
+// should still go somewhere sensible rather than to "".
+const sponsorUrl = txt(s.sponsor_url) || "/ways-to-support#sponsor";
+const scholarshipUrl = txt(s.scholarship_url) || "/scholarships";
+
+const showSponsor = sponsor && !!sponsorLabel;
+const showScholarship = scholarship && !!scholarshipLabel;
+const hasAny = showSponsor || showScholarship;
+---
+
+{hasAny && (row ? (
+  <div class={`support-links-row ${extraClass}`}>
+    {showSponsor && (
+      <a href={sponsorUrl} class="btn btn-outline">{sponsorLabel}</a>
+    )}
+    {showScholarship && (
+      <a href={scholarshipUrl} class="btn btn-outline">{scholarshipLabel}</a>
+    )}
+  </div>
+) : (
+  <>
+    {showSponsor && (
+      <a href={sponsorUrl} class="btn btn-outline">{sponsorLabel}</a>
+    )}
+    {showScholarship && (
+      <a href={scholarshipUrl} class="btn btn-outline">{scholarshipLabel}</a>
+    )}
+  </>
+))}
+
+<style>
+  /* Only used by the row= variant. The inline variant deliberately has
+     no styles of its own so it inherits whatever row it's dropped into. */
+  /* Used by the row= variant only, which is rendered into PageHero's
+     "actions" slot — so it is already inside that hero's .container
+     and must NOT add another one (nested containers would double the
+     side padding and misalign the buttons against the heading). */
+  .support-links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: var(--space-md);
+  }
+</style>
