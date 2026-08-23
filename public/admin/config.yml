@@ -374,6 +374,25 @@ collections:
           - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
           - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
  
+      # --- Support Buttons (Sponsorship + Scholarships) ---
+      # Added 2026-08-22. Controls the WORDING and DESTINATIONS of the
+      # Sponsorship / Scholarships buttons only. WHICH pages show which
+      # button is set in the page templates, not here, so staff don't
+      # have to keep eight separate toggles straight.
+      # Every field is optional on purpose: clearing a LABEL is the
+      # intended way to switch that button off everywhere it appears.
+      - name: "support-buttons"
+        label: "Support Buttons (Sponsorship & Scholarships)"
+        file: "src/content/settings/support-buttons.json"
+        description: "Wording and links for the Sponsorship and Scholarships buttons that appear on the show, season and Classes & Camps pages. Clearing a LABEL hides that button everywhere it appears."
+        fields:
+          - { name: "sponsor_label_show", label: "Sponsorship button — label on an individual show page", widget: "string", required: false, default: "Sponsor This Show", hint: "Used on each Center Stage Musical, Studio Production and Stories on Stage show page. Leave blank to hide the button on those pages." }
+          - { name: "sponsor_label_general", label: "Sponsorship button — label on season / overview pages", widget: "string", required: false, default: "Sponsor This Season", hint: "Used on All Shows, Center Stage Musicals, Studio Productions and Stories on Stage. Leave blank to hide the button on those pages." }
+          - { name: "sponsor_label_programs", label: "Sponsorship button — label on Classes & Camps", widget: "string", required: false, default: "Sponsor", hint: "Classes & Camps only, which is neither a show nor a season. Leave blank to hide the button there." }
+          - { name: "sponsor_url", label: "Sponsorship button — link", widget: "string", required: false, default: "/ways-to-support#sponsor", hint: "Where all Sponsorship buttons go. Defaults to the sponsorship section of the Ways to Support page if left blank." }
+          - { name: "scholarship_label", label: "Scholarships button — label", widget: "string", required: false, default: "Scholarships", hint: "Used on Classes & Camps, Center Stage Musicals, Stories on Stage, and each individual musical and studio show page. Leave blank to hide the button everywhere." }
+          - { name: "scholarship_url", label: "Scholarships button — link", widget: "string", required: false, default: "/scholarships", hint: "Where all Scholarships buttons go. Defaults to the Scholarships page if left blank." }
+
       # --- Shows Page (intro + global ticket fee notice) ---
       - name: "shows-page"
         label: "Shows Page (intro)"
