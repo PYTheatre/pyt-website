@@ -12,6 +12,7 @@ import PageHero from "../components/PageHero.astro";
 import AuditionsPromo from "../components/AuditionsPromo.astro";
 import page from "../content/settings/musicals-page.json";
 import { getCollection } from "astro:content";
+import SupportLinks from "../components/SupportLinks.astro";
 
 const shows = (await getCollection("shows"))
   .filter((s) => s.data.production_type === "Musical")
@@ -26,7 +27,9 @@ const now = new Date();
 >
   <AuditionsPromo strip stripText={(page as any).auditions_strip_text} />
 
-  <PageHero title={(page as any).title || "Musicals"} />
+  <PageHero title={(page as any).title || "Musicals"}>
+    <SupportLinks slot="actions" sponsor scholarship row />
+  </PageHero>
 
   <section class="section show-list-section">
     <div class="container">
