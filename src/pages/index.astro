@@ -658,29 +658,52 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
  
   .hero-heading {
-    /* Enlarged from the previous size (PM feedback) — scoped to the
-       homepage only, other pages' h1 sizes are unaffected. */
-    font-size: clamp(2.2rem, 7vw, 3.8rem);
+    /* SIZE (2026-09-16). Was clamp(2.2rem, 7vw, 3.8rem) when this
+       headline was set in Baloo 2. Archivo Black is a much wider face
+       — measured at +28.3% for the current headline string — so the
+       old maximum no longer fits on one line at desktop.
+       3.4rem is the chosen maximum. It leaves ~72px of spare width in
+       the 1060px hero column (~52px at the 1120px breakpoint).
+       DO NOT raise this to 3.6rem: it also fits, but with 2.1px to
+       spare, which is the same knife-edge that caused the nav-wrap
+       bug. Any CMS edit to the headline would tip it over.
+       The 2.0rem minimum (was 2.2rem) keeps the rendered capital
+       height at 22.4px on a 320px phone against 22.5px before, i.e.
+       optically identical, while letting 360px and 390px phones hold
+       the headline to two lines. */
+    font-size: clamp(2.0rem, 6.2vw, 3.4rem);
     margin: 0;
     position: relative;
     grid-column: 1;
     grid-row: 2;
-    /* PM tried a few playful font options and picked Baloo 2, caps —
-       scoped to just this homepage headline (via font-family here,
-       not the shared --font-heading token), so every other heading
-       on the site stays on Archivo Black.
-       Baloo 2's own font metrics reserve a lot of extra vertical
-       space (for lowercase ascenders/descenders this all-caps
-       headline never uses), which made the default line spacing
-       look oddly loose. line-height is set tight and explicit here
-       to compensate — this value was tuned by measuring the font's
-       actual rendered letter height directly (not just picked by
-       eye), but different headline text/length could still need a
-       revisit. */
-    font-family: "Baloo 2", var(--font-heading), sans-serif;
-    font-weight: 700;
+    /* FONT (2026-09-16). Reverted to the shared --font-heading token
+       (Archivo Black) at the PM's request, so this headline matches
+       every other heading on the site. It was previously Baloo 2,
+       hard-coded here rather than via the token; using the token now
+       means this headline follows any future site-wide heading change
+       automatically.
+
+       WEIGHT IS 400, NOT 700, AND THAT IS DELIBERATE. Archivo Black
+       ships a single weight. Asking for 700 does not make it bolder —
+       the browser fakes it, smearing the letterforms (measured:
+       identical width, 2px taller, visibly muddier). The face is
+       already very heavy; 400 is its real weight.
+
+       LINE-HEIGHT. The old 0.82 was tuned to Baloo 2, which reserves
+       unusual amounts of vertical space in its own metrics. Archivo
+       Black does not, so 0.82 would be too tight. 0.88 was calculated
+       from the two fonts' actual rendered cap heights (Baloo 2 0.64em,
+       Archivo Black 0.70em) to preserve the same visual gap between
+       wrapped lines rather than being picked by eye.
+
+       ⚠️ If you re-measure any of this, see §3.1 of the handover:
+       Archivo Black loads from Google Fonts and will NOT be present in
+       a sandboxed headless browser. document.fonts.check() returns
+       true for the fallback and will lie to you. */
+    font-family: var(--font-heading);
+    font-weight: 400;
     text-transform: uppercase;
-    line-height: 0.82;
+    line-height: 0.88;
   }
 
   /* Logo + headline + intro text, laid out as a small grid so the
