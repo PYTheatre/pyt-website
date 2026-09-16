@@ -14,6 +14,7 @@
 */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Logo from "../components/Logo.astro";
+import PromoBanner from "../components/PromoBanner.astro";
 import home from "../content/settings/home-page.json";
 import campaign from "../content/settings/donation-campaign.json";
 
@@ -163,6 +164,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         <p class="hero-lede">{home.hero_lede}</p>
       </div>
     </div>
+
+    {/* Optional promo banner ("news tape"). Deliberately OUTSIDE the
+        .container above so it runs edge to edge, and placed here —
+        after the hero text, before the photo strip — because that is
+        where the PM approved it (2026-09-16, "Placement 3").
+        Renders nothing at all unless it is switched on in the CMS
+        under Home Page -> Promo Banner, so leaving it here is free. */}
+    <PromoBanner />
  
     <!-- Photo strip / carousel: scrollable row of cards linking to key
          pages. Hidden entirely when there are no valid cards. Cards
