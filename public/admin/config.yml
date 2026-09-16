@@ -275,6 +275,24 @@ collections:
     files:
 
 
+      # --- Promo Banner ---
+      # Added 2026-09-16. The optional full-width green "news tape"
+      # under the hero, used to promote one blog post at a time.
+      # Rendered by src/components/PromoBanner.astro.
+      # It stays hidden unless the tick box is ON *and* both the text
+      # and the link are filled in, so a half-finished banner can never
+      # reach the live site. The colour is fixed in code (PYT logo
+      # green + near-black, a WCAG AA contrast pass) and deliberately
+      # not editable here.
+      - name: "promo-banner"
+        label: "Promo Banner (green bar under the intro)"
+        file: "src/content/settings/promo-banner.json"
+        description: "An optional bright green bar across the home page, under the intro text. The whole bar is a link — use it to point visitors at a blog post or announcement. It stays hidden until you tick the box."
+        fields:
+          - { name: "show", label: "Show the banner", widget: "boolean", default: false, required: false, hint: "Tick to show the banner on the home page. Untick to hide it — your wording and link are kept, so you can switch the same banner back on later without retyping it." }
+          - { name: "text", label: "Banner wording", widget: "string", required: false, hint: "The whole bar is the link, so write it as something worth clicking: 'New: our 2026-27 season is announced'. It is shown in capitals automatically. Around 60 characters fits on one line on a laptop; longer wording simply wraps. Leave blank to hide the banner." }
+          - { name: "url", label: "Where the banner links to", widget: "string", required: false, hint: "A page on this site starts with a slash, for example /blog or /2026-27-season-announced. A link to another website must start with https:// and will open in a new tab. Leave blank to hide the banner." }
+
       # --- Home Page ---
       # All editable copy on the home page. Layout/structure stays in
       # code. The "Now Playing" poster is automatic (next upcoming show
