@@ -1,0 +1,132 @@
+---
+/*
+  PROMO BANNER — optional full-width "news tape" under the hero.
+  (2026-09-16)
+
+  A thin, bright, full-bleed bar carrying one line of editable text
+  that is itself the link. Built to promote a single blog post or
+  announcement at a time.
+
+  OFF BY DEFAULT. It appears only when ALL THREE of these are true in
+  the CMS (Home Page -> Promo Banner):
+    - "Show the banner" is ticked
+    - the text is not blank
+    - the link is not blank
+  Untick the box to hide it; the text and link are kept, so the same
+  banner can be switched back on later without retyping it. Clearing
+  the text OR the link also hides it, which prevents an empty green
+  bar or a link to nowhere ever reaching the live site.
+
+  WHY IT IS NOT INSIDE A .container:
+  the bar is deliberately edge-to-edge (PM chose "Placement 3"), so it
+  is placed as a direct child of <section class="hero">, BETWEEN the
+  two .container blocks — after the hero text, before the photo strip.
+  Putting it inside a container would constrain it to the text column
+  and it would stop reading as a tape.
+
+  COLOUR IS FIXED IN CODE, NOT CMS-EDITABLE, ON PURPOSE.
+  It is PYT logo green (--brand-green) with near-black text. That pair
+  measures 6.56:1 contrast, which clears the WCAG AA minimum of 4.5:1
+  for text at this size.
+  ⚠️ DO NOT SWITCH THE TEXT TO WHITE. White on this green measures
+  2.65:1 — it fails AA and also fails the 3:1 large-text threshold. It
+  was mocked up and rejected for that reason. If white text is ever
+  wanted, the GREEN has to darken to about #4d833b first (4.54:1), at
+  which point it is no longer the logo green.
+
+  EXTERNAL LINKS open in a new tab automatically — anything starting
+  "http" is treated as off-site. Internal links ("/blog", "/my-post")
+  open normally in the same tab.
+*/
+import promo from "../content/settings/promo-banner.json";
+
+const show = (promo as any).show === true;
+const text = ((promo as any).text || "").trim();
+const url = ((promo as any).url || "").trim();
+
+// All three conditions must hold — see the note above.
+const visible = show && text !== "" && url !== "";
+
+// Treat anything absolute as off-site.
+const isExternal = /^https?:\/\//i.test(url);
+---
+
+{visible && (
+  <a
+    class="promo-banner"
+    href={url}
+    target={isExternal ? "_blank" : undefined}
+    rel={isExternal ? "noopener noreferrer" : undefined}
+  >
+    <span class="promo-banner-text">{text}</span>
+    <span class="promo-banner-arrow" aria-hidden="true">&rarr;</span>
+  </a>
+)}
+
+<style>
+  .promo-banner {
+    /* Full-bleed by virtue of sitting outside .container — see the
+       note in the frontmatter. display:block so the WHOLE bar is the
+       click target, not just the words. */
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-decoration: none;
+
+    /* PYT logo green + near-black. Contrast 6.56:1 (WCAG AA pass).
+       See the warning in the frontmatter before changing either. */
+    background: var(--brand-green);
+    color: var(--ink);
+
+    /* Matches the site's heading face so the bar reads as part of the
+       design rather than as an inserted advert. Small, uppercase and
+       letter-spaced to give it the "tape" character at a thin height. */
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    line-height: 1.25;
+    text-transform: uppercase;
+
+    /* Thin, but with enough padding to stay a comfortable tap target
+       on a phone once the 1.25 line-height is counted in. */
+    padding: 0.85rem 1.4rem;
+    text-align: center;
+
+    margin-top: 2rem;
+    transition: background-color 0.15s ease;
+  }
+
+  .promo-banner:hover,
+  .promo-banner:focus-visible {
+    /* Slightly deeper green on hover. Kept dark enough that the
+       near-black text contrast only improves, never drops. */
+    background: #5a9c45;
+  }
+
+  .promo-banner:focus-visible {
+    /* Keyboard users need to see where they are. The bar is green, so
+       the outline is the site ink rather than the browser default
+       blue, which would vibrate against it. */
+    outline: 3px solid var(--ink);
+    outline-offset: -3px;
+  }
+
+  .promo-banner-arrow {
+    margin-left: 0.5em;
+    /* Decorative — hidden from screen readers in the markup above, so
+       the link text is announced cleanly without a stray "right
+       arrow" on the end. */
+  }
+
+  @media (max-width: 520px) {
+    .promo-banner {
+      /* On a narrow phone a longer line wraps to two or three rows.
+         Slightly smaller type and tighter side padding keeps that to
+         a sensible height instead of a green block. */
+      font-size: 0.85rem;
+      padding: 0.8rem 1rem;
+      letter-spacing: 0.03em;
+    }
+  }
+</style>
