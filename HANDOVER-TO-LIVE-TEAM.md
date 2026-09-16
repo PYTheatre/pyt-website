@@ -85,6 +85,52 @@ but update them for tidiness so nothing stale remains.
 **i) Explanatory comments in `Footer.astro`.** These are notes to developers,
 not live settings. Leave them; they document a real bug fix (see §6).
 
+### Search engines — one handled, one still outstanding
+
+These are two separate issues that were found while preparing this document.
+One has been dealt with; the other is a job for launch day.
+
+**✅ HANDLED — the temporary address is no longer indexable.**
+
+The problem: Cloudflare Pages **keeps serving `pyt-website.pages.dev` even
+after the real domain is added.** Both addresses serve exactly the same site.
+Left alone, Google would index both and treat the real site as a duplicate of
+the temporary one, which damages search rankings.
+
+The fix: a file called `public/_headers` now tells search engines not to index
+anything served on a `.pages.dev` address. **It is matched on the web address,
+so it applies only to the temporary one and never to the real domain.**
+
+**Nothing needs to be done to this file at launch.** It corrects itself. Please
+do not delete it after the switch — the temporary address will still be live.
+
+⚠️ **Do not "improve" this by adding a `robots.txt` that blocks everything.**
+That was considered and rejected for a specific reason: a `robots.txt` file
+cannot tell the two addresses apart, so it would block the **real** domain too.
+That failure is completely silent — no error message anywhere, the site simply
+never appears in Google. The current approach avoids this. The reasoning is
+also written into the top of the file itself.
+
+**❌ STILL TO DO AT LAUNCH — there is no sitemap.**
+
+A sitemap is a file listing every page on the site, which helps search engines
+find them all. **The site does not currently generate one**, despite a comment
+in `astro.config.mjs` implying it does.
+
+This was deliberately left until the domain switch, because a sitemap built
+today would list the *temporary* addresses — the opposite of what is wanted.
+It is generated from the same `site` setting described in **(b)** above, so
+once that is updated to the real domain, the sitemap will be correct
+automatically.
+
+**Note for the developer who does this:** the usual route is the
+`@astrojs/sitemap` package, which requires changing `package.json` **and**
+`package-lock.json`. That second file is around 171KB, and this site is
+maintained by pasting files into GitHub's web editor — pasting a file that
+size is exactly the risk described in §6. A small hand-written page that
+generates the sitemap from the existing content, adding no new packages at
+all, avoids the problem entirely and is the recommended approach here.
+
 ### After the switch — test these four things
 
 1. Log out of the CMS and log back in.
@@ -246,6 +292,9 @@ exists for page hero images only. Everywhere else — the home page photo strip,
 show posters, About page headshots — images crop from the centre, which can cut
 off heads. Extending that control is a known, unstarted job.
 
+**No sitemap is generated.** Parked until the domain switch on purpose — see
+§2 for why, and for the recommended way to add one.
+
 **Placeholder photos remain in several places.**
 
 **Small copy issues** noted but left alone rather than rewriting PYT's own
@@ -262,7 +311,7 @@ space.
 | `BUILD_LOG.md` | Running history of what was built and why |
 | `DECISIONS.md` | Design and product decisions, with reasoning |
 | `PROJECT_RULES.md` | Conventions the site is built to |
-| `HANDOVER-2026-08-21-EVENING.md` | The previous handover, more technical |
+| `HANDOVER-2026-08-23.md` | The current developer handover, more technical. Supersedes all earlier `HANDOVER-*` files |
 
 **The code itself is heavily commented**, and the comments are unusually
 detailed on purpose — they explain not just what a piece of code does but why,
