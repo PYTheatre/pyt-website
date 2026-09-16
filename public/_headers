@@ -1,0 +1,35 @@
+# Cloudflare Pages custom headers
+# ---------------------------------------------------------------------------
+# WHY THIS FILE EXISTS
+#
+# Cloudflare Pages keeps serving the temporary address
+# (pyt-website.pages.dev) even after a real custom domain is added. Both
+# addresses serve the SAME build. Left alone, search engines index both and
+# treat the real site as a duplicate of the temporary one.
+#
+# The rules below tell search engines not to index anything served on a
+# *.pages.dev address. They are matched on the HOSTNAME, so they apply ONLY
+# to the temporary address and NEVER to the real domain.
+#
+# THIS IS DELIBERATELY HOST-SCOPED. Do not replace it with a robots.txt
+# containing "Disallow: /" — that file cannot tell the two addresses apart
+# and would block the real domain too, silently, with no error anywhere.
+#
+# Also note: do NOT add a robots.txt that blocks crawling of these pages.
+# "noindex" only works if the crawler is allowed to fetch the page and read
+# this header. Blocking the crawl stops it ever seeing the noindex.
+#
+# NOTHING NEEDS TO CHANGE IN THIS FILE AT LAUNCH. It is self-correcting.
+# ---------------------------------------------------------------------------
+
+# The main temporary address.
+https://pyt-website.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+# Per-deployment preview addresses, e.g. a1b2c3d4.pyt-website.pages.dev
+https://:preview.pyt-website.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+# Any other *.pages.dev address this project is ever served on.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
