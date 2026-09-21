@@ -2,7 +2,6 @@
 audition_date: 2026-08-29
 title: THE WIZARD OF OZ
 production_type: Musical
-eyebrow: ""
 start_date: 2026-11-14
 end_date: 2026-11-22
 date_display: November 2026
@@ -18,4 +17,8 @@ audition_url: go.active.com/?c=active&e=snlvcmpscui00001load&t=https%3a%2f%2fcam
 audition_start: 2026-08-29
 audition_end: 2026-08-30
 audition_display: August 2026
+double_cast: true
+cast_a_name: Ruby
+cast_b_name: Emerald
+eyebrow: ""
 ---
