@@ -550,7 +550,7 @@ const recognitionGroups = (recognition.groups || []).filter(
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink);
   }
 
   .thermo-track-row {
@@ -558,13 +558,18 @@ const recognitionGroups = (recognition.groups || []).filter(
     align-items: center;
   }
 
+  /* DUOTONE (2026-09-21): the progress bar, and the dollar amounts and
+     tier names further down, are deep teal (--ink), not pink. Pink is
+     reserved for things you can click; these are information. Matches
+     the home-page progress bar. The pink frame on .corp-contact stays,
+     because it surrounds a contact form, which is an action. */
   .thermo-bulb {
     flex-shrink: 0;
     width: 34px;
     height: 34px;
     border-radius: 50%;
     background: var(--campaign-fill);
-    border: 3px solid var(--accent);
+    border: 3px solid var(--ink);
     /* Overlaps the track's rounded end so the two read as one object. */
     margin-right: -10px;
     position: relative;
@@ -574,9 +579,9 @@ const recognitionGroups = (recognition.groups || []).filter(
   .thermo-track {
     flex: 1;
     height: 22px;
-    border: 3px solid var(--accent);
+    border: 3px solid var(--ink);
     border-radius: var(--radius-pill);
-    background: var(--accent-soft);
+    background: var(--paper);
     overflow: hidden;
   }
 
@@ -607,7 +612,7 @@ const recognitionGroups = (recognition.groups || []).filter(
   .thermo-tick-mark {
     width: 2px;
     height: 9px;
-    background: var(--accent);
+    background: var(--ink);
     border-radius: 1px;
   }
 
@@ -642,7 +647,7 @@ const recognitionGroups = (recognition.groups || []).filter(
   }
 
   .thermo-meta strong {
-    color: var(--accent);
+    color: var(--ink);
     font-weight: 700;
   }
 
@@ -738,7 +743,7 @@ const recognitionGroups = (recognition.groups || []).filter(
     font-family: var(--font-heading);
     font-size: 1.25rem;
     line-height: 1.2;
-    color: var(--accent);
+    color: var(--ink);
   }
 
   .giving-desc {
@@ -805,7 +810,7 @@ const recognitionGroups = (recognition.groups || []).filter(
   .tier-range {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--accent);
+    color: var(--ink);
     margin-bottom: 0.3rem;
   }
 
@@ -873,7 +878,7 @@ const recognitionGroups = (recognition.groups || []).filter(
     font-family: var(--font-heading);
     font-size: 1.25rem;
     line-height: 1.2;
-    color: var(--accent);
+    color: var(--ink);
   }
 
   .corp-name {
@@ -981,7 +986,7 @@ const recognitionGroups = (recognition.groups || []).filter(
 
   .recognition-tier {
     font-size: 1.15rem;
-    color: var(--accent);
+    color: var(--ink);
     margin-bottom: 0.5rem;
     padding-bottom: 0.4rem;
     border-bottom: 1px solid var(--line);
