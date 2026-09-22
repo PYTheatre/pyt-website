@@ -2,7 +2,7 @@
 name: STUDIO CLASSES
 program_type: Class
 age_range: Ages 5-12
-season: Fall
+season: Year-round
 registration_url: ""
 eyebrow: ""
 description: >-
