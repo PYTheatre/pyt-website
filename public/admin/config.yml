@@ -745,7 +745,7 @@ collections:
         fields:
           - { name: "heading", label: "Section heading", widget: "string", required: false, default: "Every gift, every level.", hint: "Leave blank to show no heading." }
           - { name: "intro", label: "Intro paragraph", widget: "markdown", required: false, hint: "Optional. Sits between the heading and the list. Accepts links — e.g. to /ways-to-support#corporate or an outside page. Leave blank to hide it." }
-          - { name: "button_label", label: "Donate button text", widget: "string", required: false, default: "Donate", hint: "The single button under the list. Defaults to \"Donate\" if left blank." }
+          - { name: "button_label", label: "Donate button text (unused since 2026-09-22)", widget: "string", required: false, default: "Donate", hint: "The Donate button next to this section was removed at the PM's request. This field is kept only so the value isn't lost if a button is ever wanted back here; it currently controls nothing on the page." }
           - name: "items"
             label: "Gift amounts"
             widget: "list"
