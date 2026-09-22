@@ -40,6 +40,10 @@ interface Props {
   /** Optional short line above the form. */
   intro?: string;
   submitLabel?: string;
+  /** Placeholder text inside the message box. Defaults to "How can we
+      help?"; pass an empty string to show no placeholder at all (used
+      on the Corporate Contact form, 2026-09-22, PM request). */
+  messagePlaceholder?: string;
   /*
     COMPACT (2026-08-21): a deliberately small version for places where the
     full form takes over the page. Drops the Organization box and the
@@ -60,6 +64,7 @@ const {
   source = "",
   intro = "",
   submitLabel = "Send message",
+  messagePlaceholder = "How can we help?",
   compact = false,
 } = Astro.props;
 
@@ -132,7 +137,7 @@ const uid = Math.random().toString(36).slice(2, 8);
       <div class="field-group">
         <label for={`cf-message-${uid}`}>Your message <span class="required-mark" aria-label="required">*</span></label>
         <textarea name="message" id={`cf-message-${uid}`} rows={compact ? "4" : "5"} required
-          placeholder="How can we help?"></textarea>
+          placeholder={messagePlaceholder}></textarea>
       </div>
 
       {/* Tells staff which page the enquiry came from, since several
@@ -161,12 +166,22 @@ const uid = Math.random().toString(36).slice(2, 8);
 </div>
 
 <style>
+  /* ONE CONTACT-BOX STYLE, SITE-WIDE (2026-09-22, PM request: "the
+     design colours etc should be the same" across every contact box).
+     White background, pink accent border, thicker on the left — this
+     was previously only the Corporate Contact box's own custom style
+     (Ways to Support); it's now this component's own default, so every
+     page that uses ContactForm without a custom wrapper (Classes &
+     Camps, School Play in a Box, School Tickets, Stories on Stage — both
+     the main page and each production's booking form, Volunteer) picks
+     it up automatically, with no change needed on any of those pages.
+     No shadow — the pink border does the job the shadow used to. */
   .contact-form-card {
     background: var(--paper);
-    border: 1px solid var(--line);
+    border: 1px solid var(--accent);
+    border-left-width: 5px;
     border-radius: var(--radius);
     padding: var(--space-lg);
-    box-shadow: var(--shadow-soft);
     max-width: 640px;
   }
 
