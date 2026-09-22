@@ -1,0 +1,780 @@
+# HANDOVER — 2026-09-22
+
+**Peninsula Youth Theatre website.** Repo `PYTheatre/pyt-website` (public —
+clone it directly). Preview site `https://pyt-website.pages.dev`. CMS
+`https://pyt-website.pages.dev/admin/` (GitHub login). Real domain after
+launch: `pytnet.org` (not switched yet).
+
+**ADDENDUM 2026-09-22 (later session): see §16** — the Wizard of Oz cast
+page's old-site address, `pytnet.org/wizard-of-oz-cast-page/`, now works,
+and old-site page addresses forward to the new pages.
+
+**This supersedes every earlier handover**, including HANDOVER-2026-08-23.md
+and the quick HANDOVER-2026-09-21.md that was prepared but never committed.
+Where this file and any other document disagree, this one is right — except
+that **the repo itself always beats any document** (§1).
+
+Contents: §0 read-me-first · §1 document trust · §2 verified state · §3 first
+actions · §4 the pending 18-file batch · §5 CONCERNS · §6 working rules and
+preferences · §7 how the site is built now · §8 policies PYT decided ·
+§9 how the CMS is organised · §10 traps · §11 verification method ·
+§12 outstanding work · §13 going live · §14 what was done this session ·
+§15 keeping records.
+
+---
+
+## 0. READ ME FIRST — the five things that matter most
+
+1. **There is a finished, tested 18-file batch waiting to be pasted** (site-wide
+   spacing & alignment). It is in the `spacing/` folder of the zip the PM
+   uploads — it is NOT in the repo. Verify it before handing it over (§3, §4).
+2. **Several documents in the repo are stale and describe themselves as
+   current** — `START_HERE.md`, `IN_FLIGHT.md`, `DECISIONS.md`, and the
+   *workflow* section of `PROJECT_RULES.md`. Do not follow them where they
+   conflict with this file (§1).
+3. **The PM's delivery method is per-file edit links and pasting — not a zip
+   dragged into "Upload files".** `PROJECT_RULES.md` Rule 4 still describes the
+   old zip method. It is superseded (§6).
+4. **Photos are uploaded at full camera size and nothing resizes them** — the
+   home page alone downloads ~10.7MB (§5, concern 3).
+5. **The cast list (children's names) is public by PYT's decision**, and it
+   shares a published Google workbook with contact-details tabs. The publish
+   scope has never been confirmed (§5, concern 2; §8).
+
+---
+
+## 1. DOCUMENT TRUST ORDER
+
+1. **The repo on `main`.** Always clone fresh and build before believing
+   anything, including this file. Every earlier session found at least one
+   thing that had not landed as expected.
+2. **This file.**
+3. **`PROJECT_RULES.md`** — Rules 1, 2, 3, 5, 6, 7, 9 are still valid and
+   important. **Rule 4 (workflow) and Rule 8's "current state lives in
+   HANDOFF.md and IN_FLIGHT.md" are SUPERSEDED** — see §6.
+4. **`HANDOVER-TO-LIVE-TEAM.md`** — plain-English handover for the
+   non-technical team taking over the site and the domain switch. Current as
+   of 2026-09-16; a few additions are due (§12, item N7).
+5. **`BUILD_LOG.md`** — history, newest at top. **Last updated 2026-08-19.**
+   Nothing from 2026-08-20 onwards is logged there. The zip contains
+   `BUILD_LOG-ENTRIES-2026-09.md` with this session's entries, ready to add
+   (§15). History for 2026-08-20 → 08-23 lives in the HANDOVER-2026-08-2x files.
+6. **Older `HANDOVER-*.md` / `KICKOFF-PROMPT-*.md`** — history only.
+7. **STALE — do not act on:** `START_HERE.md` (2026-06-03; calls itself "the
+   single source of current truth"), `IN_FLIGHT.md` (2026-06-03; e.g. says
+   sponsor buttons are disabled pending Shopify — no longer true),
+   `DECISIONS.md` (2026-06-16; parts still valid as history of locked
+   decisions, but check against the repo). `README.md` is minimal.
+   Recommended: add a one-line banner to START_HERE.md and IN_FLIGHT.md
+   pointing to the newest handover (§15).
+
+---
+
+## 2. STATE AT HANDOVER — VERIFIED 2026-09-22 BY FRESH CLONE
+
+- **HEAD `8704c78`** ("Update Site-wide "page-heroes"").
+- **Build clean.** **36 Astro pages / 37 `index.html`** — the extra one is
+  `public/admin/index.html`, a static file. Normal; not a bug.
+  The count fell from 37 because the PM deleted the show **Rules of Comedy**
+  in the CMS on 2026-09-21 (commit `f9146a8`) — deliberate.
+- Everything prepared this session **except the §4 batch** is live and was
+  checked byte-for-byte against what was handed over.
+- No other file batch is outstanding.
+
+---
+
+## 3. FIRST ACTIONS, IN ORDER
+
+1. Clone, `npm install`, `npm run build`. Confirm the state in §2 (or note
+   what has changed since — the PM edits content in the CMS all the time).
+2. **Verify the §4 batch** before offering it:
+   - For each of the 18 repo paths, run `git diff --stat d0a2bfa origin/main -- <path>`.
+     **The batch was built on `d0a2bfa`.** As of `8704c78` none of the 18 had
+     changed (only `page-heroes.json`, a deleted show and uploads had).
+     If any HAS changed, re-apply that file's change onto the new version
+     rather than handing over the stale copy.
+   - Check the zip copies against `CHECKSUMS.txt` (first 12 hex of sha256).
+   - Best: copy all 18 into a fresh clone, build, and re-run the gap and
+     alignment measurements (§11) against the numbers in §4.3.
+3. Hand the batch to the PM in the §4 order, with every link, line count and
+   first line (§6 rules).
+4. Then, if the PM has time: the quick CMS fixes in §12 (N1–N3), and the
+   records batch in §15.
+
+---
+
+## 4. THE PENDING BATCH — SITE-WIDE SPACING & ALIGNMENT (NOT COMMITTED)
+
+PM request: "even up the white space across the site, mobile too" and then
+"look at all spacing and alignment" (examples given: Creepy Carrots and other
+production pages, Photos, About under the picture, School Play in a Box
+"Make an inquiry" box, Young Performers "YP opportunities" button).
+Mockups `mockups/MOCKUP-spacing-1/2/3` were shown to the PM; files were
+prepared; the PM ran out of time before pasting. **The PM has not explicitly
+approved the build yet — show the mockups again and get a yes first.**
+
+### 4.1 Files and order
+
+Download names differ from repo paths (prefix = part; square brackets
+removed). Paste each into the EXISTING file via its edit link:
+`https://github.com/PYTheatre/pyt-website/edit/main/<repo path>`
+with `[` → `%5B` and `]` → `%5D`, e.g.
+`https://github.com/PYTheatre/pyt-website/edit/main/src/pages/%5B...slug%5D.astro`.
+
+**Part A — shared rhythm. Do first. tokens.css first of all.**
+
+| # | Repo path | Zip file | Lines | First line |
+|---|---|---|---|---|
+| A1 | src/styles/tokens.css | A-tokens.css | 194 | `/* ====` |
+| A2 | src/styles/global.css | A-global.css | 286 | `/* ====` |
+| A3 | src/components/PageHero.astro | A-PageHero.astro | 97 | `---` |
+| A4 | src/components/PageHeroImage.astro | A-PageHeroImage.astro | 119 | `---` |
+| A5 | src/components/Footer.astro | A-Footer.astro | 384 | `---` |
+
+**Part B — individual pages. Only after ALL of Part A** (they use variables
+tokens.css defines; without them those pages lose their spacing).
+
+| # | Repo path | Zip file | Lines | First line |
+|---|---|---|---|---|
+| B1 | src/pages/[...slug].astro | B-cms-pages-slug.astro | 206 | `---` |
+| B2 | src/pages/casting.astro | B-casting.astro | 194 | `---` |
+| B3 | src/pages/school-play-in-a-box.astro | B-school-play-in-a-box.astro | 253 | `---` |
+| B4 | src/pages/stories-on-stage.astro | B-stories-on-stage.astro | 398 | `---` |
+| B5 | src/pages/stories-on-stage/[slug].astro | B-stories-production-slug.astro | 216 | `---` |
+| B6 | src/pages/shows/[slug].astro | B-shows-slug.astro | 375 | `---` |
+| B7 | src/pages/cast/[slug].astro | B-cast-slug.astro | 366 | `---` |
+| B8 | src/pages/audition.astro | B-audition.astro | 502 | `---` |
+| B9 | src/pages/photos.astro | B-photos.astro | 189 | `---` |
+| B10 | src/pages/subscribe.astro | B-subscribe.astro | 355 | `---` |
+| B11 | src/pages/thank-you.astro | B-thank-you.astro | 91 | `---` |
+| B12 | src/pages/judy-robe-spirits-awards.astro | B-judy-robe-spirits-awards.astro | 204 | `---` |
+| B13 | src/pages/shop.astro | B-shop.astro | 46 | `---` |
+
+`cast/[slug]` and `subscribe` keep the same line count as before — lines were
+swapped, not added. They ARE changed files.
+
+Safe stopping points: anywhere in Part A; between A and B (the natural
+pause); anywhere in Part B once A is complete. No `config.yml` change, so no
+CMS hard-refresh. Nothing in the batch can break the build.
+
+**Batch-size caution (§10.4):** 18 hand-pastes is large. If the PM prefers,
+Part A alone delivers most of the improvement and is a sensible first sitting.
+
+### 4.2 What it changes
+
+- **Vertical rhythm tokens** appended to tokens.css: `--section-pad`
+  (2rem phone / 3rem desktop), `--page-top` (2.5 / 4rem), `--hero-gap` (1rem).
+  Sections are padded by HALF the wanted gap so two meeting sections make one
+  gap. Targets: between sections 64/96px, header→title 40/64, title-or-photo
+  →content 48/64, last content→footer 64/96.
+- `.section` uses `--section-pad`; `PageHero`, `PageHeroImage`, the CMS page
+  title block and Casting title use `--page-top`/`--hero-gap`; the footer's
+  top margin is `--section-pad`; page-level overrides that doubled spacing
+  were removed or zeroed (listed in each file's comments).
+- **Left-aligned reading columns** — root cause: `.container` has
+  `margin-inline: auto`, and several pages narrowed a `.container` with
+  `max-width: 68ch`, which CENTRED the text column while titles, photos and
+  buttons stayed on the left edge. Fixed by limiting the children instead:
+  `.x > :global(*) { max-width: 68ch }`. Pages: CMS pages
+  (Young Performers, Scholarships, blog), Casting, School Play in a Box,
+  Stories on Stage (auditions + explainer), Thank you. Also left-aligned:
+  Casting's CTA, Photos "Find your photos" card, Newsletter signup form card.
+- Global default `.section-head { margin-bottom: var(--space-md) }` (pages
+  that set their own keep it; SPIB, Audition, Photos, About, Judy Robe had none).
+- Pages that END in a tinted band run straight into the footer:
+  `main:has(> :last-child:is(.board-section, .auditions-promo-section,
+  .inquiry-section, .sponsor-section)) ~ .site-footer { margin-top: 0 }` —
+  `~` not `+` because a script sits between `</main>` and the footer.
+  `:has()` needs Safari 15.4+ / Firefox 121+; older browsers just show a
+  48px white strip (harmless).
+- **Deliberately still centred:** home Donate button (PM asked in Aug 2026
+  for it centred under the thermometer), home Values band, Shop's lone
+  "Coming soon" message, Volunteer empty-state note.
+
+### 4.3 Measured results (all pages, real fonts, 390 and 1440px)
+
+- Largest gap per page, desktop: median 134 → **73px**, max 241 → **121px**.
+- Largest gap per page, phone: median 103 → **57px**, max 178 → **85px**.
+- Last content → footer: 96–256px → **93–106 desktop / 61–88 phone**
+  (band-ending pages meet the footer directly).
+- Alignment audit: every flagged page fixed except the deliberate ones above.
+- No page scrolls sideways at 320 / 390 / 768 / 1440.
+- Header unchanged (77–80px, one row at 1120+).
+
+---
+
+## 5. CONCERNS — FLAGGED FOR THE PM, IN PRIORITY ORDER
+
+1. **Unpasted batch** (§4) — nothing is broken without it, but the work only
+   exists in the zip. If the zip is lost it must be rebuilt from §4.2.
+2. **Children's data in a published workbook.** The cast list is public by
+   PYT decision (§8). Both cast-page embeds come from the SAME published
+   producer workbook, which also contains Contact Info, Staff Contact List,
+   email lists, Conflicts and CastList tabs. **The whole workbook was once
+   published as "Entire document" by mistake** (found 2026-09-21 and fixed at
+   the time). The PM was asked to confirm that *File → Share → Publish to web
+   → Published content and settings* lists ONLY "Rehearsal Schedule" and
+   "CastList". **Not confirmed.** Ask again. Also: keep phone numbers, emails
+   and addresses off the CastList tab.
+3. **Oversized photos — performance.** Photos are served straight from
+   `public/uploads` at camera size; nothing resizes them. 14 in-use photos are
+   over 1.5MB; the largest in use is `img_0215.jpg` (6000×4000, 7.0MB — home
+   carousel slide 3 AND the School Play in a Box hero). The home carousel
+   loads ~10.7MB (csm-newsies-4.jpg 3.0MB + creepy-carousel.png 0.7MB +
+   img_0215.jpg 7.0MB). Display never exceeds ~2,120px wide even on Retina.
+   Also heavy: four `screenshot-2026-06-26-at-*.png` files in use (1.5–4.8MB
+   PNGs), pyt-newsies-punch.jpg 3.2MB, volunteers.jpg 2.8MB,
+   development.jpg 2.1MB, ype-frog-toad.jpg 2.0MB, rc-48e.jpg 1.7MB.
+   **Options:** (a) quick win — prepare web-sized copies (≤2400px wide, JPEG
+   q≈80, target ≤500KB) and have the PM upload them to `public/uploads` with
+   the SAME filenames via GitHub "Upload files" (overwrites; no content edits
+   needed); (b) give staff a sizing rule for future uploads (add to the CMS
+   hints and HANDOVER-TO-LIVE-TEAM); (c) longer-term, an image-optimisation
+   step. Recommend (a)+(b). Confirm each file's use before replacing.
+   **31 of 69 uploads (81MB total) are unused** — do NOT bulk-delete: Rule 5,
+   and `pyt-logo-stars.png` / `pyt-logo-transparent.png` are referenced from
+   code, not content (a content-only scan misses them).
+4. **A menu link hard-codes the preview address.** `nav-menu.json` line ~81
+   has `https://pyt-website.pages.dev/school-tickets/` — it will break at
+   the domain switch. CMS fix: change it to `/school-tickets/` (§12, N1).
+   This makes **ten** files containing `pyt-website.pages.dev` (§13).
+5. **Stale repo documents** (§1) could steer a new session wrong.
+6. **Records drift** — BUILD_LOG last updated 2026-08-19 (§15).
+7. **Carried from 2026-08-23, still open:** Formspree free tier = 50
+   submissions/month across the whole account (12 forms, 4 endpoints);
+   the `_next` redirect after form submission has never been tested with a
+   real submission; Education used to reach two people but Formspree free
+   sends to one; the Rentals page has a fourth, separate, hand-built form
+   (`rentals-page.json` → `form_endpoint` `https://formspree.io/f/xnjrrdkb`)
+   that any contact-form change must also cover.
+8. **Private Google embeds don't work in Safari/Firefox** — no longer relevant
+   while the cast list is published, but if PYT reverts to a private sheet,
+   iPhone users will usually see a Google sign-in box (the page shows an
+   "Open in Google" button as fallback for exactly this).
+9. **Cast-page no-index check not yet run by the PM** (§8 has the command).
+
+---
+
+## 6. WORKING RULES AND PREFERENCES — FOLLOW WITHOUT BEING ASKED
+
+### 6.1 The PM's standing rules (restated at the start of every session)
+
+1. **Mockups:** for anything visual, generate an actual PNG first and show
+   it. **Do NOT use the interactive widget/visualizer tool — it doesn't
+   render for the PM.** Always attach with `present_files` — once this
+   session files were created but never attached and the PM couldn't see them.
+2. **Label files:** when a reply contains both mockups and repo files, say
+   explicitly which is which ("MOCKUP ONLY — do not upload" / "REPO FILE").
+3. **Code handoff:** never paste raw code into chat. A file to download plus
+   a GitHub link.
+4. **Links:** a specific GitHub link for EVERY file in a batch — edit,
+   create-new, upload or delete as appropriate. Never "same links as last
+   time". The PM has had to ask for missing links repeatedly (again this
+   session: "provide links for each of the 13 files").
+5. **New files first:** if a batch includes a brand-new file others depend
+   on, say so and number the steps. Always say whether it is safe to stop
+   halfway — the PM works in short bursts.
+6. **New or awkward filenames:** new files, square brackets, no extension or
+   unusual extensions → GitHub "Create new file" and paste (downloading and
+   re-uploading mangled names and broke four deploys once).
+   - **Extensionless files (`_headers`) open BLANK in the PM's file viewer**
+     — hand over a `.txt` copy, tell them to paste into the real name, and
+     check the breadcrumb before committing (`_headers.txt` is silently
+     ignored by Cloudflare).
+   - **Binary files (images) cannot be pasted** — use GitHub "Upload files",
+     then check the exact filename in the file list (a browser may add " (1)").
+   - For EXISTING files with square brackets, the edit link + paste is fine;
+     name the download something bracket-free and say which file it replaces.
+7. **CMS cache:** whenever `public/admin/config.yml` changes, remind them to
+   hard-refresh the CMS (Cmd+Shift+R) or use incognito. This really matters:
+   this session the old cached "required photo" rule kept blocking a save.
+8. **Pasting:** for every pasted file give the expected line count and the
+   first line, and say "click into the editor, Cmd+A, then paste". A partial
+   paste once took the site down.
+
+### 6.2 Preferences learned (2026-08 and this session)
+
+- Approves mockups fast, in one line. Give **a clear recommendation plus one
+  alternative** — not a menu of options with no steer.
+- Will overrule a recommendation; build their choice without re-litigating.
+- Reports problems with screenshots — read them closely; the real cause is
+  often deeper than the symptom shown.
+- Notices inconsistency between page types; many jobs start as "this page
+  doesn't match that one".
+- Asks "how do I…?" when the fix may be theirs. **Always say whether it's a
+  CMS edit they make or a code file you supply**, and prefer the CMS route
+  when it can do the job (e.g. removing hero photos, cast page URLs).
+- Wants numbers, not impressions ("187px against 96px elsewhere"). State
+  what was measured and what could not be verified.
+- Busy; types quickly with typos. Write plainly, no jargon; don't grovel
+  when corrected; say plainly when something works.
+- Uses a Mac (Cmd shortcuts, Terminal is available and they can run a
+  pasted `curl` command if told exactly where Terminal is — it's an app on
+  their Mac, not in Cloudflare).
+- Works in short bursts; values "safe to stop here" guidance.
+- Cares about child-safety/privacy but is pragmatic — when the organisation
+  decides (e.g. public cast list), record the decision and implement it.
+- Prefers things that look deliberate and sophisticated rather than
+  "childish"; asked for the duotone scheme, full-width carousel, even spacing.
+
+### 6.3 From PROJECT_RULES.md — still valid
+
+- **Rule 1:** never make confident fixes from memory for OAuth, Decap CMS,
+  Soapbox, MailChimp or any third-party integration — gather data and read
+  current docs first (stack: Astro 6, Decap CMS 3.10.1).
+- **Rule 2:** the repo is the source of truth for CMS content. **Never include
+  existing `src/content/**` files in a batch** (the PM edits them in the CMS;
+  your copy is stale). Brand-new settings files are fine. Page templates must
+  handle new fields being absent. This session followed it: no content
+  files were edited; temporary content changes for testing were always
+  restored and diffed.
+- **Rule 3:** plan and get approval before building; don't claim something
+  works that you haven't verified; say what depends on live services.
+- **Rule 5:** deletions must be done by the PM — give a delete link and say
+  whether the build depends on it.
+- **Rule 6:** Cloudflare "internal error" deploy failures are usually
+  transient — retry once, then wait 10 minutes.
+- **Rule 7:** Cloudflare/GitHub traps (Workers-vs-Pages landing, env var
+  changes need a redeploy, the empty `peninsula-youth-theatre` org, GitHub
+  web views lag).
+- **Rule 9:** succinct, plain language. It suggests the `ask_user_input_v0`
+  buttons tool for clarifying questions — fine for genuine choices, but
+  this session the PM answered in plain text and the rule-of-thumb is one
+  question at a time.
+
+### 6.4 SUPERSEDED in PROJECT_RULES.md
+
+- **Rule 4 steps 8–10 (zip + drag into "Upload files")** → replaced by the
+  per-file edit-link + paste method in §6.1. Use "Upload files" only for
+  binaries.
+- Rule 4 step 6 screenshot widths (390/1280) → use 390 and 1440 as the main
+  pair, plus the sweep in §11.
+- Rule 8's "current state lives in HANDOFF.md and IN_FLIGHT.md" → current
+  state lives in the newest HANDOVER file.
+
+---
+
+## 7. HOW THE SITE IS BUILT NOW
+
+Astro static site + Decap CMS, hosted on Cloudflare Pages. Every CMS save is
+a commit; Cloudflare rebuilds in ~1 minute. **There is no staging** — every
+commit to `main` goes live on the preview address.
+
+**Fonts:** Archivo Black (headings, `--font-heading`), Baloo 2 (home Values
+band only now), Source Sans 3 (body). Loaded from Google Fonts.
+
+**Colour — the duotone scheme (live since 2026-09-21).** Explained at the top
+of `tokens.css`.
+- Teal family: `--surface-brand` #b5dce3 (header, footer), `--paper-warm`
+  #e9f4f7 (panels/bands), `--campaign-fill` #338899 (graphics only),
+  `--ink` #0e323a (all text — deep teal, not black), `--surface-deep` #0e323a
+  (numbers band, header chips). Legacy names `--nav-bg-dark`/`--nav-text` are
+  kept as aliases — documented in tokens.css.
+- PYT pink `--accent` #c0287b / `--accent-deep` #97215f — **"pink means
+  press"**: reserved for clickable things (buttons, promo banner, links,
+  their hover/focus tints). `--highlight` (Donate) is pink.
+- Contrast rules: pink TEXT on pale teal must use `--accent-deep` (plain pink
+  is 3.74:1 there — fails); `--campaign-fill` never for text.
+- Exceptions on purpose: the multicolour logo; the home Values phrases keep
+  pink #a82169 / blue #2f7fa3 / green #4a8038 (PM request) — only on the teal
+  WASH; on `--surface-brand` the blue drops to 3.05:1 and merges.
+- Header: Tickets/Calendar/Register are deep-teal chips; **Donate is the only
+  pink header button**. Stat tiles pale teal on the deep band. Category tags
+  on Shows/Audition are three strengths of teal.
+- Known leftover non-clickable pink text (offered as a follow-up, not done):
+  About job titles, Judy Robe year heads/names, Programs "Scholarships
+  available" tag, Shop "Coming soon" eyebrow, Stories production dates,
+  "Interested in auditioning?" strips.
+
+**Duotone photos.** On pages with 2+ grid/carousel photos, photos get the SVG
+filter `#pyt-duotone` (defined in `BaseLayout.astro`: greyscale, gamma 1.45,
+dark #0b2a31 → light #d3edf1) and bloom to full colour when featured
+(carousel `.is-featured`) or hovered/focused. Always full colour: pages with
+ONE photo (a script in BaseLayout counts and sets `data-duotone` on `<html>`,
+so trimming a list to one item flips that page back automatically), page
+hero photos, photos inside written content, the logo. Posters/board photos
+only count when they have an inline `background-image` (placeholders with
+initials/titles are not photos). **The photo selector list exists in BOTH
+BaseLayout.astro and global.css ("DUOTONE PHOTOS") — change both together.**
+With JavaScript off, everything shows in colour.
+
+**Home carousel** (`index.astro`). One photo fills the strip (`flex: 0 0 100%`),
+3:2 desktop / 4:3 phones, arrows inset at z-index 3 (they were hidden under
+the photo before — the left arrow was invisible on phones on the old live
+site), edge fades removed, neighbour dimming off (`FADE_OPACITY = "1"`),
+looping unchanged. It opens on the card titled "center stage musicals" —
+**the PM has since renamed the titles to long sentences** ("Center Stage
+Shows - professional scale musicals where everyone is cast." etc.), so that
+match now fails and it falls back to the first card, which is still Center
+Stage. Harmless; worth updating the match and checking how the long captions
+wrap on phones. Carousel photos need ≥2000px wide originals (the old low-res
+screenshots were replaced by the PM on 2026-09-21).
+
+**Logo** (`Logo.astro`). Nav size (header on inner pages + footer on EVERY
+page) uses `/uploads/pyt-logo-transparent.png` — the PM's transparent file,
+cleaned of a 4–10px white rim and resized to 600px; heights 42px/51px chosen
+so the letters match the old 44/54px. Hero size (homepage, on white) still
+uses `/uploads/pyt-logo-stars.png` (its crop offsets were measured from that
+file). **Both live in `public/uploads` = the CMS media library — nobody
+should delete them.**
+
+**Home hero headline** — CMS "As typed / UPPERCASE" switch; line-height 1.05
+as typed vs 0.88 uppercase (lowercase descenders collide at 0.88 — measured).
+The size is Option B (clamp 2rem / 6.2vw / 3.4rem; do NOT raise to 3.6rem —
+2px headroom). CMS hint: ~35 characters fit one line as typed, ~28 in caps.
+
+**Promo banner** (`PromoBanner.astro`, CMS Home Page → Promo Banner): full
+width, pink with white text (5.48:1), shown only when ticked AND text AND link
+are filled; external links open in a new tab. Still forces capitals
+(an "as typed" option was offered, not done).
+
+**Cast pages** (`src/pages/cast/[slug].astro`): soft client-side password gate
+(NOT security). Order: intro → Rehearsal resources → Cast list → Rehearsal
+schedule. Both sheets embed in wide frames (up to 1600px). Cast list:
+published link → embedded like the schedule, no button; private link →
+embedded + "Open in Google" button; blank → hidden. URL of a cast page is
+`/cast/<slug>`, slug fixed at first save (renaming the show title doesn't
+change it). The embed helper accepts a normal sharing link (`#gid=` picks the
+tab) or a published `/pubhtml` link.
+
+**CMS-made pages** (Pages collection → `src/pages/[...slug].astro`): title,
+optional hero photo, rich-text body with links and images, optional closing
+quote and CTA button, "Add to navigation" off by default. The Blog page and
+posts (e.g. `/blog`, `/pyt-launches-new-website`) are made this way — one
+page per post, no automatic index (the PM links posts from /blog by hand).
+
+**Page Hero Images** (CMS list, `page-heroes.json`): one row per page, photo
+now optional (removing the photo or the row = no hero). Stories on Stage and
+Studio Shows rows were removed on purpose. Musicals has no row.
+
+**Programme pages:** Center Stage Musicals, Studio Shows and Stories on Stage
+each have a CMS intro paragraph under the title (Musicals' was added
+2026-09-21 and written by the PM).
+
+**Search engines:** `public/_headers` sends `X-Robots-Tag: noindex, nofollow`
+on every `*.pages.dev` host (host-scoped — does not affect the real domain),
+and on `/cast/*` on every host (path-scoped — survives launch). Never replace
+this with a blanket robots.txt Disallow (it would block the real domain and
+stop crawlers seeing noindex). Cast pages print the same header on pages.dev
+twice (two host rules match) — harmless.
+
+---
+
+## 8. POLICIES PYT HAS DECIDED
+
+- **Cast list is PUBLIC (PYT agreed, 2026-09-21).** Embedded like the
+  schedule from a "Publish to web" link. Recorded in the cast page code
+  header and the CMS hint. If PYT reverses it: unpublish the CastList tab and
+  paste an ordinary sharing link — the page switches to private mode itself.
+- **Publish ONLY the "Rehearsal Schedule" and "CastList" tabs of the producer
+  workbook — never "Entire document".** Unconfirmed (§5 concern 2).
+- **Rehearsal schedule must use role names only**, no children's names,
+  including in notes.
+- **Cast pages are noindex/nofollow on every domain.** PM's check once
+  deployed (Terminal):
+  `curl -sI https://pyt-website.pages.dev/cast/the-wizard-of-oz/ | grep -i x-robots-tag`
+  → 3 lines on pages.dev; after launch, 1 line on the real domain for cast
+  pages and none for ordinary pages.
+- **Blog posts are individual pages** (not one long page), not in the nav.
+- **Home Donate button stays centred** under the thermometer (Aug 2026).
+
+---
+
+## 9. HOW THE CMS IS ORGANISED (what staff edit where)
+
+Site Settings are split into six groups (Home Page; Shows & Auditions;
+Classes/Camps/Schools; Support & Fundraising; About & Community; Site-wide),
+plus content folders (Shows, Stories on Stage productions, Programs, Cast
+Pages, Pages). Notable records touched this session:
+- **Home Page → Promo Banner** (show tick, wording, link) and **Home Page →
+  home-page** (hero headline + capitalization switch, photo carousel, etc.).
+- **Site-wide → Page Hero Images**, **Site-wide → nav-menu**.
+- **Shows & Auditions → musicals-page** (intro paragraph).
+- **Cast Pages** (password, intro, resources, cast list link, schedule link).
+- **Pages** (Blog and posts, Young Performers, Scholarships…).
+The CMS login is GitHub; `config.yml` → `base_url` must match the site's
+address (§13).
+
+---
+
+## 10. TRAPS THAT HAVE CAUSED DAMAGE OR NEARLY DID
+
+### 10.1 Webfonts in the sandbox (cost a shipped nav bug)
+Google Fonts is unreachable from the sandbox; measuring without Archivo Black
+gives answers ~90px too small. `document.fonts.check()` returns true for a
+fallback — **verify `[...document.fonts]` shows the family "loaded"**.
+Method: download from `https://raw.githubusercontent.com/google/fonts/main/ofl/`
+(`archivoblack/ArchivoBlack-Regular.ttf`, `baloo2/Baloo2[wght].ttf`,
+`sourcesans3/SourceSans3[wght].ttf`), copy into `dist/testfonts/` AFTER each
+build (the build wipes dist), serve dist with `python3 -m http.server`
+(start it with `nohup setsid … &` — it dies otherwise), inject `@font-face`
+and `await document.fonts.load(...)`.
+
+### 10.2 Pasting (took the site down once)
+Always "click in, Cmd+A, paste" plus expected line count and first line.
+Diagnostic: clone main and compare each handed-over file byte-for-byte.
+
+### 10.3 Over-broad edits
+A regex cleanup once removed a live prop. Prefer exact, asserted
+replacements (assert the old text occurs exactly once). **Blank-line
+differences** broke exact matching this session — match tolerant of blank
+lines, or view the exact text first. When a pattern occurs twice (e.g. a rule
+repeated inside a media query), patch the first occurrence deliberately.
+
+### 10.4 Batch size
+Every hand-paste is a risk. A 35-file invisible cleanup was cut to 5 files in
+August. Offer to split large batches (the §4 batch splits cleanly into A/B).
+
+### 10.5 Astro scoped styles win
+Scoped rules (`.x[data-astro-cid]`) out-rank global and injected CSS. Test
+overrides need `!important` or doubled classes, or they silently lose.
+
+### 10.6 The header is tight at 1120px
+Measure header height/wrap before and after anything that touches the
+header (77–80px, one row; the logo swap was sized to change width <2px).
+
+### 10.7 `.container` centres itself
+Never narrow a `.container` to make a reading column — limit its children.
+
+### 10.8 The sandbox's network is limited
+docs.google.com, pages.dev, Behance, archive.org and most image hosts are
+unreachable; `web_fetch` can read some pages as text but not images. Ask the
+PM to run live checks (`curl` in Terminal, iPhone tests) and say so honestly.
+
+### 10.9 Screenshot quirks
+Full-page capture resizes the viewport, which un-centres the carousel — set
+the viewport to the page height, wait ~1s, then screenshot the viewport. A
+`clip` taller than the viewport is cut off.
+
+### 10.10 Content-only scans miss code references
+Unused-upload scans must also search `src/components`, layouts and pages
+(the logos are referenced from code).
+
+### 10.11 Temporary content edits for testing
+When testing (e.g. blanking a CMS field), always back up, restore and
+`git status` to confirm content files are unchanged before packaging.
+
+---
+
+## 11. HOW TO VERIFY WORK ON THIS PROJECT
+
+1. **Clone `main` fresh and build.** Never trust that files landed —
+   compare handed-over files byte-for-byte against main.
+2. **Serve `dist/` and drive it with Playwright**, real fonts injected
+   (§10.1). Measure, don't eyeball.
+3. **Sweep widths:** 320 / 360 / 390 / 768 / 1024 / 1119 / 1120 / 1280 /
+   1440 / 1920. Assert `document.documentElement.scrollWidth - innerWidth`
+   = 0; header height one row.
+4. **Gap audit** (used for §4): full-page screenshot (per §10.9), find runs of
+   uniform pixel rows between the top of `<main>` and the footer, split at
+   colour changes, report the largest per page and the end-of-page gap;
+   identify the leaf elements above and below each gap.
+5. **Alignment audit:** left edge of outermost content blocks versus the
+   first `.container`'s content edge, ignoring multi-column grids and noting
+   centred text.
+6. **Contrast scan:** every visible text node against its effective
+   background (sample gradients), WCAG AA (4.5, or 3.0 for large text);
+   include open dropdowns and the mobile menu.
+7. **For refactors, diff built HTML before and after** (normalise asset
+   hashes and ContactForm's random ids).
+8. **Every mockup is rendered on the real built site** with real fonts, and
+   labelled; stand-ins for things the sandbox can't load (Google sheets) are
+   labelled as stand-ins.
+9. **State findings as measurements**, and list what could not be verified.
+
+---
+
+## 12. OUTSTANDING WORK
+
+### New this session
+- **N1 (CMS, PM, 1 min):** nav-menu School Tickets link →
+  `/school-tickets/` instead of the full pages.dev address.
+- **N2 (CMS, PM):** Young Performers page title has a trailing space
+  (`"Young Performers "`) — still there.
+- **N3 (CMS, PM):** `gift-funds.json` $12,000 line still reads "the cost of
+  royalties costs for a Center Stage Musical" — doubled wording.
+- **N4:** oversized photos (§5 concern 3) — web-sized replacements.
+- **N5:** confirm the workbook publish scope (§5 concern 2).
+- **N6:** PM to run the cast-page noindex `curl` check (§8).
+- **N7:** add to HANDOVER-TO-LIVE-TEAM.md: don't delete the two logo files;
+  the cast-list-public decision and "publish only two tabs" rule; the photo
+  sizing rule; the spacing tokens ("change spacing in tokens.css, not page
+  files"); the duotone "pink means press" rule; nav-menu links should be
+  root-relative.
+- **N8 (optional):** remaining non-clickable pink text → teal (§7).
+- **N9 (optional):** promo banner "as typed" capitalization option.
+- **N10 (small bug):** the home headline "word to italicize" CMS field
+  (`hero_heading_italic_word`, `.accent-word`) applies no italic styling —
+  it only sets `position: relative`. Field is blank today.
+- **N11 (optional):** carousel start-card match and long captions (§7).
+- **N12 (optional):** if the rehearsal schedule still clips on narrow
+  windows, the fix is in Google (Format → Wrapping → Wrap on the notes
+  column), or a shrink-to-fit frame (smaller text) — offered, not chosen.
+
+### Carried from 2026-08-23 (still open unless marked)
+- **C1 The parked ~30-file cleanup** (dead `eyebrow` keys in 17 settings
+  files, dead `eyebrow` props in 11 templates, 12 unused keys) — verified
+  invisible; only after the domain switch, only if wanted. **Keep
+  `auditions_eyebrow` — it's live.**
+- **C2 `sponsorship-page.json` is orphaned** — real tier content ($10,000
+  "Show Producer", $5,000 "Show Sponsor") that no page renders. A question
+  for PYT. (Re-verified 2026-09-22: no page imports it.)
+- **C3 Rentals' separate form** (§5 concern 7).
+- **C4 Formspree 50/month** shared limit — the PM asked once about
+  alternatives then said disregard; don't reopen unless they raise it.
+- **C5 Education two-recipient problem** — forwarding rule or group alias.
+- **C6 `_next` redirect never tested with a real submission.**
+- **C7 Image focus batch (~9 files):** "Vertical focus (%)" exists only on
+  page hero images; carousel, discovery cards, rentals, photos page, awards,
+  show posters and About headshots still centre-crop.
+- **C8 Real photos** still needed in places; placeholders remain.
+- **C9 small:** `contact-forms.json` → `unavailable_note` empty (falls back
+  to a hard-coded default); `.btn-highlight` is local to ways-to-support.
+
+### Done this session (so don't reopen)
+Sponsor/Scholarship buttons, nav fixes, etc. from August are done (see the
+08-23 handover §4). This session's work is in §14.
+
+---
+
+## 13. GOING LIVE — CHECKLIST
+
+**Ten files contain `pyt-website.pages.dev`** (verified 2026-09-22):
+```
+astro.config.mjs                          <- site; builds form redirect URLs  (CRITICAL)
+public/admin/config.yml                   <- base_url; CMS LOGIN              (CRITICAL)
+src/components/ContactForm.astro          <- fallback only
+src/components/Footer.astro               <- fallback + comments
+src/pages/rentals.astro                   <- fallback only
+src/content/settings/nav-labels.json      <- site_origin; Spanish toggle
+src/content/settings/nav-menu.json        <- School Tickets link (NEW — fix now, N1)
+src/content/settings/audition-page.json   <- link inside CMS body copy
+src/content/settings/casting-page.json    <- link inside CMS body copy
+src/content/settings/donate-page.json     <- link inside CMS body copy
+```
+Wrong `base_url` → nobody can log into the CMS. Wrong `site` → every form
+lands on a dead page. The four content links should become root-relative
+(`/school-tickets/`, `/judy-robe-spirits-awards/` …).
+
+**Sitemap:** still parked until the switch; derive from `site`; do it with a
+hand-written endpoint, NOT `@astrojs/sitemap` (171KB `package-lock.json` =
+paste risk).
+
+**`public/_headers`:** needs no change at launch and must not be deleted.
+
+**Test after switching:** log out/in to the CMS; submit one form and confirm
+the Thank You page; click Español; click the links on Casting, Audition and
+Support; open `https://pytnet.org/wizard-of-oz-cast-page/` (§16); run the cast-page `curl` check on the real domain (1 line) and on an
+ordinary page (0 lines).
+
+Full plain-English version for the team: `HANDOVER-TO-LIVE-TEAM.md` §2.
+
+---
+
+## 14. WHAT WAS DONE THIS SESSION (2026-09-16 → 09-22), ALL LIVE UNLESS NOTED
+
+Verified on `main` by fresh clone; commit hashes in brackets.
+
+1. **Search engines:** `public/_headers` host-scoped noindex for *.pages.dev
+   (`d676c68`), later a path-scoped `/cast/*` noindex (`3bb68e2`).
+   HANDOVER-TO-LIVE-TEAM.md created (`4d158dd`) and updated (`055de08`);
+   HANDOVER-2026-08-23.md corrected (`9f5c75a`).
+2. **Home headline:** Archivo Black at the Option B size (`c4e3c99`) with a
+   CMS length hint (`e45ec39`); later an As-typed/UPPERCASE CMS switch with
+   case-dependent line-height (in `a16763b` + `9573e58`, shipped together
+   with the duotone batch).
+3. **Promo banner:** new component (`d27fd16`), home page wiring
+   (`1c6f1c6`), CMS fields (`9c688fb`), and a new settings record
+   `promo-banner.json` (created by the PM as a new file); later recoloured
+   pink/white under the duotone scheme.
+4. **Blog:** made by the PM in the CMS Pages collection — no code.
+5. **Duotone colour scheme** (`b216cc4` tokens, `dc9a858` Header,
+   `63788b7` Footer, `76a0ed4` PromoBanner, `a16763b` index, `ea1a6ca`
+   ways-to-support, `92ed0a2` about, `1107757` shows/index, `e89cdf1`
+   audition) and **duotone photos** (`5fdf6e3` BaseLayout, `a6a75d9`
+   global.css).
+6. **Full-width home carousel** (`329efd2`).
+7. **Transparent logo** (`48209e6` Logo, `b1d68ca` Header, PNG upload).
+8. **Cast page:** resources moved up, wider frames, cast list embedded;
+   first privately with a guard (`6bad35c`, `ad3324e`), then — after PYT
+   agreed the list may be public — like the schedule (`d006d43`,
+   `77e083b`); `/cast/*` noindex (`3bb68e2`).
+9. **Musicals intro paragraph** (`076e5cf`, `86a29d2`).
+10. **Page Hero Images photo made optional** (`d0a2bfa`); PM removed the
+    Stories on Stage and Studio Shows hero rows in the CMS.
+11. **Site-wide spacing & alignment** — built and verified, **NOT
+    COMMITTED** (§4).
+12. **Advice given (no code):** CMS login URL; cast page URL pattern;
+    isolating a Google Sheets tab via "Publish to web" (single sheet);
+    unpublishing an accidentally published workbook; how to run the
+    `curl` header check.
+
+---
+
+## 15. KEEPING RECORDS
+
+- **Commit this handover** to the repo root as `HANDOVER-2026-09-22.md`
+  (new file → "Create new file" and paste).
+- **`BUILD_LOG.md`:** the zip's `BUILD_LOG-ENTRIES-2026-09.md` holds this
+  session's entries in the log's style, newest first, ready to insert
+  directly under the log's 3-line header. BUILD_LOG.md is 415 lines, so
+  this is a careful paste: give the PM the full new file, its expected line
+  count and first line, or (safer) commit the entries as their own file
+  alongside the log and add a one-line pointer at the top of BUILD_LOG.md.
+- **Banners for stale files** (recommended, small): add one line at the top
+  of `START_HERE.md` and `IN_FLIGHT.md`: "⚠️ Superseded — read the newest
+  HANDOVER-*.md file instead." Consider the same pointer atop PROJECT_RULES.md
+  §Rule 4 ("delivery method superseded — see newest handover").
+- Keep future handovers dated, and update this file's "state" section by
+  fresh clone, never from memory.
+
+---
+
+## 16. ADDENDUM — WIZARD OF OZ CAST PAGE KEEPS ITS OLD ADDRESS (2026-09-22)
+
+**PYT requirement:** the one existing cast page must be reachable after launch
+at exactly `https://pytnet.org/wizard-of-oz-cast-page/` (its old-site
+address). All future cast pages use the normal `/cast/<show>/` address.
+
+**How:** two `200` (rewrite, not redirect) lines in `public/_redirects` serve
+`/cast/the-wizard-of-oz/` at `/wizard-of-oz-cast-page/` and
+`/wizard-of-oz-cast-page`; the address bar keeps the old address. Two
+matching blocks in `public/_headers` add `X-Robots-Tag: noindex, nofollow`.
+No page code changed, so the page (including the password gate and the §4
+spacing changes) is always exactly the `/cast/the-wizard-of-oz/` page.
+
+**Verified:** build clean (36 pages, unchanged); tested in Cloudflare's own
+local Pages emulator (`wrangler pages dev dist`): both old-address forms
+return 200 with the cast page and the noindex header; the served HTML is
+byte-identical to `/cast/the-wizard-of-oz/`; `/employment` still 301s to
+`/volunteer`; ordinary pages get no noindex. **Not verifiable in the
+sandbox:** the real Cloudflare deployment — PM checks
+`https://pyt-website.pages.dev/wizard-of-oz-cast-page/` after pasting.
+
+**Rules:** do NOT rename or delete the CMS cast page `the-wizard-of-oz` while
+the old address is in use (the rule points at it). No change needed at the
+domain switch (path-based). Add the post-switch check to the §13 tests.
+
+**Old-site addresses (same session, same file):** `public/_redirects` also
+301-forwards the old WordPress addresses to their new pages — 35 explicit
+old addresses (each with and without the final slash: 70 lines) plus six
+section catch-alls (`/boxoffice/stories-on-stage*`, `/boxoffice/*`,
+`/acting-classes-camps/*`, `/for-educators/*`, `/auditions/*`,
+`/get-involved/*`), placed last because Cloudflare uses the first match.
+Mapping taken from the live pytnet.org menu (fetched 2026-09-22) and a
+site search. Note `/boxoffice/the-wizard-of-oz/` (no -2) was the 2025
+Stories on Stage play → `/stories-on-stage/`; `-2` is the Nov 2026 musical.
+Judgement calls the PM/PYT may change: `/pyteens/` → Volunteer,
+`/about/pyt-spotlight/` → Blog, `/about/videos/` → Photos,
+`/about/alumni-news/` and other About sub-pages → About.
+Tested in `wrangler pages dev`: 70/70 listed addresses 301 to the intended
+page, 13 catch-all samples correct, every destination loads, all 36 new
+pages still 200, `/about/` unaffected. **Known:** the site has no 404 page,
+so Cloudflare shows the home page for any unknown address (SPA fallback);
+old `/files/…` image links are not covered. **Never add `/about/*` or `/*`.**
+
+**Trap recorded:** an earlier attempt this session built a second route file
+(`[show]-cast-page.astro`) by retyping the page. It produced the wrong address
+(`/the-wizard-of-oz-cast-page/`) and a password gate that could never unlock,
+yet the build passed. It was never committed. Lesson: for an alias address,
+use a `_redirects` 200 rewrite, and never retype a page file — copy it exactly.
