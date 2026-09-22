@@ -210,3 +210,58 @@ p {
     padding-block: var(--space-2xl);
   }
 }
+
+/* ============================================================
+   DUOTONE PHOTOS (2026-09-21, PM-approved mockup
+   "MOCKUP-duotone-photos-2-recommended")
+   ------------------------------------------------------------
+   On pages with SEVERAL photos, grid and carousel photos are shown in
+   teal duotone and bloom into FULL COLOUR when they matter:
+     - the carousel's featured (centred) photo — index.astro adds the
+       .is-featured class to it
+     - any card the visitor hovers over, or tabs to with the keyboard
+
+   Always FULL COLOUR, by design:
+     - any page with only one photo (a show's poster, a production's
+       poster, single hero images). The 2+ count is done by a small
+       script in BaseLayout.astro, which sets data-duotone on <html>.
+     - a page's own big hero photo, even on multi-photo pages — it isn't
+       in the list below.
+     - photos inside blog posts and other written page text.
+     - the logo.
+
+   The filter itself (#pyt-duotone, the teal colours) is defined in
+   BaseLayout.astro. Nothing here edits the photo files: originals in
+   the CMS are untouched, and new uploads get the treatment automatically.
+
+   TO ADD DUOTONE TO A NEW PHOTO GRID: add its image class to BOTH the
+   list below AND the DUO list in BaseLayout.astro, and add its card
+   class to the "bloom" list further down.
+   ============================================================ */
+/* Real photos only. The posters and board photos are <div>s that get a
+   background-image ONLY when a photo was uploaded; without one they are
+   a coloured placeholder with a title or initials, which must NOT be
+   tinted — hence [style*="background-image"] on those four. */
+[data-duotone] :is(.photo-strip-photo img, .card-photo, .sample-photo, .category-photo,
+  .board-photo[style*="background-image"], .show-poster[style*="background-image"],
+  .combined-poster[style*="background-image"], .production-poster[style*="background-image"]) {
+  filter: url(#pyt-duotone);
+}
+
+/* Bloom into colour. :focus-within covers keyboard users tabbing onto a
+   card's link. Touch screens have no hover, so on phones it is the
+   carousel's featured photo that carries the colour. */
+[data-duotone] .photo-strip-card.is-featured .photo-strip-photo img,
+[data-duotone] :is(.card, .board-card, .show-card, .combined-card, .production-card,
+  .sample-card, .category-card):is(:hover, :focus-within)
+  :is(.card-photo, .board-photo, .show-poster, .combined-poster, .production-poster,
+  .sample-photo, .category-photo) {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-duotone] :is(.photo-strip-photo img, .card-photo, .board-photo, .show-poster,
+    .combined-poster, .production-poster, .sample-photo, .category-photo) {
+    transition: filter 0.45s ease;
+  }
+}
