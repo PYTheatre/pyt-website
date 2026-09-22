@@ -34,10 +34,55 @@ const {
     <title>{title}</title>
   </head>
   <body>
+    {/* DUOTONE PHOTO FILTER (2026-09-21). Defined once here so every page
+        can use it; the rules for WHICH photos get it are in global.css
+        under "DUOTONE PHOTOS". It turns a photo greyscale, deepens the
+        midtones slightly (gamma 1.45, so bright outdoor shots don't wash
+        out), then maps dark -> deep teal #0b2a31 and light -> pale teal
+        #d3edf1.
+        These two colours are written as 0-1 numbers below because SVG
+        filter tables cannot read CSS variables. They are deliberately
+        near, not equal, to --surface-deep and --surface-brand in
+        tokens.css: a slightly lighter top tone keeps photos from looking
+        muddy. If the scheme's teal ever changes, change these too.
+        Hidden with width/height 0 rather than display:none, because some
+        browsers ignore filters defined inside a display:none SVG. */}
+    <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute">
+      <filter id="pyt-duotone" color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0" />
+        <feComponentTransfer>
+          <feFuncR type="gamma" exponent="1.45" />
+          <feFuncG type="gamma" exponent="1.45" />
+          <feFuncB type="gamma" exponent="1.45" />
+        </feComponentTransfer>
+        <feComponentTransfer>
+          <feFuncR type="table" tableValues="0.0431 0.8275" />
+          <feFuncG type="table" tableValues="0.1647 0.9294" />
+          <feFuncB type="table" tableValues="0.1922 0.9451" />
+        </feComponentTransfer>
+      </filter>
+    </svg>
     <Header />
     <main>
       <slot />
     </main>
+    {/* PM rule: a page with only ONE photo always shows it in full colour.
+        Duotone switches on only when a page has 2+ photos in a grid or
+        carousel — counted here, so if an editor trims a list down to one
+        show, that page goes back to full colour by itself. Also means
+        that with JavaScript off, every photo simply shows in colour.
+        Posters and board photos only count when they have a background
+        image — without one they are a coloured placeholder showing a
+        title or initials, which is not a photo and must not be tinted.
+        The selector list MUST match the one in global.css. */}
+    <script is:inline>
+      (function () {
+        var DUO = '.photo-strip-photo img, .card-photo, .sample-photo, .category-photo, .board-photo[style*="background-image"], .show-poster[style*="background-image"], .combined-poster[style*="background-image"], .production-poster[style*="background-image"]';
+        if (document.querySelectorAll(DUO).length > 1) {
+          document.documentElement.setAttribute("data-duotone", "");
+        }
+      })();
+    </script>
     <Footer />
   </body>
 </html>
