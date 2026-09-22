@@ -292,9 +292,9 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
     max-width: 64ch;
   }
 
-  .sheet-section {
-    padding-block: var(--space-md) var(--space-lg);
-  }
+  /* .sheet-section takes the standard .section padding (VERTICAL
+     RHYTHM, tokens.css); its own smaller values made the gaps between
+     the resources, cast list and schedule uneven. */
 
   .section-head {
     margin-bottom: var(--space-sm);
