@@ -31,7 +31,10 @@ import PageHero from "../components/PageHero.astro";
     text-align: center;
     max-width: 44ch;
     margin-inline: auto;
-    padding-block: var(--space-lg);
+    /* No extra padding: the section already provides the standard gap
+       (VERTICAL RHYTHM, tokens.css). Still centred on purpose — it is
+       the only thing on the page. */
+    padding-block: 0;
   }
   .coming-soon-eyebrow {
     font-family: var(--font-heading);
