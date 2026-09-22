@@ -30,6 +30,28 @@
 
   Every page uses THIS component, so swapping the file here updates
   the logo everywhere at once, at both sizes.
+
+  TWO DIFFERENT FILES (2026-09-21):
+   - size="nav" uses /uploads/pyt-logo-transparent.png — a TRANSPARENT
+     version, because the header and footer are pale teal under the
+     duotone scheme and the original file's white background showed as
+     a white box. "nav" size covers the header on every page except the
+     homepage, and the footer on EVERY page (the homepage included).
+     The PM's transparent file had a pale rim left over from removing
+     its white background (4-10px wide — the file had been enlarged
+     from a smaller original). The rim was removed by un-mixing the
+     white out of each edge pixel, and the file resized to 600px wide
+     (it had been 1125px / 393KB for a logo shown ~100px wide). If a
+     new transparent logo is supplied, check its edges on teal first.
+   - size="hero" (homepage, on white) still uses the ORIGINAL
+     /uploads/pyt-logo-stars.png, deliberately: its crop/offset numbers
+     below were measured from that exact file, and it sits on white.
+
+  The transparent file is cropped TIGHTER than the original, so at the
+  same height its letters would look ~6% bigger. Its heights (42px /
+  51px, against the original's 44px / 54px) were calculated so the
+  visible PYT letters + wordmark are the SAME size as before — the
+  header width changes by under 2px. If you swap this file, re-measure.
 */
 interface Props {
   size?: "nav" | "hero";
@@ -45,7 +67,7 @@ const { size = "nav" } = Astro.props;
   </a>
 ) : (
   <a href="/" class="logo logo-nav" aria-label="Peninsula Youth Theatre — home">
-    <img src="/uploads/pyt-logo-stars.png" alt="Peninsula Youth Theatre" class="logo-mark" width="2526" height="1398" />
+    <img src="/uploads/pyt-logo-transparent.png" alt="Peninsula Youth Theatre" class="logo-mark" width="600" height="309" />
   </a>
 )}
 
@@ -68,7 +90,7 @@ const { size = "nav" } = Astro.props;
   }
 
   .logo-mark {
-    height: 44px;
+    height: 42px;   /* transparent file — see the TWO DIFFERENT FILES note */
     width: auto;
     display: block;
     flex-shrink: 0;
@@ -76,7 +98,7 @@ const { size = "nav" } = Astro.props;
 
   @media (min-width: 520px) {
     .logo-nav .logo-mark {
-      height: 54px;
+      height: 51px;   /* transparent file — see the TWO DIFFERENT FILES note */
     }
   }
 
