@@ -55,8 +55,12 @@ const hasHtmlLede = Boolean(ledeHtml && ledeHtml.trim());
 <PageHeroImage />
 
 <style>
+  /* Top and bottom come from the VERTICAL RHYTHM tokens (tokens.css).
+     The bottom is deliberately small: the next section's own top
+     padding supplies the rest of the title -> content gap. Was
+     96px / 40px, which with the section's 96px made ~136px. */
   .page-hero {
-    padding-block: var(--space-xl) var(--space-lg);
+    padding-block: var(--page-top) var(--hero-gap);
   }
   .page-hero h1 {
     margin-block: 0.6rem 0;
@@ -89,10 +93,5 @@ const hasHtmlLede = Boolean(ledeHtml && ledeHtml.trim());
 
   .page-hero-lede-rich :global(a:hover) {
     color: var(--accent-deep);
-  }
-  @media (min-width: 720px) {
-    .page-hero {
-      padding-block: var(--space-2xl) var(--space-lg);
-    }
   }
 </style>
