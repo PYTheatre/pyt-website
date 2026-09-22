@@ -307,15 +307,24 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
   }
 
   /* Responsive sheet frame */
-  /* WIDE FRAMES (2026-09-21): the Google Sheet embeds break out of the
-     text column so wide schedules don't run off the right edge. Up to
-     1600px wide, centred, with the same side gutters as .container; the
-     heading and note above stay in the normal column. Google decides
-     the sheet's own column widths — if a sheet is still wider than
-     this, the frame scrolls sideways inside itself, never the page. */
+  /* SHEET WIDTH (2026-09-22, PM request: "narrower, and aligned left
+     with the headings"). The embeds used to break out of the page and
+     run up to 1600px, which started them well to the LEFT of the
+     "Cast list" and "Rehearsal schedule" headings above them. They now
+     share the page's own width and gutters, so an embed's left edge is
+     exactly the heading's left edge: 1060px on a laptop, down from
+     1360px, and the full width on a phone as before.
+
+     TO MAKE THEM NARROWER STILL: add a max-width to .sheet-frame below
+     (e.g. 820px). Because .sheet-wide is left-aligned in the page, a
+     narrower frame stays lined up with the heading rather than drifting
+     to the middle. Google decides the sheet's own column widths — if a
+     sheet is wider than the frame, it scrolls sideways inside itself,
+     never the page — so don't go so narrow that the schedule needs
+     constant scrolling. */
   .sheet-wide {
     width: 100%;
-    max-width: 1600px;
+    max-width: var(--max-width);
     margin-inline: auto;
     padding-inline: var(--space-md);
   }
