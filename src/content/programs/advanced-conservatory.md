@@ -20,6 +20,6 @@ description: >-
 schedule: ""
 tuition: $385-420
 registration_status: Closed
-registration_note: Registration now closed until Fall 2027
+registration_note: Registration full until Fall 2027
 scholarships_available: true
 ---
