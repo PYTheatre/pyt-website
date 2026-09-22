@@ -55,27 +55,46 @@ const pct = Math.round((raised / goal) * 100);
 // Thermometer fill height, capped 0–100 so it never overflows the tube.
 const fillPct = Math.min(100, Math.max(0, pct));
 
-// --- Thermometer: HORIZONTAL (2026-08-20) ---
-// Rewritten from a vertical tube to a horizontal bar, approved via a
-// static mockup first (thermo_horizontal_v2.png). The vertical version
-// left large empty margins either side of a narrow column and, on
-// phones, wasted most of the screen width while pushing the Donate
-// button far down. A bar spans the full text column and reads
-// left-to-right like the copy above it.
+// --- Thermometer: "200k for 2026!" graphic (2026-09-22) ---
+// Redrawn from the PM's reference picture ("pyt-carousel-thermometer.png"):
+// a big multicoloured title, a horizontal bar with a bulb on the left,
+// $50k / $100k / $150k ticks, and a star-shaped GOAL badge at the end.
+// It is ONE inline SVG, so the whole drawing scales as a single piece
+// from a phone to a desktop and nothing can drift out of line.
 //
-// The scale is a straightforward percentage of the bar's width, so
-// unlike the vertical version there's no rounded-cap geometry to work
-// around — the fill and the tick marks share one percentage scale by
-// construction and can't drift apart.
+// SVG coordinates (viewBox 0 0 1000 222): the scale runs from x=55
+// ($0) to x=795 (the goal). The fill and the ticks both use toX(), so
+// they share one scale by construction.
+const THERMO_X0 = 55;
+const THERMO_X1 = 795;
+const toX = (fraction: number) => THERMO_X0 + (THERMO_X1 - THERMO_X0) * fraction;
+const fillX = toX(fillPct / 100);
 const tickFractions = [0.25, 0.5, 0.75];
 const thermoTicks = tickFractions.map((f) => ({
-  // Abbreviated ($50k, not $50,000) — spelled out, these collide on a
-  // phone-width bar.
+  // Abbreviated ($50k, not $50,000) so they fit under the bar on phones.
   label: `$${Math.round((goal * f) / 1000)}k`,
-  leftPct: f * 100,
+  x: toX(f),
 }));
-// No tick at 100%: it lands on the bar's rounded end where there's no
-// clean place for it, and the GOAL badge already marks that end.
+// No tick at 100%: the GOAL star marks that end.
+
+// Star badge: a six-point star, 12 corners alternating between an outer
+// and inner radius, centred at (900, 111).
+const starPoints = Array.from({ length: 12 }, (_, i) => {
+  const r = i % 2 === 0 ? 100 : 57.7;
+  const a = (Math.PI / 6) * i - Math.PI / 2;
+  return `${(900 + r * Math.cos(a)).toFixed(1)},${(111 + r * Math.sin(a)).toFixed(1)}`;
+}).join(" ");
+
+// Title, e.g. "200k for 2026!" — built from the campaign settings, so it
+// updates itself when the goal or campaign changes in the CMS
+// (Support & Fundraising -> Donation Campaign). The year is taken from
+// the campaign label ("2026 Annual Campaign"), or this year if the label
+// has none. The "200k" part is coloured letter by letter in the four
+// logo colours, like the reference picture.
+const campaignYear = (campaignLabel || "").match(/\b(20\d\d)\b/)?.[1] || String(new Date().getFullYear());
+const goalShort = goal >= 1000 ? `${Math.round(goal / 1000)}k` : `$${goal}`;
+const titleColours = ["var(--thermo-c1)", "var(--thermo-c2)", "var(--thermo-c3)", "var(--thermo-c4)"];
+const goalChars = [...goalShort].map((ch, i) => ({ ch, colour: titleColours[i % titleColours.length] }));
  
 // Donation-teaser heading. CMS-editable (home.donate_heading). If the
 // field is empty, fall back to the original goal-based wording so the
@@ -582,38 +601,39 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
       <p class="donate-lede">{home.donate_lede}</p>
  
-      <!-- Horizontal campaign bar (2026-08-20). One role="img" wrapper
-           carries the whole thing for screen readers, so the decorative
-           ticks and GOAL badge below are aria-hidden rather than being
-           read out as stray text. -->
-      <div class="thermo" role="img"
-           aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete, from ${donorCount} donors`}>
-        <p class="thermo-goal-flag" aria-hidden="true">Goal</p>
-
-        <div class="thermo-track-row">
-          <span class="thermo-bulb" aria-hidden="true"></span>
-          <div class="thermo-track">
-            <div class="thermo-fill" style={`width: ${fillPct}%`}></div>
-          </div>
-        </div>
-
-        <div class="thermo-ticks" aria-hidden="true">
-          {thermoTicks.map((t) => (
-            <span class="thermo-tick" style={`left: ${t.leftPct}%`}>
-              <span class="thermo-tick-mark"></span>
-              <span class="thermo-tick-label">{t.label}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <p class="thermo-meta">
-        <strong>${raised.toLocaleString()}</strong> raised
-        <span class="thermo-sep" aria-hidden="true">&middot;</span>
-        <strong>{donorCount}</strong> donors
-        <span class="thermo-sep" aria-hidden="true">&middot;</span>
-        <strong>{pct}%</strong> of goal
+      <!-- Campaign graphic (2026-09-22). The title is real text; the
+           drawing below it is one SVG with a role="img" label, so screen
+           readers hear the actual figures ($ raised, goal, %, donors)
+           even though they're no longer printed as a line of text. -->
+      <p class="thermo-title">
+        {goalChars.map((c) => <span style={`color: ${c.colour}`}>{c.ch}</span>)}
+        {" "}for {campaignYear}!
       </p>
+
+      <svg class="thermo" viewBox="0 0 1000 222" role="img"
+           aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete, from ${donorCount} donors`}>
+        <defs>
+          <clipPath id="thermo-inner">
+            <rect x="59" y="76" width="732" height="70" rx="35" />
+          </clipPath>
+        </defs>
+        <!-- tube: white inside, magenta outline -->
+        <rect x="54.5" y="71.5" width="741" height="79" rx="39.5" fill="#ffffff" stroke="var(--thermo-outline)" stroke-width="9" />
+        <!-- fill, clipped to the tube's rounded inside -->
+        <rect x="0" y="76" width={fillX} height="70" fill="var(--thermo-fill)" clip-path="url(#thermo-inner)" />
+        <!-- bulb -->
+        <circle cx="56" cy="111" r="56" fill="var(--thermo-fill)" />
+        <!-- ticks -->
+        {thermoTicks.map((t) => (
+          <g aria-hidden="true">
+            <line x1={t.x} y1="155" x2={t.x} y2="170" stroke="var(--thermo-tick)" stroke-width="3" />
+            <text x={t.x} y="200" text-anchor="middle" class="thermo-tick-label">{t.label}</text>
+          </g>
+        ))}
+        <!-- GOAL star -->
+        <polygon points={starPoints} fill="var(--thermo-star)" stroke="var(--thermo-fill)" stroke-width="10" stroke-linejoin="miter" />
+        <text x="900" y="124" text-anchor="middle" class="thermo-goal-text" aria-hidden="true">GOAL</text>
+      </svg>
 
       <div class="donate-teaser-btn-wrap">
         <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn donate-teaser-btn" target="_blank" rel="noopener">{home.donate_button_label}</a>
@@ -1201,10 +1221,26 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     color: var(--on-surface-deep);
   }
  
+  /* CENTRED (2026-09-22, PM request). Was a fixed 4-column grid, so
+     with three numbers the boxes sat on the left with an empty slot on
+     the right. Now a centred, wrapping row: each box keeps exactly the
+     width it had (a quarter of the row on wider screens, half on
+     phones), and however many numbers there are, the row is centred.
+     A 5th number starts a second, centred row. */
   .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 0.9rem;
+  }
+
+  .stat-grid > .stat {
+    flex: 0 1 calc((100% - 0.9rem) / 2);
+  }
+
+  .impact .section-head {
+    margin-inline: auto;
+    text-align: center;
   }
  
   /* Solid colour boxes (2026-08-21). Figure and label are both centred,
@@ -1347,150 +1383,76 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     letter-spacing: 0.01em;
   }
 
-  /* ---- Campaign progress bar (horizontal, 2026-08-20) ---- */
-  /* Replaces the vertical tube. Sized in percentages off the container
-     width rather than fixed pixels, so it fills whatever column it
-     sits in and needs no separate mobile geometry. */
-  .thermo {
-    position: relative;
-    margin-bottom: var(--space-md);
-    /* Matches the Ways to Support page (2026-08-21). Width is the ONLY
-       change: the bar previously stretched the full container while the
-       copy above it did not, and that mismatch is what made it look
-       oversized. Position, height, colours and the button are untouched. */
-    max-width: 620px;
+  /* ---- Campaign graphic (2026-09-22) ---- */
+  /* Colours taken from the PM's reference picture. They are set here, on
+     the donation section only, so nothing else on the site changes.
+     The "200k" letters use the four PYT logo colours. */
+  .donate-teaser {
+    --thermo-outline: #cc00cc;  /* magenta: tube outline + title   */
+    --thermo-fill: #00bbbb;     /* bright teal: fill, bulb, star edge */
+    --thermo-star: #f7e800;     /* yellow star                        */
+    --thermo-tick: #e3a6e3;     /* pale magenta tick marks            */
+    --thermo-tick-text: #b068b6;/* muted magenta tick labels          */
+    --thermo-c1: #c1287b;       /* logo pink  */
+    --thermo-c2: #f2b705;       /* logo gold  */
+    --thermo-c3: #4f9a3a;       /* logo green */
+    --thermo-c4: #2f9fd0;       /* logo blue  */
   }
 
-  /* "Goal" sits above the right-hand end of the bar. */
-  .thermo-goal-flag {
-    margin: 0 0 0.35rem;
-    text-align: right;
-    font-family: var(--font-body);
-    font-size: 0.82rem;
+  /* Whole section centred, like the reference picture (it was left-
+     aligned text with a centred button). .section-head carries a
+     max-width, so margin-inline:auto is what centres the box itself. */
+  .donate-teaser .section-head {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .donate-teaser .donate-lede {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .thermo-title {
+    /* Baloo 2 is already loaded site-wide (the Values band uses it). */
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
     font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink);
+    font-size: clamp(2.2rem, 7vw, 3.6rem);
+    line-height: 1.05;
+    color: var(--thermo-outline);
+    text-align: center;
+    margin: var(--space-lg) 0 var(--space-md);
   }
 
-  /* Bulb + track share a row so they sit on one centreline. */
-  .thermo-track-row {
-    display: flex;
-    align-items: center;
-  }
-
-  .thermo-bulb {
-    flex-shrink: 0;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--campaign-fill);
-    /* Deep teal, not pink (duotone, 2026-09-21): the bar is information,
-       not something to click. Same for the track, ticks, flag and the
-       raised/donors figures below. */
-    border: 3px solid var(--ink);
-    /* Overlaps the track's rounded left end so the two read as one
-       object rather than a circle sitting next to a bar. */
-    margin-right: -10px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .thermo-track {
-    flex: 1;
-    height: 22px;
-    border: 3px solid var(--ink);
-    border-radius: var(--radius-pill);
-    background: var(--paper);
-    /* Clips the fill's square right edge to the rounded end. */
-    overflow: hidden;
-  }
-
-  .thermo-fill {
-    height: 100%;
-    background: var(--campaign-fill);
-    border-radius: var(--radius-pill) 0 0 var(--radius-pill);
-    transition: width 0.5s ease;
-  }
-
-  /* Ticks are absolutely positioned as a percentage across the track,
-     so they line up with the fill by construction — the two can't drift
-     apart the way they did when the vertical version measured them on
-     different scales. */
-  .thermo-ticks {
-    position: relative;
-    /* Matches .thermo-bulb's width minus its negative margin, so 0% on
-       this layer is the same point as 0% on the track above. */
-    margin-left: 24px;
-    height: 34px;
-  }
-
-  .thermo-tick {
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-  }
-
-  .thermo-tick-mark {
-    width: 2px;
-    height: 9px;
-    background: var(--ink);
-    border-radius: 1px;
+  /* The drawing: one SVG that scales as a unit. */
+  .thermo {
+    display: block;
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    margin: 0 auto var(--space-lg);
+    overflow: visible;
   }
 
   .thermo-tick-label {
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-    white-space: nowrap;
-  }
-
-  /* One line, one font — body font throughout, with just the numbers
-     picked out in pink. Deliberately NOT the heading font: mixing the
-     two put the runs on different baselines and read as ragged. */
-  .thermo-meta {
-    font-family: var(--font-body);
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0 0 var(--space-md);
-    /* Wraps as whole phrases on narrow screens instead of breaking
-       mid-figure. */
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.3rem;
-  }
-
-  .thermo-meta strong {
-    color: var(--ink);
+    font-family: "Baloo 2", var(--font-body), sans-serif;
     font-weight: 700;
+    font-size: 30px;   /* SVG units — scales with the drawing */
+    fill: var(--thermo-tick-text);
   }
 
-  .thermo-sep {
-    color: var(--ink-soft);
-    padding-inline: 0.2rem;
-  }
-
+  /* On phones the whole drawing shrinks to about a third, which would
+     make the tick labels ~9px. Larger SVG text there keeps them ~12-15px. */
   @media (max-width: 560px) {
-    .thermo-bulb {
-      width: 28px;
-      height: 28px;
+    .thermo-tick-label {
+      font-size: 44px;
     }
-    .thermo-track {
-      height: 18px;
-    }
-    .thermo-ticks {
-      margin-left: 20px;
-    }
-    .thermo-meta {
-      font-size: 0.98rem;
-    }
+  }
+
+  .thermo-goal-text {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    font-size: 40px;   /* SVG units */
+    fill: var(--thermo-outline);
   }
 
   /* Wrapper just for centering — the button itself is inline-flex
@@ -1506,6 +1468,9 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      .btn-primary at the default button size, left-aligned under the
      lede text. */
   .donate-teaser-btn {
+    /* The site's standard button pink (PM choice, 2026-09-22): it stays
+       --highlight like every other button, NOT the brighter magenta of
+       the campaign graphic above it. */
     background: var(--highlight);
     color: var(--highlight-text);
     font-size: 1.35rem;
@@ -1520,8 +1485,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
  
   /* ============ WIDER SCREENS ============ */
   @media (min-width: 720px) {
-    .stat-grid {
-      grid-template-columns: repeat(4, 1fr);
+    .stat-grid > .stat {
+      flex-basis: calc((100% - 3 * 0.9rem) / 4);
     }
     .card-grid {
       grid-template-columns: repeat(2, 1fr);
