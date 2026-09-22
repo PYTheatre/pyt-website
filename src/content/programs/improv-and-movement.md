@@ -1,12 +1,13 @@
 ---
 name: CAMPS 2026-2027
-eyebrow: ""
 program_type: Camp
 age_range: Coming soon
 season: Summer
+registration_url: ""
+eyebrow: ""
 description: Coming soon
 schedule: ""
 tuition: ""
-registration_url: ""
+registration_status: Coming soon
 scholarships_available: false
 ---
