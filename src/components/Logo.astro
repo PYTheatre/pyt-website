@@ -55,12 +55,13 @@
 */
 interface Props {
   size?: "nav" | "hero";
-  /* MARK ONLY (2026-09-22, PM request: "look how Apple's logo and nav
-     items are uniform"). The header shows just the "PYT" letters,
-     cropped out of the same file — no wordmark, no stars — so the logo
-     reads as one more item in the menu rather than a different kind of
-     object. The FOOTER keeps the full lockup, wordmark and all, which
-     is why this is a prop rather than a change to the nav size. */
+  /* SIZED LIKE A NAV BUTTON (2026-09-22, PM request: "treat the full
+     logo as a button the same size as the other buttons"). The header
+     logo is the WHOLE logo — letters and wordmark, as it always was —
+     in a box exactly as tall as the Tickets / Calendar / Register
+     buttons beside it, so its top and bottom edges line up with theirs.
+     An earlier attempt cropped it to the "PYT" letters; that is gone.
+     The FOOTER is unaffected and keeps its larger logo. */
   mark?: boolean;
 }
 const { size = "nav", mark = false } = Astro.props;
@@ -74,9 +75,7 @@ const { size = "nav", mark = false } = Astro.props;
   </a>
 ) : (
   <a href="/" class={`logo logo-nav ${mark ? "logo-nav-mark" : ""}`} aria-label="Peninsula Youth Theatre — home">
-    <span class="logo-nav-frame">
-      <img src="/uploads/pyt-logo-transparent.png" alt="Peninsula Youth Theatre" class="logo-mark" width="600" height="309" />
-    </span>
+    <img src="/uploads/pyt-logo-transparent.png" alt="Peninsula Youth Theatre" class="logo-mark" width="600" height="309" />
   </a>
 )}
 
@@ -111,53 +110,26 @@ const { size = "nav", mark = false } = Astro.props;
     }
   }
 
-  /* MARK-ONLY CROP (2026-09-22) — the header version.
-     Measured on the actual pixels of pyt-logo-transparent.png (600 x
-     309): the big "PYT" letters occupy rows 62-238 and columns 51-557.
-     The frame is a window of that size and the image is scaled up and
-     shifted so only those letters show. Everything is expressed against
-     --mark-h (the height of the visible letters), so changing that one
-     number resizes the mark correctly:
-       image height = 309/176 = 1.7557
-       frame width  = 506/176 = 2.8750
-       shift up     =  62/176 = 0.3523
-       shift left   =  51/176 = 0.2898
-     Because the crop starts exactly at the ink, the mark needs no
-     alignment nudge: its left edge IS the letters' left edge.
-     If the logo file is ever replaced, re-measure those four rows and
-     columns. */
-  .logo-nav-mark .logo-nav-frame {
-    --mark-h: 20px;
-    position: relative;
-    display: block;
-    overflow: hidden;
-    height: var(--mark-h);
-    width: calc(var(--mark-h) * 2.875);
+  /* The header logo's BOX is one nav item tall (--nav-item-h, set in
+     Header.astro), and the image sits inside it with a little air top
+     and bottom, the way the type does inside the buttons. Both numbers
+     come from the header, so the bar stays consistent if its height is
+     ever changed. */
+  .logo-nav-mark {
+    height: var(--logo-box-h, 34px);
   }
 
+  /* A SEPARATE VARIABLE ON PURPOSE: --logo-h is set on the image itself
+     by the >=520px rule above, so a header value inherited from the
+     link could never win. --logo-img-h is read only here. The letter-
+     alignment margins are restated from it for the same reason, so they
+     match this image's height rather than the footer's. */
   .logo-nav-mark .logo-mark {
-    position: absolute;
-    top: calc(var(--mark-h) * -0.3523);
-    left: calc(var(--mark-h) * -0.2898);
-    height: calc(var(--mark-h) * 1.7557);
-    width: auto;
-    margin: 0;
+    height: var(--logo-img-h, 26px);
+    margin-left: calc(var(--logo-img-h, 26px) * -0.1295);
+    margin-right: calc(var(--logo-img-h, 26px) * -0.068);
   }
 
-  /* LETTERS FLUSH WITH THE EDGE, NOT THE FILE (2026-09-22, PM request).
-     The transparent logo file has decorative stars that stick out past
-     the lettering: measured on the actual pixels, the "PYT"/wordmark ink
-     starts 6.67% of the file's width in from the left and stops 3.50%
-     short of the right. Lining the FILE up with the menu therefore left
-     the letters looking indented. These negative margins pull the file
-     out by exactly those amounts, so the LETTERS line up with whatever
-     sits beside the logo. The numbers are the measured fractions times
-     the file's aspect ratio (600 / 309 = 1.942), expressed against the
-     logo's own height so they follow any size change:
-       left  = 0.0667 x 1.942 = 0.1295
-       right = 0.0350 x 1.942 = 0.0680
-     The stars still show — nothing is cropped. If the logo FILE is ever
-     replaced, re-measure these two fractions. */
   .logo-nav .logo-mark {
     margin-left: calc(var(--logo-h, 42px) * -0.1295);
     margin-right: calc(var(--logo-h, 42px) * -0.068);
@@ -172,7 +144,8 @@ const { size = "nav", mark = false } = Astro.props;
      line-height (see index.astro) — if the headline font-size,
      line-height, or typeface changes again, these should be
      revisited together. */
-  /* QUARTER SIZE (2026-09-22, PM request): every number in this block and
+  /* HALF SIZE (2026-09-22, PM request — quarter size was tried live and
+     was too small): every number in this block and
      the two below is exactly half what it was, so the crop and the
      offset still line up the same way — the stars poke above the frame
      and the wordmark sits on its bottom edge. Was 50 / 127.2 on phones
@@ -181,27 +154,27 @@ const { size = "nav", mark = false } = Astro.props;
     position: relative;
     display: block;
     overflow: visible;
-    height: 12.5px;
-    width: 31.8px;
+    height: 25px;
+    width: 63.6px;
   }
 
   .logo-mark-hero {
     position: absolute;
     left: 0;
-    top: -4.65px;
-    height: 17.6px;
+    top: -9.3px;
+    height: 35.2px;
     width: auto;
   }
 
   @media (min-width: 720px) {
     .logo-hero-frame {
-      height: 21.8px;
-      width: 55.3px;
+      height: 43.5px;
+      width: 110.7px;
     }
 
     .logo-mark-hero {
-      top: -8.1px;
-      height: 30.6px;
+      top: -16.2px;
+      height: 61.3px;
     }
   }
 </style>
