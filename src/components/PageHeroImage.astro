@@ -99,7 +99,9 @@ const focus = objectPosition(focusProp !== undefined && focusProp !== null && fo
 
 <style>
   .page-hero-image {
-    margin-bottom: var(--space-lg);
+    /* Small on purpose: the next section's top padding supplies the rest
+       of the photo -> content gap (VERTICAL RHYTHM, tokens.css). */
+    margin-bottom: var(--hero-gap);
   }
 
   .page-hero-img {
