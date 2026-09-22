@@ -275,10 +275,16 @@ function getInitials(name: string): string {
     margin-bottom: var(--space-md);
   }
 
+  /* SAME STYLE AS EVERY OTHER CONTACT BOX ON THE SITE (2026-09-22, PM
+     request). Was a pale-teal panel with a plain grey border — the only
+     contact box on the site that didn't match the pink-accent style
+     ContactForm.astro now uses everywhere else. White background, pink
+     border, thicker on the left. */
   .contact-card {
     padding: var(--space-lg);
-    background: var(--paper-warm);
-    border: 1px solid var(--line);
+    background: var(--paper);
+    border: 1px solid var(--accent);
+    border-left-width: 5px;
     border-radius: var(--radius);
   }
 
@@ -318,8 +324,13 @@ function getInitials(name: string): string {
     text-decoration: underline;
   }
 
+  /* FIXED 2026-09-22 (PM: "squashed and inelegant") — this had a
+     margin-top pulling it away from the address/EIN list above, but no
+     margin-bottom, so the form's "Your name" label sat right underneath
+     it with no breathing room at all. */
   .nonprofit-note {
     margin-top: var(--space-md);
+    margin-bottom: var(--space-md);
     padding-top: var(--space-md);
     border-top: 1px solid var(--line);
     font-size: 0.85rem;
