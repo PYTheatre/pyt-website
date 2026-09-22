@@ -344,7 +344,13 @@ function getInitials(name: string): string {
   .board-photo {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
+    /* Placeholder for people with no photo yet: DEEP TEAL with white
+       initials (13.7:1). Was a pink gradient until the duotone scheme
+       (2026-09-21) — with several members photo-less, the page became a
+       wall of pink squares, and pink is reserved for things you click.
+       When a photo IS uploaded, the inline background-image covers this
+       and global.css applies the duotone photo filter. */
+    background: var(--surface-deep);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
