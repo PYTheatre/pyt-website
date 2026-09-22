@@ -21,6 +21,11 @@
       "title": "School Play In A Box - bring PYT to your school.",
       "url": "/school-play-in-a-box",
       "image": "/uploads/img_0215.jpg"
+    },
+    {
+      "image": "/uploads/pyt-carousel-thermometer.png",
+      "url": "https://pyt.secure.nonprofitsoapbox.com/donate",
+      "title": "Support PYT's annual campaign"
     }
   ],
   "hero_primary_url": "/shows",
