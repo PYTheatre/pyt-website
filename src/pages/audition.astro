@@ -326,14 +326,18 @@ const faqs = Array.isArray(page.faqs)
     margin-bottom: 0.5rem;
   }
 
+  /* Category tags. DUOTONE (2026-09-21): three STRENGTHS OF TEAL
+     instead of pink / green / blue, so the three stay easy to tell
+     apart without adding colours. Musical = deep teal, Studio = pale
+     teal, Stories = teal wash with a fine outline. All measured 9:1+. */
   .label-musical {
-    color: var(--accent-deep);
-    background: var(--accent-soft);
+    color: var(--on-surface-deep);
+    background: var(--surface-deep);
   }
 
   .label-studio {
-    color: #27500a;
-    background: #eaf3de;
+    color: var(--on-surface-brand);
+    background: var(--surface-brand);
   }
 
   /* Fallback for any future production type that isn't one of the two
