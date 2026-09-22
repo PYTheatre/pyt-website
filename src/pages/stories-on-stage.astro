@@ -292,7 +292,12 @@ const productions = (await getCollection("storiesOnStage")).sort(
     border-block: 1px solid var(--line);
   }
 
-  .auditions-inner {
+/* LEFT-ALIGNED READING WIDTH (2026-09-21). The width limit is on the
+     CHILDREN, not this box. This box is also a .container, and
+     .container centres itself — so limiting ITS width used to push the
+     whole column into the middle of the page while the title, photo and
+     buttons stayed on the left edge. Now everything shares one edge. */
+  .auditions-inner > :global(*) {
     max-width: 68ch;
   }
 
@@ -361,8 +366,12 @@ const productions = (await getCollection("storiesOnStage")).sort(
   }
 
   /* ---- Explainer section ---- */
-  .explainer-inner {
-    max-width: 68ch;
+  .explainer-inner > :global(*) {
+    max-width: 68ch;   /* left-aligned reading width — see .auditions-inner */
+  }
+
+  .explainer-body > p:last-child {
+    margin-bottom: 0;   /* the section padding provides the gap */
   }
 
   .explainer-body p {
