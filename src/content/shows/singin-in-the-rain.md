@@ -1,7 +1,7 @@
 ---
 production_type: Musical
 eyebrow: ""
-title: SINGIN' IN THE RAIN
+title: Singin' In The Rain
 start_date: 2027-03-13
 end_date: 2027-03-21
 date_display: March 2027
