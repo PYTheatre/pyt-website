@@ -249,22 +249,17 @@ const recognitionGroups = (recognition.groups || []).filter(
   {showGiving && (
     <section class="section giving-section" id="giving-levels">
       <div class="container">
-        <!-- Heading and intro on the left, Donate top-right on wide
-             screens; stacked in that order on a phone. -->
+        <!-- Donate button removed 2026-09-22 (PM request) — this
+             section now has only the heading and intro; the campaign
+             block above it, and the Giving Levels list below it, each
+             already have their own Donate. giftButtonLabel and
+             soapboxDonateUrl stay defined further up the file: other
+             buttons on this page still use soapboxDonateUrl. -->
         <div class="giving-head">
           <div class="giving-head-text">
             {giftHeading && <h2 class="section-head">{giftHeading}</h2>}
             {giftIntro && <div class="giving-intro rich" set:html={md(giftIntro)} />}
           </div>
-
-          <a
-            href={soapboxDonateUrl}
-            class="btn btn-highlight giving-donate"
-            target="_blank"
-            rel="noopener"
-          >
-            {giftButtonLabel}
-          </a>
         </div>
 
         {giftItems.length > 0 && (
@@ -582,14 +577,11 @@ const recognitionGroups = (recognition.groups || []).filter(
     --giving-rule: var(--nav-pill);
   }
 
-  /* Heading + intro on the left, Donate on the right (2026-08-21). Stacks
-     on a phone, where the button lands under the intro rather than at the
-     very bottom of the list. */
+  /* Heading + intro only (2026-08-21 layout; Donate button removed
+     2026-09-22). The row/space-between rule that positioned the button
+     top-right on wide screens is gone with it — this is just the
+     heading block now, at every width. */
   .giving-head {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-md);
     margin-bottom: var(--space-lg);
   }
 
@@ -602,21 +594,6 @@ const recognitionGroups = (recognition.groups || []).filter(
     max-width: 62ch;
     font-size: 1.05rem;
     margin-bottom: 0;
-  }
-
-  .giving-donate {
-    font-size: 1.1rem;
-    padding: 0.85rem 2.4rem;
-    flex-shrink: 0;
-  }
-
-  @media (min-width: 720px) {
-    .giving-head {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--space-xl);
-    }
   }
 
   .giving-list {
