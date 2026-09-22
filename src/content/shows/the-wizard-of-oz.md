@@ -20,5 +20,6 @@ audition_display: August 2026
 double_cast: true
 cast_a_name: Ruby
 cast_b_name: Emerald
+performances: []
 eyebrow: ""
 ---
