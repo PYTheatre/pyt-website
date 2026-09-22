@@ -285,6 +285,38 @@ const recognitionGroups = (recognition.groups || []).filter(
     </section>
   )}
 
+  <!-- ============ SHOW & SEASON SPONSORSHIP ============ -->
+  {showSponsor && (
+    <section class="section sponsor-section" id="sponsor">
+      <div class="container">
+        {sponsorHeading && <h2 class="section-head">{sponsorHeading}</h2>}
+        {sponsorIntro && <div class="sponsor-intro rich" set:html={md(sponsorIntro)} />}
+
+        {sponsorItems.length > 0 && (
+          <ul class="tier-list sponsor-list">
+            {sponsorItems.map((item: any) => (
+              <li class="tier-card">
+                {txt(item.price) && <p class="tier-range">{txt(item.price)}</p>}
+                {txt(item.title) && <h3>{txt(item.title)}</h3>}
+                {txt(item.description) && (
+                  <div class="tier-description rich" set:html={md(item.description)} />
+                )}
+                <a
+                  href={txt(item.button_url) || soapboxDonateUrl}
+                  class="btn btn-primary sponsor-btn"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {txt(item.button_label) || txt(item.title) || "Sponsor"}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </section>
+  )}
+
   <!-- ============ CORPORATE SPONSORSHIP ============ -->
   {showCorporate && (
     <section class="section corporate-section" id="corporate">
@@ -331,38 +363,6 @@ const recognitionGroups = (recognition.groups || []).filter(
             compact={true}
           />
         </div>
-      </div>
-    </section>
-  )}
-
-  <!-- ============ SHOW & SEASON SPONSORSHIP ============ -->
-  {showSponsor && (
-    <section class="section sponsor-section" id="sponsor">
-      <div class="container">
-        {sponsorHeading && <h2 class="section-head">{sponsorHeading}</h2>}
-        {sponsorIntro && <div class="sponsor-intro rich" set:html={md(sponsorIntro)} />}
-
-        {sponsorItems.length > 0 && (
-          <ul class="tier-list sponsor-list">
-            {sponsorItems.map((item: any) => (
-              <li class="tier-card">
-                {txt(item.price) && <p class="tier-range">{txt(item.price)}</p>}
-                {txt(item.title) && <h3>{txt(item.title)}</h3>}
-                {txt(item.description) && (
-                  <div class="tier-description rich" set:html={md(item.description)} />
-                )}
-                <a
-                  href={txt(item.button_url) || soapboxDonateUrl}
-                  class="btn btn-primary sponsor-btn"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  {txt(item.button_label) || txt(item.title) || "Sponsor"}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </section>
   )}
@@ -743,8 +743,14 @@ const recognitionGroups = (recognition.groups || []).filter(
   }
 
   /* ---- Corporate sponsorship ---- */
+  /* MOVED BELOW SHOW & SEASON SPONSORSHIP (2026-09-22, PM request): the
+     two sections swapped places, and their background colours swapped
+     with them so the page keeps alternating white / tinted bands.
+     Corporate can now be the last section on the page, so its class is
+     listed in the "pages that end in a coloured band" rule in
+     global.css — without that there is a white strip above the footer. */
   .corporate-section {
-    background: var(--paper);
+    background: var(--paper-warm);
     border-top: 1px solid var(--line);
   }
 
@@ -816,13 +822,27 @@ const recognitionGroups = (recognition.groups || []).filter(
      card styling is switched off inside it so they don't nest as two boxes.
      :global() is required — ContactForm's styles are scoped to that
      component, and this rule has to reach into it. */
+  /* SMALLER (2026-09-22, PM request): it was the full width of the page
+     and 512px tall, which made a short enquiry form look like the main
+     event. Now a 560px column with lighter padding and a thinner frame. */
   .corp-contact {
+    /* Centred on the page (2026-09-22, PM request); the wording inside
+       stays left-aligned so the form is still easy to read. */
     margin-top: var(--space-lg);
+    margin-inline: auto;
+    max-width: 560px;
     background: var(--paper);
-    border: 2px solid var(--accent);
-    border-left-width: 8px;
+    border: 1px solid var(--accent);
+    border-left-width: 5px;
     border-radius: var(--radius);
-    padding: var(--space-lg);
+    padding: var(--space-md);
+  }
+
+  /* Three lines rather than four in the message box — part of bringing
+     the block's height down (2026-09-22). */
+  .corp-contact :global(textarea) {
+    min-height: 5.2rem;
+    height: 5.2rem;
   }
 
   .corp-contact :global(.contact-form-card) {
@@ -834,19 +854,21 @@ const recognitionGroups = (recognition.groups || []).filter(
   }
 
   .corp-contact-head {
-    font-size: 1.35rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+    margin-bottom: 0.4rem;
   }
 
   .corp-contact-intro {
     color: var(--ink-soft);
     max-width: 60ch;
-    margin-bottom: var(--space-md);
+    font-size: 0.98rem;
+    margin-bottom: var(--space-sm);
   }
 
   /* ---- Show & season sponsorship ---- */
+  /* Moved above Corporate 2026-09-22; background swapped with it. */
   .sponsor-section {
-    background: var(--paper-warm);
+    background: var(--paper);
     border-top: 1px solid var(--line);
   }
 
