@@ -6,16 +6,16 @@
       "style": "tickets",
       "children": [
         {
-          "label": "School Tickets",
-          "url": "/school-tickets"
+          "url": "/stories-on-stage/creepy-carrots/",
+          "label": "Creepy Carrots"
         },
         {
           "label": "The Wizard of Oz",
           "url": "/shows/the-wizard-of-oz"
         },
         {
-          "url": "/stories-on-stage/creepy-carrots/",
-          "label": "Creepy Carrots"
+          "label": "School Tickets",
+          "url": "/school-tickets"
         }
       ]
     },
