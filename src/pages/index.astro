@@ -105,7 +105,14 @@ const donateHeading = home.donate_heading?.trim() || `Help us reach $${goal.toLo
 // The CMS lets staff pick one word in the heading to italicize
 // (the accent style). If that word appears in the heading, we
 // split around it; otherwise the heading renders plain.
-const heading = home.hero_heading;
+// BLANK = NO HEADLINE (2026-09-22, PM request). Clearing "Hero — main
+// headline" in the CMS now hides the headline completely: the page shows
+// the logo and the intro paragraph with no empty space where the heading
+// was. A hidden heading is still given to screen readers and search
+// engines (see .sr-only below), because a page with no heading at all is
+// both an accessibility fault and bad for search results.
+const heading = (home.hero_heading || "").trim();
+const hasHeading = heading.length > 0;
 const italicWord = home.hero_heading_italic_word?.trim();
 let headingBefore = heading;
 let headingItalic = "";
@@ -169,24 +176,28 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         <div class="hero-logo-wrap">
           <Logo size="hero" />
         </div>
-        <h1 class={`hero-heading ${hero_heading_case === "uppercase" ? "hero-heading--upper" : ""}`}>
-          {headingItalic && headingLine2Lead ? (
-            <>
-              {headingLine1}<br />
-              {headingLine2Lead}{" "}
-              <span class="accent-word">
-                {headingItalic}
-              </span>
-              {headingAfter}
-            </>
-          ) : (
-            <>
-              {headingBefore}{headingItalic && (
-                <span class="accent-word">{headingItalic}</span>
-              )}{headingAfter}
-            </>
-          )}
-        </h1>
+        {hasHeading ? (
+          <h1 class={`hero-heading ${hero_heading_case === "uppercase" ? "hero-heading--upper" : ""}`}>
+            {headingItalic && headingLine2Lead ? (
+              <>
+                {headingLine1}<br />
+                {headingLine2Lead}{" "}
+                <span class="accent-word">
+                  {headingItalic}
+                </span>
+                {headingAfter}
+              </>
+            ) : (
+              <>
+                {headingBefore}{headingItalic && (
+                  <span class="accent-word">{headingItalic}</span>
+                )}{headingAfter}
+              </>
+            )}
+          </h1>
+        ) : (
+          <h1 class="sr-only">Peninsula Youth Theatre</h1>
+        )}
         <p class="hero-lede">{home.hero_lede}</p>
       </div>
     </div>
@@ -820,10 +831,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        jammed into the headline's descenders. Anything set here is
        box-to-box, so it buys less optical space than the number
        suggests — 1.9rem lands at roughly 1.1rem of visible air. */
+    /* LEFT-ALIGNED ON DESKTOP TOO (2026-09-22, PM request): the logo,
+       headline and intro paragraph all sit on the page's left edge, the
+       way they already did on phones. This replaces justify-items:
+       center / text-align: center. */
     .hero-grid {
       grid-template-columns: 1fr;
-      justify-items: center;
-      text-align: center;
+      justify-items: start;
+      text-align: left;
       row-gap: 1.9rem;
     }
 
@@ -836,11 +851,11 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     }
 
     .hero-lede {
-      /* Wider than the 60ch used when this sat in a narrow right-hand
-         column — a centred block that stops at 60ch looks pinched
-         against the full-width carousel under it. 75ch is the top of
-         the comfortable measure range; don't push it further. */
-      max-width: 75ch;
+      /* 75ch was chosen when this block was CENTRED and needed to look
+         wide enough against the carousel. Left-aligned (2026-09-22) it
+         reads better at the site's ordinary reading measure, which is
+         also what the phone layout uses. */
+      max-width: 60ch;
     }
   }
 
@@ -849,14 +864,12 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   .hero-lede {
-    /* Brought up to match the impact of the new bolder look — bigger,
-       heavier, and full-strength ink color instead of the muted gray
-       paragraphs normally use. Line-height/letter-spacing tightened
-       from the site's normal body defaults (1.6 leading, no tracking)
-       since at this size+weight the default reads loose — condensed
-       to feel more like a headline-adjacent block than body copy. */
+    /* Bigger than an ordinary paragraph and in full-strength ink, but
+       NORMAL WEIGHT (2026-09-22, PM request: body copy on this page is
+       no longer semi-bold). Line-height and letter-spacing stay tighter
+       than the site default, which suits the larger size. */
     font-size: 1.3rem;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1.35;
     letter-spacing: -0.01em;
     color: var(--ink);
@@ -1290,11 +1303,11 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   /* ---- Donation teaser ---- */
   .donate-lede {
     /* Matched to the hero intro paragraph's exact treatment (PM
-       request, 2026-08-19) — same size, weight, line-height, and
-       letter-spacing as "At Peninsula Youth Theatre..." up top,
-       instead of the site's default lighter/smaller paragraph style. */
+       request, 2026-08-19) — same size, line-height and letter-spacing
+       as "Peninsula Youth Theatre produces..." up top, and normal
+       weight like it since 2026-09-22. */
     font-size: 1.3rem;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1.35;
     letter-spacing: -0.01em;
     color: var(--ink);
