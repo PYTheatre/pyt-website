@@ -45,3 +45,12 @@ https://:project.pages.dev/*
 # ---------------------------------------------------------------------------
 /cast/*
   X-Robots-Tag: noindex, nofollow
+
+# 2026-09-22: the old-site address for the Wizard of Oz cast page, which
+# public/_redirects serves at pytnet.org/wizard-of-oz-cast-page/. Kept out
+# of search engines exactly like /cast/* above.
+/wizard-of-oz-cast-page
+  X-Robots-Tag: noindex, nofollow
+
+/wizard-of-oz-cast-page/
+  X-Robots-Tag: noindex, nofollow
