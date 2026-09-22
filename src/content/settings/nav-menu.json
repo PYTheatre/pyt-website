@@ -6,28 +6,8 @@
       "style": "tickets",
       "children": [
         {
-          "label": "All Shows",
-          "url": "/shows"
-        },
-        {
-          "label": "Center Stage Musicals",
-          "url": "/musicals"
-        },
-        {
-          "label": "Studio Shows",
-          "url": "/studio-productions"
-        },
-        {
-          "label": "Stories on Stage",
-          "url": "/stories-on-stage"
-        },
-        {
           "label": "School Tickets",
           "url": "/school-tickets"
-        },
-        {
-          "label": "The Rules of Comedy",
-          "url": "/shows/rules-of-comedy"
         },
         {
           "label": "The Wizard of Oz",
@@ -70,20 +50,8 @@
           "url": "/musicals/"
         },
         {
-          "label": "Studio Shows",
-          "url": "/studio-productions/"
-        },
-        {
           "label": "Stories on Stage",
           "url": "/stories-on-stage/"
-        },
-        {
-          "url": "/school-tickets/",
-          "label": "School Tickets"
-        },
-        {
-          "label": "The Rules of Comedy",
-          "url": "/shows/rules-of-comedy/"
         },
         {
           "label": "The Wizard of Oz",
@@ -96,7 +64,7 @@
       ]
     },
     {
-      "label": "Classes & Camps",
+      "label": "Education",
       "url": "/programs",
       "style": "none",
       "children": [
@@ -107,6 +75,10 @@
         {
           "label": "School Play in a Box",
           "url": "/school-play-in-a-box/"
+        },
+        {
+          "label": "School Tickets",
+          "url": "https://pyt-website.pages.dev/school-tickets/"
         }
       ]
     },
