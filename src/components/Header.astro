@@ -588,7 +588,10 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      because the logo's own classes come from that component and don't
      carry this file's scoping attribute. */
   .header-inner :global(.logo-nav .logo-mark) {
-    height: 44px;
+    /* 42px, not 44px, since the switch to the TRANSPARENT logo file
+       (2026-09-21): that file is cropped tighter, so 42px shows the
+       letters at exactly the size 44px did — see Logo.astro. */
+    height: 42px;
   }
 
   .header-actions {
