@@ -1,7 +1,8 @@
 ---
 title: Young Performers
-intro: An ensemble for children age 5-7.
+intro: ""
 hero_image: /uploads/ype-frog-toad.jpg
+hero_focus: 45
 cta_label: YP opportunities
 cta_url: /musicals/
 show_in_nav: true
