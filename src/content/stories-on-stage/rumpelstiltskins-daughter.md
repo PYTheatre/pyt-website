@@ -1,5 +1,5 @@
 ---
-title: RUMPELSTILTSKIN'S DAUGHTER
+title: "Rumpelstiltskin's Daughter "
 start_date: 2027-02-12
 end_date: 2027-02-13
 date_display: February 2027
