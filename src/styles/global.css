@@ -180,11 +180,34 @@ p {
   color: var(--accent-deep);
 }
  
-/* ---- Section spacing helper ---- */
+/* ---- Section spacing helper ----
+   Half the gap between sections on each side — see VERTICAL RHYTHM in
+   tokens.css. The phone/desktop difference lives in the token now, so
+   there is no separate desktop rule below any more. */
 .section {
-  padding-block: var(--space-xl);
+  padding-block: var(--section-pad);
 }
  
+/* ---- Section headings: default space underneath (2026-09-21) ----
+   Pages that style .section-head themselves keep their own value; this
+   default is for the ones that never set one (School Play in a Box,
+   Audition, Photos, About, Judy Robe), where a heading could sit almost
+   on top of the box below it. */
+.section-head {
+  margin-bottom: var(--space-md);
+}
+
+/* ---- Pages that END in a coloured band (2026-09-21) ----
+   The band runs straight into the footer instead of leaving a thin
+   white strip between two tinted blocks, which looked like a mistake.
+   These are the four sections that can end a page and have a tinted
+   background; if you add another, add its class here.
+   "~" rather than "+" because BaseLayout places a small <script>
+   between </main> and the footer. */
+main:has(> :last-child:is(.board-section, .auditions-promo-section, .inquiry-section, .sponsor-section)) ~ .site-footer {
+  margin-top: 0;
+}
+
 /* ---- Visually-hidden (accessibility: screen-reader-only text) ---- */
 .sr-only {
   position: absolute;
@@ -205,11 +228,7 @@ p {
   .container {
     padding-inline: var(--space-lg);
   }
- 
-  .section {
-    padding-block: var(--space-2xl);
-  }
-}
+ }
 
 /* ============================================================
    DUOTONE PHOTOS (2026-09-21, PM-approved mockup
