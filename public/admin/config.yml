@@ -401,6 +401,7 @@ collections:
         description: "The Musicals page (Shows → Musicals). Edit the title and the auditions strip + section. (The musicals themselves are Shows tagged 'Musical'.)"
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Musicals" }
+          - { name: "intro", label: "Intro paragraph", widget: "text", required: false, hint: "Shown under the page title to describe what Center Stage Musicals are — like the paragraph on the Studio Shows and Stories on Stage pages. Leave blank for no paragraph." }
           - { name: "auditions_strip_text", label: "Auditions strip — text", widget: "string", required: false, hint: "The pink strip at the very top. Leave blank to hide the strip." }
           - { name: "auditions_heading", label: "Auditions section — heading", widget: "string", required: false }
           - { name: "auditions_body", label: "Auditions section — body", widget: "text", required: false, hint: "Leave heading and body blank to hide the section." }
