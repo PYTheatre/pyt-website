@@ -862,6 +862,16 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .photo-strip-wrap {
     position: relative;
     margin-top: var(--space-lg);
+    /* ONE THIRD SMALLER (2026-09-22, PM-approved mockup
+       "MOCKUP-carousel-smaller-desktop", option A): the photo was the full
+       content width (1060 x 707px on a laptop) and ran well below the fold.
+       Capping the whole carousel at 720px and centring it under the centred
+       headline makes the photo 720 x 480px, with the whole picture still
+       shown (same 3:2 shape, nothing extra cropped). Phones are narrower
+       than 720px, so they are unchanged. Change the size HERE only — the
+       slides, arrows and script all follow this width automatically. */
+    max-width: 720px;
+    margin-inline: auto;
   }
 
   .photo-strip {
