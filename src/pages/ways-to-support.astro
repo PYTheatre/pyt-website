@@ -71,7 +71,7 @@ const mdInline = (input?: string | null): string =>
 
 const txt = (v?: string | null): string => (typeof v === "string" ? v.trim() : "");
 
-/* ---------------- Campaign thermometer (unchanged) ---------------- */
+/* ---------------- Campaign thermometer ---------------- */
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
 const donorCount = campaign.donor_count;
@@ -79,54 +79,40 @@ const pct = Math.round((raised / goal) * 100);
 // Clamp the visible fill so an over-goal campaign can't overflow the bar.
 const fillPct = Math.min(100, Math.max(0, pct));
 
-// Horizontal bar, shared with the home page. Ticks at 25/50/75% only — a
-// 100% tick lands on the bar's rounded end; the GOAL badge marks that end.
+// --- "200k for 2026!" graphic (2026-09-22) ---
+// The same drawing as the home page (see index.astro): one inline SVG,
+// viewBox 0 0 1000 222, scale from x=55 ($0) to x=795 (the goal). The
+// fill and ticks both use toX(), so they share one scale by construction.
+// If you change the drawing, change it on BOTH pages.
+const THERMO_X0 = 55;
+const THERMO_X1 = 795;
+const toX = (fraction: number) => THERMO_X0 + (THERMO_X1 - THERMO_X0) * fraction;
+const fillX = toX(fillPct / 100);
 const tickFractions = [0.25, 0.5, 0.75];
 const thermoTicks = tickFractions.map((f) => ({
   label: `$${Math.round((goal * f) / 1000)}k`,
-  leftPct: f * 100,
+  x: toX(f),
 }));
+const starPoints = Array.from({ length: 12 }, (_, i) => {
+  const r = i % 2 === 0 ? 100 : 57.7;
+  const a = (Math.PI / 6) * i - Math.PI / 2;
+  return `${(900 + r * Math.cos(a)).toFixed(1)},${(111 + r * Math.sin(a)).toFixed(1)}`;
+}).join(" ");
+// Title, e.g. "200k for 2026!", from the Donation Campaign settings.
+const campaignYear = ((campaign as any).campaign_label || "").match(/\b(20\d\d)\b/)?.[1] || String(new Date().getFullYear());
+const goalShort = goal >= 1000 ? `${Math.round(goal / 1000)}k` : `$${goal}`;
+const titleColours = ["var(--thermo-c1)", "var(--thermo-c2)", "var(--thermo-c3)", "var(--thermo-c4)"];
+const goalChars = [...goalShort].map((ch, i) => ({ ch, colour: titleColours[i % titleColours.length] }));
 
 /*
-  THE STAT SENTENCES UNDER THE BAR (2026-08-21, second pass).
-  Previously hard-coded as "$X raised · N donors · P% of goal". Staff now
-  write each sentence themselves, but the FIGURES are not typed in — they
-  are placeholders filled from the thermometer settings above, so a
-  sentence can never drift out of date the way "of this year's $200,000
-  goal" typed as literal text would. Any sentence left blank is dropped,
-  and the separators only appear between the sentences that survive.
+  THE STAT SENTENCES UNDER THE BAR WERE REMOVED 2026-09-22 (PM request):
+  the campaign section is now the title, the drawing and a centred Donate
+  button, nothing else. The figures are still announced to screen readers
+  by the drawing's aria-label. The three CMS fields that fed the removed
+  sentences (Support & Fundraising -> Donation Campaign: stat_raised,
+  stat_donors, stat_percent) are now unused; they are left in place rather
+  than deleted, so the wording survives if the line is ever wanted back.
 */
-const statTokens: Record<string, string> = {
-  raised: `$${raised.toLocaleString()}`,
-  goal: `$${goal.toLocaleString()}`,
-  donors: `${donorCount}`,
-  percent: `${pct}%`,
-};
-
-/* Split a template into plain text and figure parts, so the figures can be
-   picked out in the accent colour. An unrecognised {token} is left alone as
-   literal text rather than silently vanishing. */
-function statParts(template: string): { text: string; figure: boolean }[] {
-  const parts: { text: string; figure: boolean }[] = [];
-  const re = /\{(raised|goal|donors|percent)\}/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(template)) !== null) {
-    if (m.index > last) parts.push({ text: template.slice(last, m.index), figure: false });
-    parts.push({ text: statTokens[m[1]], figure: true });
-    last = m.index + m[0].length;
-  }
-  if (last < template.length) parts.push({ text: template.slice(last), figure: false });
-  return parts;
-}
-
-const statLines = [
-  txt((campaign as any).stat_raised),
-  txt((campaign as any).stat_donors),
-  txt((campaign as any).stat_percent),
-]
-  .filter(Boolean)
-  .map(statParts);
 
 const soapboxDonateUrl =
   txt(donatePage.soapbox_donate_url) || "https://pyt.secure.nonprofitsoapbox.com/donate";
@@ -200,61 +186,55 @@ const recognitionGroups = (recognition.groups || []).filter(
             <div class="campaign-intro rich" set:html={md(donatePage.intro_body)} />
           )}
         </div>
-
-        <a
-          href={soapboxDonateUrl}
-          class="btn btn-highlight campaign-donate"
-          target="_blank"
-          rel="noopener"
-        >
-          Donate
-        </a>
       </div>
 
       <!-- Optional hero image — Site Settings -> Page Hero Images. Renders
            nothing if this page has no photo set. -->
       <PageHeroImage />
 
-      <!-- Bar and stats. The Donate button used to sit to the right of
-           this block; it moved up into the header row above (2026-08-21)
-           so it lines up with the one in Giving Levels. -->
+      <!-- The campaign block: title, drawing and Donate button, centred
+           on the page as one unit (2026-09-22, PM request). Before this
+           the block sat on the left and the Donate button was up in the
+           header row, on the right; the "$X raised" sentences under the
+           bar were removed at the same time. The Giving Levels section
+           below keeps its own Donate button where it is. -->
       <div class="campaign-progress">
         <div class="campaign-progress-main">
-          <div class="thermo" role="img"
+          <p class="thermo-title">
+            {goalChars.map((c) => <span style={`color: ${c.colour}`}>{c.ch}</span>)}
+            {" "}for {campaignYear}!
+          </p>
+
+          <svg class="thermo" viewBox="0 0 1000 222" role="img"
                aria-label={`$${raised.toLocaleString()} raised of $${goal.toLocaleString()} goal, ${pct}% complete, from ${donorCount} donors`}>
-            <p class="thermo-goal-flag" aria-hidden="true">Goal</p>
+            <defs>
+              <clipPath id="thermo-inner">
+                <rect x="59" y="76" width="732" height="70" rx="35" />
+              </clipPath>
+            </defs>
+            <rect x="54.5" y="71.5" width="741" height="79" rx="39.5" fill="#ffffff" stroke="var(--thermo-outline)" stroke-width="9" />
+            <rect x="0" y="76" width={fillX} height="70" fill="var(--thermo-fill)" clip-path="url(#thermo-inner)" />
+            <circle cx="56" cy="111" r="56" fill="var(--thermo-fill)" />
+            {thermoTicks.map((t) => (
+              <g aria-hidden="true">
+                <line x1={t.x} y1="155" x2={t.x} y2="170" stroke="var(--thermo-tick)" stroke-width="3" />
+                <text x={t.x} y="200" text-anchor="middle" class="thermo-tick-label">{t.label}</text>
+              </g>
+            ))}
+            <polygon points={starPoints} fill="var(--thermo-star)" stroke="var(--thermo-fill)" stroke-width="10" stroke-linejoin="miter" />
+            <text x="900" y="124" text-anchor="middle" class="thermo-goal-text" aria-hidden="true">GOAL</text>
+          </svg>
 
-            <div class="thermo-track-row">
-              <span class="thermo-bulb" aria-hidden="true"></span>
-              <div class="thermo-track">
-                <div class="thermo-fill" style={`width: ${fillPct}%`}></div>
-              </div>
-            </div>
-
-            <div class="thermo-ticks" aria-hidden="true">
-              {thermoTicks.map((t) => (
-                <span class="thermo-tick" style={`left: ${t.leftPct}%`}>
-                  <span class="thermo-tick-mark"></span>
-                  <span class="thermo-tick-label">{t.label}</span>
-                </span>
-              ))}
-            </div>
+          <div class="campaign-donate-wrap">
+            <a
+              href={soapboxDonateUrl}
+              class="btn btn-highlight campaign-donate"
+              target="_blank"
+              rel="noopener"
+            >
+              Donate
+            </a>
           </div>
-
-          {statLines.length > 0 && (
-            <p class="thermo-meta">
-              {statLines.map((parts, i) => (
-                <>
-                  {i > 0 && <span class="thermo-sep" aria-hidden="true">&middot;</span>}
-                  <span class="thermo-stat">
-                    {parts.map((p) =>
-                      p.figure ? <strong>{p.text}</strong> : <Fragment>{p.text}</Fragment>
-                    )}
-                  </span>
-                </>
-              ))}
-            </p>
-          )}
         </div>
       </div>
     </div>
@@ -481,9 +461,9 @@ const recognitionGroups = (recognition.groups || []).filter(
     background: var(--paper);
   }
 
-  /* Heading + intro on the left, Donate top-right (2026-08-21). Mirrors
-     .giving-head exactly, including the breakpoint, so both buttons sit on
-     the same right edge and appear at the same point in each section. */
+  /* Heading + intro. This row held the Donate button top-right until
+     2026-09-22; the button now sits centred under the drawing, so this is
+     just the heading and intro block. */
   .campaign-head {
     display: flex;
     flex-direction: column;
@@ -496,24 +476,24 @@ const recognitionGroups = (recognition.groups || []).filter(
     min-width: 0;
   }
 
+  /* Centred under the drawing (2026-09-22) — was top-right in the header
+     row. Same size as before, and the Giving Levels button is untouched. */
+  .campaign-donate-wrap {
+    text-align: center;
+  }
+
   .campaign-donate {
     font-size: 1.1rem;
     padding: 0.85rem 2.4rem;
     flex-shrink: 0;
   }
 
-  @media (min-width: 720px) {
-    .campaign-head {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: var(--space-xl);
-    }
-  }
-
+  /* Centred on the page (2026-09-22, PM request) — was pinned to the
+     left edge under the heading. */
   .campaign-progress-main {
     width: 100%;
     max-width: 620px;
+    margin-inline: auto;
   }
 
   .campaign-hero h1 {
@@ -535,140 +515,60 @@ const recognitionGroups = (recognition.groups || []).filter(
     margin-block: 0.4rem var(--space-md);
   }
 
-  /* ---- Campaign progress bar (horizontal, 2026-08-20) ---- */
-  .thermo {
-    position: relative;
-    margin-bottom: var(--space-md);
-    max-width: 620px;
+  /* ---- Campaign graphic (2026-09-22) ---- */
+  /* Same drawing and colours as the home page (PM reference picture).
+     Colours are set on this section only. The Donate buttons keep the
+     site's standard pink. */
+  .campaign-hero {
+    --thermo-outline: #cc00cc;
+    --thermo-fill: #00bbbb;
+    --thermo-star: #f7e800;
+    --thermo-tick: #e3a6e3;
+    --thermo-tick-text: #b068b6;
+    --thermo-c1: #c1287b;
+    --thermo-c2: #f2b705;
+    --thermo-c3: #4f9a3a;
+    --thermo-c4: #2f9fd0;
   }
 
-  .thermo-goal-flag {
-    margin: 0 0 0.35rem;
-    text-align: right;
-    font-family: var(--font-body);
-    font-size: 0.82rem;
+  /* Title, drawing and the stat sentences are centred within the 620px
+     column, so they read as one unit; the column itself stays on the
+     page's left edge like the heading above it. */
+  .thermo-title {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
     font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink);
+    font-size: clamp(2.2rem, 7vw, 3.6rem);
+    line-height: 1.05;
+    color: var(--thermo-outline);
+    text-align: center;
+    margin: 0 0 var(--space-md);
   }
 
-  .thermo-track-row {
-    display: flex;
-    align-items: center;
-  }
-
-  /* DUOTONE (2026-09-21): the progress bar, and the dollar amounts and
-     tier names further down, are deep teal (--ink), not pink. Pink is
-     reserved for things you can click; these are information. Matches
-     the home-page progress bar. The pink frame on .corp-contact stays,
-     because it surrounds a contact form, which is an action. */
-  .thermo-bulb {
-    flex-shrink: 0;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--campaign-fill);
-    border: 3px solid var(--ink);
-    /* Overlaps the track's rounded end so the two read as one object. */
-    margin-right: -10px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .thermo-track {
-    flex: 1;
-    height: 22px;
-    border: 3px solid var(--ink);
-    border-radius: var(--radius-pill);
-    background: var(--paper);
-    overflow: hidden;
-  }
-
-  .thermo-fill {
-    height: 100%;
-    background: var(--campaign-fill);
-    border-radius: var(--radius-pill) 0 0 var(--radius-pill);
-    transition: width 0.5s ease;
-  }
-
-  /* Percentage positions, matching the fill's own scale exactly. */
-  .thermo-ticks {
-    position: relative;
-    margin-left: 24px;
-    height: 34px;
-  }
-
-  .thermo-tick {
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-  }
-
-  .thermo-tick-mark {
-    width: 2px;
-    height: 9px;
-    background: var(--ink);
-    border-radius: 1px;
+  .thermo {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 var(--space-md);
+    overflow: visible;
   }
 
   .thermo-tick-label {
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-    white-space: nowrap;
-  }
-
-  /* Sizes raised 2026-08-21 (PM request): 1.05rem -> 1.25rem, and 0.98rem
-     -> 1.12rem on small screens. */
-  .thermo-meta {
-    font-family: var(--font-body);
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.3rem;
-    max-width: 620px;
-  }
-
-  /* Each sentence wraps as a unit, so a longer one such as "$149,000
-     raised of this year's $200,000 goal" never breaks across the middle
-     dot from the sentence after it. */
-  .thermo-stat {
-    display: inline-block;
-  }
-
-  .thermo-meta strong {
-    color: var(--ink);
+    font-family: "Baloo 2", var(--font-body), sans-serif;
     font-weight: 700;
+    font-size: 30px;   /* SVG units — scales with the drawing */
+    fill: var(--thermo-tick-text);
   }
 
-  .thermo-sep {
-    color: var(--ink-soft);
-    padding-inline: 0.2rem;
+  .thermo-goal-text {
+    font-family: "Baloo 2", var(--font-heading), sans-serif;
+    font-weight: 700;
+    font-size: 40px;   /* SVG units */
+    fill: var(--thermo-outline);
   }
 
   @media (max-width: 560px) {
-    .thermo-bulb {
-      width: 28px;
-      height: 28px;
-    }
-    .thermo-track {
-      height: 18px;
-    }
-    .thermo-ticks {
-      margin-left: 20px;
-    }
-    .thermo-meta {
-      font-size: 1.12rem;
+    .thermo-tick-label {
+      font-size: 44px;
     }
   }
 
