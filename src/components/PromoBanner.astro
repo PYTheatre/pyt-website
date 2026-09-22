@@ -25,13 +25,19 @@
   and it would stop reading as a tape.
 
   COLOUR IS FIXED IN CODE, NOT CMS-EDITABLE, ON PURPOSE.
-  It is PYT pink (--accent) with white text, 5.48:1 contrast — clears
-  the WCAG AA minimum of 4.5:1 for text at this size.
-  History: it launched in logo green with black text; it went pink
-  under the duotone scheme (2026-09-21), where pink is reserved for
-  things you click — and the whole bar is a link.
-  ⚠️ If it is ever moved back to the logo green, the text must go
-  back to near-black: white on that green is 2.65:1 and fails.
+  MORE RECESSIVE (2026-09-22, PM request): white fill, pink border, pink
+  type — the inverse of the solid pink bar this replaced. Contrast is
+  the SAME 5.48:1 (pink #c0287b on white), which still clears the WCAG
+  AA minimum of 4.5:1 for text at this size; the deep-pink hover state
+  is 7.78:1. A solid colour bar reads as an announcement; an outlined
+  one on white sits quietly closer to the page's own background, which
+  is the point of "more recessive."
+  History: it launched in logo green with black text; it went solid
+  pink under the duotone scheme (2026-09-21); it became outlined pink
+  on white in this pass.
+  ⚠️ If it is ever moved back to logo green, re-check contrast: green
+  text needs to be a good deal darker than --brand-green to pass on
+  white, the same way white failed on green in the solid version.
 
   EXTERNAL LINKS open in a new tab automatically — anything starting
   "http" is treated as off-site. Internal links ("/blog", "/my-post")
@@ -72,10 +78,13 @@ const isExternal = /^https?:\/\//i.test(url);
     box-sizing: border-box;
     text-decoration: none;
 
-    /* PYT pink + white. Contrast 5.48:1 (WCAG AA pass).
-       See the note in the frontmatter before changing either. */
-    background: var(--accent);
-    color: #ffffff;
+    /* Inverted (2026-09-22): white fill, pink border, pink type —
+       recessive rather than a solid announcement block. Same 5.48:1
+       contrast as the white-on-pink version it replaces (still WCAG AA).
+       See the note in the frontmatter before changing any of these. */
+    background: #ffffff;
+    color: var(--accent);
+    border-block: 1px solid var(--accent);
 
     /* Matches the site's heading face so the bar reads as part of the
        design rather than as an inserted advert. Small, uppercase and
@@ -98,15 +107,20 @@ const isExternal = /^https?:\/\//i.test(url);
 
   .promo-banner:hover,
   .promo-banner:focus-visible {
-    /* Deeper pink on hover — white text contrast rises to 7.8:1. */
-    background: var(--accent-deep);
+    /* Deep pink on white on hover, 7.78:1 — the fill stays white so the
+       bar keeps reading as recessive even while active; only the type
+       and border deepen. */
+    color: var(--accent-deep);
+    border-color: var(--accent-deep);
   }
 
   .promo-banner:focus-visible {
-    /* Keyboard users need to see where they are. White inset outline:
-       the browser's default blue would vibrate against the pink. */
-    outline: 3px solid #ffffff;
-    outline-offset: -3px;
+    /* Keyboard users need to see where they are. The browser's default
+       blue would clash with the pink border, so this restates it in
+       the deep pink instead, offset so it doesn't double up with the
+       1px border above. */
+    outline: 2px solid var(--accent-deep);
+    outline-offset: 2px;
   }
 
   .promo-banner-arrow {
