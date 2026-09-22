@@ -8,17 +8,17 @@
   "donate_lede": "We're raising $200,000 in 2026! PYT is a nonprofit organization that relies on the generosity of donors. Every gift brings theater and community to the Bay Area and beyond. ",
   "photo_strip": [
     {
-      "title": "CENTER STAGE MUSICALS",
+      "title": "Center Stage Shows - professional scale musicals where everyone is cast.",
       "url": "/musicals",
       "image": "/uploads/csm-newsies-4.jpg"
     },
     {
-      "title": "STORIES ON STAGE",
+      "title": "Stories on Stage - beloved books brought to life by small casts.",
       "url": "/stories-on-stage",
       "image": "/uploads/creepy-carousel.png"
     },
     {
-      "title": "SCHOOL PLAY IN A BOX",
+      "title": "School Play In A Box - bring PYT to your school.",
       "url": "/school-play-in-a-box",
       "image": "/uploads/img_0215.jpg"
     }
@@ -32,31 +32,19 @@
   "discovery_heading": "What's next",
   "discovery_cards": [
     {
-      "title": "STORIES ON STAGE AUDITIONS",
-      "subtitle": "Grades 5-12",
-      "image": "/uploads/uglyduckling-pyt-.jpg",
-      "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976#/selectSessions/3847843"
-    },
-    {
-      "title": "THE RULES OF COMEDY",
-      "subtitle": "Tickets",
-      "image": "/uploads/rules-of-comey.jpg",
-      "url": "/shows/rules-of-comedy"
-    },
-    {
-      "title": "THE WIZARD OF OZ",
+      "title": "The Wizard of Oz",
       "subtitle": "Tickets",
       "image": "/uploads/wizard.jpg",
       "url": "/shows/the-wizard-of-oz"
     },
     {
-      "title": "SINGIN' IN THE RAIN AUDITIONS",
+      "title": "Singin' In The Rain",
       "subtitle": "Grades K-12",
       "image": "/uploads/unnamed.png",
       "url": "https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=c5cdeef1-8227-4386-b098-f70b375870f3&e4p=90297909-9398-4434-b99c-b69f27992a20&e4ts=1787170365&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=4ced56c397ba9f4426b6f39943d9f976"
     },
     {
-      "title": "CREEPY CARROTS",
+      "title": "Creepy Carrots",
       "subtitle": "Tickets",
       "image": "/uploads/carrots.jpg",
       "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
