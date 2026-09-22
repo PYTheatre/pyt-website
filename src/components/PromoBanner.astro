@@ -25,14 +25,13 @@
   and it would stop reading as a tape.
 
   COLOUR IS FIXED IN CODE, NOT CMS-EDITABLE, ON PURPOSE.
-  It is PYT logo green (--brand-green) with near-black text. That pair
-  measures 6.56:1 contrast, which clears the WCAG AA minimum of 4.5:1
-  for text at this size.
-  ⚠️ DO NOT SWITCH THE TEXT TO WHITE. White on this green measures
-  2.65:1 — it fails AA and also fails the 3:1 large-text threshold. It
-  was mocked up and rejected for that reason. If white text is ever
-  wanted, the GREEN has to darken to about #4d833b first (4.54:1), at
-  which point it is no longer the logo green.
+  It is PYT pink (--accent) with white text, 5.48:1 contrast — clears
+  the WCAG AA minimum of 4.5:1 for text at this size.
+  History: it launched in logo green with black text; it went pink
+  under the duotone scheme (2026-09-21), where pink is reserved for
+  things you click — and the whole bar is a link.
+  ⚠️ If it is ever moved back to the logo green, the text must go
+  back to near-black: white on that green is 2.65:1 and fails.
 
   EXTERNAL LINKS open in a new tab automatically — anything starting
   "http" is treated as off-site. Internal links ("/blog", "/my-post")
@@ -73,10 +72,10 @@ const isExternal = /^https?:\/\//i.test(url);
     box-sizing: border-box;
     text-decoration: none;
 
-    /* PYT logo green + near-black. Contrast 6.56:1 (WCAG AA pass).
-       See the warning in the frontmatter before changing either. */
-    background: var(--brand-green);
-    color: var(--ink);
+    /* PYT pink + white. Contrast 5.48:1 (WCAG AA pass).
+       See the note in the frontmatter before changing either. */
+    background: var(--accent);
+    color: #ffffff;
 
     /* Matches the site's heading face so the bar reads as part of the
        design rather than as an inserted advert. Small, uppercase and
@@ -99,16 +98,14 @@ const isExternal = /^https?:\/\//i.test(url);
 
   .promo-banner:hover,
   .promo-banner:focus-visible {
-    /* Slightly deeper green on hover. Kept dark enough that the
-       near-black text contrast only improves, never drops. */
-    background: #5a9c45;
+    /* Deeper pink on hover — white text contrast rises to 7.8:1. */
+    background: var(--accent-deep);
   }
 
   .promo-banner:focus-visible {
-    /* Keyboard users need to see where they are. The bar is green, so
-       the outline is the site ink rather than the browser default
-       blue, which would vibrate against it. */
-    outline: 3px solid var(--ink);
+    /* Keyboard users need to see where they are. White inset outline:
+       the browser's default blue would vibrate against the pink. */
+    outline: 3px solid #ffffff;
     outline-offset: -3px;
   }
 
