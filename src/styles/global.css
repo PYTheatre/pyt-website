@@ -210,6 +210,47 @@ main:has(> :last-child:is(.board-section, .auditions-promo-section, .inquiry-sec
   margin-top: 0;
 }
 
+/* ---- Hero photo follows the page's reading width (2026-09-22) ----
+   The wide hero photo is the full content width (1060px on a laptop).
+   On pages whose body is a single reading column — the CMS-built pages
+   (Scholarships, Young Performers, blog posts), School Play in a Box,
+   Casting and Thank you — that left a photo hanging far out to the
+   right of everything under it, with a band of empty space beside the
+   text. Here the photo is capped at the same 68ch as the text, so the
+   two share one left AND right edge.
+
+   Pages whose content really is full width (About, Programs, Auditions,
+   School Tickets, Volunteer, Judy Robe, the show listings) are NOT in
+   this list and keep the full-width photo.
+
+   HOW IT PICKS THE PAGE: by the section class the page's own body uses,
+   so no page file needs changing and a new CMS page gets it
+   automatically. `:has()` needs Safari 15.4+ / Firefox 121+ (the same
+   support as the footer rule above); older browsers simply show the
+   photo at full width, exactly as it is today. */
+/* The cap is written the same way the text columns are — 68ch (or 56ch
+   on Thank you) at that page's own body size — so the photo keeps
+   matching the text if either is ever re-tuned. Setting font-size on an
+   image changes nothing visible; it is only there to make "ch" measure
+   the same as it does for the words underneath. */
+main:has(.page-body) .page-hero-img,
+main:has(.casting-body) .page-hero-img {
+  font-size: 1.08rem;
+  max-width: 68ch;
+}
+
+/* School Play in a Box measures its column at its own smaller body size,
+   which works out at 623px; "ch" on an image doesn't land on the same
+   number here, so this one is written in pixels to match exactly. */
+main:has(.spib-section) .page-hero-img {
+  max-width: 623px;
+}
+
+main:has(.thanks-section) .page-hero-img {
+  font-size: 1.08rem;
+  max-width: 56ch;
+}
+
 /* ---- Visually-hidden (accessibility: screen-reader-only text) ---- */
 .sr-only {
   position: absolute;
