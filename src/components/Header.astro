@@ -596,13 +596,14 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
  
   /* :global() is required because the logo's own classes come from
      Logo.astro and don't carry this file's scoping attribute. */
-  /* The header shows the PYT MARK only — the letters cropped out of the
-     logo file, no wordmark (see Logo.astro). 20px of letters sits with
-     the 12.8px menu type the way Apple's mark sits with theirs, so the
-     logo reads as one more item in the bar. The FOOTER is untouched and
-     keeps the full logo with the wordmark. */
-  .header-inner :global(.logo-nav-mark .logo-nav-frame) {
-    --mark-h: 20px;
+  /* The logo is a nav item like any other (2026-09-22): its box is the
+     same height as the menu items and the Register / Donate buttons, so
+     all four line up top and bottom. --logo-h is the image inside that
+     box; the difference between the two is the logo's breathing room.
+     The FOOTER renders the same component and is untouched. */
+  .header-inner :global(.logo-nav-mark) {
+    --logo-box-h: var(--nav-item-h);
+    --logo-img-h: 26px;
   }
 
   .header-actions {
@@ -617,10 +618,15 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      one pink button — see the DUOTONE note on .tickets-btn. */
   /* Smaller in the compact bar (2026-09-22): was 0.5rem/1.1rem at
      0.9rem type. */
+  /* Same type size as the plain menu items (2026-09-22, PM request:
+     "all copy inside or outside a button on the navbar should be
+     uniform"). Was 0.82rem, and a leftover >=1120px rule further down
+     separately bumped this to 0.88rem — removed, since it disagreed
+     with everything else in the bar. */
   .donate-btn {
     height: var(--nav-item-h);
     padding: 0 0.85rem;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     background: var(--highlight);
     color: var(--highlight-text);
   }
@@ -628,7 +634,7 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   .register-btn {
     height: var(--nav-item-h);
     padding: 0 0.85rem;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     background: var(--surface-deep);
     border-color: var(--surface-deep);
     color: var(--on-surface-deep);
@@ -841,13 +847,6 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     }
     .nav-mobile {
       display: none !important;
-    }
-    .donate-btn,
-    .register-btn {
-      /* 1.3 -> 1rem padding, 0.95 -> 0.88rem type (2026-08-23), to
-         match the nav pills beside them and claw back ~40px. */
-      padding: 0.5rem 1rem;
-      font-size: 0.88rem;
     }
   }
 </style>
