@@ -53,6 +53,12 @@
       "subtitle": "Tickets",
       "image": "/uploads/creepy-carrots-carousel.png",
       "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
+    },
+    {
+      "title": "Movie Night!",
+      "subtitle": "Fundraiser",
+      "image": "/uploads/13668736373_39d525da45_b.jpg",
+      "url": "/calendar/"
     }
   ],
   "hero_image": "",
