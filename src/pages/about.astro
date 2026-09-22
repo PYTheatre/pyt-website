@@ -130,12 +130,22 @@ function getInitials(name: string): string {
         </p>
 
         {/* Replaces the published email address that used to sit in the
-            list above (2026-08-20). */}
+            list above (2026-08-20). COMPACT (2026-09-22, PM request:
+            "reduce the size and content of the contact box"): drops the
+            Organization field and the visible Subject field (Subject is
+            still sent as a hidden value, "Website enquiry", so staff can
+            still see it came from this form), stacks name/email side by
+            side, and removes the form's own card chrome (border/
+            background/padding) so it sits directly inside .contact-card
+            instead of nesting a second box inside the first — which is
+            what made the block tall in the first place. */}
+        {/* intro line removed 2026-09-22 (PM request) — the "Get in
+            touch" heading above already says what this box is for. */}
         <ContactForm
           route="general"
           source="About / Contact page"
-          intro="Send us a message and we'll get back to you."
           submitLabel="Send message"
+          compact={true}
         />
       </aside>
     </div>
