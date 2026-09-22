@@ -121,6 +121,10 @@ const years = ((page as any).years || [])
     font-size: 1rem;
   }
 
+  .jr-year-block:last-child {
+    margin-bottom: 0;   /* the section padding provides the gap to the footer */
+  }
+
   .jr-year-block {
     margin-bottom: var(--space-xl);
   }
