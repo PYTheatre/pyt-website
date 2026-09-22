@@ -105,6 +105,12 @@ const programs = defineCollection({
     schedule: z.string().optional(),
     tuition: z.string().optional(),
     registration_url: z.string().optional(),
+    /* REGISTRATION STATUS (2026-09-22). "Open" behaves exactly as before:
+       the Register button shows if there is a link. "Closed" shows a sign
+       instead of the button, so a programme between seasons says so
+       plainly rather than looking broken or linking to a dead form. */
+    registration_status: z.enum(["Open", "Coming soon", "Closed"]).default("Open"),
+    registration_note: z.string().optional(),
     scholarships_available: z.boolean().default(false),
   }),
 });
