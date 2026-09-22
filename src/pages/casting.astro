@@ -78,7 +78,7 @@ const bodyHtml = renderMarkdown(casting.body);
        every page that uses the shared PageHero component. Keep these
        two values in step: this block exists to imitate that component,
        so if its spacing changes, change this too. */
-    padding-block: var(--space-xl) var(--space-lg);
+    padding-block: var(--page-top) var(--hero-gap);   /* same as PageHero — VERTICAL RHYTHM, tokens.css */
   }
 
   .casting-title h1 {
@@ -98,12 +98,19 @@ const bodyHtml = renderMarkdown(casting.body);
   }
 
   /* ---- Body prose ---- */
-  .casting-body {
-    padding-block: var(--space-md) var(--space-lg);
+  /* .casting-body takes the standard .section padding (VERTICAL RHYTHM). */
+
+  /* LEFT-ALIGNED READING WIDTH (2026-09-21). The width limit is on the
+     CHILDREN, not this box. This box is also a .container, and
+     .container centres itself — so limiting ITS width used to push the
+     whole column into the middle of the page while the title, photo and
+     buttons stayed on the left edge. Now everything shares one edge. */
+  .casting-prose > :global(*) {
+    max-width: 68ch;
   }
 
-  .casting-prose {
-    max-width: 68ch;
+  .casting-prose > :global(:last-child) {
+    margin-bottom: 0;
   }
 
   /* The body is injected via set:html (rendered Markdown), so its elements
@@ -156,7 +163,7 @@ const bodyHtml = renderMarkdown(casting.body);
 
   /* ---- Pulled-out closing line ---- */
   .casting-quote-section {
-    padding-block: var(--space-lg) var(--space-xl);
+    padding-block: var(--section-pad);
     background: var(--paper-warm);
     border-block: 1px solid var(--line);
   }
@@ -178,9 +185,10 @@ const bodyHtml = renderMarkdown(casting.body);
   }
 
   /* ---- CTA ---- */
+  /* Left-aligned (2026-09-21), like the text above it — it was centred
+     under a left-aligned column, so it looked placed at random. */
   .casting-cta-section {
-    padding-block: var(--space-xl);
-    text-align: center;
+    padding-block: var(--section-pad);
   }
 
 </style>
