@@ -39,6 +39,13 @@ const valuesList: string[] = ((home as any).values_list || [])
   .filter(Boolean);
 const values_heading_case = (home as any).values_heading_case || "as-typed";
 
+// --- Hero headline case (2026-09-21) ---
+// Same "As typed / UPPERCASE" switch as the section headings above.
+// Defaults to "as-typed" so the headline shows exactly as written in
+// the CMS. Before this, the headline was forced to capitals in CSS
+// with no way to turn it off.
+const hero_heading_case = (home as any).hero_heading_case || "as-typed";
+
 // --- Donation campaign numbers ---
 const goal = campaign.goal_amount;
 const raised = campaign.raised_amount;
@@ -143,7 +150,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         <div class="hero-logo-wrap">
           <Logo size="hero" />
         </div>
-        <h1 class="hero-heading">
+        <h1 class={`hero-heading ${hero_heading_case === "uppercase" ? "hero-heading--upper" : ""}`}>
           {headingItalic && headingLine2Lead ? (
             <>
               {headingLine1}<br />
@@ -309,6 +316,10 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         cards.forEach((card, i) => {
           const isHero = i === currentIndex;
           card.style.opacity = isHero ? "1" : FADE_OPACITY;
+          // Duotone photos (2026-09-21): the featured card's photo shows
+          // in FULL COLOUR; the rest stay duotone. The styling lives in
+          // global.css ("DUOTONE PHOTOS") and keys off this class.
+          card.classList.toggle("is-featured", isHero);
           card.style.zIndex = isHero ? "2" : "1";
         });
 
@@ -508,21 +519,13 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       {(home.stats || []).filter((s) => s?.figure?.trim() || s?.label?.trim()).length > 0 && (
       <div class="stat-grid">
         {(home.stats || []).filter((s) => s?.figure?.trim() || s?.label?.trim()).map((stat, i) => {
-          /* Each stat sits in a SOLID box in one of the brand colours,
-             cycling by position (2026-08-21, replaces the outlined box).
-             Full-strength brand colours rather than pastels, so the type
-             inside stays light — a pale box would need dark type instead.
-             A fourth colour was added so the four current stats don't
-             repeat blue immediately; beyond four it cycles. */
-          const boxColors = [
-            "var(--brand-blue)",
-            "var(--brand-green)",
-            "var(--accent)",
-            "var(--stat-gold)",
-          ];
-          const boxColor = boxColors[i % boxColors.length];
+          /* DUOTONE (2026-09-21): every stat box is the same PALE TEAL
+             with deep-teal type, sitting on the deep-teal band. Until then
+             each box cycled through blue / green / pink / gold; that
+             multicolour look is exactly what the duotone scheme removes.
+             The colour now lives in the .stat CSS rule, not here. */
           return (
-            <div class="stat" style={`background: ${boxColor}`}>
+            <div class="stat">
               <p class="stat-figure">{stat.figure}</p>
               <p class="stat-label">{stat.label}</p>
             </div>
@@ -613,26 +616,20 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
 </BaseLayout>
  
 <style>
-  /* Pastel tints of the three PYT logo colours, used by the Values
-     section. Kept local to this page because nothing else uses them. */
-  .impact {
-    /* Fourth box colour, so four stats don't repeat blue side by side.
-       A deepened gold rather than the bright --highlight yellow, which
-       is reserved for the Donate button and is too light to carry white
-       type. */
-    --stat-gold: #c9971a;
-  }
+  /* Values band (2026-08-21). Its ground is --paper-warm, which is the
+     TEAL WASH since the duotone scheme (2026-09-21; lilac before).
 
-  /* Values band (2026-08-21). Pale lilac ground, chosen because it's the
-     nav-pill colour and so already part of the palette rather than a new
-     one — and because it separates this section from the plain-white
-     thermometer section directly below it.
+     ⚠️ THE THREE WORD COLOURS ARE A DELIBERATE EXCEPTION TO DUOTONE.
+     The PM asked for "BE KIND / BE PREPARED / BE BRAVE" to keep their
+     pink / blue / green when everything else went to two colours. Don't
+     "fix" them to teal.
 
-     The word colours are DEEPENED brand colours, not the pastels first
-     tried: pastels on any pale ground measure ~1.5-2.2 contrast, well
-     under the 3.0 minimum for large display text, and visibly washed
-     out. These sit around 3.8. The pastel range moved up to the stat
-     boxes, where the dark band behind them supports it. */
+     They are DEEPENED brand colours, not pastels: pastels on a pale
+     ground measure ~1.5-2.2 contrast, under the 3.0 minimum for large
+     display text. On the teal wash they measure pink 6.1, blue 4.0,
+     green 4.2 (all pass). Do NOT move this band onto the stronger pale
+     teal (--surface-brand): the blue falls to 3.05 there and merges
+     visually into the teal behind it. */
   .values {
     --values-pink: #a82169;
     --values-blue: #2f7fa3;
@@ -711,7 +708,32 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        true for the fallback and will lie to you. */
     font-family: var(--font-heading);
     font-weight: 400;
+    /* CASE + LINE-HEIGHT (2026-09-21). No text-transform here any
+       more: the headline shows AS TYPED unless "UPPERCASE" is chosen
+       in the CMS (Home Page -> Hero — headline capitalization), which
+       adds .hero-heading--upper below.
+
+       Line-height has to differ between the two, and was measured
+       with the real font (Archivo Black, per 100px of type):
+         capitals          reach 70 above the baseline, ~1 below
+         lowercase         tallest ascender 74 above, deepest
+                           descender (g j p q y) 21 below
+       So in mixed case a tail on one line and a tall letter on the
+       next need 95/100 of the font size between baselines.
+         0.88 -> they OVERLAP by 7  (fine for capitals only)
+         0.95 -> they touch
+         1.05 -> 10 clear  <- used for as-typed
+       ⚠️ DO NOT "tidy" these into one value. 0.88 for everything
+       makes lowercase tails crash into the line below; 1.05 for
+       everything makes an all-caps headline look gappy. */
+    line-height: 1.05;
+  }
+
+  .hero-heading--upper {
     text-transform: uppercase;
+    /* Capitals only — no descenders — so the tighter value calculated
+       on 2026-09-16 (cap heights of Baloo 2 vs Archivo Black) still
+       applies. See the note above. */
     line-height: 0.88;
   }
 
@@ -1062,7 +1084,11 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     position: relative;
     display: inline-flex;
     align-items: center;
-    background: var(--brand-green);
+    /* PINK since 2026-09-21 (duotone: pink = the thing to click, on a
+       white page). This DELIBERATELY differs from the header's Calendar
+       chip, which is deep teal so that Donate stays the header's only
+       pink button. Same shape and rings; colour differs by context. */
+    background: var(--accent);
     color: #fff;
     font-family: var(--font-heading);
     font-weight: 600;
@@ -1166,12 +1192,15 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      dark surface; the figures themselves already carry their own
      brand color (blue/green/pink) which reads fine on black. */
   .impact {
-    background: var(--nav-bg-dark);
+    /* DEEP TEAL since 2026-09-21 (duotone). It was near-black matching
+       the old header; the header is pale teal now, so this band carries
+       the page's one deep-colour moment instead. */
+    background: var(--surface-deep);
     border-block: none;
   }
 
   .impact .section-head {
-    color: var(--nav-text);
+    color: var(--on-surface-deep);
   }
  
   .stat-grid {
@@ -1185,6 +1214,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      equal even though the labels differ a lot in length — without it the
      shortest ("Audience members") made a visibly stubbier box. */
   .stat {
+    background: var(--surface-brand);   /* pale teal box (duotone) */
     /* Grid items default to min-width:auto, which means a track can
        never shrink below its longest UNBREAKABLE word. The longest
        label here contains "SCHOLARSHIPS" and "SPONSORS", which forced
@@ -1193,7 +1223,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        shrink; the break-word on .stat-label below then wraps the word
        instead of overflowing. (2026-08-23) */
     min-width: 0;
-    background: var(--accent);
     padding: 1.4rem 1rem;
     border-radius: var(--radius);
     display: flex;
@@ -1208,8 +1237,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     font-family: var(--font-heading);
     font-size: 2.1rem;
     font-weight: 400;
-    /* Light type on a saturated box. */
-    color: #fff;
+    /* Deep teal on the pale-teal box (duotone, 2026-09-21): 9.3:1. */
+    color: var(--on-surface-brand);
     line-height: 1;
     margin: 0;
   }
@@ -1218,10 +1247,8 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     /* Pairs with min-width:0 on .stat above — see the note there. */
     overflow-wrap: break-word;
     font-size: 0.85rem;
-    /* Slightly softened white rather than the muted grey used before:
-       that grey was tuned for the dark band behind, and on a saturated
-       box it dropped below a comfortable contrast. */
-    color: rgba(255, 255, 255, 0.92);
+    /* Deep teal on the pale-teal box, full strength (duotone). */
+    color: var(--on-surface-brand);
     margin: 0.55rem 0 0;
     line-height: 1.35;
   }
@@ -1345,7 +1372,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink);
   }
 
   /* Bulb + track share a row so they sit on one centreline. */
@@ -1360,7 +1387,10 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     height: 34px;
     border-radius: 50%;
     background: var(--campaign-fill);
-    border: 3px solid var(--accent);
+    /* Deep teal, not pink (duotone, 2026-09-21): the bar is information,
+       not something to click. Same for the track, ticks, flag and the
+       raised/donors figures below. */
+    border: 3px solid var(--ink);
     /* Overlaps the track's rounded left end so the two read as one
        object rather than a circle sitting next to a bar. */
     margin-right: -10px;
@@ -1371,9 +1401,9 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .thermo-track {
     flex: 1;
     height: 22px;
-    border: 3px solid var(--accent);
+    border: 3px solid var(--ink);
     border-radius: var(--radius-pill);
-    background: var(--accent-soft);
+    background: var(--paper);
     /* Clips the fill's square right edge to the rounded end. */
     overflow: hidden;
   }
@@ -1410,7 +1440,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .thermo-tick-mark {
     width: 2px;
     height: 9px;
-    background: var(--accent);
+    background: var(--ink);
     border-radius: 1px;
   }
 
@@ -1440,7 +1470,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   .thermo-meta strong {
-    color: var(--accent);
+    color: var(--ink);
     font-weight: 700;
   }
 
