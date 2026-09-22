@@ -350,11 +350,15 @@ const recognitionGroups = (recognition.groups || []).filter(
           {corporateContactIntro && (
             <div class="corp-contact-intro rich" set:html={md(corporateContactIntro)} />
           )}
+          {/* messagePlaceholder="" removes "How can we help?" from this
+              form only (2026-09-22, PM request) — every other contact
+              form on the site keeps the default placeholder. */}
           <ContactForm
             route="development"
             source="Ways to Support — corporate sponsorship"
             subject="Corporate sponsorship enquiry"
             submitLabel="Send enquiry"
+            messagePlaceholder=""
             compact={true}
           />
         </div>
