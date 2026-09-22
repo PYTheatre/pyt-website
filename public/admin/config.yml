@@ -177,6 +177,14 @@ collections:
       - { name: "schedule", label: "Schedule blurb", widget: "string", required: false, hint: "Example: Wednesdays 4–5pm, 8 weeks" }
       - { name: "tuition", label: "Tuition / cost", widget: "string", required: false, hint: "Example: $240 per session" }
       - { name: "registration_url", label: "Active.com registration link", widget: "string", required: false, hint: "Where families register. Leave blank if registration isn't open yet." }
+      - name: "registration_status"
+        label: "Registration status"
+        widget: "select"
+        options: ["Open", "Coming soon", "Closed"]
+        default: "Open"
+        required: false
+        hint: "Open = show the Register button (needs a link above). Coming soon = grey 'Registration coming soon'. Closed = a sign saying registration is closed until next year; the Register button is hidden even if the link is still saved, so nobody lands on a closed form."
+      - { name: "registration_note", label: "Registration wording (optional)", widget: "string", required: false, hint: "Replaces the standard wording, e.g. 'Registration opens 1 March' or 'Closed until Fall 2027'. Leave blank for 'Registration closed until next year' / 'Registration coming soon'." }
       - { name: "scholarships_available", label: "Scholarships available?", widget: "boolean", default: false }
  
   # ============================================================
@@ -566,6 +574,7 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string" }
           - { name: "lede", label: "Intro paragraph", widget: "text" }
+          - { name: "registration_notice", label: "Registration notice (optional)", widget: "string", required: false, hint: "One line shown in a teal band under the intro, for something true of the whole page — e.g. 'Class registration is closed until next year. Summer camps open in March.' Leave blank to show nothing. Each programme also has its own status further down under Classes & Camps." }
           - { name: "summer_heading", label: "Summer block — heading", widget: "string", required: false, hint: "Example: Summer Camps 2026" }
           - { name: "summer_intro", label: "Summer block — intro", widget: "text", required: false, hint: "Leave the intro blank to hide the whole Summer Camps block." }
           - { name: "summer_register_url", label: "Summer block — Register link", widget: "string", required: false }
