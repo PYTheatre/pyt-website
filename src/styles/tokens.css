@@ -13,18 +13,45 @@
  
    Everything below is a PLACEHOLDER pending real branding:
    the pink accent, the Newsreader/Inter fonts, the "P" logo.
+
+   ------------------------------------------------------------
+   DUOTONE SCHEME (2026-09-21, PM-approved mockup
+   "MOCKUP-duotone-photos-2-recommended")
+   ------------------------------------------------------------
+   The site now uses essentially TWO colours, so the photographs
+   carry the colour and the design reads as less childish:
+
+     TEAL  — one family, from a pale wash to a very deep teal that
+             replaces black for all text. Surfaces, text, graphics.
+     PINK  — PYT logo pink. Reserved for things you CLICK: buttons,
+             the promo banner, links, and their hover/focus tints.
+
+   The rule "pink means press" is the point of the scheme. Before
+   putting pink on something that isn't clickable, don't.
+
+   Exceptions, on purpose: the logo stays multicolour (brand mark);
+   the three homepage values phrases keep their own colours (PM
+   request); photos are recoloured by a filter (see global.css,
+   "DUOTONE PHOTOS") and bloom into full colour when featured/hovered.
+
+   CONTRAST RULES (all measured, WCAG AA):
+     - pink TEXT never sits on --surface-brand (pale teal): 3.74:1
+       fails. On pale teal, pink text uses --accent-deep (5.3:1).
+     - --teal-mid is for graphics only (progress bar), never text.
    ============================================================ */
  
 :root {
   /* ---- INK (text colors) ---- */
-  --ink: #111111;          /* near-black, main text            */
+  /* Duotone (2026-09-21): text is the DEEPEST TEAL rather than black,
+     so even the type belongs to the two-colour scheme. 13.7:1 on white. */
+  --ink: #0e323a;          /* deep teal, main text             */
   /* Secondary text is now the SAME black as primary body text
      (2026-08-21, PM request: "everywhere across the site the text that's
      grey should all be black"). Kept as its own token rather than being
      removed, so the ~40 places that use it don't all need editing, and so
      a softer secondary tone could be reintroduced in one place later. */
-  --ink-soft: #111111;     /* secondary text (same as --ink)   */
-  --ink-muted: #8a8a8a;    /* captions, hints                  */
+  --ink-soft: #0e323a;     /* secondary text (same as --ink)   */
+  --ink-muted: #547278;    /* captions, hints — teal-grey, 5.2:1 on white */
  
   /* ---- PAPER (background colors) ---- */
   --paper: #ffffff;        /* main background                  */
@@ -38,16 +65,21 @@
      at this token rather than repeating the hex, so the two can't drift
      apart. Lilac is the nav-pill colour, so it was already in the
      palette rather than being a new colour. */
-  --paper-warm: #efeaf8;   /* pale lilac panel background      */
+  /* Duotone (2026-09-21): lilac -> the palest teal. Covers every panel
+     on the site AND the home-page Values band, whose three coloured
+     phrases were measured against it (all pass, 4.0-6.1:1). Do NOT
+     darken this to --surface-brand: the blue phrase drops to 3.05:1
+     there and visually merges with the teal. */
+  --paper-warm: #e9f4f7;   /* teal wash panel background       */
 
   /* A genuinely neutral soft grey, for the few places that must stay
      black-and-white and would be broken by a colour — currently the
      mobile nav accordion's hover and open states, which the PM asked to
      be black-and-white with pink accents only. */
-  --neutral-soft: #f4f3f1;
+  --neutral-soft: #e9f4f7;   /* now the teal wash (duotone, 2026-09-21) */
  
   /* ---- LINE (borders & dividers) ---- */
-  --line: #e8e6e1;
+  --line: #cde0e4;         /* teal-tinted hairline (duotone) */
  
   /* ---- ACCENT (the one brand color — from PYT logo, PLACEHOLDER) ---- */
   --accent: #c0287b;       /* primary accent (PYT logo pink)   */
@@ -55,38 +87,54 @@
   --accent-soft: #fbeaf3;  /* very light accent (tints, fills) */
 
   /* ---- SECONDARY BRAND COLORS (sampled from the PYT logo's green & blue
-     letters; logo-derived, may be fine-tuned in the Phase 5 rebrand) ---- */
+     letters; logo-derived, may be fine-tuned in the Phase 5 rebrand) ----
+     Duotone (2026-09-21): these keep their TRUE logo values, but the
+     site's buttons no longer use them — Tickets/Calendar/Register now
+     use --surface-deep. They survive only for empty-photo placeholder
+     tiles. Don't reach for them for new UI; use the teal roles below. */
   --brand-green: #68b050;  /* PYT logo green                   */
   --brand-blue: #48a8d0;   /* PYT logo blue                    */
  
   /* ---- NEUTRAL (was mustard/gold; now grey per decisions) ---- */
-  --neutral: #6a6a6a;
+  --neutral: #547278;
  
   /* ---- NAV PILLS (top-level menu items — soft lilac, PLACEHOLDER) ---- */
-  --nav-pill: #d9d2ec;        /* top-level nav pill background      */
-  --nav-pill-hover: #cabfe3;  /* slightly deeper lilac on hover    */
-  --nav-pill-text: #3c3163;   /* dark plum text on the nav pills   */
+  --nav-pill: #b5dce3;        /* pale teal (duotone)               */
+  --nav-pill-hover: #98cdd7;  /* slightly deeper teal on hover     */
+  --nav-pill-text: #0e323a;   /* deep teal text                    */
  
   /* ---- CAMPAIGN FILL (the "raised so far" portion of the thermometer
      and the home-page progress bar — aqua, PLACEHOLDER) ---- */
-  --campaign-fill: #7ed5d8;
+  --campaign-fill: #338899;   /* mid teal — graphics only (4.1:1 vs white) */
  
   /* ---- TYPOGRAPHY (Archivo Black headings + Source Sans 3 body — placeholder,
      chosen to feel closer to reference sites while colors/logo are still TBD) ---- */
   --font-heading: "Archivo Black", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-body: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  /* ---- DARK NAV (new bolder header direction — colors still PLACEHOLDER) ---- */
-  --nav-bg-dark: #17151a;         /* header background */
-  --nav-text: #f5f3ef;            /* nav link text on the dark header */
-  /* The footer's secondary text. This one canNOT go black — it sits on
-     the near-black footer, where black would be invisible. Per the same
-     request's own exception ("unless they're overlaying black and need
-     contrast"), the greyness is removed by taking it to FULL strength
-     light instead of a 70% wash. */
-  --nav-text-muted: rgba(245, 243, 239, 1);
-  --highlight: #f2c419;           /* bright CTA color (Donate button), PLACEHOLDER */
-  --highlight-text: #1a1a1a;      /* text on the highlight color */
+  /* ---- TEAL SURFACES (duotone, 2026-09-21) ---- */
+  --surface-brand: #b5dce3;     /* PALE TEAL — the main colour: header, footer */
+  --on-surface-brand: #0e323a;  /* text on pale teal (9.3:1)                   */
+  --surface-deep: #0e323a;      /* DEEP TEAL — numbers band, header chips      */
+  --on-surface-deep: #ffffff;   /* text on deep teal (13.7:1)                  */
+
+  /* ---- NAV / FOOTER (names are HISTORICAL) ----
+     These were a near-black header and light text. Under the duotone
+     scheme the header and footer are PALE TEAL with DEEP TEAL text, so
+     "-dark" and "nav-text" no longer describe the colours. They are kept
+     as aliases so Header.astro and Footer.astro didn't all need editing;
+     for anything new, use the --surface-* roles above directly. */
+  --nav-bg-dark: var(--surface-brand);    /* header + footer background */
+  --nav-text: var(--on-surface-brand);    /* text on header + footer    */
+  /* The footer's secondary text. Full strength, not a faded tone, per
+     the PM's 2026-08-21 "no grey text" rule — now deep teal on the
+     pale-teal footer. */
+  --nav-text-muted: var(--on-surface-brand);
+  /* Donate button colour. Was bright yellow; under the duotone scheme
+     it is PYT pink, the one colour reserved for actions. White text
+     on it measures 5.5:1. */
+  --highlight: #c0287b;
+  --highlight-text: #ffffff;
  
   /* ---- SPACING SCALE (keeps rhythm consistent) ---- */
   --space-xs: 0.5rem;
