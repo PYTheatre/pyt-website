@@ -20,22 +20,23 @@
   - Rehearsal schedule: EMBEDDED from a "Publish to web" link, which
     makes it PUBLIC. So it must be ROLE-NAMES-ONLY (e.g. "Jack,
     Crutchie, Newsies") and free of any child's name in the notes.
-  - Cast list (full names → roles): EMBEDDED PRIVATELY since
-    2026-09-21 (PM/team request), plus a button to open it in Google.
-    ⚠️ THIS IS ONLY SAFE BECAUSE THE SHEET STAYS PRIVATE IN GOOGLE
-    ("Restricted", shared with specific cast-family accounts). The
-    embed points at the private sheet; Google itself decides, per
-    viewer, whether to show it — signed-in people it is shared with see
-    the list, everyone else sees Google's "you need access" box. The
-    names are never delivered into this page's source.
-    NEVER "Publish to web" the cast list to make the embed "work":
-    that makes a roster of named children public. As a guard, the code
-    below REFUSES to embed a published link (…/d/e/…, /pubhtml) for the
-    cast list and shows only the button.
-    KNOWN LIMITATION: Safari (all iPhones) and Firefox block Google's
-    sign-in inside another site's frame, so even correctly-shared
-    families may see a sign-in box there. That is why the "Open in
-    Google" button stays directly under the embed.
+  - Cast list (full names → roles): EMBEDDED, exactly like the
+    schedule, from a "Publish to web" link.
+    ⚠️ POLICY CHANGE, 2026-09-21: PYT AGREED THAT THE CAST LIST MAY BE
+    PUBLIC. Until then it was private-only and this page refused to
+    embed a published cast list. Publishing makes the children's names
+    visible to anyone who has the link — and the link is in this page's
+    source, behind only the soft password. If PYT ever reverses that
+    decision, unpublish the CastList tab in Google and paste an ordinary
+    (private) sharing link instead: the page then still embeds it, but
+    Google shows it only to signed-in people it is shared with, and an
+    "Open in Google" button appears under it as a fallback (Safari and
+    Firefox block Google sign-in inside embedded frames).
+    PUBLISH ONLY THE CASTLIST TAB — never "Entire document". The
+    producer workbook also holds Contact Info and staff contact tabs.
+  Cast pages are kept OUT OF SEARCH ENGINES by an X-Robots-Tag
+  "noindex, nofollow" rule for /cast/* in public/_headers, so neither
+  this page nor the sheet links in it turn up in search results.
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
@@ -51,8 +52,9 @@ export async function getStaticPaths() {
 const { page } = Astro.props;
 const data = page.data;
 
-// Convert a Google Sheets share URL into an embeddable /preview URL.
-// Used ONLY for the rehearsal schedule (role-names-only).
+// Convert a Google Sheets share URL into an embeddable URL. Published
+// links (/pubhtml) pass through unchanged; ordinary sharing links become
+// /preview. Used for both the schedule and the cast list.
 function toSheetEmbed(url: string | undefined): string {
   if (!url) return "";
   const trimmed = url.trim();
@@ -67,13 +69,14 @@ function toSheetEmbed(url: string | undefined): string {
 }
 
 const rehearsalEmbed = toSheetEmbed(data.rehearsal_sheet_url);
-// Cast list: the button always uses the link as-is (opens in a new tab).
+// Cast list: embedded the same way as the schedule (see file header for
+// the 2026-09-21 policy change). A PUBLISHED link shows to everyone, so
+// it needs no fallback button — just like the schedule. An ordinary
+// PRIVATE link only shows to signed-in people it is shared with, so it
+// also gets an "Open in Google" button underneath.
 const castListLink = (data.cast_list_sheet_url || "").trim();
-// …and it is ALSO embedded, but only if it is an ordinary PRIVATE sheet
-// link. A "Publish to web" link (/d/e/… or /pubhtml) means someone has
-// made the roster public — never embed that (see the file header).
 const castListIsPublished = /\/spreadsheets\/d\/e\/|\/pubhtml/i.test(castListLink);
-const castListEmbed = castListLink && !castListIsPublished ? toSheetEmbed(castListLink) : "";
+const castListEmbed = toSheetEmbed(castListLink);
 
 // Resource links (Google Drive folders etc.) — keep only complete entries.
 const resources = (data.resources || []).filter(
@@ -137,18 +140,22 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
       <section class="section sheet-section">
         <div class="container">
           <h2 class="section-head">Cast list</h2>
-          <p class="sheet-note">The cast list is private. It shows below if you're signed in to Google with an account it's been shared with. If the box asks you to sign in or stays blank, open it in Google instead.</p>
+          {castListIsPublished ? (
+            <p class="sheet-note">This list is updated as casting changes — check back for the latest.</p>
+          ) : (
+            <p class="sheet-note">The cast list is private. It shows below if you're signed in to Google with an account it's been shared with. If the box asks you to sign in or stays blank, open it in Google instead.</p>
+          )}
         </div>
-        {castListEmbed && (
-          <div class="sheet-wide">
-            <div class="sheet-frame">
-              <iframe src={castListEmbed} title="Cast list" loading="lazy"></iframe>
-            </div>
+        <div class="sheet-wide">
+          <div class="sheet-frame">
+            <iframe src={castListEmbed} title="Cast list" loading="lazy"></iframe>
+          </div>
+        </div>
+        {!castListIsPublished && (
+          <div class="container">
+            <a href={castListLink} class="btn btn-outline sheet-open-btn" target="_blank" rel="noopener">Open the cast list in Google →</a>
           </div>
         )}
-        <div class="container">
-          <a href={castListLink} class={`btn ${castListEmbed ? "btn-outline sheet-open-btn" : "btn-primary"}`} target="_blank" rel="noopener">Open the cast list in Google →</a>
-        </div>
       </section>
     )}
 
