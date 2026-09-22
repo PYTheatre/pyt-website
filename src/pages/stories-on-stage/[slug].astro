@@ -172,6 +172,13 @@ const ticketsIntro = (data as any).tickets_intro || "";
     gap: 0.7rem;
   }
 
+  /* The last card needs no margin under it: that 24px sat on top of the
+     section padding and pushed these pages further from the footer than
+     the rest of the site (VERTICAL RHYTHM, tokens.css). */
+  .booking-card:last-child {
+    margin-bottom: 0;
+  }
+
   .booking-card {
     border: 1px solid var(--line);
     border-radius: var(--radius);
