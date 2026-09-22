@@ -422,19 +422,25 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      silently rendered as a plain white pill like every other nav
      item. !important sidesteps needing to out-calculate Astro's
      auto-injected specificity. */
+  /* DUOTONE (2026-09-21): Tickets, Calendar and Register are DEEP TEAL
+     chips with white text; Donate is the header's ONLY pink button,
+     because pink is reserved for the primary action. Tickets was blue
+     and Calendar green before. The notches/rings below are unchanged:
+     the notches take the header colour, so they follow it to pale teal
+     automatically. */
   .tickets-btn {
     position: relative;
-    background: var(--brand-blue) !important;
-    color: #0d2733 !important;
+    background: var(--surface-deep) !important;
+    color: var(--on-surface-deep) !important;
     font-weight: 600;
     padding-inline: 1.3rem;
     z-index: 1;
   }
 
   .tickets-btn:hover {
-    background: var(--brand-blue) !important;
-    filter: brightness(1.07);
-    color: #0d2733 !important;
+    background: var(--surface-deep) !important;
+    filter: brightness(1.35);
+    color: var(--on-surface-deep) !important;
   }
 
   .tickets-btn::before,
@@ -462,8 +468,8 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      mobile-menu panel background instead of the dark bar. */
   .tickets-btn-mobile {
     position: relative;
-    background: var(--brand-blue) !important;
-    color: #0d2733 !important;
+    background: var(--surface-deep) !important;
+    color: var(--on-surface-deep) !important;
     z-index: 1;
   }
 
@@ -489,7 +495,8 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   }
 
   /* ---- Calendar button (2026-08-19) ---- */
-  /* Green (site's brand-green), with two small "ring" tabs poking
+  /* Deep teal since 2026-09-21 (was brand-green — see the DUOTONE
+     note on .tickets-btn), with two small "ring" tabs poking
      above the top edge — evokes a wall calendar's binder rings, the
      same general idea as the Tickets button's side notches but
      additive (small light tabs drawn ON TOP) rather than a "bite"
@@ -500,8 +507,8 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      than a plain ".calendar-btn" rule could ever win outright. */
   .calendar-btn {
     position: relative;
-    background: var(--brand-green) !important;
-    color: #ffffff !important;
+    background: var(--surface-deep) !important;
+    color: var(--on-surface-deep) !important;
     font-weight: 600;
     padding-inline: 1.2rem;
     /* NO vertical offset (2026-08-23). This used to be `margin-top: 6px`,
@@ -523,9 +530,9 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   }
 
   .calendar-btn:hover {
-    background: var(--brand-green) !important;
-    filter: brightness(1.08);
-    color: #ffffff !important;
+    background: var(--surface-deep) !important;
+    filter: brightness(1.35);
+    color: var(--on-surface-deep) !important;
   }
 
   .calendar-btn::before,
@@ -549,8 +556,8 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
 
   .calendar-btn-mobile {
     position: relative;
-    background: var(--brand-green) !important;
-    color: #ffffff !important;
+    background: var(--surface-deep) !important;
+    color: var(--on-surface-deep) !important;
     margin-top: 6px;
   }
 
@@ -590,10 +597,10 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     gap: 0.5rem;
   }
  
-  /* Donate keeps the bright highlight color. Register uses PYT's
-     pink accent instead (PM request) — .btn-primary already gives
-     it that pink by default, so register-btn just needs sizing,
-     no color override. */
+  /* Donate uses --highlight, which is PYT pink under the duotone
+     scheme (was yellow). Register is DEEP TEAL rather than the
+     .btn-primary pink it used to inherit, so Donate is the header's
+     one pink button — see the DUOTONE note on .tickets-btn. */
   .donate-btn {
     padding: 0.5rem 1.1rem;
     font-size: 0.9rem;
@@ -604,6 +611,16 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   .register-btn {
     padding: 0.5rem 1.1rem;
     font-size: 0.9rem;
+    background: var(--surface-deep);
+    border-color: var(--surface-deep);
+    color: var(--on-surface-deep);
+  }
+
+  .register-btn:hover {
+    background: var(--surface-deep);
+    border-color: var(--surface-deep);
+    color: var(--on-surface-deep);
+    filter: brightness(1.35);
   }
 
   .donate-btn:hover {
