@@ -1,4 +1,4 @@
 ---
-show_title: SINGIN' IN THE RAIN
+show_title: Singin' In The Rain
 password: goodmorning
 ---
