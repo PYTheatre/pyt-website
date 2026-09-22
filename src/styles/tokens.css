@@ -154,3 +154,40 @@
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.06);
   --shadow-lift: 0 8px 28px rgba(0, 0, 0, 0.10);
 }
+
+/* ============================================================
+   VERTICAL RHYTHM (2026-09-21, PM request: "even up the white space
+   across the site, mobile too")
+   ------------------------------------------------------------
+   Every page's vertical spacing comes from these four values, so the
+   whole site keeps one rhythm. Measured on every page before this
+   change, gaps ranged from ~50px to 241px and the space above the
+   footer from 96px to 256px.
+
+   The rule of thumb: sections are padded by HALF the gap wanted
+   between them, so two sections meeting add up to one full gap
+   (96px desktop / 64px phone) instead of doubling to 192px, which is
+   what the old 96px-each-side padding did.
+
+                              phone   desktop
+     between two sections      64px     96px   (2 x --section-pad)
+     header -> page title      40px     64px   (--page-top)
+     title / photo -> content  48px     64px   (--hero-gap + --section-pad)
+     last content -> footer    64px     96px   (--section-pad + footer margin)
+
+   If a page looks too tight or too loose, change these here rather
+   than adding one-off margins in a page file — one-off margins are
+   what made the spacing uneven in the first place.
+   ============================================================ */
+:root {
+  --section-pad: 2rem;
+  --page-top: 2.5rem;
+  --hero-gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --section-pad: 3rem;
+    --page-top: 4rem;
+  }
+}
