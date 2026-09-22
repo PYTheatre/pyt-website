@@ -131,12 +131,60 @@ size is exactly the risk described in §6. A small hand-written page that
 generates the sitemap from the existing content, adding no new packages at
 all, avoids the problem entirely and is the recommended approach here.
 
-### After the switch — test these four things
+### After the switch — test these five things
 
 1. Log out of the CMS and log back in.
 2. Submit one contact form and confirm you land on the Thank You page.
 3. Click the **Español** button in the footer and confirm the site translates.
 4. Click through the links on the Casting, Audition and Support pages.
+5. Open **https://pytnet.org/wizard-of-oz-cast-page/** and confirm the Wizard
+   of Oz cast page appears (password screen first) and the address bar still
+   shows that address. See "The Wizard of Oz cast page address" below.
+
+### The Wizard of Oz cast page address (added 22 September 2026)
+
+PYT's old site had one cast page, at `pytnet.org/wizard-of-oz-cast-page/`,
+and that exact address must keep working. On the new site every cast page
+normally lives at `/cast/<show>/`, so the Wizard of Oz page is really
+`/cast/the-wizard-of-oz/`. **Two lines in `public/_redirects` make the old
+address show that same page**, without changing what is in the address bar.
+Both addresses work and show identical content. A matching rule in
+`public/_headers` keeps the old address out of search engines, like every
+other cast page.
+
+Three things to know:
+
+- **Nothing needs changing at launch.** The rule is based on the path, not
+  the domain, so it works on `pyt-website.pages.dev` now and on `pytnet.org`
+  after the switch.
+- **Do not rename or delete the CMS cast page "The Wizard of Oz"** (file
+  `the-wizard-of-oz`) while the old address is in use — the rule points at it.
+  If it is ever renamed, the old address shows "page not found".
+- **New shows need nothing.** Their cast pages use the normal
+  `/cast/<show>/` address. Only this one old address is special.
+
+### Old-site page addresses forward to the new pages (added 22 September 2026)
+
+Most page addresses on the old WordPress site differ from the new site's
+(for example the old `/boxoffice/the-wizard-of-oz-2/` ticket page is now
+`/shows/the-wizard-of-oz/`). **`public/_redirects` forwards about 35 old
+addresses, plus whole old sections (`/boxoffice/…`, `/auditions/…`,
+`/get-involved/…`, `/acting-classes-camps/…`, `/for-educators/…`), to the
+closest new page**, so links in Google, old emails and bookmarks keep working.
+Addresses that are the same on both sites (the home page, `/about/`,
+`/subscribe/`, `/shop/`, `/scholarships/`) need nothing.
+
+- **Nothing needs changing at launch** — like the cast rule, it is path-based.
+- **To change where an old address goes**, edit the second column of its two
+  lines in `public/_redirects`. Never add a catch-all for `/about/*` or `/*`:
+  it would also catch real new pages.
+- **Not covered:** old image addresses (`/files/…`) used in past emails, and
+  any old page not linked from the old site's menu. An address the site
+  doesn't know shows the home page (the address bar keeps the unknown
+  address). If staff find a missing one, add two lines to `public/_redirects`.
+- **After the switch, test:** `pytnet.org/boxoffice/the-wizard-of-oz-2/` should
+  land on the new Wizard of Oz show page, and `pytnet.org/auditions/` on
+  Auditions.
 
 ---
 
