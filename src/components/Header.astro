@@ -107,7 +107,7 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
  
 <header class="site-header">
   <div class="container header-inner">
-    {!isHomepage && <Logo />}
+    {!isHomepage && <Logo mark />}
  
     <!-- Desktop / wide-screen navigation -->
     <nav class="nav-wide" aria-label="Main navigation">
@@ -228,11 +228,19 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      back on --max-width like every other container. That restores the
      nav's left edge to line up with the page content beneath it. */
   .header-inner {
+    /* ONE HEIGHT FOR EVERYTHING IN THE BAR (2026-09-22, PM request).
+       The logo, the menu items and the Register / Donate buttons used
+       to be three different heights (30 / 34 / 41px). They all read off
+       this one number now, so they match exactly and the bar stays
+       tidy; change it here and the whole bar follows. */
+    --nav-item-h: 34px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
-    padding-block: 1.1rem;
+    /* COMPACT BAR (2026-09-22, PM request: closer to Apple's). Was
+       1.1rem, which with a 42px logo made a 77px bar. */
+    padding-block: 0.5rem;
     /* SAFETY NET. The nav is CMS-driven (Navigation -> Full Menu), so
        its width is not fixed by this code — adding a menu item makes it
        wider and could re-break the fit. With wrap, an over-long row
@@ -282,8 +290,13 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
        worth ~120px, the largest single saving available. 0.88rem is
        about as small as Archivo Black can go here and still read
        comfortably on the dark bar — don't reduce it further. */
-    padding: 0.55rem 0.65rem;
-    font-size: 0.88rem;
+    /* Height comes from --nav-item-h, so only the side padding is set
+       here (2026-09-22). */
+    height: var(--nav-item-h);
+    padding: 0 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
     white-space: nowrap;
     font-family: var(--font-heading);
     font-weight: 400;
@@ -581,17 +594,15 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
   }
 
  
-  /* Nav logo trimmed 54px -> 44px tall (2026-08-23), worth ~18px of
-     width. Scoped to the header on purpose: Footer.astro renders the
-     SAME <Logo size="nav" /> and should keep the larger size, so this
-     must not be changed inside Logo.astro. :global() is required
-     because the logo's own classes come from that component and don't
-     carry this file's scoping attribute. */
-  .header-inner :global(.logo-nav .logo-mark) {
-    /* 42px, not 44px, since the switch to the TRANSPARENT logo file
-       (2026-09-21): that file is cropped tighter, so 42px shows the
-       letters at exactly the size 44px did — see Logo.astro. */
-    height: 42px;
+  /* :global() is required because the logo's own classes come from
+     Logo.astro and don't carry this file's scoping attribute. */
+  /* The header shows the PYT MARK only — the letters cropped out of the
+     logo file, no wordmark (see Logo.astro). 20px of letters sits with
+     the 12.8px menu type the way Apple's mark sits with theirs, so the
+     logo reads as one more item in the bar. The FOOTER is untouched and
+     keeps the full logo with the wordmark. */
+  .header-inner :global(.logo-nav-mark .logo-nav-frame) {
+    --mark-h: 20px;
   }
 
   .header-actions {
@@ -604,16 +615,20 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
      scheme (was yellow). Register is DEEP TEAL rather than the
      .btn-primary pink it used to inherit, so Donate is the header's
      one pink button — see the DUOTONE note on .tickets-btn. */
+  /* Smaller in the compact bar (2026-09-22): was 0.5rem/1.1rem at
+     0.9rem type. */
   .donate-btn {
-    padding: 0.5rem 1.1rem;
-    font-size: 0.9rem;
+    height: var(--nav-item-h);
+    padding: 0 0.85rem;
+    font-size: 0.82rem;
     background: var(--highlight);
     color: var(--highlight-text);
   }
 
   .register-btn {
-    padding: 0.5rem 1.1rem;
-    font-size: 0.9rem;
+    height: var(--nav-item-h);
+    padding: 0 0.85rem;
+    font-size: 0.82rem;
     background: var(--surface-deep);
     border-color: var(--surface-deep);
     color: var(--on-surface-deep);
@@ -637,9 +652,9 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     flex-direction: column;
     justify-content: center;
     gap: 5px;
-    width: 42px;
-    height: 42px;
-    padding: 0 9px;
+    width: var(--nav-item-h);
+    height: var(--nav-item-h);
+    padding: 0 7px;
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: var(--radius-btn);
