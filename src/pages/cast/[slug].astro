@@ -17,14 +17,25 @@
   page.
 
   TWO DIFFERENT TREATMENTS FOR THE TWO SHEETS:
-  - Rehearsal schedule: EMBEDDED. Must be ROLE-NAMES-ONLY (e.g.
-    "Jack, Crutchie, Newsies") and free of any child's name in the
-    notes. It's embedded because it isn't a roster of named minors.
-  - Cast list (full names → roles): NOT embedded. It is a roster of
-    identifiable children, so it must stay PRIVATE in Google (shared
-    with specific cast-family accounts), and this page only LINKS to
-    it. Google then enforces real login-based access — the names are
-    never delivered into this public page's source.
+  - Rehearsal schedule: EMBEDDED from a "Publish to web" link, which
+    makes it PUBLIC. So it must be ROLE-NAMES-ONLY (e.g. "Jack,
+    Crutchie, Newsies") and free of any child's name in the notes.
+  - Cast list (full names → roles): EMBEDDED PRIVATELY since
+    2026-09-21 (PM/team request), plus a button to open it in Google.
+    ⚠️ THIS IS ONLY SAFE BECAUSE THE SHEET STAYS PRIVATE IN GOOGLE
+    ("Restricted", shared with specific cast-family accounts). The
+    embed points at the private sheet; Google itself decides, per
+    viewer, whether to show it — signed-in people it is shared with see
+    the list, everyone else sees Google's "you need access" box. The
+    names are never delivered into this page's source.
+    NEVER "Publish to web" the cast list to make the embed "work":
+    that makes a roster of named children public. As a guard, the code
+    below REFUSES to embed a published link (…/d/e/…, /pubhtml) for the
+    cast list and shows only the button.
+    KNOWN LIMITATION: Safari (all iPhones) and Firefox block Google's
+    sign-in inside another site's frame, so even correctly-shared
+    families may see a sign-in box there. That is why the "Open in
+    Google" button stays directly under the embed.
 */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
@@ -56,8 +67,13 @@ function toSheetEmbed(url: string | undefined): string {
 }
 
 const rehearsalEmbed = toSheetEmbed(data.rehearsal_sheet_url);
-// Cast list is a LINK, not an embed — used as-is (opens in a new tab).
+// Cast list: the button always uses the link as-is (opens in a new tab).
 const castListLink = (data.cast_list_sheet_url || "").trim();
+// …and it is ALSO embedded, but only if it is an ordinary PRIVATE sheet
+// link. A "Publish to web" link (/d/e/… or /pubhtml) means someone has
+// made the roster public — never embed that (see the file header).
+const castListIsPublished = /\/spreadsheets\/d\/e\/|\/pubhtml/i.test(castListLink);
+const castListEmbed = castListLink && !castListIsPublished ? toSheetEmbed(castListLink) : "";
 
 // Resource links (Google Drive folders etc.) — keep only complete entries.
 const resources = (data.resources || []).filter(
@@ -101,28 +117,8 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
       </div>
     </section>
 
-    {castListLink && (
-      <section class="section sheet-section">
-        <div class="container">
-          <h2 class="section-head">Cast list</h2>
-          <p class="sheet-note">The cast list is kept private. You'll need to be signed in to the Google account it was shared with to view it.</p>
-          <a href={castListLink} class="btn btn-primary" target="_blank" rel="noopener">View the cast list →</a>
-        </div>
-      </section>
-    )}
-
-    {rehearsalEmbed && (
-      <section class="section sheet-section">
-        <div class="container">
-          <h2 class="section-head">Rehearsal schedule</h2>
-          <p class="sheet-note">This schedule is updated through the run — check back for the latest.</p>
-          <div class="sheet-frame">
-            <iframe src={rehearsalEmbed} title="Rehearsal schedule" loading="lazy"></iframe>
-          </div>
-        </div>
-      </section>
-    )}
-
+    {/* Rehearsal resources come FIRST, straight after the intro
+        (PM request, 2026-09-21) — they were at the bottom. */}
     {resources.length > 0 && (
       <section class="section sheet-section">
         <div class="container">
@@ -132,6 +128,39 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
             {resources.map((r) => (
               <a href={r.url} class="btn btn-outline" target="_blank" rel="noopener">{r.label}</a>
             ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {castListLink && (
+      <section class="section sheet-section">
+        <div class="container">
+          <h2 class="section-head">Cast list</h2>
+          <p class="sheet-note">The cast list is private. It shows below if you're signed in to Google with an account it's been shared with. If the box asks you to sign in or stays blank, open it in Google instead.</p>
+        </div>
+        {castListEmbed && (
+          <div class="sheet-wide">
+            <div class="sheet-frame">
+              <iframe src={castListEmbed} title="Cast list" loading="lazy"></iframe>
+            </div>
+          </div>
+        )}
+        <div class="container">
+          <a href={castListLink} class={`btn ${castListEmbed ? "btn-outline sheet-open-btn" : "btn-primary"}`} target="_blank" rel="noopener">Open the cast list in Google →</a>
+        </div>
+      </section>
+    )}
+
+    {rehearsalEmbed && (
+      <section class="section sheet-section">
+        <div class="container">
+          <h2 class="section-head">Rehearsal schedule</h2>
+          <p class="sheet-note">This schedule is updated through the run — check back for the latest.</p>
+        </div>
+        <div class="sheet-wide">
+          <div class="sheet-frame">
+            <iframe src={rehearsalEmbed} title="Rehearsal schedule" loading="lazy"></iframe>
           </div>
         </div>
       </section>
@@ -271,6 +300,29 @@ const bodyParas = (data.body || "").split("\n\n").filter((p) => p.trim().length 
   }
 
   /* Responsive sheet frame */
+  /* WIDE FRAMES (2026-09-21): the Google Sheet embeds break out of the
+     text column so wide schedules don't run off the right edge. Up to
+     1600px wide, centred, with the same side gutters as .container; the
+     heading and note above stay in the normal column. Google decides
+     the sheet's own column widths — if a sheet is still wider than
+     this, the frame scrolls sideways inside itself, never the page. */
+  .sheet-wide {
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+  }
+
+  @media (min-width: 720px) {
+    .sheet-wide {
+      padding-inline: var(--space-lg);
+    }
+  }
+
+  .sheet-open-btn {
+    margin-top: var(--space-sm);
+  }
+
   .sheet-frame {
     width: 100%;
     border: 1px solid var(--line);
