@@ -155,8 +155,8 @@ const privacyUrl = (footer as any).privacy_link_url || "";
     color: var(--nav-text);
   }
 
-  /* Deliberately NOT .btn: this needs to read clearly on the dark
-     footer, and the shared button styles are tuned for light
+  /* Deliberately NOT .btn: this needs to read clearly on the
+     footer's own colour (pale teal since 2026-09-21), and the shared button styles are tuned for light
      backgrounds. Sized like a real button rather than the small
      40px-wide "ES" pill it was in the nav. */
   .lang-btn {
@@ -215,7 +215,9 @@ const privacyUrl = (footer as any).privacy_link_url || "";
   }
 
   .footer-privacy a {
-    color: var(--accent);
+    /* --accent-deep, not --accent: the footer is pale teal, and ordinary
+       pink text measures 3.74:1 there (fails). Deep pink is 5.3:1. */
+    color: var(--accent-deep);
     text-decoration: underline;
   }
 
@@ -243,8 +245,8 @@ const privacyUrl = (footer as any).privacy_link_url || "";
 
   .footer-social-link:hover,
   .footer-social-link:focus-visible {
-    color: var(--accent);
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--accent-deep);   /* deep pink: see .footer-privacy a */
+    background: rgba(14, 50, 58, 0.08);
   }
 
   /* The icons are the only content, so the negative margin pulls the
@@ -284,13 +286,15 @@ const privacyUrl = (footer as any).privacy_link_url || "";
   }
 
   .footer-col a:hover {
-    color: var(--accent);
+    color: var(--accent-deep);   /* deep pink: see .footer-privacy a */
   }
 
   .footer-bottom {
     margin-top: var(--space-lg);
     padding-block: var(--space-md);
-    border-top: 1px solid rgba(245, 243, 239, 0.15);
+    /* Deep-teal hairline — the old near-white one vanished once the
+       footer turned pale teal (duotone, 2026-09-21). */
+    border-top: 1px solid rgba(14, 50, 58, 0.15);
   }
 
   .footer-bottom p {
