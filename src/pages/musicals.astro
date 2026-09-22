@@ -27,7 +27,11 @@ const now = new Date();
 >
   <AuditionsPromo strip stripText={(page as any).auditions_strip_text} />
 
-  <PageHero title={(page as any).title || "Musicals"}>
+  {/* Intro paragraph added 2026-09-21 (PM request), matching the Studio
+      Shows and Stories on Stage pages. Edited in the CMS under
+      Musicals Page -> "Intro paragraph". Blank = no paragraph. No hero
+      photo on purpose: this page has no entry in page-heroes.json. */}
+  <PageHero title={(page as any).title || "Musicals"} lede={(page as any).intro}>
     <SupportLinks slot="actions" sponsor scholarship row />
   </PageHero>
 
