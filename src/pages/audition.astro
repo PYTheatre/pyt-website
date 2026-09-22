@@ -271,13 +271,16 @@ const faqs = Array.isArray(page.faqs)
      query at the bottom) — forcing columns earlier squeezed both the
      card text and the FAQ questions onto too many lines. */
   .auditions-main {
-    padding-bottom: var(--space-lg);
+    /* standard section padding (VERTICAL RHYTHM, tokens.css) */
   }
 
   .auditions-columns {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-2xl) var(--space-xl);
+    /* Row gap (only used when the columns stack on narrower screens) is
+       one standard section gap — VERTICAL RHYTHM, tokens.css. Was 96px
+       on phones, bigger than the gap between whole sections. */
+    gap: calc(2 * var(--section-pad)) var(--space-xl);
     align-items: start;
   }
 
