@@ -33,3 +33,15 @@ https://:preview.pyt-website.pages.dev/*
 # Any other *.pages.dev address this project is ever served on.
 https://:project.pages.dev/*
   X-Robots-Tag: noindex, nofollow
+
+# ---------------------------------------------------------------------------
+# CAST PAGES — kept out of search engines ON EVERY ADDRESS (2026-09-21).
+# Unlike the rules above, this one is matched on the PATH, so it applies on
+# the real domain after launch too — which is the point. Cast pages are
+# shared by direct link only, sit behind a soft password, and embed the
+# cast list (children's names, public since PYT's Sept 2026 decision).
+# "nofollow" also tells search engines not to follow the sheet links on
+# these pages. This is safe at launch: it only affects /cast/ pages.
+# ---------------------------------------------------------------------------
+/cast/*
+  X-Robots-Tag: noindex, nofollow
