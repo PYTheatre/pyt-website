@@ -55,13 +55,23 @@
 */
 interface Props {
   size?: "nav" | "hero";
-  /* SIZED LIKE A NAV BUTTON (2026-09-22, PM request: "treat the full
-     logo as a button the same size as the other buttons"). The header
-     logo is the WHOLE logo — letters and wordmark, as it always was —
-     in a box exactly as tall as the Tickets / Calendar / Register
-     buttons beside it, so its top and bottom edges line up with theirs.
-     An earlier attempt cropped it to the "PYT" letters; that is gone.
-     The FOOTER is unaffected and keeps its larger logo. */
+  /* TOP-TO-TOP, BOTTOM-TO-BOTTOM (2026-09-22, PM correction x3): "top
+     of the PYT letters should match the top of the buttons, and the
+     bottom of the Peninsula Youth Theatre wordmark should match the
+     bottom of the buttons." The previous pass matched the LETTERS'
+     height to the button height, which let the outer stars (above the
+     letters) and the whole wordmark (below the letters) spill out past
+     the header bar — which is exactly the "cut off / running over"
+     the PM then saw.
+
+     This scales the image so the SPAN FROM THE TOP OF THE LETTERS TO
+     THE BOTTOM OF THE WORDMARK — the part the PM actually wants inside
+     the bar — matches the button height, then aligns that span's top
+     and bottom to the button's top and bottom. Nothing is cropped: the
+     decorative stars above the letters are the only thing that can
+     still extend past the box, and at this scale that's a few pixels,
+     not the previous overflow into the page below. The FOOTER is
+     unaffected and keeps its own, larger, uncropped logo. */
   mark?: boolean;
 }
 const { size = "nav", mark = false } = Astro.props;
@@ -110,29 +120,57 @@ const { size = "nav", mark = false } = Astro.props;
     }
   }
 
-  /* The header logo's BOX is one nav item tall (--nav-item-h, set in
-     Header.astro), and the image sits inside it with a little air top
-     and bottom, the way the type does inside the buttons. Both numbers
-     come from the header, so the bar stays consistent if its height is
-     ever changed. */
+  /* LETTER-TOP TO WORDMARK-BOTTOM = BUTTON HEIGHT (2026-09-22, third
+     pass). Measured by colour on the real file (600 x 309): the "PYT"
+     letters start at row 64 (pink/green/blue, stars excluded by
+     colour); the "Peninsula Youth Theatre" wordmark (purple) ends at
+     row 297. So the span the PM wants inside the bar is rows 64-297,
+     233px of the file's 309px height — NOT the full file (which also
+     has stars above row 64) and NOT the letters alone (which stops
+     above the wordmark).
+
+     --mark-h is that 233px span, set to --nav-item-h by Header.astro.
+     Horizontal alignment reuses the ORIGINAL letters-flush numbers —
+     6.67% / 3.50% of the image's rendered WIDTH is empty margin before
+     the P / after the T — expressed here against this image's rendered
+     HEIGHT (aspect ratio 600/309 = 1.9417), so they still work
+     whatever --mark-h is:
+       image height = 309/233 = 1.3262
+       shift up     =  64/233 = 0.2747   (top of letters -> top of box)
+       margin-left  = 0.0667 x 1.9417 = 0.1295
+       margin-right = 0.0350 x 1.9417 = 0.0680
+     overflow: visible — the box is a layout footprint for rows 64-297,
+     not a crop window, so the stars above the letters (rows 0-64) can
+     still poke a little above it; nothing below row 297 is cropped
+     either, there just isn't much there. */
   .logo-nav-mark {
-    height: var(--logo-box-h, 34px);
+    /* Width is the LETTERS-TO-WORDMARK footprint (image width minus its
+       left/right empty margins — the same 0.0667 / 0.0350 fractions as
+       the horizontal alignment below), so the next nav item doesn't
+       collide with the logo. The right-hand star is allowed a few
+       pixels of harmless overlap past this, the same small amount the
+       PM already approved when the letters were first aligned to the
+       edge. */
+    position: relative;
+    display: block;
+    overflow: visible;
+    height: var(--mark-h, 34px);
+    width: calc(var(--mark-h, 34px) * 2.3131);
   }
 
-  /* A SEPARATE VARIABLE ON PURPOSE: --logo-h is set on the image itself
-     by the >=520px rule above, so a header value inherited from the
-     link could never win. --logo-img-h is read only here. The letter-
-     alignment margins are restated from it for the same reason, so they
-     match this image's height rather than the footer's. */
   .logo-nav-mark .logo-mark {
-    height: var(--logo-img-h, 26px);
-    margin-left: calc(var(--logo-img-h, 26px) * -0.1295);
-    margin-right: calc(var(--logo-img-h, 26px) * -0.068);
-  }
-
-  .logo-nav .logo-mark {
-    margin-left: calc(var(--logo-h, 42px) * -0.1295);
-    margin-right: calc(var(--logo-h, 42px) * -0.068);
+    position: absolute;
+    top: calc(var(--mark-h, 34px) * -0.2747);
+    left: 0;
+    height: calc(var(--mark-h, 34px) * 1.3262);
+    width: auto;
+    /* max-width:none is required — global.css resets every <img> to
+       max-width:100%, which would otherwise clamp this image's width
+       against its own small box and squash it sideways (found and
+       fixed in the previous pass). */
+    max-width: none;
+    margin-left: calc(var(--mark-h, 34px) * 1.3262 * -0.1295);
+    margin-right: calc(var(--mark-h, 34px) * 1.3262 * -0.068);
   }
 
   /* Hero size: the frame is sized to exactly the headline text
