@@ -302,7 +302,8 @@ collections:
         file: "src/content/settings/home-page.json"
         description: "All the words, links, and numbers on the home page. The 'Now Playing' poster updates automatically from your Shows list."
         fields:
-          - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Example: Outstanding youth theatre. Up to about 28 characters stays on one line on a wide screen; longer is fine and simply wraps onto two, which is what it already does on tablets and phones." }
+          - { name: "hero_heading", label: "Hero — main headline", widget: "string", hint: "Shown exactly as you type it, unless you choose UPPERCASE below. On a wide screen roughly 35 characters fits on one line in normal capitalization, or about 28 in ALL CAPS; longer is fine and simply wraps onto two lines, as it already does on tablets and phones." }
+          - { name: "hero_heading_case", label: "Hero — headline capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed", required: false, hint: "'As typed' shows the headline exactly as written above. 'UPPERCASE' turns it all into capitals whatever you type." }
           - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
           - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text" }
           - { name: "hero_image", label: "Hero — banner photo (wide, under the intro) — NOT CURRENTLY SHOWN", widget: "image", required: false, hint: "Not currently used on the live page (replaced by the photo strip below). Left here in case you want a single wide banner again in future." }
