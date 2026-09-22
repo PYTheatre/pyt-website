@@ -48,10 +48,10 @@ performances:
   - date_label: Thur, Nov 19
     time_label: 9:30AM
     cast: Student Matinee
-    buy_url: Phone call only 650-903-6000
+    buy_url: https://tickets.mvcpa.com/eventperformances.asp?evt=765
   - date_label: Fri, Nov 20
     time_label: 9:30AM
     cast: Student Matinee
-    buy_url: Phone call only 650-903-6000
+    buy_url: https://tickets.mvcpa.com/eventperformances.asp?evt=765
 eyebrow: ""
 ---
