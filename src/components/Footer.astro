@@ -181,7 +181,10 @@ const privacyUrl = (footer as any).privacy_link_url || "";
   }
 
   .site-footer {
-    margin-top: var(--space-2xl);
+    /* With the last section's bottom padding this makes the standard
+       gap above the footer (VERTICAL RHYTHM, tokens.css). Was 96px on
+       its own, on top of up to 160px from the page above it. */
+    margin-top: var(--section-pad);
     background: var(--nav-bg-dark);
     border-top: none;
     padding-top: var(--space-xl);
