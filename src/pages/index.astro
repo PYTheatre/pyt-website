@@ -202,8 +202,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     {photoStrip.length > 0 && (
       <div class="container">
         <div class="photo-strip-wrap" id="photo-strip-wrap">
-          <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Scroll left">‹</button>
-          <div class="photo-strip-fade photo-strip-fade-left" aria-hidden="true"></div>
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-prev" id="photo-strip-prev" aria-label="Previous photo">‹</button>
 
           <div class="photo-strip" id="photo-strip">
             {loopedPhotoStrip.map((card) => (
@@ -220,8 +219,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
             ))}
           </div>
 
-          <div class="photo-strip-fade photo-strip-fade-right" aria-hidden="true"></div>
-          <button type="button" class="photo-strip-arrow photo-strip-arrow-next" id="photo-strip-next" aria-label="Scroll right">›</button>
+          <button type="button" class="photo-strip-arrow photo-strip-arrow-next" id="photo-strip-next" aria-label="Next photo">›</button>
         </div>
       </div>
     )}
@@ -299,7 +297,16 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       // CSS opacity affects an element's full subtree) — not a
       // gradual falloff by distance, just hero = fully opaque,
       // everything else = evenly faded.
-      const FADE_OPACITY = "0.4";
+      //
+      // FULL-WIDTH SLIDES (2026-09-21, PM-approved mockup
+      // "MOCKUP-carousel-1-options", option A): each card is now the full
+      // width of the strip, so the neighbours sit just outside the visible
+      // area and are only seen mid-slide. Dimming them no longer does
+      // anything useful and made a photo slide in washed-out, so the fade
+      // is now "1" (off). The is-featured class below still matters: it is
+      // what shows the centred photo in full colour (duotone scheme) —
+      // an incoming photo slides in duotone and blooms into colour.
+      const FADE_OPACITY = "1";
 
       const updateScale = () => {
         if (!cards.length) return;
@@ -877,26 +884,6 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     display: none;
   }
 
-  .photo-strip-fade {
-    display: none; /* shown on wider screens only, see media query below */
-    position: absolute;
-    top: 0;
-    bottom: 0.6rem;
-    width: 48px;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .photo-strip-fade-left {
-    left: 0;
-    background: linear-gradient(to right, var(--paper), transparent);
-  }
-
-  .photo-strip-fade-right {
-    right: 0;
-    background: linear-gradient(to left, var(--paper), transparent);
-  }
-
   .photo-strip-arrow {
     /* Visible at every width as of 2026-08-20 (was desktop-only, with
        the mobile rule added separately — which left a dead zone between
@@ -926,14 +913,20 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     top: 14px;
     bottom: calc(0.6rem + 0.6rem + (0.95rem * 1.25));
     margin-block: auto;
-    z-index: 2;
-    width: 34px;
-    height: 34px;
+    /* z-index 3, ABOVE the featured card (which the script lifts to 2).
+       At 2 the prev arrow — earlier in the page than the strip — was
+       drawn UNDER the photo wherever they overlapped, which hid it on
+       phones and, at full width, on every screen size. (2026-09-21) */
+    z-index: 3;
+    /* Sized up with the full-width photo (was 34px) so it doesn't look
+       lost against a picture over 1000px wide. */
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     border: 1px solid var(--line);
     background: var(--paper);
     color: var(--ink);
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
     align-items: center;
@@ -941,41 +934,40 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     box-shadow: var(--shadow-soft);
   }
 
+  /* Inset over the photo's edges — there is no margin to sit in any
+     more, since the photo runs the full width of the strip. */
   .photo-strip-arrow-prev {
-    left: -6px;
+    left: 16px;
   }
 
   .photo-strip-arrow-next {
-    right: -6px;
+    right: 16px;
   }
 
-  /* Edge fades are wide-screen only — on a phone the card fills nearly
-     the whole container, so a fade over its edges just dims the photo
-     rather than suggesting "more to scroll". The arrows (visible at all
-     widths, see above) carry that cue on mobile instead. */
-  @media (min-width: 720px) {
-    .photo-strip-fade {
-      display: flex;
-    }
-  }
+  /* (The white edge fades that used to sit over the peeking neighbour
+     photos were removed 2026-09-21 — at full width nothing peeks in.) */
 
   .photo-strip-card {
-    /* All cards are now this SAME size (PM request, 2026-08-19) — the
-       old scale-up-the-center-card effect is gone. This size is
-       roughly the old hero size (220px base * 1.7x scale ≈ 374px)
-       increased again by about a third, so today's "hero" size is
-       what every card looks like now; only opacity (see script)
-       distinguishes the centered one. Not all cards fit on one
-       screen at this size — that's expected, swipe/arrows reveal
-       the rest. */
-    flex: 0 0 500px;
+    /* FULL WIDTH (2026-09-21, PM/team request): one photo fills the whole
+       strip, arrows either side, no glimpse of the neighbours. Was a
+       fixed 500px with the next photos peeking in. The script's
+       updateHorizontalPadding() now always computes 0 padding, because
+       (strip width - card width) / 2 = 0 — which is what keeps a 100%
+       card from measuring itself against a padded strip. */
+    flex: 0 0 100%;
     display: block;
     scroll-snap-align: center;
     transition: opacity 0.25s ease;
   }
 
   .photo-strip-photo {
-    aspect-ratio: 4 / 3;
+    /* 3:2 (was 4:3), chosen 2026-09-21: it matches most of the carousel's
+       photos, so at full width almost nothing is cropped. 1060 x 707px
+       on a laptop. 16:9 was mocked as the shorter alternative and not
+       chosen — it clipped heads on the Center Stage photo.
+       PHOTOS NEED TO BE AT LEAST ~2000px WIDE to stay sharp at this size
+       on Retina screens. */
+    aspect-ratio: 3 / 2;
     border-radius: 0;
     overflow: hidden;
     box-shadow: var(--shadow-soft);
@@ -1009,16 +1001,12 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   }
 
   @media (max-width: 640px) {
-    .photo-strip-card {
-      /* Was a fixed 380px, which was WIDER than the container's inner
-         width on a typical phone (390px viewport − 2×1.5rem padding =
-         342px). The card sat centered, so it hung ~19px off each edge
-         — and since the title is left-aligned inside the card, its
-         first characters were pushed off-screen ("CENTER STAGE
-         MUSICALS" rendered as "NTER STAGE MUSICALS"). Capping at 100%
-         of the available width fixes the clipped title at every phone
-         size rather than trading one hardcoded width for another. */
-      flex-basis: min(380px, 100%);
+    /* Phones keep the taller 4:3 shape. The photo already filled the
+       width on a phone, so switching to 3:2 would only have made it
+       SHORTER than before. (The old min(380px, 100%) card width that
+       lived here is no longer needed: cards are 100% at every size.) */
+    .photo-strip-photo {
+      aspect-ratio: 4 / 3;
     }
 
     /* Arrows on phones (2026-08-20, PM request): bigger tap targets and
@@ -1026,19 +1014,19 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
        PHOTO (33%), not the card — the card's height includes the caption
        underneath, so centering on it would sit them visibly low. */
     .photo-strip-arrow {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       font-size: 1.4rem;
       /* No `top` here any more — the base rule centres the arrows on
          the photos at every width. */
     }
 
     .photo-strip-arrow-prev {
-      left: 2px;
+      left: 10px;
     }
 
     .photo-strip-arrow-next {
-      right: 2px;
+      right: 10px;
     }
   }
  
