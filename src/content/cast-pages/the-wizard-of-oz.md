@@ -20,8 +20,7 @@ intro: >-
 
 
   For example, PROFESSOR MARVEL may be called on the schedule as part of the CARNIVAL FOLK group, but also may be called by name as PROFESSOR MARVEL at the end, as the other CARNIVAL FOLK aren’t in the final scene.
-cast_list_sheet_url: <iframe
-  src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQXKvm7KboUBFsdQeQMKECiS35fL854aQD0vuOKW719VZfLJo1VaIrAhJYZlRKXeuad9m-PKLXQyXiy/pubhtml?gid=1515958808&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+cast_list_sheet_url: https://docs.google.com/spreadsheets/d/e/2PACX-1vQXKvm7KboUBFsdQeQMKECiS35fL854aQD0vuOKW719VZfLJo1VaIrAhJYZlRKXeuad9m-PKLXQyXiy/pubhtml?gid=1515958808&single=true
 rehearsal_sheet_url: https://docs.google.com/spreadsheets/d/e/2PACX-1vQXKvm7KboUBFsdQeQMKECiS35fL854aQD0vuOKW719VZfLJo1VaIrAhJYZlRKXeuad9m-PKLXQyXiy/pubhtml?gid=1684731311&single=true
 resources:
   - url: https://drive.google.com/drive/folders/1uQDoJN7emXkQSTwGZMGzwPriipnrNdDH
