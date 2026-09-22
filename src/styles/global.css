@@ -200,11 +200,13 @@ p {
 /* ---- Pages that END in a coloured band (2026-09-21) ----
    The band runs straight into the footer instead of leaving a thin
    white strip between two tinted blocks, which looked like a mistake.
-   These are the four sections that can end a page and have a tinted
+   These are the sections that can end a page and have a tinted
    background; if you add another, add its class here.
+   (.corporate-section joined the list 2026-09-22, when Ways to Support
+   swapped its Sponsorship and Corporate sections around.)
    "~" rather than "+" because BaseLayout places a small <script>
    between </main> and the footer. */
-main:has(> :last-child:is(.board-section, .auditions-promo-section, .inquiry-section, .sponsor-section)) ~ .site-footer {
+main:has(> :last-child:is(.board-section, .auditions-promo-section, .inquiry-section, .sponsor-section, .corporate-section)) ~ .site-footer {
   margin-top: 0;
 }
 
