@@ -5,7 +5,7 @@ age_range: Coming soon
 season: Year-round
 registration_url: ""
 eyebrow: ""
-description: Coming soon
+description: Holiday camps throughout the year.
 schedule: ""
 tuition: ""
 registration_status: Coming soon
