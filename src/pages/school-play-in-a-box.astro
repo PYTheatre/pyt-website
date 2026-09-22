@@ -118,11 +118,16 @@ const showsList = ((page as any).shows_list || "")
 </BaseLayout>
 
 <style>
-  .spib-section {
-    padding-top: 0;
-  }
+  /* (.spib-section used to set padding-top: 0 to sit close under the
+     hero photo. The photo gap is now handled by the VERTICAL RHYTHM
+     tokens, and keeping the 0 would put the text 16px under the photo.) */
 
-  .spib-narrow {
+  /* LEFT-ALIGNED READING WIDTH (2026-09-21). The width limit is on the
+     CHILDREN, not this box. This box is also a .container, and
+     .container centres itself — so limiting ITS width used to push the
+     whole column into the middle of the page while the title, photo and
+     buttons stayed on the left edge. Now everything shares one edge. */
+  .spib-narrow > * {
     max-width: 70ch;
   }
 
@@ -192,8 +197,10 @@ const showsList = ((page as any).shows_list || "")
   }
 
   .spib-shows,
+  /* No bottom margin: it is the last block, and its 40px used to add to
+     both sections' padding — the ~240px gap above the inquiry form. */
   .spib-schools {
-    margin: var(--space-lg) 0;
+    margin: var(--space-lg) 0 0;
   }
 
   .spib-shows h2,
@@ -222,6 +229,10 @@ const showsList = ((page as any).shows_list || "")
     position: absolute;
     left: 0;
     color: var(--accent);
+  }
+
+  .spib-schools p:last-child {
+    margin-bottom: 0;   /* the section padding provides the gap to the form */
   }
 
   .spib-schools p {
