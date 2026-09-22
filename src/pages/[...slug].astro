@@ -91,7 +91,7 @@ const bodyHtml = renderMarkdown(page.body || "");
        every page that uses the shared PageHero component. Keep these
        two values in step: this block exists to imitate that component,
        so if its spacing changes, change this too. */
-    padding-block: var(--space-xl) var(--space-lg);
+    padding-block: var(--page-top) var(--hero-gap);   /* same as PageHero — VERTICAL RHYTHM, tokens.css */
   }
 
   .page-title h1 {
@@ -105,12 +105,23 @@ const bodyHtml = renderMarkdown(page.body || "");
     margin: 0;
   }
 
-  .page-body {
-    padding-block: var(--space-md) var(--space-lg);
+  /* .page-body now takes the standard .section padding (VERTICAL RHYTHM,
+     tokens.css) — its own override made the page end ~120px above the
+     footer instead of the standard gap. */
+
+  /* LEFT-ALIGNED READING WIDTH (2026-09-21). The width limit is on the
+     CHILDREN, not this box. This box is also a .container, and
+     .container centres itself — so limiting ITS width used to push the
+     whole column into the middle of the page while the title, photo and
+     buttons stayed on the left edge. Now everything shares one edge. */
+  .page-prose > :global(*) {
+    max-width: 68ch;
   }
 
-  .page-prose {
-    max-width: 68ch;
+  /* No stray margin under the last paragraph: the section padding
+     already provides the gap. */
+  .page-prose > :global(:last-child) {
+    margin-bottom: 0;
   }
 
   /* The body is injected with set:html (rendered Markdown), so its
@@ -170,7 +181,7 @@ const bodyHtml = renderMarkdown(page.body || "");
   }
 
   .page-quote-section {
-    padding-block: 0 var(--space-lg);
+    padding-block: 0 var(--section-pad);
   }
 
   .page-quote {
@@ -186,7 +197,10 @@ const bodyHtml = renderMarkdown(page.body || "");
     margin: 0;
   }
 
+  /* Was 96px of bottom padding on its own (on top of the footer's
+     margin): the reason these pages ended further from the footer than
+     every other page. */
   .page-cta-section {
-    padding-bottom: var(--space-2xl);
+    padding-bottom: var(--section-pad);
   }
 </style>
