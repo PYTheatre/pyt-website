@@ -9,3 +9,116 @@
 # results, other people's websites) keeps working instead of hitting a
 # "page not found".
 /employment  /volunteer  301
+
+# ===========================================================================
+# 2026-09-22: THE WIZARD OF OZ CAST PAGE KEEPS ITS OLD-SITE ADDRESS.
+# PYT needs pytnet.org/wizard-of-oz-cast-page/ to keep working after launch.
+# "200" is NOT a redirect: Cloudflare serves the /cast/the-wizard-of-oz/
+# page AT the old address, and the address bar keeps the old address.
+# Both lines are needed (with and without the final slash). New shows use
+# their normal /cast/<show>/ address and need nothing here.
+# DO NOT rename or delete the CMS cast page "the-wizard-of-oz" while this
+# address is in use — these lines point at it.
+# ===========================================================================
+/wizard-of-oz-cast-page/  /cast/the-wizard-of-oz/  200
+/wizard-of-oz-cast-page   /cast/the-wizard-of-oz/  200
+
+# ===========================================================================
+# 2026-09-22: OLD WORDPRESS-SITE ADDRESSES -> NEW PAGES (for the pytnet.org
+# switch). Anyone arriving from Google, an old email or a bookmark lands on
+# the right new page instead of the wrong one. Each old address is listed
+# with and without the final slash. Order matters: Cloudflare uses the FIRST
+# line that matches, so specific lines come before the catch-alls at the end.
+# Addresses that are the same on both sites (/, /about/, /subscribe/, /shop/,
+# /scholarships/) need nothing. NEVER add a catch-all for /about/* or /* —
+# it would also catch real new pages.
+# To change where an old address goes, edit the second column only.
+# ===========================================================================
+
+# --- Shows (old /boxoffice/ pages). Specific shows first. ---
+/upcoming-shows  /shows/  301
+/upcoming-shows/  /shows/  301
+/boxoffice/the-wizard-of-oz-2  /shows/the-wizard-of-oz/  301
+/boxoffice/the-wizard-of-oz-2/  /shows/the-wizard-of-oz/  301
+
+# (the-wizard-of-oz WITHOUT -2 was the 2025 Stories on Stage play, not this musical)
+/boxoffice/the-wizard-of-oz  /stories-on-stage/  301
+/boxoffice/the-wizard-of-oz/  /stories-on-stage/  301
+/boxoffice/singin-in-the-rain-2  /shows/singin-in-the-rain/  301
+/boxoffice/singin-in-the-rain-2/  /shows/singin-in-the-rain/  301
+/boxoffice/singin-in-the-rain  /shows/singin-in-the-rain/  301
+/boxoffice/singin-in-the-rain/  /shows/singin-in-the-rain/  301
+/boxoffice/a-midsummer-nights-dream  /shows/a-midsummer-nights-dream/  301
+/boxoffice/a-midsummer-nights-dream/  /shows/a-midsummer-nights-dream/  301
+/boxoffice/creepy-carrots  /stories-on-stage/creepy-carrots/  301
+/boxoffice/creepy-carrots/  /stories-on-stage/creepy-carrots/  301
+/boxoffice/the-night-before-christmas  /stories-on-stage/the-night-before-christmas/  301
+/boxoffice/the-night-before-christmas/  /stories-on-stage/the-night-before-christmas/  301
+/boxoffice/a-connecticut-yankee-in-king-arthurs-court  /stories-on-stage/a-connecticut-yankee-in-king-arthurs-court/  301
+/boxoffice/a-connecticut-yankee-in-king-arthurs-court/  /stories-on-stage/a-connecticut-yankee-in-king-arthurs-court/  301
+/boxoffice/rumpelstiltskins-daughter  /stories-on-stage/rumpelstiltskins-daughter/  301
+/boxoffice/rumpelstiltskins-daughter/  /stories-on-stage/rumpelstiltskins-daughter/  301
+/boxoffice/lillys-purple-plastic-purse-2  /stories-on-stage/lillys-purple-plastic-purse/  301
+/boxoffice/lillys-purple-plastic-purse-2/  /stories-on-stage/lillys-purple-plastic-purse/  301
+/boxoffice/lillys-purple-plastic-purse  /stories-on-stage/lillys-purple-plastic-purse/  301
+/boxoffice/lillys-purple-plastic-purse/  /stories-on-stage/lillys-purple-plastic-purse/  301
+/boxoffice/alice-in-wonderland  /stories-on-stage/alice-in-wonderland/  301
+/boxoffice/alice-in-wonderland/  /stories-on-stage/alice-in-wonderland/  301
+
+# --- Classes, educators, auditions ---
+/acting-classes-camps  /programs/  301
+/acting-classes-camps/  /programs/  301
+/for-educators  /school-play-in-a-box/  301
+/for-educators/  /school-play-in-a-box/  301
+/for-educators/school-play-in-a-box  /school-play-in-a-box/  301
+/for-educators/school-play-in-a-box/  /school-play-in-a-box/  301
+/for-educators/bring-your-class-to-a-show  /school-tickets/  301
+/for-educators/bring-your-class-to-a-show/  /school-tickets/  301
+/auditions  /audition/  301
+/auditions/  /audition/  301
+
+# --- Get involved / support ---
+/get-involved  /ways-to-support/  301
+/get-involved/  /ways-to-support/  301
+/get-involved/volunteer  /volunteer/  301
+/get-involved/volunteer/  /volunteer/  301
+/ticket-donations  /ways-to-support/  301
+/ticket-donations/  /ways-to-support/  301
+/pyteens  /volunteer/  301
+/pyteens/  /volunteer/  301
+/shop-2  /shop/  301
+/shop-2/  /shop/  301
+
+# --- About Us sub-pages (NOT /about/ itself, which exists on the new site) ---
+/about/careers  /volunteer/  301
+/about/careers/  /volunteer/  301
+/about/our-supporters  /ways-to-support/  301
+/about/our-supporters/  /ways-to-support/  301
+/about/videos  /photos/  301
+/about/videos/  /photos/  301
+/about/pyt-spotlight  /blog/  301
+/about/pyt-spotlight/  /blog/  301
+/about/awards  /press/  301
+/about/awards/  /press/  301
+/about/judy-robe  /judy-robe-spirits-awards/  301
+/about/judy-robe/  /judy-robe-spirits-awards/  301
+/about/alumni-news  /about/  301
+/about/alumni-news/  /about/  301
+/about/contact-us  /about/  301
+/about/contact-us/  /about/  301
+/about/locations  /about/  301
+/about/locations/  /about/  301
+/about/history  /about/  301
+/about/history/  /about/  301
+/about/board-of-directors  /about/  301
+/about/board-of-directors/  /about/  301
+/about/staff  /about/  301
+/about/staff/  /about/  301
+
+# --- Catch-alls: any other old page in these sections (keep LAST) ---
+/boxoffice/stories-on-stage*  /stories-on-stage/  301
+/boxoffice/*  /shows/  301
+/acting-classes-camps/*  /programs/  301
+/for-educators/*  /school-play-in-a-box/  301
+/auditions/*  /audition/  301
+/get-involved/*  /ways-to-support/  301
