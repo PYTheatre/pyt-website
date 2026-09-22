@@ -6,10 +6,16 @@ draft: false
 ---
 We've spent some time polishing up our website a bit over the summer. Take a look around and let us know what you think! The urls and pages you know (and love?) should all still be there, just clearer, and there are some new ones to, including:
 
-xxx
+[Shows](/shows/)
 
-xxx
+[School tickets](/school-tickets/)
 
-xxx
+[Calendar](/calendar/)
 
-xxx
+[Auditions](/audition/) and [Casting](/casting/)
+
+[Stories on Stage](/stories-on-stage/)
+
+[Ways to support PYT](/ways-to-support/)
+
+Coming soon...a new shop!
