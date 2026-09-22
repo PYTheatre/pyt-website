@@ -21,5 +21,5 @@ schedule: ""
 tuition: $385-420
 registration_status: Closed
 registration_note: Registration full until Fall 2027
-scholarships_available: true
+scholarships_available: false
 ---
