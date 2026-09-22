@@ -1,5 +1,5 @@
 ---
-title: CREEPY CARROTS!
+title: Creepy Carrots!
 start_date: 2026-10-09
 end_date: 2026-10-10
 date_display: October 2026
