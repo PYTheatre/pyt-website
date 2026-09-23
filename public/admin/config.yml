@@ -213,8 +213,11 @@ collections:
       - { name: "synopsis", label: "Short synopsis", widget: "text", hint: "2–3 sentences. Stories on Stage cards are smaller than Center Stage Musicals show cards." }
       - { name: "poster", label: "Poster image", widget: "image", required: false, hint: "Upload an optional poster. If empty, a colored placeholder is used." }
       - { name: "public_ticketing_url", label: "Buy Tickets link (public performances)", widget: "string", required: false, hint: "Leave blank to hide the Buy Tickets button." }
-      - { name: "school_bookings_url", label: "School Bookings link", widget: "string", required: false, hint: "Leave blank to hide the School Bookings button." }
-      - { name: "tickets_intro", label: "Line above the Tickets button (optional)", widget: "string", required: false, hint: "A short line shown above the Tickets button on this production's page. Leave blank to show nothing." }
+      # "School Bookings link" field REMOVED from the CMS 2026-09-23 (PYT no longer takes school bookings;
+      # every ticket goes through MVCPA). Old files may still carry the value; nothing shows it.
+      - { name: "runtime_minutes", label: "Runtime (minutes)", widget: "number", value_type: "int", required: false, min: 1, max: 600, step: 1, pattern: ["^[0-9]*$", "Enter a whole number of minutes only (for example 45), or leave it blank."], hint: "Optional. Approximate, in minutes — shows as 'About 45 minutes' in the facts strip. Leave blank to hide." }
+      - { name: "ages", label: "Recommended ages", widget: "string", required: false, hint: "Optional. Example: Ages 3 and up. Leave blank to hide." }
+      - { name: "tickets_intro", label: "Line above the Buy Tickets button (optional)", widget: "string", required: false, hint: "A short line shown between the facts strip and the buttons on this production's page. Leave blank to show nothing." }
  
   # ============================================================
   # CAST PAGES — one entry per show's cast page.
