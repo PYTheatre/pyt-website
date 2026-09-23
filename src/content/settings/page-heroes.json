@@ -31,7 +31,8 @@
     },
     {
       "page": "/school-tickets",
-      "image": "/uploads/matilda.jpg"
+      "image": "/uploads/matilda.jpg",
+      "focus": 75
     },
     {
       "page": "/stories-on-stage",
