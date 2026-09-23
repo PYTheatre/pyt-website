@@ -2,29 +2,33 @@
 /*
   STORIES ON STAGE — PER-PRODUCTION PAGE  ( /stories-on-stage/<slug> )
 
-  One page per Stories on Stage production. ONE booking path (2026-09-23):
-    - Public performances → "Tickets" button to the outside ticketing site
-      (or "coming soon" when no link is set yet). An optional, editable
-      intro line sits above it — empty by default, and renders nothing
-      (no gap) when empty.
+  REBUILT 2026-09-23 (PM request) to use the SAME LAYOUT AS THE CENTER
+  STAGE MUSICALS show page (src/pages/shows/[slug].astro): poster on the
+  left (sticky on wide screens), and on the right the title, a Dates /
+  Venue / Runtime / Ages facts strip, the Buy Tickets + Sponsor buttons,
+  the ticket-fee notice, then the synopsis. The old page (a page hero
+  with the title, then a framed "Public performances" card) is gone.
 
-  The "Schools and groups" card with its enquiry form was REMOVED on
-  2026-09-23 at the PM's request: PYT no longer takes school or group
-  bookings itself — every ticket, including school matinees, is bought
-  through the MVCPA box office site. Don't add a booking contact back
-  here. (The "education" Formspree route still exists for School Play in
-  a Box and Classes & Camps.)
+  Differences from the musicals page, on purpose:
+    - NO double-cast performance schedule (Stories on Stage is never
+      double cast) and no auditions / cast-page buttons.
+    - Back link goes to /stories-on-stage, not /shows.
+    - NO school/group booking path of any kind (removed 2026-09-23):
+      every ticket, including school matinees, is bought through the
+      MVCPA box office site. Don't add a booking contact back here.
 
-  Per-production content comes from the storiesOnStage collection;
-  the ticket-fee notice from the Shows page settings.
+  The CSS below is copied from the musicals page (same class names,
+  same values) so the two page types stay visually identical; if the
+  musicals page's layout changes, change this one to match.
 */
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageHero from "../../components/PageHero.astro";
-import settings from "../../content/settings/stories-on-stage-page.json";
+import donatePage from "../../content/settings/donate-page.json";
 import showsPage from "../../content/settings/shows-page.json";
 import SupportLinks from "../../components/SupportLinks.astro";
 
+// Global ticket-fee notice (CMS-editable, Shows page settings, applies
+// everywhere tickets are sold). Empty-safe: renders nothing when blank.
 const ticketFeeNotice = (showsPage as any).ticket_fee_notice || "";
 
 export async function getStaticPaths() {
@@ -38,143 +42,153 @@ export async function getStaticPaths() {
 const { prod } = Astro.props;
 const data = prod.data;
 
-// Optional editable line above the Tickets button — empty by default.
+// Optional editable line above the buttons — empty by default.
 const ticketsIntro = (data as any).tickets_intro || "";
 ---
 
 <BaseLayout
   title={`${data.title} — Stories on Stage — Peninsula Youth Theatre`}
-  description={`${data.title} — a Stories on Stage production at Peninsula Youth Theatre. Dates, tickets and details.`}
+  description={data.synopsis?.split("\n")[0] || `${data.title} — a Stories on Stage production at Peninsula Youth Theatre.`}
 >
-  <PageHero eyebrow="Stories on Stage" title={data.title} />
-
-  <section class="section prod-section">
-    <div class="container prod-grid">
-      <div class="prod-poster-col">
-        <div
-          class="prod-poster"
-          style={data.poster ? `background-image: url(${data.poster}); background-size: cover; background-position: center;` : ""}
-        >
-          {!data.poster && <span class="poster-placeholder">{data.title}</span>}
-        </div>
+  <article class="show-detail">
+    <div class="container show-grid">
+      <!-- Poster column -->
+      <div
+        class="show-poster-large"
+        style={data.poster ? `background-image: url(${data.poster}); background-size: cover; background-position: center;` : ""}
+      >
+        {!data.poster && (
+          <span class="poster-placeholder-large">{data.title}</span>
+        )}
       </div>
 
-      <div class="prod-detail-col">
-        <p class="prod-meta">{data.date_display} · {data.venue}</p>
+      <!-- Info column -->
+      <div class="show-content">
+        <h1>{data.title}</h1>
+
+        <dl class="show-info-grid">
+          <div>
+            <dt>Dates</dt>
+            <dd>{data.date_display}</dd>
+          </div>
+          <div>
+            <dt>Venue</dt>
+            <dd>{data.venue}</dd>
+          </div>
+          {data.runtime_minutes && (
+            <div>
+              <dt>Runtime</dt>
+              <dd>About {data.runtime_minutes} minutes</dd>
+            </div>
+          )}
+          {data.ages && (
+            <div>
+              <dt>Ages</dt>
+              <dd>{data.ages}</dd>
+            </div>
+          )}
+        </dl>
+
+        {ticketsIntro && <p class="tickets-intro">{ticketsIntro}</p>}
+
+        <div class="show-ctas">
+          {data.public_ticketing_url ? (
+            <a href={data.public_ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
+              Buy Tickets
+            </a>
+          ) : (
+            <span class="btn btn-outline btn-disabled" aria-disabled="true">
+              Tickets coming soon
+            </span>
+          )}
+          <SupportLinks sponsor context="show" />
+        </div>
+
+        {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
 
         {data.synopsis && (
-          <div class="prod-synopsis">
+          <div class="show-synopsis">
             {data.synopsis.split("\n\n").map((para: string) => (
               <p>{para}</p>
             ))}
           </div>
         )}
 
-        {/* ---- Public performances ---- */}
-        <div class="booking-card">
-          <h2>Public performances</h2>
-          {ticketsIntro && <p class="booking-intro">{ticketsIntro}</p>}
-          {/* Tickets and Sponsor share one row (PM request, 2026-08-22)
-              so the sponsor button reads as a peer of Tickets rather
-              than as a stray afterthought below the card. The row
-              wrapper is always present even when SupportLinks renders
-              nothing (blank CMS label), which is harmless: an empty
-              flex row collapses to the height of its one child. */}
-          <div class="booking-actions">
-            {data.public_ticketing_url ? (
-              <a href={data.public_ticketing_url} class="btn btn-primary" target="_blank" rel="noopener">
-                Tickets
-              </a>
-            ) : (
-              <span class="btn btn-outline btn-disabled" aria-disabled="true">
-                Tickets coming soon
-              </span>
-            )}
-            <SupportLinks sponsor context="show" />
-          </div>
-          {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
-        </div>
+        <p class="back-link"><a href="/stories-on-stage">← Back to Stories on Stage</a></p>
       </div>
     </div>
-  </section>
+  </article>
 </BaseLayout>
 
 <style>
-  .prod-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+  /* Copied from src/pages/shows/[slug].astro (2026-09-23) so the two
+     show-page types match. Keep in step with that file. */
+  .show-detail {
+    /* VERTICAL RHYTHM (tokens.css): standard top, standard bottom. */
+    padding-block: var(--page-top) var(--section-pad);
+  }
+
+  .show-grid {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-lg);
   }
 
-  .prod-poster {
+  .show-poster-large {
     aspect-ratio: 3 / 4;
+    width: 100%;
     background: linear-gradient(150deg, var(--accent) 0%, var(--accent-deep) 100%);
     border-radius: var(--radius);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    padding: var(--space-md);
-    box-shadow: var(--shadow-soft);
-    max-width: 360px;
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-lift);
   }
 
-  .poster-placeholder {
+  .poster-placeholder-large {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
+    font-size: 2.2rem;
     font-weight: 600;
     text-align: center;
-    line-height: 1.15;
+    line-height: 1.05;
   }
 
-  .prod-meta {
-    font-size: 1rem;
-    color: var(--ink-soft);
-    font-weight: 500;
-    margin: 0 0 var(--space-md);
+  .show-content h1 {
+    margin-block: 0.4rem var(--space-md);
   }
 
-  .prod-synopsis {
-    font-size: 1rem;
-    line-height: 1.7;
+  .show-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
     margin-bottom: var(--space-lg);
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
 
-  .prod-synopsis p {
-    margin: 0 0 var(--space-sm);
+  .show-info-grid div {
+    min-width: 0;
   }
 
-  /* Button row inside the Public performances card. Wraps on narrow
-     screens so Tickets and Sponsor stack rather than overflowing the
-     card. Same 0.7rem gap as .show-ctas on the musical show pages, so
-     the two page types match. */
-  .booking-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.7rem;
+  .show-info-grid dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
   }
 
-  /* The last card needs no margin under it: that 24px sat on top of the
-     section padding and pushed these pages further from the footer than
-     the rest of the site (VERTICAL RHYTHM, tokens.css). */
-  .booking-card:last-child {
-    margin-bottom: 0;
+  .show-info-grid dd {
+    font-size: 1rem;
+    color: var(--ink);
+    margin: 0;
   }
 
-  .booking-card {
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: var(--space-md);
-    margin-bottom: var(--space-md);
-    background: var(--paper);
-  }
-
-  .booking-card h2 {
-    font-size: 1.2rem;
-    margin: 0 0 0.4rem;
-  }
-
-  .booking-intro {
+  .tickets-intro {
     font-size: 0.95rem;
     color: var(--ink-soft);
     line-height: 1.6;
@@ -185,14 +199,52 @@ const ticketsIntro = (data as any).tickets_intro || "";
     font-size: 0.85rem;
     color: var(--ink-muted);
     line-height: 1.5;
-    margin: var(--space-md) 0 0;
+    max-width: 60ch;
+    margin: var(--space-md) 0 var(--space-lg);
   }
 
-  @media (min-width: 720px) {
-    .prod-grid {
-      grid-template-columns: 320px 1fr;
-      gap: var(--space-xl);
-      align-items: start;
+  .show-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .show-synopsis p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .back-link {
+    margin-top: var(--space-xl);
+    font-size: 0.95rem;
+  }
+
+  .back-link a {
+    color: var(--accent-deep);
+  }
+
+  /* Wider screens: poster beside content */
+  @media (min-width: 920px) {
+    .show-grid {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-2xl);
+    }
+    .show-poster-large {
+      flex: 1;
+      position: sticky;
+      top: 80px;
+      max-width: 380px;
+    }
+    .show-content {
+      flex: 1.4;
     }
   }
 </style>
