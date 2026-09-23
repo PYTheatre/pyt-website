@@ -321,7 +321,10 @@ collections:
             summary: "{{fields.title}}"
             hint: "A row of photo cards under the intro text, each linking to a page. The title shows below the photo. Cards display in the order listed here, and the carousel loops continuously. The page always opens centered on the card titled exactly 'Center Stage Musicals' — keep that title spelled that way, or the page will just open on the first card instead. Whichever card is centered (by swipe, the arrow buttons, or hovering it with a mouse) displays larger. Clicking a card that ISN'T already the centered one just centers it instead of opening its link — only clicking the already-centered card takes visitors to its page. If a card's photo is left empty, a colored placeholder with the title is shown instead."
             fields:
-              - { name: "title", label: "Title (shown on the photo)", widget: "string", hint: "Example: Centre Stage Musicals" }
+              # Caption is Markdown with ONLY the Bold button (2026-09-23), so one
+              # word can be bold and the rest normal. Rendered in the body font at
+              # normal weight; select a word and press B (or type **word**) to bold it.
+              - { name: "title", label: "Caption (shown under the photo)", widget: "markdown", buttons: ["bold"], editor_components: [], modes: ["rich_text", "raw"], minimal: true, hint: "Select a word and press B to make just that word bold. Everything else stays normal weight. Example: **Center Stage Shows** - professional scale musicals" }
               - { name: "url", label: "Link", widget: "string", hint: "Where this card goes. Example: /musicals" }
               - { name: "image", label: "Photo", widget: "image", required: false, hint: "Wide-ish photo works best. Leave empty for a colored placeholder." }
           - { name: "discovery_heading", label: "Discovery section — heading", widget: "string" }
@@ -362,7 +365,7 @@ collections:
             fields:
               - { name: "figure", label: "Big number", widget: "string", hint: "Example: 30+ or $45K" }
               - { name: "label", label: "Description", widget: "string" }
-          - { name: "donate_heading", label: "Donation teaser — heading", widget: "string", required: false, hint: "The big line above the progress bar. If left blank, it shows 'Help us reach $[your goal].' automatically. Type your own wording to override it (e.g. 'Be part of our 2026 campaign')." }
+          - { name: "donate_heading", label: "Donation teaser — heading", widget: "string", required: false, hint: "The big line above the campaign graphic. LEAVE BLANK FOR NO HEADING (since 2026-09-23 — it used to fall back to 'Help us reach $[goal]'). Type wording to show one." }
           - { name: "donate_heading_case", label: "Donation teaser — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
           - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
@@ -450,13 +453,15 @@ collections:
           - { name: "auditions_strip_link_text", label: "Audition strip — link text", widget: "string", default: "Jump to auditions" }
           - { name: "lineup_heading", label: "Season lineup section heading", widget: "string", default: "This season's lineup" }
           - { name: "lineup_blurb", label: "Season lineup section description", widget: "text" }
+          - { name: "card_button_label", label: "Show card button label", widget: "string", required: false, default: "Tickets & details", hint: "The button on every show card in the lineup. Leave blank for 'Tickets & details'. (Was 'Tickets & bookings' until 2026-09-23.)" }
           - { name: "auditions_heading", label: "Auditions section heading", widget: "string", default: "Auditions" }
-          - { name: "auditions_intro", label: "Auditions — intro paragraph", widget: "text" }
+          # Markdown since 2026-09-23 so it can carry a link, e.g. to the Contact page.
+          - { name: "auditions_intro", label: "Auditions — intro paragraph", widget: "markdown", buttons: ["bold", "italic", "link"], editor_components: [], modes: ["rich_text", "raw"], minimal: true, hint: "Use the link button to link to a page, e.g. the Contact page (/about#contact). This paragraph replaces the old contact form under the auditions details." }
           - { name: "auditions_dates", label: "Auditions — dates", widget: "string", hint: "Example: September 12–14, 2026" }
           - { name: "auditions_age_range", label: "Auditions — age range", widget: "string", hint: "Example: Ages 8–14" }
           - { name: "auditions_what_to_prepare", label: "Auditions — what to prepare", widget: "text" }
           - { name: "auditions_fees", label: "Auditions — fees / tuition info", widget: "text", required: false }
-          - { name: "auditions_form_url", label: "Auditions registration Google Form URL", widget: "string", required: false, hint: "Paste the Google Form link here. Leave blank to hide the registration button until it's ready." }
+          - { name: "auditions_form_url", label: "Auditions registration Google Form URL", widget: "string", required: false, hint: "Paste the Google Form link here. Leave blank to hide the registration button. (Since 2026-09-23 a blank link shows nothing here at all — no 'Registration opens soon' line and no contact form; put any 'contact us' wording in the intro paragraph above instead.)" }
           - { name: "auditions_form_blurb", label: "Auditions form — short blurb next to the button", widget: "text", required: false }
           - { name: "explainer_heading", label: "Explainer section heading", widget: "string", default: "What is Stories on Stage?" }
           - { name: "explainer_body", label: "Explainer paragraphs", widget: "text", hint: "Use blank lines to separate paragraphs." }
