@@ -5,17 +5,59 @@
   "listings": [
     {
       "link_label": "Book tickets",
-      "title": "CREEPY CARROTS!",
-      "dates": "Oct 9-10 (School Matinees October 9)",
+      "title": "Creepy Carrots!",
+      "dates": "Oct 9 & 10, 2026 (School Matinees October 9)",
       "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767",
       "description": "Jasper Rabbit loves carrots, especially the ones from Crackenhopper Field. He eats them everywhere he goes. Until the day they start following him... or do they? Based on the beloved book by Aaron Reynolds and illustrated by Peter Brown, this funny and slightly spooky tale is the perfect fall treat for our youngest community members and their families.\n\nBased on the book by Aaron Reynolds, illustrated by Peter Brown.\nAdapted by Dexter Fiddle.\n\nThis performance is 45 minutes long, with no intermission, and is appropriate for all ages."
     },
     {
       "link_label": "Book tickets",
       "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=765",
-      "title": "THE WIZARD OF OZ",
-      "dates": "Nov 14-22 (School Matinees November 19 & 20)",
+      "title": "The Wizard of Oz",
+      "dates": "Nov 14-22, 2026 (School Matinees November 19 & 20)",
       "description": "Follow the yellow brick road to join Dorothy’s adventures with her friends as they brave the Wizard in the Emerald City. This inspiration for Wicked contains the songs from the beloved MGM musical starring Judy Garland, and is a treat the whole family can enjoy.\n\nBy L. Frank Baum, Harold Arlen, E. Y. Harburg, Herbert Stothart, Peter Howard, Larry Wilcox, John Kane.\n\nTHE WIZARD OF OZ is presented by arrangement with Concord Theatricals on behalf of Tams-Witmark LLC. www.concordtheatricals.com"
+    },
+    {
+      "link_label": "Book tickets",
+      "title": "The Night Before Christmas",
+      "dates": "December 11 & 12, 2026 (School matinees December 11)",
+      "description": "We are thrilled to present the world premiere of this brand-new Stories on Stage production! Find out what REALLY happened on that famous night before Christmas, told by someone who was actually there, and wants it known for the record that she absolutely was stirring!",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
+    },
+    {
+      "link_label": "Book tickets",
+      "title": "A Connecticut Yankee In King Arthur's Court",
+      "description": "A modern kid on a castle tour gets accidentally transported to the court of King Arthur, and her cell phone definitely does not have service. Based on Mark Twain’s classic, this fun retelling is full of laughs as our hero navigates courtly manners and medieval sensibilities to find her way back home.\n\n",
+      "dates": "Jan 22 & 23, 2027 (School Matinees January 22)",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=770"
+    },
+    {
+      "link_label": "Book tickets",
+      "title": "Rumpelstiltskin's Daughter",
+      "dates": "Feb 12 & 13, 2027 (Student Matinees February 12)",
+      "description": "In this merry rethinking of the classic fairy tale, Rumpelstiltskin and the miller's daughter are wed, and sixteen years later, their daughter faces the same golden dilemma. But this fairy-tale heroine has canny plans of her own. Based on the book by Diane Stanley, Rumpelstiltskin’s Daughter is a story about a girl who finds her own role to play, on her own terms.",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=771"
+    },
+    {
+      "link_label": "Book tickets",
+      "title": "Singin' In The Rain",
+      "dates": "Mar 13-21, 2027 (Student Matinees March 18 & 19)",
+      "description": "Based on the “Greatest Movie Musical of All Time,” this Hollywood classic is packed with hilarious situations, snappy dialogue, and a hit-parade score that will have the whole house tapping their toes and grinning from ear to ear. This delightful classic is a guaranteed good time for performers and audience members alike.",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=766"
+    },
+    {
+      "link_label": "Book tickets",
+      "title": "Lilly's Purple Plastic Purse",
+      "description": "Lilly loves everything! School, dressing up, and even her stinky baby brother, Julius. But when she cannot wait until sharing time to show off her purple plastic purse and movie star sunglasses, things do not go quite as planned. A charming, funny, and heartfelt story based on the book by Kevin Henkes, perfect for the littlest members of our community.",
+      "dates": "Apr 9 & 10, 2027 (Student Matinees April 9)",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=772"
+    },
+    {
+      "link_label": "Book tickets",
+      "title": "Alice in Wonderland",
+      "dates": "May 14 & 15, 2027 (Student Matinees May 14)",
+      "description": "Follow Alice down the rabbit hole and join her on her adventures with the Caterpillar, the Mad Hatter, and the Queen of Hearts! This classic tale has been specially adapted for Stories on Stage, a fitting and magical close to another season of stories shared together.",
+      "link_url": "https://tickets.mvcpa.com/eventperformances.asp?evt=773"
     }
   ],
   "empty_state_text": "No school-discount shows are listed yet. Check back soon, or get in touch below.",
