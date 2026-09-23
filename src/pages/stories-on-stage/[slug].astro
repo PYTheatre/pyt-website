@@ -2,21 +2,23 @@
 /*
   STORIES ON STAGE — PER-PRODUCTION PAGE  ( /stories-on-stage/<slug> )
 
-  One page per Stories on Stage production. Two booking paths:
+  One page per Stories on Stage production. ONE booking path (2026-09-23):
     - Public performances → "Tickets" button to the outside ticketing site
       (or "coming soon" when no link is set yet). An optional, editable
       intro line sits above it — empty by default, and renders nothing
       (no gap) when empty.
-    - Schools and groups → an "Email about a group booking" button that
-      opens the visitor's mail app, pre-addressed to the editable PYT
-      email (Site Settings → Stories on Stage Page → school booking email)
-      with the show title pre-filled in the subject.
 
-  Page-level content (the editable email) comes from the Stories settings
-  JSON; per-production content comes from the storiesOnStage collection.
+  The "Schools and groups" card with its enquiry form was REMOVED on
+  2026-09-23 at the PM's request: PYT no longer takes school or group
+  bookings itself — every ticket, including school matinees, is bought
+  through the MVCPA box office site. Don't add a booking contact back
+  here. (The "education" Formspree route still exists for School Play in
+  a Box and Classes & Camps.)
+
+  Per-production content comes from the storiesOnStage collection;
+  the ticket-fee notice from the Shows page settings.
 */
 import { getCollection } from "astro:content";
-import ContactForm from "../../components/ContactForm.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageHero from "../../components/PageHero.astro";
 import settings from "../../content/settings/stories-on-stage-page.json";
@@ -36,19 +38,13 @@ export async function getStaticPaths() {
 const { prod } = Astro.props;
 const data = prod.data;
 
-// Group bookings go through the contact form (2026-08-20) rather than a
-// published address, routed to the "education" inbox where
-// school_booking_email used to point. The show title prefills the subject
-// so staff can see which production at a glance.
-const bookingSubject = `Group booking enquiry — ${data.title}`;
-
 // Optional editable line above the Tickets button — empty by default.
 const ticketsIntro = (data as any).tickets_intro || "";
 ---
 
 <BaseLayout
   title={`${data.title} — Stories on Stage — Peninsula Youth Theatre`}
-  description={`${data.title} — a Stories on Stage production at Peninsula Youth Theatre. Book tickets or enquire about a school or group booking.`}
+  description={`${data.title} — a Stories on Stage production at Peninsula Youth Theatre. Dates, tickets and details.`}
 >
   <PageHero eyebrow="Stories on Stage" title={data.title} />
 
@@ -97,20 +93,6 @@ const ticketsIntro = (data as any).tickets_intro || "";
             <SupportLinks sponsor context="show" />
           </div>
           {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
-        </div>
-
-        {/* ---- Schools and groups ---- */}
-        <div class="booking-card">
-          <h2>Schools and groups</h2>
-          <p class="booking-intro">
-            Bringing a class or group? Send us a message to arrange a booking.
-          </p>
-          <ContactForm
-            route="education"
-            source={`Stories on Stage booking — ${data.title}`}
-            subject={bookingSubject}
-            submitLabel="Send booking enquiry"
-          />
         </div>
       </div>
     </div>
