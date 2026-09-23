@@ -11,4 +11,5 @@ synopsis: Jasper Rabbit loves carrots, especially the ones from Crackenhopper
   for our youngest community members and their families.
 poster: /uploads/carrots.jpg
 public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=767
+school_bookings_url: Contact MVCPA 650-903-6000 performingarts@mvcpa.com
 ---
