@@ -5,7 +5,7 @@ production_type: Studio Production
 eyebrow: 2027 Studio Production
 start_date: 2027-05-07
 end_date: 2027-05-08
-date_display: May 2027
+date_display: May 7 & 8, 2027
 venue: PYT Studio, Old Middlefield Way
 runtime_minutes: 60
 poster: /uploads/midsummer.jpg
