@@ -8,20 +8,75 @@
 
   Each page passes in its own `title` and optional
   `description` for the browser tab and search engines.
+
+  SEARCH & SHARING TAGS (added 2026-09-23 for launch). Every page now gets:
+    - a canonical link (this page's address on the real domain, from
+      `site` in astro.config.mjs — so the temporary .pages.dev address
+      never becomes the "official" one in search results);
+    - Open Graph + Twitter tags, so a link shared on Facebook, Instagram,
+      WhatsApp, iMessage or Slack shows a title, description and picture.
+      The picture is the page's own `image` prop when it passes one (show
+      pages pass their poster), else the site-wide default from
+      Site-wide → Search & Sharing in the CMS;
+    - Organization structured data (JSON-LD) for Google: name, address,
+      logo, social profiles. Address/EIN come from the About Page settings,
+      social links from the Footer settings, so nothing is duplicated.
+  Pages can pass `noindex` to add a robots meta tag (thank-you page, 404).
 */
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import seo from "../content/settings/site-seo.json";
+import about from "../content/settings/about-page.json";
+import footer from "../content/settings/footer.json";
 
 interface Props {
   title: string;
   description?: string;
+  /** Absolute or site-relative URL of the picture to show when this page is shared. */
+  image?: string;
+  /** Add <meta name="robots" content="noindex"> — for pages that shouldn't be in search. */
+  noindex?: boolean;
+  /** Open Graph type; "website" for everything except articles/posts. */
+  ogType?: "website" | "article";
 }
 
+const seoS = seo as any;
+const siteName = seoS.site_name?.trim() || "Peninsula Youth Theatre";
 const {
   title,
-  description = "Peninsula Youth Theatre — outstanding youth theatre in Mountain View, California.",
+  description = seoS.default_description?.trim() ||
+    "Peninsula Youth Theatre — outstanding youth theatre in Mountain View, California.",
+  image,
+  noindex = false,
+  ogType = "website",
 } = Astro.props;
+
+// Absolute URLs. Astro.site is `site` from astro.config.mjs; the fallback
+// only guards against it being unset, which would break every absolute URL.
+const site = Astro.site ?? new URL("https://pyt-website.pages.dev");
+const canonical = new URL(Astro.url.pathname, site).href;
+const shareImageRel = (image && image.trim()) || (seoS.share_image && String(seoS.share_image).trim()) || "";
+const shareImage = shareImageRel ? new URL(shareImageRel, site).href : "";
+const logoUrl = new URL("/uploads/pyt-logo.png", site).href;
+
+// Organization structured data. Only fields with values are included.
+const a = about as any;
+const f = footer as any;
+const sameAs = [f.facebook_url, f.instagram_url].filter((u: any) => u && String(u).trim());
+const orgSchema: Record<string, any> = {
+  "@context": "https://schema.org",
+  "@type": "PerformingArtsTheater",
+  name: siteName,
+  url: site.href,
+  logo: logoUrl,
+};
+if (a.address?.trim()) orgSchema.address = { "@type": "PostalAddress", streetAddress: a.address.trim() };
+if (seoS.org_phone?.trim()) orgSchema.telephone = seoS.org_phone.trim();
+if (seoS.org_founded?.trim()) orgSchema.foundingDate = seoS.org_founded.trim();
+if (a.ein?.trim()) orgSchema.taxID = a.ein.trim();
+if (sameAs.length) orgSchema.sameAs = sameAs;
+if (a.email?.trim()) orgSchema.email = a.email.trim();
 ---
 
 <!doctype html>
@@ -30,8 +85,29 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    {/* Open Graph (Facebook, Instagram, WhatsApp, iMessage, Slack, LinkedIn) */}
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    {shareImage && <meta property="og:image" content={shareImage} />}
+
+    {/* Twitter / X */}
+    <meta name="twitter:card" content={shareImage ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {shareImage && <meta name="twitter:image" content={shareImage} />}
+
+    {/* Organization structured data for Google */}
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
   </head>
   <body>
     {/* DUOTONE PHOTO FILTER (2026-09-21). Defined once here so every page
