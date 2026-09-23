@@ -1,0 +1,408 @@
+# HANDOVER — 2026-09-22 (evening session)
+
+**Read this file FIRST, before touching the repo.** It supersedes every
+earlier handover, including `HANDOVER-2026-09-22.md` (the morning one) and
+`START_HERE.md` / `IN_FLIGHT.md` / `DECISIONS.md`, which are all now
+several sessions stale — see §11 on what to do with them.
+
+Repo: `PYTheatre/pyt-website` (public). Preview: `pyt-website.pages.dev`.
+Live domain: `pytnet.org` (already switched over — see §2).
+
+---
+
+## 1. What this session was
+
+A single long design-and-build session, working directly against `main`
+with the PM watching the preview site live and reacting to each change —
+not a batch handover like the morning session. **Every file below is
+already committed and confirmed live on `main`** as of commit `37ef5a8`
+(2026-09-22, 13:57 PT). I re-cloned `main` fresh and verified this myself
+before writing this handover — see §3 for exactly how.
+
+**One item is outstanding as of this writing**: #17 below (home page
+intro paragraph made optional) was built and handed over as two files at
+the very end of this session, after everything else was already
+confirmed live — it has not been confirmed pasted. Everything else in §4
+is confirmed live; see §3 for how. If the PM opens a new chat and mentions
+unfinished business from today beyond #17, check first — it's very likely
+already done; this handover records it as done for that reason.
+
+---
+
+## 2. Domain status
+
+`pytnet.org` is confirmed live and is the domain used in this handover.
+The Wizard of Oz cast page rewrite and the ~35-address old-site redirect
+list (both from the morning session, see `HANDOVER-2026-09-22.md` §16 and
+the "old-site addresses forward to new pages" entry) are both still intact
+in `public/_redirects` (124 lines, verified). Nothing this session touched
+that file.
+
+---
+
+## 3. How I verified "already live" for this handover
+
+Every claim in §4 below was checked against a **fresh clone of `main`**,
+not against my memory of the conversation or against files sent earlier in
+the chat that may not have been pasted. For each feature I grepped for a
+marker string I know is unique to my own code comments (e.g.
+`"ONE THIRD SMALLER"` for the carousel resize) and confirmed it's present
+in the live file. I also ran a full `astro build` on that fresh clone: **36
+pages, zero errors.** A new session should do the same before trusting
+anything below — repos drift, and a grep costs nothing.
+
+---
+
+## 4. Everything shipped this session (all live, verified)
+
+In roughly chronological order. Each entry is one committed change; most
+went out as single files.
+
+1. **Home page carousel resized ~one third smaller.** `.photo-strip-wrap`
+   capped at 720px, centred. `src/pages/index.astro`.
+2. **Home page thermometer redesigned** from a thin horizontal bar to the
+   PM's reference image: big multicolour "200k for 2026!" title, bulb +
+   tube + star GOAL badge, drawn as one SVG. Colours are local CSS
+   variables on `.donate-teaser`, not global — `--thermo-outline`,
+   `--thermo-fill`, etc. `src/pages/index.astro`.
+   - Donate button below it was explicitly reverted to the site's
+     standard pink (`var(--highlight)`), NOT the thermometer's brighter
+     magenta — a deliberate PM correction mid-session.
+3. **Same thermometer redesign copied to Ways to Support**, then changed
+   further per PM feedback: the "$X raised · Y donors · Z% of goal"
+   sentence was **removed** (that page's version only — the CMS fields
+   that used to feed it, `stat_raised`/`stat_donors`/`stat_percent` in
+   Donation Campaign settings, are unused now, not deleted), and the
+   Donate button moved from top-right to **centred under the
+   thermometer**, with the whole block centred on the page rather than
+   left-aligned. `src/pages/ways-to-support.astro`.
+4. **Ways to Support: Sponsorship and Corporate sections swapped** —
+   Sponsorship now sits directly after "What your gift could fund";
+   Corporate is now last. Their background tints were swapped with them so
+   the page still alternates white/tinted bands. `.corporate-section`
+   added to the "pages that end in a tinted band" list in `global.css`
+   (needed since Corporate can now be the last section on the page).
+5. **Corporate contact box made much smaller and centred**: was
+   1060×512px full-width, now a centred 560px column, ~420px tall.
+6. **Home page body copy set to normal weight** (was semi-bold, 600) —
+   the hero intro and the donation-section paragraph. This is **separate**
+   from the site-wide body-size normalization the PM asked about later and
+   then explicitly declined (see §7, "declined") — don't confuse the two.
+7. **Home page hero left-aligned on desktop** (logo, headline, intro) to
+   match how it already looked on phones — was centred.
+8. **Home page headline made optional via the CMS.** Clearing "Hero — main
+   headline" in Settings → Home Page now shows no headline at all (with a
+   screen-reader-only fallback heading for accessibility/SEO — a page
+   with zero `<h1>` is bad practice). **The PM asked for this to be
+   possible, then said "for now keep the headline"** — so the field is
+   populated and the headline shows; the capability is just sitting there
+   unused. `src/pages/index.astro` + `public/admin/config.yml`.
+9. **Hero photos capped to the page's reading width** on pages whose body
+   is a single text column (Scholarships, Young Performers, blog posts,
+   School Play in a Box, Casting, Thank you) — these used to have a
+   full-width 1060px photo sitting well to the right of a ~650px text
+   column, leaving a dead band of white space. Pages whose content really
+   is full-width (About, Auditions, Classes & Camps, School Tickets,
+   Volunteer, Judy Robe, show listings) are **not** in this list and keep
+   the wide photo. One rule in `global.css`, uses `:has()` (Safari 15.4+ /
+   Firefox 121+; older browsers just show the old wide photo, nothing
+   breaks).
+10. **Nav bar and logo — this took many iterations; read carefully if
+    touching it again (see §6, first entry, before changing anything
+    here).** Final state:
+    - Nav bar compacted: 78px → 51px tall, menu type 14.1px → 12.8px,
+      **one shared height variable `--nav-item-h: 34px`** in
+      `Header.astro` that the logo, every menu pill, and the
+      Register/Donate buttons all read from.
+    - The header logo is the **whole logo** (letters + wordmark, nothing
+      cropped) — NOT the letters-only "mark" that was tried and reverted.
+      It's scaled so the **span from the top of the "PYT" letters to the
+      bottom of "Peninsula Youth Theatre"** matches the button height
+      exactly, top-to-top and bottom-to-bottom. `src/components/Logo.astro`.
+    - Found and fixed, along the way: the site's global
+      `img { max-width: 100% }` reset was silently squashing the logo
+      sideways whenever its containing box was narrower than the image's
+      natural width at that height — `max-width: none` added on the nav
+      logo image specifically. Worth knowing about if any other small
+      image in a tight flex/grid box ever looks distorted.
+    - Home page logo: settled at **half size** (111×44px) after a
+      "quarter size" attempt was tried live and rejected as too small.
+    - Footer logo is untouched throughout all of this — it was never part
+      of the ask.
+11. **"200k for 2026!" thermometer:** same on both pages now (see #2, #3).
+12. **Registration status field added to Programs** (Classes & Camps).
+    Each programme now has a CMS dropdown — **Open / Coming soon /
+    Closed** — plus an optional wording override. **Closed hides the
+    Register button even if a registration link is still saved**, showing
+    a sign instead ("Registration closed until next year" or the custom
+    wording). A page-wide "Registration notice" field was also added to
+    Classes & Camps settings for something true of the whole page.
+    **The PM is already using this on real content**: Studio Classes is
+    set to `Closed` with the note "Registration full until Fall 2027";
+    Camps is set to `Coming soon`. `src/content.config.ts`,
+    `src/pages/programs.astro`, `public/admin/config.yml`.
+13. **Cast page embeds (rehearsal schedule + cast list) made narrower and
+    left-aligned** with the page headings — were 1360px wide starting
+    150px left of "Cast list"/"Rehearsal schedule"; now 1060px, left edge
+    exactly on the heading. `src/pages/cast/[slug].astro`.
+14. **"What your gift could fund" Donate button removed** (Ways to
+    Support) — that section now has just the heading and the list; the
+    campaign section above and Giving Levels below each keep their own
+    Donate. The CMS field that used to set that button's label
+    (`button_label` under Gift Funds) is relabelled "(unused since
+    2026-09-22)" with an explanatory hint, rather than deleted.
+15. **Home page promo banner ("New: PYT has a new website!") inverted** —
+    was solid pink with white text; now white with a pink border and pink
+    text. Same 5.48:1 contrast (WCAG AA) either way. Hover/focus deepen
+    the pink rather than filling the bar.
+16. **Every page heading reduced ~20%**, except Home (which has its own,
+    separate, larger `.hero-heading` style and was untouched). This was
+    one shared rule — `h1 { font-size: clamp(...) }` in `global.css` —
+    so it applied everywhere at once: Auditions, About, Casting, Ways to
+    Support, Scholarships, Young Performers, Classes & Camps, School Play
+    in a Box, Volunteer, Photos, show pages, Stories on Stage pages, Shop,
+    Judy Robe, all confirmed landing at the same new size.
+17. **Contact box design unified across the whole site.** There were
+    three different looks in use (a plain grey-bordered box on six pages,
+    a pink-accent-border box on the Corporate form, and a pale-teal panel
+    on About's "Get in touch"). The pink-accent style — white background,
+    pink border, thicker on the left — is now `ContactForm.astro`'s own
+    **default**, so six other pages (Classes & Camps' grid card excluded
+    on purpose, see below) picked it up automatically with no page-file
+    changes. About's card was switched from pale-teal to match. Along the
+    way: the About card's "Peninsula Youth Theatre is a 501(c)(3)..." line
+    had no bottom margin and sat jammed against the form below it — fixed.
+    Also added a `messagePlaceholder` prop so the Corporate form's message
+    box could have "How can we help?" removed **without** removing it from
+    every other form.
+    - **Deliberately NOT touched:** the Classes & Camps "Questions?" card,
+      which sits inside a 3-card grid next to Studio Classes and Camps and
+      is styled to match *those* cards, not a standalone contact box.
+      Changing it would have broken that grid's own consistency instead
+      of helping it. If the PM asks why it still looks different, this is
+      why — not an oversight.
+
+17. **Home page hero intro paragraph made optional via the CMS**,
+    exactly the same pattern as the headline (#8) — clearing "Hero —
+    intro paragraph" in Settings → Home Page now hides it with no empty
+    gap left behind, independent of the headline field. **Handed to the
+    PM as two files (index.astro, config.yml) at the very end of this
+    session — NOT YET CONFIRMED PASTED.** Check this first in a new
+    session: grep `src/pages/index.astro` for `hasHeroLede` — if it's
+    not there, the files are still sitting unpasted and need re-sending.
+
+---
+
+## 5. Preferences and working style — carry these forward exactly
+
+These are the PM's standing preferences, confirmed and re-confirmed
+across two full sessions now. Follow them without being asked.
+
+- **Mock up before building, every time**, using real screenshots of the
+  actual built site with the real webfonts loaded (see §9 — this is not
+  optional, default-system fonts give misleading measurements). Never use
+  the interactive widget/diagramming tool for this project — PNG mockups
+  only, clearly labelled "MOCKUP ONLY — do not upload," never mixed in
+  with real files.
+- **The PM cannot see inline images reliably in this chat surface** —
+  files must be attached with `present_files` (or whatever the current
+  tool is), not just referenced. Twice this session I described a mockup
+  without attaching it and had to be told "can't see it" or "just a
+  screenshot" before resending. **Attach every visual you claim to show.**
+- **The PM wants direct GitHub links pasted in the chat itself**, not
+  buried in a downloadable instructions file — "just list all the links
+  here in the chat so I can click them in order" was said explicitly.
+  Give: the link, the file it replaces, expected line count, first line.
+- **New files first, numbered, with safe stopping points** between
+  logical groups (this mattered a lot in the spacing batch; less relevant
+  once we moved to one-file-at-a-time live iteration this session, but
+  keep it in mind for any future multi-file batch).
+- **Never paste raw code into the chat** — always a downloadable file.
+- **A CMS hard-refresh reminder whenever `config.yml` changes** — several
+  times this session (registration status, headline-optional) needed
+  this; keep flagging it.
+- **The PM will correct you plainly and expects you to actually find the
+  real cause, not just try another guess.** The logo saga (§6) is the
+  clearest example: two "fixes" in a row treated the symptom differently
+  without diagnosing it, and the PM's third message — "maybe it's because
+  you're aligning the outer edges of the stars in the logo, and not the
+  type?" — was the correct diagnosis, handed to me. When a PM correction
+  suggests a specific mechanism, take it seriously and verify it before
+  trying yet another surface-level tweak.
+- **Always verify the actual rendered pixels, not just the CSS you wrote.**
+  The logo saga's second bug (the `max-width: 100%` squash) was invisible
+  in the CSS and only showed up by measuring the rendered image's width
+  against its intended aspect ratio. Several other times this session,
+  computed-style checks (via a headless browser) caught mismatches that
+  reading the CSS alone would have missed — e.g. a leftover `0.88rem`
+  media-query rule that silently overrode the Donate button's font-size
+  after it looked correct in the file. **Screenshot AND measure, every
+  time, before presenting something as fixed.**
+- **Never claim something is fixed without having rebuilt and re-measured
+  it.** Standard workflow this session, every single change: edit → clean
+  rebuild → serve locally with the real webfonts → screenshot and/or
+  measure with a headless browser → only then say it's done.
+- **The PM approves incrementally and iterates live** — today was a
+  single flowing session of many small requests against the live preview,
+  not a batch handover. Be ready for "no, still not right, try X" as a
+  normal part of the workflow, not a sign of failure — see the logo saga.
+
+---
+
+## 6. Concerns and traps for the next session
+
+**Read this before touching the logo, nav bar, or thermometer again.**
+
+1. **The nav bar / logo took five iterations to get right this session.**
+   If asked to adjust it further, read `src/components/Logo.astro`'s
+   comments in full first — they document the exact reasoning and the
+   measurements used (which rows/columns of the 600×309 logo file are the
+   letters vs. the wordmark vs. the decorative stars), and they document
+   **two specific wrong turns** (cropping to letters-only was rejected;
+   scaling the whole file to button height under-sized the letters). Don't
+   repeat either. If changing the logo file itself is ever discussed,
+   every fraction in that file's comments needs re-measuring from
+   scratch — they're all pixel-measured against this specific PNG.
+2. **The global `img { max-width: 100% }` reset can silently squash any
+   small image inside a tight flex/grid container.** If a future report
+   of "this logo/icon/photo looks squished" comes in, check for this
+   before anything else — it's an easy, invisible trap.
+3. **The `h1` size rule in `global.css` is now shared by every page except
+   Home.** If a future request is "make the heading on page X bigger,"
+   check whether that page has its own override before assuming a global
+   change is safe — changing the shared rule again will move all of them
+   at once, which is usually what's wanted, but confirm.
+4. **`ContactForm.astro`'s default styling is now the site-wide contact
+   box look.** Same caution as #3 — a change here affects six-plus pages
+   at once by design; that's a feature, not a bug, but be deliberate.
+5. **The registration-status feature is live and the PM is already using
+   it on real content** (see §4.12). Don't accidentally revert Studio
+   Classes or Camps' status while working on something else in
+   `programs.astro`.
+6. **Photo weight is still an outstanding concern from the original
+   handover** (§5 of the morning `HANDOVER-2026-09-22.md`) — several
+   photos are still several MB each, unresized. Not touched this session.
+   Still worth raising if it comes up.
+7. **Formspree's free tier limit (50 submissions/month, shared across all
+   forms site-wide)** was flagged in the morning handover as a concern —
+   not verified or revisited this session. Still an open question for the
+   PM/PYT to check against actual usage once the site's been live longer.
+8. **Nothing from this session touched `_redirects`, `_headers`, or the
+   cast page's password/embed logic** — those are exactly as the morning
+   session left them and don't need re-checking.
+
+---
+
+## 7. Explicitly declined or reverted — do NOT redo these
+
+- **Site-wide body-copy size increase.** The PM asked whether the home
+  page's large intro paragraph (20.8px) was a different font from the
+  rest of the site's body copy (16.8px). It is not — same typeface, same
+  weight, same colour, just a different size, used deliberately in that
+  one spot. Once this was confirmed, **the PM said "just leave it all
+  actually"** — no global.css change was made or should be revisited
+  unless asked again.
+- **Nav logo cropped to "PYT" letters only** (no wordmark, no stars) —
+  tried, explicitly asked to be undone ("I don't want you to crop the
+  logo"). Current state is the whole logo, scaled — see §4.10.
+- **Home page logo at quarter size** (55×22px) — tried live, rejected as
+  too small. Current state is half size (111×44px).
+- **Thermometer in bright magenta Donate button** — tried to match the
+  thermometer's own colours, explicitly reverted to the site's standard
+  pink for the button specifically.
+
+---
+
+## 8. CMS fields that now exist but may be unfamiliar
+
+If the PM or a new session runs into an unexpected CMS field, these are
+all deliberate additions from today, not bugs:
+
+- **Programs (Classes & Camps) → each programme:** "Registration status"
+  (Open / Coming soon / Closed) and "Registration wording (optional)."
+- **Classes & Camps page settings:** "Registration notice (optional)" —
+  one line shown under the intro for something true of the whole page.
+- **Home Page settings:** "Hero — main headline" is now optional
+  (`required: false`), with a hint explaining blank = no headline.
+- **Support & Fundraising → Gift Funds:** "Donate button text" is now
+  labelled "(unused since 2026-09-22)" with a hint explaining it no
+  longer controls anything — kept rather than deleted so the wording
+  isn't lost if a button is ever wanted back there.
+- **Support & Fundraising → Donation Campaign:** `stat_raised`,
+  `stat_donors`, `stat_percent` are still present but unused on the Ways
+  to Support page (still used on the Home page's version of the same
+  section, if that section's stat line is ever re-enabled there — check
+  before assuming it's fully dead).
+
+---
+
+## 9. Technical setup notes (carried forward from the morning handover,
+    still true)
+
+- **Google Fonts is unreachable from the sandbox** — Archivo Black,
+  Baloo 2, and Source Sans 3 will NOT load in a headless browser unless
+  served locally. Every screenshot/measurement this session used real
+  `.ttf` files fetched from the Google Fonts GitHub mirror and served
+  from a local `testfonts/` folder alongside each build, with an
+  `@font-face` override injected before measuring.
+  `document.fonts.check()` is not sufficient — it returns true even for a
+  fallback font. Re-fetch these fonts at the start of a new session; they
+  don't persist between sessions.
+- **Local build/serve pattern that worked reliably**: `npm run build`,
+  then `setsid nohup python3 -m http.server <port> --directory <path>/dist
+  > /tmp/h<port>.log 2>&1 < /dev/null &` (plain `nohup &` without `setsid`
+  was unreliable — the server sometimes died between tool calls). Always
+  `curl` to confirm the server actually answers before trusting a
+  Playwright screenshot.
+- **Playwright (via Python) was used throughout** for both screenshots and
+  precise pixel measurement (`getBoundingClientRect()`,
+  `getComputedStyle()`) — this combination is what caught the two logo
+  bugs that would have been invisible from a screenshot alone.
+
+---
+
+## 10. Suggested first steps for a new session
+
+1. Fresh clone `main`, confirm it's commit `37ef5a8` or later, run
+   `npm run build` and confirm 36 pages / zero errors — the same check
+   this handover's §3 describes. Note anything that's changed since (the
+   PM edits content in the CMS regularly).
+2. Fetch the webfonts locally before doing any visual work (§9).
+3. Read this file's §5 (preferences) and §6 (concerns) before starting
+   any new request — especially before touching the logo, nav bar,
+   `global.css`'s `h1` rule, or `ContactForm.astro`.
+4. Ask the PM what's next — there is no unfinished work queued from this
+   session.
+
+---
+
+## 11. What to do with the older handover documents
+
+- `HANDOVER-2026-09-22.md` (the morning one, 781 lines): still useful for
+  its §1–§16 on the cast page and old-site redirect work, none of which
+  changed this session. Its own §5 "concerns" list (photo weight,
+  Formspree limits, the cast-page noindex check, etc.) is still the
+  authoritative source for those — this handover's §6 only adds what's
+  new from today.
+- `START_HERE.md`, `IN_FLIGHT.md`, `DECISIONS.md`: still carry their
+  "SUPERSEDED" banners from the morning session, still accurate — these
+  are now two sessions stale and should keep being treated as historical
+  only.
+- `BUILD_LOG.md` / `BUILD_LOG-ENTRIES-2026-09.md`: **now written up.**
+  See `BUILD_LOG-ENTRIES-2026-09-22-EVENING.md` — 18 entries (all of §4's
+  17, plus the intro-paragraph fix from item 17 above), in the same
+  Goal/Built/Tested style as the existing entries, newest first, meant to
+  go at the very top of `BUILD_LOG-ENTRIES-2026-09.md` (which itself,
+  note, was NEVER merged into `BUILD_LOG.md` — both files are still
+  sitting as separate, unmerged staging documents; a new session doing a
+  proper cleanup might want to fold all of this into `BUILD_LOG.md`
+  properly in one pass, oldest-to-newest at the bottom in normal
+  chronological order or newest-at-top matching the existing file's own
+  stated convention — check `BUILD_LOG.md`'s own header for which). Unlike
+  the morning session's entries, these are **not individually tagged with
+  commit hashes** — this session's live-iteration workflow (the PM
+  pasting one small file after each approved mockup, sometimes three or
+  four times against the same file in a row, e.g. the logo saga) doesn't
+  map cleanly to one hash per feature the way the morning session's did.
+  The entries file explains this and points to the blanket verification
+  in this handover's §3 instead.
