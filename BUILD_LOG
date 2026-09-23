@@ -1,0 +1,291 @@
+Build log entries for 2026-09-22 (evening session) — to go at the TOP of
+BUILD_LOG-ENTRIES-2026-09.md, above its existing "2026-09-16 → 2026-09-22"
+entries (which are themselves still not yet merged into BUILD_LOG.md — see
+that file's own note). Newest first, as usual.
+
+A NOTE ON COMMIT HASHES IN THIS BATCH: unlike the entries below this note,
+these are NOT individually bracketed with commit hashes. This session's
+workflow was fast, live iteration against the real preview — the PM
+pasting one small file after each approved mockup, often several times in
+a row against the same file (Header.astro and Logo.astro were each pasted
+three-plus times in the nav-bar/logo work alone) — so a 1:1 mapping from
+feature to a single commit doesn't exist for most of these the way it did
+for earlier sessions' entries. What IS verified: a fresh clone of `main`
+at commit 37ef5a8 (2026-09-22, 13:57 PT) built clean at 36 pages with
+every item below confirmed present by grepping for a marker unique to
+that change — see HANDOVER-2026-09-22-EVENING.md §3 for the exact method.
+Item 18 postdates that clone and was still pending paste as of this
+writing — see its own entry.
+
+---
+
+Home hero — intro paragraph made optional (2026-09-22) — PENDING PASTE
+Goal (PM): same treatment as the headline below — "make the body copy
+under the home page headline optional."
+Built: index.astro — hero_lede trimmed and gated behind hasHeroLede,
+mirroring hasHeading exactly; blank renders nothing, no empty gap left
+behind. Independent of the headline field: either, both or neither can
+show. config.yml — hero_lede set to required:false with a hint explaining
+the blank-to-hide behavior; hero_heading's own hint updated to mention the
+paragraph now has the same option.
+Tested: built both states (paragraph present / blank) at 1440 and 390px —
+carousel simply moves up to fill the space (562px→424px desktop,
+553px→366px phone), no sideways scroll either way.
+NOT YET COMMITTED — handed to PM as two files (index.astro, config.yml)
+with a mockup; not confirmed pasted as of this entry.
+
+Contact box design unified across the site (2026-09-22)
+Goal (PM, from two screenshots): the Corporate Contact box and the About
+page's "Get in touch" box should share the same design (colours), even
+though their fields differ; remove "How can we help?" from the Corporate
+message box specifically, not site-wide; the About box's nonprofit-status
+line looked "squashed and inelegant."
+Found: three different looks were in use across nine ContactForm-using
+pages — a plain grey-bordered card (six pages), the pink-accent-border
+card (Corporate only, Ways to Support), and a pale-teal panel (About).
+Built: ContactForm.astro — the pink-accent style (white background, 1px
+pink border, 5px on the left, no shadow) is now the component's own
+DEFAULT non-compact card, so it applies automatically to every page using
+the plain form (Auditions, Volunteer, School Play in a Box, Stories on
+Stage main + each production's booking form) with no changes needed on
+those page files; added an optional messagePlaceholder prop (default "How
+can we help?") so one instance can override or blank it without affecting
+the rest. about.astro — .contact-card switched from pale-teal/grey-border
+to the same white/pink-accent style; .nonprofit-note given a
+margin-bottom (it had margin-top only, so the form's first field sat
+jammed directly underneath it). ways-to-support.astro — Corporate form
+passes messagePlaceholder="" to drop its placeholder only.
+Deliberately unchanged: the Classes & Camps "Questions?" card, which sits
+in a 3-card grid matching its neighbours (Studio Classes, Camps) — giving
+it its own border would have broken that grid's consistency instead of
+fixing anything.
+Tested: computed-style check on six pages confirmed the new border/
+background; corporate placeholder confirmed empty string; About gap
+between the nonprofit line and the first field label confirmed at 24px
+(was 0). Before/after mockup rendered on the real site with real fonts.
+
+Every page heading reduced ~20%, uniform, except Home (2026-09-22)
+Goal (PM): "Auditions at PYT" and similar page headings were too large;
+wanted them all uniform and about 20% smaller.
+Found: every page's <h1> except Home's already read from ONE shared rule
+in global.css (Home has its own separate .hero-heading style) — so this
+was a one-line fix, not a per-page one.
+Built: global.css — h1 { font-size: clamp(...) } changed from
+clamp(2.2rem, 8vw, 4rem) to clamp(1.76rem, 6.4vw, 3.2rem) — every number
+exactly 80% of before.
+Tested: 14 pages (Auditions, About, Casting, Ways to Support,
+Scholarships, Young Performers, Classes & Camps, School Play in a Box,
+Volunteer, Photos, a show page, a Stories on Stage page, Shop, Judy Robe)
+all landed at the same new size (51.2px on a laptop, was 64px); checked
+1440/1024/768/390/320px — new size is exactly 80% of old at every width;
+Home's headline confirmed untouched (54.4px throughout).
+
+Home page promo banner inverted — more recessive (2026-09-22)
+Goal (PM): "New: PYT has a new website!" read as too bold/announcement-
+like; asked to invert the colours — pink border, white inside, pink type.
+Built: PromoBanner.astro — background #ffffff, color var(--accent),
+border-block 1px solid var(--accent) (was solid pink background, white
+text). Hover/focus now deepen the text/border colour to --accent-deep
+rather than filling the bar.
+Tested: contrast unchanged at 5.48:1 (WCAG AA pass) — same ratio as
+before, just inverted which side carries the colour. Computed styles
+confirmed white/pink/pink at both 1440 and 390px; no sideways scroll.
+
+"What your gift could fund" Donate button removed (2026-09-22)
+Goal (PM): remove the Donate button next to that specific section on Ways
+to Support (the campaign section above and Giving Levels below each keep
+their own).
+Built: ways-to-support.astro — .giving-head's button removed; the
+row/space-between layout that positioned it top-right on wide screens
+removed with it, since the section is now just a heading and intro.
+config.yml — the Gift Funds "Donate button text" field relabelled
+"(unused since 2026-09-22)" with a hint explaining it, rather than
+deleted, so the wording isn't lost if a button is ever wanted back.
+Tested: before/after mockup on the real page, desktop and phone; no
+sideways scroll on either.
+
+Cast page embeds narrower, left-aligned with the headings (2026-09-22)
+Goal (PM, from a screenshot): the rehearsal-schedule and cast-list Google
+Sheet embeds on cast pages didn't need to be as wide as they were; asked
+to align them left with the "Cast list"/"Rehearsal schedule" headings and
+make them narrower.
+Found: the embeds were 1360px wide, starting ~150px to the LEFT of the
+headings above them (a deliberate August choice to let wide schedules
+break out of the text column, which had the side effect of misaligning
+the left edge).
+Built: cast/[slug].astro — .sheet-wide's max-width changed from a fixed
+1600px to var(--max-width) (the page's own content width), so the frame
+now shares the page's left/right gutters instead of centring independent
+of them.
+Tested: 1440/1280/1024/768/390/320px — embed frame and heading share
+exactly the same left edge at every width (e.g. 190px/1060px wide at
+1440, matching the heading's own 190px left edge); no sideways scroll.
+
+Registration status added to Programs / Classes & Camps (2026-09-22)
+Goal (PM): a way to show "registration closed until next year" for a
+class, with or without the existing live Register button.
+Built: content.config.ts — registration_status enum (Open / Coming soon /
+Closed, default Open) and an optional registration_note override string
+added to the programs collection schema. programs.astro — Closed hides
+the Register button (even if a link is still saved) and shows a sign
+instead, using the custom note if set or "Registration closed until next
+year" otherwise; Coming soon keeps the existing grey chip behaviour; a
+new page-wide "Registration notice" field (Classes & Camps settings)
+renders one line under the intro for something true of the whole page,
+or nothing if left blank. config.yml — both new CMS fields added with
+hints.
+Tested: built with a stand-in Closed status on Studio Classes and
+confirmed the sign renders and the button is gone; confirmed Coming soon
+unaffected; confirmed Open (the default) behaves exactly as before.
+PM has since set this live on real content: Studio Classes is Closed
+("Registration full until Fall 2027"); Camps is Coming soon — both
+confirmed present in the CMS content files on a fresh clone.
+
+Nav bar compacted, and the logo made to match it — five rounds (2026-09-22)
+Goal (PM, working from an Apple screenshot): nav bar closer to Apple's
+size; logo LETTERS (not the file's edges) aligned with the menu items,
+"maximum elegance."
+Round 1 — compact bar: Header.astro — one shared --nav-item-h: 34px
+variable now drives the logo, every menu pill, and Register/Donate;
+bar 78px → 51px, menu type 14.1px → 12.8px. Logo.astro — margins added so
+the logo's LETTERS (not the transparent file's padded edges) sit flush
+with the page's content edge, computed from the file's actual measured
+pixel bounds. PM: "still confusing" / mark cut off.
+Round 2 — cropped to "PYT" only: tried cropping the header logo to just
+the three letters (no wordmark, no stars). PM: "I don't want you to crop
+the logo."
+Round 3 — full logo, sized like a button: reverted to the whole logo
+(letters + wordmark), scaled so the FILE's height matched the button
+height. Measured against the real Tickets button: still visibly shorter,
+because the file's stars-and-wordmark padding meant the letters
+themselves were still small within that height.
+Round 4 — letters scaled to button height: rescaled so the LETTERS
+(not the file) matched button height. This let the stars above and the
+wordmark below spill out past the header bar — "cut off / running over."
+Round 5 (final) — letter-top to wordmark-bottom: PM diagnosed the actual
+problem directly ("maybe it's because you're aligning the outer edges of
+the stars, and not the type?"). Rescaled so the SPAN from the top of the
+letters to the bottom of "Peninsula Youth Theatre" — not the letters
+alone, not the whole file — matches the button height, aligned top-to-top
+and bottom-to-bottom with the buttons. Only the decorative stars above
+the letters can still poke out, by about 1px.
+Also found and fixed along the way: the site's global img{max-width:100%}
+reset was silently squashing the header logo sideways whenever its
+containing box was narrower than the image's natural width at that
+height — max-width:none added on the nav logo image specifically.
+Tested (final round): 1440/1280/1120/1024/768/390/320px — logo's visible
+content stays within ~1px of the header bar at every width; footer logo
+(99×51px) and home page logo (111×44px) confirmed untouched throughout
+all five rounds.
+
+Home page logo size — settled at half, after quarter was tried (2026-09-22)
+Goal (PM): "bring the home page logo down in size by about three
+quarters." Two readings of that phrase were mocked up (quarter of current
+size, vs. half) since it's ambiguous; PM initially chose quarter (55×22px)
+in the mockup stage, it was built and seen live, then PM asked for it
+brought back up to "the second smallest option" — i.e. half (111×44px).
+Built: Logo.astro — .logo-hero-frame / .logo-mark-hero dimensions set to
+exactly half of the pre-session size on both mobile and the >=520px
+breakpoint (every number precisely halved so the crop/offset still lines
+up correctly).
+Tested: confirmed 111×44px live; carousel position shifts accordingly.
+
+Hero photos capped to the page's reading width (2026-09-22)
+Goal (PM): "the hero and images generally are not working when they're
+much wider than the content blocks below them" — e.g. Scholarships had a
+full-width 1060px photo sitting well right of a ~650px text column,
+leaving a dead band of white space; About was fine (its content really is
+full-width).
+Built: global.css — one rule targeting .page-hero-img inside pages whose
+body uses a single-column layout (matched via :has() against each page's
+own body-section class: .page-body, .spib-section, .casting-body,
+.thanks-section), capping the photo at that page's own reading width
+(68ch for most, 623px for School Play in a Box which runs a smaller body
+font, 56ch for Thank you). Pages with genuinely full-width content
+(About, Auditions, Classes & Camps, School Tickets, Volunteer, Judy Robe,
+show listings) are not matched and keep the wide photo.
+Tested: photo width now matches the text column exactly on every matched
+page, confirmed at 1440/1024/768/390/320px; unmatched pages (About etc.)
+confirmed unaffected. Uses :has() — Safari 15.4+/Firefox 121+; older
+browsers simply keep showing the old wide photo, nothing breaks.
+
+Ways to Support — Sponsorship/Corporate swapped, corporate box shrunk and
+centred (2026-09-22)
+Goal (PM): "Sponsorship section to move up from the bottom and swap with
+Corporate," and "the corporate contact box is way too big," later refined
+to "centre align the contact box."
+Built: ways-to-support.astro — the two sections' markup order swapped
+(Show & Season Sponsorship now directly after "What your gift could fund";
+Corporate Sponsorship now last), and their background tints swapped WITH
+them so the page keeps alternating white/tinted bands rather than
+stacking two of the same colour. Corporate's contact box: was 1060×512px
+full-width, now a 560px column (later centred with margin-inline:auto),
+~420px tall — smaller padding, thinner border, smaller heading, a
+three-line message box instead of four.
+global.css — .corporate-section added to the "pages that can end in a
+tinted band" list (it can now be the last section on the page, where it
+never used to be).
+Tested: section order and background alternation confirmed; contact box
+confirmed centred at 1440/1024/768/390px with box staying 560px wide;
+no sideways scroll.
+
+Home page thermometer redrawn from PM's reference image; copied to Ways to
+Support with further changes (2026-09-22)
+Goal (PM): replace the thin horizontal progress bar with a specific
+reference picture — big multicolour "200k for 2026!" title, a bulb+tube
+bar with tick marks, a star-shaped GOAL badge, a Donate button.
+Built (Home): index.astro — one inline SVG (bulb, fill, ticks, star)
+plus the title built from the campaign settings (goal amount, year
+parsed from the campaign label), colours as local CSS custom properties
+scoped to .donate-teaser (--thermo-fill, --thermo-outline, etc.), not
+global tokens. PM then asked for the Donate button below it to use the
+site's STANDARD pink rather than the thermometer's own brighter magenta
+— reverted that one element back to var(--highlight).
+Built (Ways to Support): same SVG/title copied in, left-aligned rather
+than centred (matches that page's layout), then per further PM feedback:
+the "$X raised · Y donors · Z% of goal" sentence removed entirely (the
+three CMS fields that fed it — stat_raised/stat_donors/stat_percent — are
+now unused on this page, not deleted, in case ever wanted back), and the
+Donate button moved from top-right in the section header down to
+CENTRED under the thermometer, with the whole block (title, drawing,
+button) centred on the page rather than left-aligned.
+Tested: both pages checked at 1440/390px; figures (raised/goal/percent/
+donor count) still announced via the SVG's aria-label for screen readers
+even with the visible sentence removed from Ways to Support; no sideways
+scroll.
+
+Home page hero — body copy normal weight, left-aligned on desktop,
+headline made optional (2026-09-22, three related requests)
+Goal (PM): "change all the body copy... back to non-bold," then "the
+left-aligned logo, headline and body copy from mobile look better, so
+apply that to desktop," then "introduce the option in the CMS of not
+having a headline."
+Built: index.astro — .hero-lede and .donate-lede font-weight 600→400.
+.hero-grid justify-items/text-align changed from center to
+start/left (desktop only — phones already were left-aligned, unchanged).
+heading trimmed and gated behind a hasHeading check; blank CMS field now
+renders a screen-reader-only fallback <h1> (Peninsula Youth Theatre)
+instead of an empty visible heading — a page with zero visible heading
+is bad for accessibility/SEO even when the design wants none shown.
+config.yml — hero_heading set to required:false with a hint.
+PM's own follow-up: "for now keep the headline" — the capability exists
+and is tested, but the field is populated and the headline is showing;
+nothing further needed unless asked.
+Tested: weight change confirmed 400 on both paragraphs; alignment
+confirmed flush with page content edge at 1440/1024/768px; blank-heading
+state built and screenshotted (logo + intro only, no gap) before the PM
+asked to keep the headline populated instead.
+
+Home page carousel resized ~one third smaller (2026-09-22)
+Goal (PM): "reduce the home page carousel image size back down by about a
+third. It's way too big."
+Built: index.astro — .photo-strip-wrap given max-width:720px and
+margin-inline:auto (was the full content width, ~1060px on a laptop).
+Photo goes from 1060×707px to 720×480px on a laptop, same 3:2 shape,
+whole picture still shown (a "crop the top/bottom instead" alternative
+was mocked up alongside this and rejected — it clipped the poster's
+title text). Phones unaffected — the photo already fit the screen width
+there.
+Tested: 1440/1024/768/390/320px — photo capped at 720px from 1024px
+upward, fills width below that; carousel controls (arrows, dots) and the
+CMS-driven show data unaffected; no sideways scroll.
