@@ -24,7 +24,8 @@
       "title": "Stories on Stage Sponsor",
       "description": "[Stories on Stage](https://pyt-website.pages.dev/stories-on-stage/) (SOS) - adaptations of beloved children’s books, priced so schools and families can afford to attend. Sponsors individual shows or the full season, with benefits including tickets*, recognition, and VIP scheduling.\n\n\\*Ticket benefits have a fair market value of $26 per ticket.",
       "price": "Show: $150, $350, $750 | Season: $1,000, $2,500",
-      "button_label": "Sponsor Stories on Stage"
+      "button_label": "Sponsor Stories on Stage",
+      "button_url": "https://pyt.secure.nonprofitsoapbox.com/component/donations/donate/id-9"
     }
   ]
 }
