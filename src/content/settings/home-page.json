@@ -8,24 +8,24 @@
   "donate_lede": "PYT is a nonprofit organization that relies on the generosity of donors. Every gift brings theater and community to the Bay Area and beyond. ",
   "photo_strip": [
     {
-      "title": "Center Stage Shows - professional scale musicals where everyone is cast.",
+      "title": "Center Stage Shows - professional scale musicals ",
       "url": "/musicals",
       "image": "/uploads/pyt-newsies-punch.jpg"
     },
     {
-      "title": "Stories on Stage - beloved books brought to life by small casts.",
+      "title": "Stories on Stage - books brought to life by small casts",
       "url": "/stories-on-stage",
-      "image": "/uploads/untitled-1800-x-1200-px-.png"
+      "image": "/uploads/stories.jpg"
     },
     {
-      "title": "School Play In A Box - bring PYT to your school.",
+      "title": "School Play In A Box - PYT at your school",
       "url": "/school-play-in-a-box",
       "image": "/uploads/img_0215.jpg"
     },
     {
       "image": "/uploads/pyt-carousel-thermometer.png",
       "url": "https://pyt.secure.nonprofitsoapbox.com/donate",
-      "title": "Support PYT's annual campaign"
+      "title": "Support PYT"
     }
   ],
   "hero_primary_url": "/shows",
