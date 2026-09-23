@@ -840,6 +840,27 @@ collections:
     files:
 
  
+      # --- Newsletter signup form wording (added 2026-09-23) ---
+      - name: "newsletter-form"
+        label: "Newsletter Signup Form"
+        file: "src/content/settings/newsletter-form.json"
+        description: "The wording on the MailChimp signup form (shown on /subscribe and the Contact page). You can rename, reorder or hide the topic checkboxes; adding a brand-new topic needs a matching group set up in MailChimp first, so ask for help with that."
+        fields:
+          - { name: "interests_heading", label: "Topics — heading", widget: "string", required: false, default: "What do you want to hear about?" }
+          - { name: "interests_hint", label: "Topics — hint line", widget: "string", required: false, hint: "Small text under the heading. Leave blank to omit." }
+          - name: "interests"
+            label: "Topic checkboxes"
+            widget: "list"
+            allow_add: false
+            summary: "{{fields.label}}"
+            hint: "Rename any topic or untick 'Show' to hide it. Drag to reorder. Don't change the 'MailChimp key' — it's what links the checkbox to the right MailChimp group."
+            fields:
+              - { name: "key", label: "MailChimp key (do not change)", widget: "string", pattern: ["^(auditions|classes|performances|field_trips|alumni|giving|schools)$", "Must be one of: auditions, classes, performances, field_trips, alumni, giving, schools"] }
+              - { name: "label", label: "Label shown to visitors", widget: "string" }
+              - { name: "show", label: "Show this topic", widget: "boolean", default: true }
+          - { name: "submit_label", label: "Button text", widget: "string", required: false, default: "Subscribe" }
+          - { name: "submit_note", label: "Note next to the button", widget: "string", required: false, hint: "Leave blank to omit." }
+
       # --- Contact page (added 2026-09-23) ---
       - name: "contact-page"
         label: "Contact Page"
