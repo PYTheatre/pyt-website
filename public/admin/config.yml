@@ -1184,6 +1184,17 @@ collections:
     editor:
       preview: false
     files:
+      # --- Search & sharing (added 2026-09-23 for launch) ---
+      - name: "site-seo"
+        label: "Search & Sharing (SEO)"
+        file: "src/content/settings/site-seo.json"
+        description: "What search engines and social networks see. The share image is the picture that appears when someone posts a link to the site on Facebook, Instagram, WhatsApp or iMessage (show pages use their own poster instead)."
+        fields:
+          - { name: "site_name", label: "Site name", widget: "string", default: "Peninsula Youth Theatre" }
+          - { name: "default_description", label: "Default description", widget: "text", hint: "Shown under the site name in Google and in link previews, for pages that don't set their own. One or two sentences, under ~160 characters." }
+          - { name: "share_image", label: "Default share image", widget: "image", required: false, hint: "1200 x 630 pixels, JPEG or PNG, under 300 KB. Keep anything important away from the edges. Leave blank to share links with no picture." }
+          - { name: "org_phone", label: "Main phone number (optional)", widget: "string", required: false, hint: "For Google's business listing data only — it is NOT shown on the site. Example: +1 650 000 0000" }
+          - { name: "org_founded", label: "Year founded (optional)", widget: "string", required: false, hint: "For Google's business listing data only. Example: 1991" }
 
 
       # --- Navigation — full menu (2026-08-20) ---
