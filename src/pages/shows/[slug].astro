@@ -55,6 +55,7 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
 <BaseLayout
   title={`${data.title} — Peninsula Youth Theatre`}
   description={data.synopsis?.split("\n")[0] || `${data.title} at Peninsula Youth Theatre`}
+  image={data.poster}
 >
   <article class="show-detail">
     <div class="container show-grid">
@@ -134,8 +135,11 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
           )}
         </div>
 
-        {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
- 
+        {/* Ticket-fee notice moved to the bottom of the page (2026-09-23,
+            PM request): it appeared here AND under the performance list,
+            so double-cast shows showed it twice mid-page. Now rendered
+            once, just above the back link — see below. */}
+
         <div class="show-synopsis">
           {data.synopsis.split("\n\n").map((para) => (
             <p>{para}</p>
@@ -169,10 +173,13 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
                 </li>
               ))}
             </ul>
-            {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
           </section>
         )}
- 
+
+        {/* ALWAYS the last thing before the back link, on every show page
+            (2026-09-23). Same on Stories on Stage show pages. */}
+        {ticketFeeNotice && <p class="ticket-fee-notice">{ticketFeeNotice}</p>}
+
         <p class="back-link"><a href="/shows">← Back to all shows</a></p>
       </div>
     </div>
@@ -245,12 +252,16 @@ const hasSchedule = data.double_cast === true && performances.length > 0;
     margin: 0;
   }
  
+  /* Footnote at the bottom of the page (2026-09-23): hairline above,
+     then the back link. */
   .ticket-fee-notice {
     font-size: 0.85rem;
     color: var(--ink-muted);
     line-height: 1.5;
     max-width: 60ch;
-    margin: var(--space-md) 0 var(--space-lg);
+    margin: var(--space-xl) 0 0;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line);
   }
 
   .show-ctas {
