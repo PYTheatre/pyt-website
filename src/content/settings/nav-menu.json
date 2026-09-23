@@ -103,7 +103,7 @@
     },
     {
       "label": "About",
-      "url": "/contact",
+      "url": "/about/",
       "style": "none",
       "children": [
         {
