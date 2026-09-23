@@ -1,0 +1,178 @@
+---
+/*
+  CONTACT PAGE  ( /contact )   — added 2026-09-23 (PM request)
+
+  One page that brings together the two ways to reach PYT:
+    - the "Get in touch" box (address, EIN, contact form) that also lives
+      on the About page — same fields, same ContactForm component, same
+      "general" route, so messages land in the same inbox;
+    - the newsletter signup form from /subscribe, rendered by the shared
+      NewsletterForm component (extracted from that page for this).
+
+  Above them: a title and an open Markdown field for copy (links, bold,
+  lists — whatever staff want to say), both CMS-editable in
+  Settings → Site-wide → Contact Page. The two box headings are
+  editable there too. Address and EIN come from the About Page settings
+  so they're maintained in one place.
+
+  The nav's and footer's "Contact" links now point here (they pointed at
+  /about#contact before). The About page keeps its own contact box.
+*/
+import { marked } from "marked";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/ContactForm.astro";
+import NewsletterForm from "../components/NewsletterForm.astro";
+import page from "../content/settings/contact-page.json";
+import about from "../content/settings/about-page.json";
+
+const p = page as any;
+const title = p.title?.trim() || "Contact";
+const bodyHtml = p.body?.trim()
+  ? (marked.parse(String(p.body).trim(), { breaks: true, gfm: true }) as string)
+  : "";
+const contactHeading = p.contact_heading?.trim() || "Get in touch";
+const newsletterHeading = p.newsletter_heading?.trim() || "Newsletter signup";
+const newsletterIntro = p.newsletter_intro?.trim() || "";
+const address = (about as any).address?.trim() || "";
+const ein = (about as any).ein?.trim() || "";
+---
+
+<BaseLayout
+  title={`${title} — Peninsula Youth Theatre`}
+  description="Contact Peninsula Youth Theatre or sign up for PYT news — auditions, shows, camps and classes."
+>
+  <PageHero title={title} />
+
+  <section class="section contact-section">
+    <div class="container">
+      {bodyHtml && <div class="contact-copy rich" set:html={bodyHtml} />}
+
+      <div class="contact-grid">
+        {/* ---- Get in touch (same box as the About page) ---- */}
+        <div class="contact-card" id="contact">
+          <h2>{contactHeading}</h2>
+          {(address || ein) && (
+            <dl>
+              {address && (
+                <div>
+                  <dt>Address</dt>
+                  <dd>{address}</dd>
+                </div>
+              )}
+              {ein && (
+                <div>
+                  <dt>Tax ID (EIN)</dt>
+                  <dd>{ein}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+          <p class="nonprofit-note">
+            Peninsula Youth Theatre is a 501(c)(3) nonprofit corporation.
+          </p>
+          <ContactForm
+            route="general"
+            source="Contact page"
+            submitLabel="Send message"
+            compact={true}
+          />
+        </div>
+
+        {/* ---- Newsletter signup (same form as /subscribe) ---- */}
+        <div class="contact-card newsletter-card" id="newsletter">
+          <h2>{newsletterHeading}</h2>
+          {newsletterIntro && <p class="newsletter-intro">{newsletterIntro}</p>}
+          <NewsletterForm flush />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Open copy above the two boxes. Reading width, links in brand pink. */
+  .contact-copy {
+    max-width: 68ch;
+    margin-bottom: var(--space-xl);
+  }
+  .contact-copy :global(p) {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 0 var(--space-md);
+  }
+  .contact-copy :global(a) {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+  .contact-copy :global(ul),
+  .contact-copy :global(ol) {
+    margin: 0 0 var(--space-md) 1.2rem;
+    line-height: 1.7;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  /* Same box as the About page's contact card and the newsletter card:
+     white, grey hairline, soft shadow (2026-09-23). */
+  .contact-card {
+    padding: var(--space-lg);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .contact-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-card dl {
+    margin: 0;
+  }
+
+  .contact-card dl div {
+    margin-bottom: var(--space-sm);
+  }
+
+  .contact-card dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .contact-card dd {
+    font-size: 0.98rem;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .nonprofit-note {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .newsletter-intro {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0 0 var(--space-md);
+  }
+
+  @media (min-width: 920px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+  }
+</style>
