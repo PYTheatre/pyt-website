@@ -1,16 +1,18 @@
 {
   "intro": "Auditions are a skill, not just for performing, but for life. We want you to enjoy auditioning, even when you're nervous. \n\nAll shows with auditions currently open are listed on this page, and you can also read answers to our most frequently asked questions and what to expect at auditions. \n\n[Read about our casting philosophy and approach here](/casting).",
-  "sos_button_label": "",
+  "coming_soon_label": "Coming soon",
+  "signup_button_label": "Register",
+  "sos_button_label": "Find out more",
   "no_open_message": "",
-  "sos_blurb": "",
+  "sos_blurb": "Our Stories on Stage season is cast from a single annual audition. Productions are short, small-cast adaptations of beloved children's books. Visit the Stories on Stage page for more information, including audition details.",
   "title": "Auditions at PYT",
   "faq_heading": "What to expect, and FAQs",
-  "sos_heading": "",
+  "sos_heading": "Stories on Stage Youth Company",
   "button_case": "as-typed",
   "faqs": [
     {
       "question": "Do I need experience to audition?",
-      "answer": "No. We welcome first-time auditioners alongside returning performers. Come as you are."
+      "answer": "No. We welcome first-timers alongside returning performers. Come as you are."
     },
     {
       "question": "How do I sign up?",
@@ -18,11 +20,11 @@
     },
     {
       "question": "How do auditions work?",
-      "answer": "Actors arrive at PYT studios 15-30 minutes before their scheduled audition time. They check in with their paperwork complete, are given a number, and are measured for their costume(s). For most auditions, actors are taken into the audition room in groups of about ten actors. The group goes into our studio and take turns performing their chosen monologue and song. They then learn a short dance routine with the choreographer. Plan on spending 1 – 1.5 hours at the studio for your audition. This can go longer if we start running behind – check with the producers when you arrive to get an accurate sense of when you will be finished for the day."
+      "answer": "Actors arrive at PYT studios 15-30 minutes before their scheduled audition time. They check in with their paperwork complete, are given a number, and are someimtes measured for their costume(s). For most auditions, actors are taken into the audition room in groups of about ten actors. The group goes into our studio and take turns performing their chosen monologue and song. They then learn a short dance routine with the choreographer. Plan on spending 1 – 1.5 hours at the studio for your audition. This can go longer if we start running behind – check with the producers when you arrive to get an accurate sense of when you will be finished for the day."
     },
     {
       "question": "What should I prepare?",
-      "answer": "It varies by the type of show. Each show's audition sign-up page lists exactly what to prepare. Usually you will memorize a 1 minute monologue, and for musicals, 1 minute of a song, both to perform at the audition. You'll also need to bring the section of music that accompanies your song - PYT won't have a piano or an accompanist in the room. You can bring the music file on a phone or tablet, or a usb drive.\n\nMake sure you know your song and monologue so well that you won’t forget it, even if you’re nervous. Being nervous is a totally normal part of auditioning, and the best way to ease those nerves is to feel 100% prepared!\n\nPractice your audition full-out, with a loud, clear voice. \n\nPractice your opening introduction each time you rehearse your monologue. Always begin your audition with, “Hello, my name is __________ and I will be performing _________.” This is part of the audition!\n\n\nOn the day of your audition, try to be well rested and fed, and don’t forget to drink plenty of water.\n\nDress appropriately for your audition. Wear comfortable clothing you can move freely in, and closed toe shoes (eg tennis shoes) or dance shoes.\n\nBring some water!"
+      "answer": "It varies by the type of show. Each show's audition sign-up page lists exactly what to prepare. \n\nUsually you will memorize a 1 minute monologue, and for musicals, 1 minute of a song, both to perform at the audition. You'll also need to bring the section of music that accompanies your song - PYT won't have a piano or an accompanist in the room. You can bring the music file on a phone or tablet, or a usb stick.\n\nMake sure you know your song and monologue so well that you won’t forget it, even if you’re nervous. Being nervous is a totally normal part of auditioning, and the best way to ease those nerves is to feel 100% prepared!\n\nPractice your audition full-out, with a loud, clear voice. \n\nPractice your opening introduction each time you rehearse your monologue. Always begin your audition with, “Hello, my name is __________ and I will be performing _________.” This is part of the audition!\n\nOn the day of your audition, try to be well rested and fed, and don’t forget to drink plenty of water.\n\nDress appropriately for your audition. Wear comfortable clothing you can move freely in, and closed toe shoes (eg tennis shoes) or dance shoes.\n\nBring some water!"
     },
     {
       "question": "How do I choose a monologue?",
@@ -38,7 +40,7 @@
     },
     {
       "question": "What is a callback, and what does it mean if I don’t get one?",
-      "answer": "Callbacks are the directors way of gathering more information from actors, or seeing how they interact with other performers. Having a callback is not a guarantee of a role. Not receiving one doesn’t mean you won’t be cast in a great role - it means the director gathered enough information during your initial audition to cast you without seeing you again. Callback time is limited so directors may call you back for one role and use your callback as a way to evaluate you for a variety of roles."
+      "answer": "Callbacks are the director's way of gathering more information from actors, or seeing how they interact with other performers. PYT usually only does callbacks for Center Stage Musicals. Having a callback is not a guarantee of a role. Not receiving one doesn’t mean you won’t be cast in a great role - it means the director gathered enough information during your initial audition to cast you without seeing you again. Callback time is limited so directors may call you back for one role and use your callback as a way to evaluate you for a variety of roles."
     },
     {
       "question": "How do I know if I will have a callback?",
@@ -54,15 +56,15 @@
     },
     {
       "question": "How does casting work?",
-      "answer": "While talent does carry weight in casting, there are other considerations. Casting is something like putting a big jigsaw puzzle together except you won’t know what it actually looks like for another 6-8 weeks. Sometimes, there are things that influence casting that are completely outside of the actor’s control – things like height, who else is auditioning, and the casting team's vision for the role can all affect casting. Carpools and calendar conflicts can also affect choices. Finally, the creative team's experiences with actors can be a factor - behavior and attitude towards others and the work of a production make a difference, especially for major roles. Please see our casting philosophy for more information https://pyt-website.pages.dev/casting/"
+      "answer": "While talent does carry weight in casting, there are other considerations. Casting is something like putting a big jigsaw puzzle together except you won’t know what it actually looks like for another 6-8 weeks. Sometimes, there are things that influence casting that are completely outside of the actor’s control – things like height, who else is auditioning, and the casting team's vision for the role can all affect casting. Carpools and calendar conflicts can also affect choices. Finally, the creative team's experiences with actors can be a factor - behavior and attitude towards others and the work of a production make a difference, especially for major roles. Please see our casting philosophy for more information www.pytnet.org/casting"
     },
     {
       "question": "What does PYT look for in an ideal actor?",
-      "answer": "PYT looks for people who embody our values of Kindness, Preparedeness and Courage.\n\nA great actor, for PYT:\n\nhas prepared their audition material well; has a good attitude, and dosen't make excuses; is generous to the other actors around them, and listens; demonstrates maturity and the ability to stay focused; recovers from mistakes quickly because they know everyone makes them!; gives 100% performance energy all of the time; is willing to accept any role; dresses appropriately for the audition, including clothes and shoes they can move well in."
+      "answer": "PYT looks for people who embody our values of Kindness, Preparedeness and Courage.\n\nA great actor, for PYT:\n\nHas prepared their audition material well; has a good attitude, and dosen't make excuses; is generous to the other actors around them, and listens; demonstrates maturity and the ability to stay focused; recovers from mistakes quickly because they know everyone makes them!; gives 100% performance energy all of the time; is willing to accept any role; dresses appropriately for the audition."
     },
     {
       "question": "Why is the cast list usually posted a few days after callbacks?",
-      "answer": "This period gives the casting team time to check the cast list for errors and omissions. This is particularly important when casting a large cast."
+      "answer": "This period gives the casting team time to check the cast list for scheduling, preferences, errors and omissions. This is particularly important when casting a large cast."
     },
     {
       "question": "Do you have to have previous experience at PYT to get a lead?",
@@ -74,11 +76,11 @@
     },
     {
       "question": "Do producers or board members participate in any casting decisions?",
-      "answer": "No. The director, choreographer, and vocal director make all casting decisions as a group."
+      "answer": "No. The director, choreographer, and vocal director make all casting decisions."
     },
     {
       "question": "How often are rehearsals?",
-      "answer": "How often you will be called to rehearsal depends on: the size of the show, the role you have, the cast you are in, the number of participants in the show. \n\nGenerally hold rehearsals from 6:30pm – 9pm on weekday evenings and from 10am – 2pm on Saturday. \n\nOn average, you can plan on being called at least 2-3 times per week for a Center Stage Musical, and twice a week for Stories on Stage. \n\nActors with larger roles or significant stage time should plan to be at rehearsal more often. \n\nYou will get a final rehearsal schedule at the first parent meeting, just after casting. We do our best to stick to the schedule once posted as closely as possible so you can plan your other commitments."
+      "answer": "How often you will be called to rehearsal depends on: the size of the show, the role you have, the cast you are in, the number of participants in the show. \n\nGenerally PYT holds rehearsals from 6:30pm – 9pm on weekday evenings and from 10am – 2pm on Saturday. The Stories on Stage Company rehearses Tuesday and Sunday evenings.\n\nOn average, you can plan on being called at least 2-3 times per week for a Center Stage Musical, and twice a week for Stories on Stage. \n\nActors with larger roles or significant stage time should plan to be at rehearsal more often. \n\nYou will get a final rehearsal schedule at the first parent meeting, just after casting. We do our best to stick to the schedule once posted as closely as possible so you can plan your other commitments."
     },
     {
       "question": "How important is the conflict calendar?",
@@ -90,7 +92,7 @@
     },
     {
       "question": "Why can’t I have a planned conflict during tech week?",
-      "answer": "We usually have one or less to prepare to run shows at a professional theater, with all of the production elements – set, lights, costumes, sound. \n\nA stage is exciting, but it can also be dangerous. You are walking around in the dark with things flying in and out, and large pieces of scenery moving around. It is critically important that the cast be present and understand what they need to do and where they need to be on stage."
+      "answer": "We usually have one week before the show and in a professional theater space, to prepare to run shows with all of the production elements – set, lights, costumes, sound. \n\nA stage is exciting, but it can also be dangerous. You are walking around in the dark with things flying in and out, and large pieces of scenery moving around. It is critically important that the cast be present and understand what they need to do and where they need to be on stage.\n\nTech week is also where many parent volunteers have a limited time to learn their critical roles in helping the show run!"
     },
     {
       "question": "What’s the deal with the shows on schools days? Do I have to miss school?",
@@ -102,7 +104,8 @@
     },
     {
       "question": "What are PYT’s casting policies - do you cast everyone?",
-      "answer": "For Center Stage Musicals, all actors who audition and who fall within the age range for that show are cast - unless they exceed the maximum number of conflicts allowed, or present casting requirements that cannot be met. There will be two casts (each with four performance dates), and all roles will be double-cast.\n\nEvery effort will be made to feature each performer and maximize their stage time."
+      "answer": "For Center Stage Musicals, all actors who audition and who fall within the age range for that show are cast - unless they exceed the maximum number of conflicts allowed, or present casting requirements that cannot be met. There will be two casts (each with four performance dates), and all roles will be double-cast.\n\nEvery effort will be made to feature each performer and maximize stage time for every actor.\n\nStories on Stage, Teen Shows, and Studio Shows are usually limited-cast, as much smaller productions with highly focused - and often short - rehearsal periods."
     }
-  ]
+  ],
+  "about_show_link_label": "Details"
 }
