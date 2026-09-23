@@ -38,10 +38,41 @@
     flush — true removes the card's own border/background/padding so the
             form can sit inside another box (the Contact page's card).
 */
+import settings from "../content/settings/newsletter-form.json";
+
 interface Props {
   flush?: boolean;
 }
 const { flush = false } = Astro.props;
+
+/* CMS-EDITABLE WORDING (2026-09-23, PM request). The MailChimp wiring
+   stays in code; the words around it come from
+   Settings → Site-wide → Newsletter Signup Form:
+   - the interests heading + hint, the button text, the note under it;
+   - each checkbox's LABEL, and whether it's SHOWN.
+   Each checkbox is matched to its MailChimp group by a fixed KEY (below),
+   never by its label, so relabelling can't break the audience mapping.
+   A checkbox whose key isn't listed here (or has no MailChimp group) is
+   not rendered. Adding a NEW topic = new group in MailChimp → new id
+   here → new row in the CMS list; that's the one thing staff can't do
+   alone. */
+const GROUP_IDS: Record<string, string> = {
+  auditions: "group[222749][1]",
+  classes: "group[222749][2]",
+  performances: "group[222749][4]",
+  field_trips: "group[222749][8]",
+  alumni: "group[222749][16]",
+  giving: "group[222749][32]",
+  schools: "group[222749][64]",
+};
+const sx = settings as any;
+const interests = ((sx.interests || []) as any[])
+  .filter((i) => i && GROUP_IDS[i.key] && i.show !== false && String(i.label || "").trim())
+  .map((i) => ({ name: GROUP_IDS[i.key], label: String(i.label).trim() }));
+const interestsHeading = sx.interests_heading?.trim() || "What do you want to hear about?";
+const interestsHint = sx.interests_hint?.trim() || "";
+const submitLabel = sx.submit_label?.trim() || "Subscribe";
+const submitNote = sx.submit_note?.trim() || "";
 ---
 
 <div class={`form-card ${flush ? "form-card--flush" : ""}`}>
@@ -91,56 +122,25 @@ const { flush = false } = Astro.props;
         </div>
       </div>
 
-      {/* ---- Interest checkboxes ---- */}
-      <fieldset class="interests-group">
-        <legend>What do you want to hear about?</legend>
-        <p class="interests-hint">Check everything that applies. We'll only send what's relevant to you.</p>
+      {/* ---- Interest checkboxes (labels/visibility from the CMS; group
+             names from GROUP_IDS above) ---- */}
+      {interests.length > 0 && (
+        <fieldset class="interests-group">
+          <legend>{interestsHeading}</legend>
+          {interestsHint && <p class="interests-hint">{interestsHint}</p>}
 
-        <ul class="interests-list">
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][1]" value="" />
-              <span>Auditions</span>
-            </label>
-          </li>
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][2]" value="" />
-              <span>Camps and Classes at PYT</span>
-            </label>
-          </li>
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][4]" value="" />
-              <span>Upcoming Public Performances</span>
-            </label>
-          </li>
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][8]" value="" />
-              <span>Field Trip Opportunities</span>
-            </label>
-          </li>
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][16]" value="" />
-              <span>Alumni News</span>
-            </label>
-          </li>
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][32]" value="" />
-              <span>Giving to PYT</span>
-            </label>
-          </li>
-          <li>
-            <label class="checkbox-label">
-              <input type="checkbox" name="group[222749][64]" value="" />
-              <span>Bringing PYT to Your School</span>
-            </label>
-          </li>
-        </ul>
-      </fieldset>
+          <ul class="interests-list">
+            {interests.map((i) => (
+              <li>
+                <label class="checkbox-label">
+                  <input type="checkbox" name={i.name} value="" />
+                  <span>{i.label}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      )}
 
       {/* ---- MailChimp response containers (shown/hidden by mc-validate.js) ---- */}
       <div id="mce-responses" class="mce-responses">
@@ -155,9 +155,9 @@ const { flush = false } = Astro.props;
 
       <div class="submit-row">
         <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary">
-          Subscribe
+          {submitLabel}
         </button>
-        <p class="submit-note">You can unsubscribe at any time. We'll never share your email.</p>
+        {submitNote && <p class="submit-note">{submitNote}</p>}
       </div>
 
     </div>
