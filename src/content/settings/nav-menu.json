@@ -77,7 +77,7 @@
           "url": "/programs"
         },
         {
-          "label": "PYT at Your School",
+          "label": "PYT at your school",
           "url": "/school-play-in-a-box/"
         },
         {
@@ -103,7 +103,7 @@
     },
     {
       "label": "About",
-      "url": "/about#contact",
+      "url": "/contact",
       "style": "none",
       "children": [
         {
@@ -124,7 +124,7 @@
         },
         {
           "label": "Contact",
-          "url": "/about#contact"
+          "url": "/contact"
         },
         {
           "label": "Employment",
