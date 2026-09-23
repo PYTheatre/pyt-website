@@ -121,6 +121,10 @@
         {
           "label": "Contact",
           "url": "/about#contact"
+        },
+        {
+          "label": "Employment",
+          "url": "/employment"
         }
       ]
     }
