@@ -58,6 +58,14 @@ const artistMembers = (about as any).artist_members || [];
 const artistHeading = (about as any).artist_section_heading || "Artists";
 const artistBlurb = (about as any).artist_section_blurb || "";
 
+// Starring Volunteers (added 2026-09-23, PM request): a fourth personnel
+// section, sitting between Artists and the Board. Same card grid, same
+// CMS shape (heading, optional blurb, list of people) as the others.
+// Hidden entirely until at least one person is added.
+const volunteerMembers = (about as any).volunteer_members || [];
+const volunteerHeading = (about as any).volunteer_section_heading || "Starring Volunteers";
+const volunteerBlurb = (about as any).volunteer_section_blurb || "";
+
 // NOTE (2026-08-20): the banner image that used to live here now comes
 // from the shared PageHeroImage component (Site Settings → Page Hero
 // Images), so every page can have one and they're all managed in one
@@ -209,6 +217,35 @@ function getInitials(name: string): string {
     </section>
   )}
 
+  {volunteerMembers.length > 0 && (
+    <section class="section volunteer-section">
+      <div class="container">
+        <h2 class="section-head">{volunteerHeading}</h2>
+        {volunteerBlurb && <p class="board-blurb">{volunteerBlurb}</p>}
+
+        <ul class="board-grid">
+          {volunteerMembers.map((m: any) => (
+            <li class="board-card">
+              <div
+                class="board-photo"
+                style={m.photo ? `background-image: url(${m.photo}); background-size: cover; background-position: center;` : ""}
+              >
+                {!m.photo && (
+                  <span class="board-initials">{getInitials(m.name)}</span>
+                )}
+              </div>
+              <p class="board-pyt-title">{m.pyt_title}</p>
+              <p class="board-name">{m.name}</p>
+              {m.outside_title && (
+                <p class="board-outside-title">{m.outside_title}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
   {boardMembers.length > 0 && (
     <section class="section board-section">
       <div class="container">
@@ -264,7 +301,8 @@ function getInitials(name: string): string {
 
   /* ---- Artists section: same plain treatment as Staff, sits between
           Staff and the warm-background Board section ---- */
-  .artist-section {
+  .artist-section,
+  .volunteer-section {
     padding-block: var(--space-lg);
     border-top: 1px solid var(--line);
   }
