@@ -104,6 +104,12 @@ const goalChars = [...goalShort].map((ch, i) => ({ ch, colour: titleColours[i % 
 // section's <h2> is skipped entirely when the field is empty, so no
 // empty gap is left behind.
 const donateHeading = home.donate_heading?.trim() || "";
+
+// Alignment of the text above the campaign graphic (heading + lede):
+// CMS select, "center" (default, how it's always been) or "left"
+// (2026-09-23, PM request). Only the text moves; the graphic and the
+// Donate button stay centred under it.
+const donate_text_align = (home as any).donate_text_align === "left" ? "left" : "center";
  
 // --- Hero heading with optional italic word ---
 // The CMS lets staff pick one word in the heading to italicize
@@ -624,7 +630,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   )}
 
   <!-- ============ DONATION TEASER ============ -->
-  <section class="section donate-teaser">
+  <section class={`section donate-teaser donate-text-${donate_text_align}`}>
     <div class="container">
       {donateHeading && (
         <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
@@ -1493,6 +1499,13 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     text-align: center;
   }
 
+  /* CMS "left" alignment for the heading + lede only (2026-09-23). */
+  .donate-text-left .section-head,
+  .donate-text-left .donate-lede {
+    margin-inline: 0;
+    text-align: left;
+  }
+
   .thermo-title {
     /* Baloo 2 is already loaded site-wide (the Values band uses it). */
     font-family: "Baloo 2", var(--font-heading), sans-serif;
@@ -1551,12 +1564,12 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .donate-teaser-btn {
     /* The site's standard button pink (PM choice, 2026-09-22): it stays
        --highlight like every other button, NOT the brighter magenta of
-       the campaign graphic above it. */
+       the campaign graphic above it. STANDARD SIZE (2026-09-23, PM:
+       "too big") — it now inherits the shared .btn size (0.95rem type,
+       0.7rem/1.4rem padding) like every other button on the site; the
+       1.35rem / 1.15rem 2.8rem enlargement from 2026-08-19 is gone. */
     background: var(--highlight);
     color: var(--highlight-text);
-    font-size: 1.35rem;
-    font-weight: 600;
-    padding: 1.15rem 2.8rem;
   }
 
   .donate-teaser-btn:hover {
