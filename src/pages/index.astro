@@ -113,6 +113,11 @@ const donateHeading = home.donate_heading?.trim() || `Help us reach $${goal.toLo
 // both an accessibility fault and bad for search results.
 const heading = (home.hero_heading || "").trim();
 const hasHeading = heading.length > 0;
+// BLANK = NO INTRO PARAGRAPH (2026-09-22, PM request — same pattern as
+// the headline above). Clearing "Hero — intro paragraph" in the CMS now
+// hides it completely, with no empty gap left behind.
+const heroLede = (home.hero_lede || "").trim();
+const hasHeroLede = heroLede.length > 0;
 const italicWord = home.hero_heading_italic_word?.trim();
 let headingBefore = heading;
 let headingItalic = "";
@@ -198,7 +203,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
         ) : (
           <h1 class="sr-only">Peninsula Youth Theatre</h1>
         )}
-        <p class="hero-lede">{home.hero_lede}</p>
+        {hasHeroLede && <p class="hero-lede">{heroLede}</p>}
       </div>
     </div>
 
