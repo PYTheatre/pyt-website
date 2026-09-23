@@ -5,9 +5,14 @@
   A single-page presentation of PYT's parallel season:
     - Thin strip at the very top linking down to auditions
     - Page hero with title + lede
-    - Season lineup grid: cards for each production with
-      Buy Tickets (public) and School Bookings CTAs
-    - Auditions section (anchor target #auditions)
+    - Season lineup grid: cards for each production with one
+      "Tickets & details" button (label CMS-editable, 2026-09-23 —
+      school/group bookings are no longer taken by PYT; every ticket
+      goes through the MVCPA box office)
+    - Auditions section (anchor target #auditions). The contact form
+      that used to sit here when no registration link was set was
+      REMOVED 2026-09-23 (PM request); the intro paragraph is now
+      Markdown so it can carry a link to the Contact page instead.
     - "What is Stories on Stage?" explainer block
 
   Productions come from the storiesOnStage content collection
@@ -15,8 +20,8 @@
   (intro lede, auditions copy, explainer) comes from a single
   Site Settings JSON file.
 */
+import { marked } from "marked";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ContactForm from "../components/ContactForm.astro";
 import PageHero from "../components/PageHero.astro";
 import { getCollection } from "astro:content";
 import page from "../content/settings/stories-on-stage-page.json";
@@ -26,6 +31,17 @@ import SupportLinks from "../components/SupportLinks.astro";
 const productions = (await getCollection("storiesOnStage")).sort(
   (a, b) => a.data.start_date.getTime() - b.data.start_date.getTime()
 );
+
+// Auditions intro is Markdown (2026-09-23) so staff can link to the
+// Contact page from it. breaks: true — one Return in the CMS box is a
+// line break, as staff expect.
+const auditionsIntroHtml = (page as any).auditions_intro?.trim()
+  ? (marked.parse(String((page as any).auditions_intro).trim(), { breaks: true, gfm: true }) as string)
+  : "";
+
+// Label on each show card's button. CMS field (Stories on Stage (intro)
+// → Show card button label); defaults to "Tickets & details".
+const cardButtonLabel = (page as any).card_button_label?.trim() || "Tickets & details";
 ---
 
 <BaseLayout
@@ -82,7 +98,7 @@ const productions = (await getCollection("storiesOnStage")).sort(
                 <p class="production-synopsis">{prod.data.synopsis}</p>
                 <div class="production-ctas">
                   <a href={`/stories-on-stage/${prod.id}`} class="btn btn-primary">
-                    Tickets &amp; bookings
+                    {cardButtonLabel}
                   </a>
                 </div>
               </div>
@@ -97,7 +113,7 @@ const productions = (await getCollection("storiesOnStage")).sort(
   <section class="section auditions-section" id="auditions">
     <div class="container auditions-inner">
       <h2 class="section-head">{page.auditions_heading}</h2>
-      <p class="auditions-intro">{page.auditions_intro}</p>
+      {auditionsIntroHtml && <div class="auditions-intro" set:html={auditionsIntroHtml} />}
 
       <dl class="auditions-facts">
         <div>
@@ -120,32 +136,27 @@ const productions = (await getCollection("storiesOnStage")).sort(
         </>
       )}
 
-      <div class="auditions-cta">
-        {page.auditions_form_url ? (
-          <>
-            {page.auditions_form_blurb && (
-              <p class="auditions-form-blurb">{page.auditions_form_blurb}</p>
-            )}
-            <a
-              href={page.auditions_form_url}
-              class="btn btn-primary"
-              target="_blank"
-              rel="noopener"
-            >
-              Register for auditions →
-            </a>
-          </>
-        ) : (
-          <>
-            <p class="auditions-form-pending">
-              Registration opens soon. Check back, or send us a message below.
-            </p>
-            {/* Replaced a published info@ address (2026-08-20). Wrapped in
-                a fragment: a ternary branch returns one element only. */}
-            <ContactForm route="general" source="Stories on Stage — auditions" subject="Stories on Stage auditions" submitLabel="Send message" />
-          </>
-        )}
-      </div>
+      {/* Registration button + its blurb. The whole framed block is skipped
+          when no registration link is set (2026-09-23) — it used to fall
+          back to a "Registration opens soon…" line plus a contact form,
+          both removed at the PM's request; the intro paragraph above now
+          carries any "contact us" link instead. The blurb belongs to the
+          button, so it's hidden with it. */}
+      {page.auditions_form_url && (
+        <div class="auditions-cta">
+          {page.auditions_form_blurb && (
+            <p class="auditions-form-blurb">{page.auditions_form_blurb}</p>
+          )}
+          <a
+            href={page.auditions_form_url}
+            class="btn btn-primary"
+            target="_blank"
+            rel="noopener"
+          >
+            Register for auditions →
+          </a>
+        </div>
+      )}
     </div>
   </section>
 
@@ -307,6 +318,21 @@ const productions = (await getCollection("storiesOnStage")).sort(
     margin-bottom: var(--space-lg);
   }
 
+  /* The intro is Markdown now (2026-09-23): its own <p>s carry the
+     type size, and links read as links. */
+  .auditions-intro :global(p) {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 0 1em;
+  }
+  .auditions-intro :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .auditions-intro :global(a) {
+    color: var(--accent-deep);
+    text-decoration: underline;
+  }
+
   .auditions-facts {
     display: grid;
     grid-template-columns: 1fr;
@@ -352,17 +378,6 @@ const productions = (await getCollection("storiesOnStage")).sort(
   .auditions-form-blurb {
     margin-bottom: var(--space-md);
     color: var(--ink-soft);
-  }
-
-  .auditions-form-pending {
-    color: var(--ink-muted);
-    font-style: italic;
-  }
-
-  .auditions-form-pending a {
-    color: var(--accent-deep);
-    text-decoration: underline;
-    font-style: normal;
   }
 
   /* ---- Explainer section ---- */
