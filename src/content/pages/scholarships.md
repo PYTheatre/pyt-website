@@ -1,6 +1,6 @@
 ---
 title: Scholarships
-hero_image: ""
+hero_image: /uploads/i-1267.jpg
 hero_focus: 40
 show_in_nav: true
 nav_parent: About
