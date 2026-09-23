@@ -166,21 +166,19 @@ const uid = Math.random().toString(36).slice(2, 8);
 </div>
 
 <style>
-  /* ONE CONTACT-BOX STYLE, SITE-WIDE (2026-09-22, PM request: "the
-     design colours etc should be the same" across every contact box).
-     White background, pink accent border, thicker on the left — this
-     was previously only the Corporate Contact box's own custom style
-     (Ways to Support); it's now this component's own default, so every
-     page that uses ContactForm without a custom wrapper (Classes &
-     Camps, School Play in a Box, School Tickets, Stories on Stage — both
-     the main page and each production's booking form, Volunteer) picks
-     it up automatically, with no change needed on any of those pages.
-     No shadow — the pink border does the job the shadow used to. */
+  /* ONE CONTACT-BOX STYLE, SITE-WIDE — now the NEWSLETTER CARD LOOK
+     (2026-09-23, PM: "I prefer the contact box design from the
+     newsletter page"): white, thin grey hairline border, rounded, soft
+     shadow — the same values as .form-card in NewsletterForm.astro. The
+     pink accent border with the thick left edge (2026-09-22) is gone
+     everywhere: here, About's contact card, the Contact page's two
+     cards, and the Corporate Contact box on Ways to Support all use
+     these same four lines. Change them together. */
   .contact-form-card {
     background: var(--paper);
-    border: 1px solid var(--accent);
-    border-left-width: 5px;
+    border: 1px solid var(--line);
     border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
     padding: var(--space-lg);
     max-width: 640px;
   }
