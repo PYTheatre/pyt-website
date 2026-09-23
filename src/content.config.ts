@@ -133,8 +133,14 @@ const storiesOnStage = defineCollection({
     synopsis: z.string(),
     poster: z.string().optional(),
     public_ticketing_url: z.string().optional(),
+    // school_bookings_url is kept in the schema only so old production
+    // files still validate; nothing renders it (bookings removed 2026-09-23).
     school_bookings_url: z.string().optional(),
     tickets_intro: z.string().optional(),
+    // Added 2026-09-23 with the musicals-style layout: both optional,
+    // shown in the facts strip only when filled in.
+    runtime_minutes: z.number().int().positive().optional(),
+    ages: z.string().optional(),
   }),
 });
  
