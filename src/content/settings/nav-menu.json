@@ -54,12 +54,12 @@
           "url": "/stories-on-stage/"
         },
         {
-          "label": "The Wizard of Oz",
-          "url": "/shows/the-wizard-of-oz/"
+          "label": "All Shows",
+          "url": "/shows/"
         },
         {
-          "url": "/stories-on-stage/creepy-carrots/",
-          "label": "Creepy Carrots"
+          "label": "Studio Shows",
+          "url": "/studio-productions/"
         }
       ]
     },
