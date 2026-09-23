@@ -9,4 +9,6 @@ synopsis: We are thrilled to present the world premiere of this brand-new
   night before Christmas, told by someone who was actually there, and wants it
   known for the record that she absolutely was stirring!
 poster: /uploads/xmas.jpg
+public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=767
+school_bookings_url: 650-903-6000 performingarts@mvcpa.com
 ---
