@@ -879,6 +879,20 @@ collections:
               - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Resident Choreographer" }
               - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line." }
               - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
+          # Starring Volunteers (added 2026-09-23): fourth personnel section, shown between Artists and the Board.
+          - { name: "volunteer_section_heading", label: "Starring Volunteers section heading", widget: "string", required: false, default: "Starring Volunteers" }
+          - { name: "volunteer_section_blurb", label: "Starring Volunteers section description (optional)", widget: "text", required: false, hint: "Optional short text under the heading. Leave blank to omit." }
+          - name: "volunteer_members"
+            label: "Starring Volunteers"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.pyt_title}}"
+            hint: "The section only appears on the site once at least one person is added here."
+            fields:
+              - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
+              - { name: "pyt_title", label: "Volunteer role", widget: "string", hint: "Example: Costume Shop Lead" }
+              - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line. Example: Volunteering since 2019" }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
           - { name: "board_section_heading", label: "Board section heading", widget: "string", required: false, default: "Board of Directors" }
           - { name: "board_section_blurb", label: "Board section description (optional)", widget: "text", required: false, hint: "Optional short text under the section heading. Leave blank to omit." }
           - name: "board_members"
