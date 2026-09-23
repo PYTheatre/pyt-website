@@ -17,20 +17,5 @@ synopsis: >-
   Based on the book by Mark Twain.
 
   Adapted by Karen Simpson.
-
-
-  Saturday General Admission: $20 for adults, $17 for seniors, students, and children.
-
-
-  Friday Student Matinees: $7/ticket for student groups of 10 or more.
-
-
-  Appropriate for all ages.
-
-
-  General Admission tickets may be ordered online, over the phone, or in person at the MVCPA box office: 650-903-6000 performingarts@mvcpa.com
-
-
-  To purchase tickets to the Student Matinees, call the MVCPA box office: 650-903-6000
 poster: /uploads/arthur.jpg
 ---
