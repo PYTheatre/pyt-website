@@ -10,4 +10,5 @@ synopsis: In this merry rethinking of the classic fairy tale, Rumpelstiltskin
   her own. Based on the book by Diane Stanley, Rumpelstiltskin’s Daughter is a
   story about a girl who finds her own role to play, on her own terms.
 poster: /uploads/rumpel.jpg
+school_bookings_url: 650-903-6000 performingarts@mvcpa.com
 ---
