@@ -26,6 +26,11 @@
       "image": "/uploads/pyt-carousel-thermometer.png",
       "url": "https://pyt.secure.nonprofitsoapbox.com/donate",
       "title": "Support PYT"
+    },
+    {
+      "title": "Teen Shows",
+      "url": "/shows/",
+      "image": "/uploads/pyteens-six.jpeg"
     }
   ],
   "hero_primary_url": "/shows",
