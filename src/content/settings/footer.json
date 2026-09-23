@@ -25,12 +25,8 @@
           "url": "/subscribe"
         },
         {
-          "label": "Bring PYT to your school!",
-          "url": "/school-play-in-a-box/"
-        },
-        {
-          "url": "/school-tickets/",
-          "label": "School tickets"
+          "label": "For schools",
+          "url": "/school-tickets/"
         }
       ]
     },
@@ -43,7 +39,7 @@
         },
         {
           "label": "Contact",
-          "url": "/about#contact"
+          "url": "/contact"
         }
       ]
     }
