@@ -1,7 +1,7 @@
 ---
 title: Scholarships
 hero_image: /uploads/i-1267.jpg
-hero_focus: 25
+hero_focus: 15
 show_in_nav: true
 nav_parent: About
 draft: false
