@@ -12,6 +12,7 @@
   design — so the page can't be visually broken). All words, links,
   images, and numbers are editable through the CMS.
 */
+import { marked } from "marked";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Logo from "../components/Logo.astro";
 import PromoBanner from "../components/PromoBanner.astro";
@@ -96,10 +97,13 @@ const goalShort = goal >= 1000 ? `${Math.round(goal / 1000)}k` : `$${goal}`;
 const titleColours = ["var(--thermo-c1)", "var(--thermo-c2)", "var(--thermo-c3)", "var(--thermo-c4)"];
 const goalChars = [...goalShort].map((ch, i) => ({ ch, colour: titleColours[i % titleColours.length] }));
  
-// Donation-teaser heading. CMS-editable (home.donate_heading). If the
-// field is empty, fall back to the original goal-based wording so the
-// line never renders blank.
-const donateHeading = home.donate_heading?.trim() || `Help us reach $${goal.toLocaleString()}.`;
+// Donation-teaser heading. CMS-editable (home.donate_heading). BLANK
+// NOW MEANS NO HEADING (2026-09-23, PM request: "remove the title from
+// the donation section"). It used to fall back to "Help us reach $X.",
+// which made the heading impossible to remove from the CMS. The
+// section's <h2> is skipped entirely when the field is empty, so no
+// empty gap is left behind.
+const donateHeading = home.donate_heading?.trim() || "";
  
 // --- Hero heading with optional italic word ---
 // The CMS lets staff pick one word in the heading to italicize
@@ -157,10 +161,18 @@ const heroImage = (home as any).hero_image || "";
 // still look intentional rather than broken). Empty-safe: hidden
 // entirely if the list is empty or every entry is missing a title/url.
 const placeholderColors = ["accent", "brand-blue", "brand-green", "accent-deep", "brand-blue", "brand-green"];
+// Caption text is INLINE MARKDOWN (2026-09-23, PM request): the CMS
+// field is a markdown box with only the Bold button, so a single word
+// inside a caption can be bold while the rest stays normal. Rendered
+// with parseInline so no <p> wrapper sneaks into the <span>. Plain
+// text still comes through exactly as typed.
+const inlineMd = (v: string): string => marked.parseInline(String(v).trim(), { gfm: true }) as string;
+const stripText = (v: string): string => String(v).replace(/[*_`]/g, "").trim();
+
 const photoStrip = ((home as any).photo_strip || [])
-  .filter((c: any) => c?.title?.trim() && c?.url?.trim())
+  .filter((c: any) => stripText(c?.title || "") && c?.url?.trim())
   .map((c: any, i: number) => ({
-    title: c.title,
+    title: inlineMd(c.title),
     url: c.url,
     image: c.image || "",
     colorClass: placeholderColors[i % placeholderColors.length],
@@ -249,7 +261,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
                     <div class={`photo-strip-placeholder c-${card.colorClass}`}></div>
                   )}
                 </div>
-                <span class="photo-strip-title">{card.title}</span>
+                <span class="photo-strip-title" set:html={card.title} />
               </a>
             ))}
           </div>
@@ -614,7 +626,9 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   <!-- ============ DONATION TEASER ============ -->
   <section class="section donate-teaser">
     <div class="container">
-      <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
+      {donateHeading && (
+        <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
+      )}
       <p class="donate-lede">{home.donate_lede}</p>
  
       <!-- Campaign graphic (2026-09-22). The title is real text; the
@@ -1041,11 +1055,19 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   .photo-strip-title {
     display: block;
     margin-top: 0.6rem;
-    font-family: var(--font-heading);
+    /* BODY FONT, NOT THE HEADING FONT (2026-09-23). Archivo Black only
+       exists in one (black) weight, so a caption set in it could never
+       be "not bold". Captions now use Source Sans 3 at normal weight;
+       words the PM bolds in the CMS render as <strong>, below. */
+    font-family: var(--font-body);
     font-weight: 400;
-    font-size: 0.95rem;
-    line-height: 1.25;
+    font-size: 1rem;
+    line-height: 1.35;
     color: var(--ink);
+  }
+
+  .photo-strip-title :global(strong) {
+    font-weight: 700;
   }
 
   @media (max-width: 640px) {
@@ -1078,6 +1100,36 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     }
   }
  
+  /* ---- HOME PAGE SPACING (2026-09-23, PM-approved mockup
+     "MOCKUP-4-home-spacing", option B, "the most spacious") ----
+     Every band on the home page had 48px above and below, but inside
+     the hero the banner sat only 32px under the headline and the
+     carousel 40px under the banner, so the page read as tight and
+     uneven. One value now rules all of it: --home-pad is the gap
+     between the headline and the banner, the banner and the carousel,
+     the carousel and "What's next", and the top/bottom padding of every
+     other band. 96px on desktop, 64px on phones (same 2:3 ratio the
+     site's --section-pad already uses). This is scoped to the home
+     page's own .section elements — every other page keeps
+     --section-pad from tokens.css. */
+  :root {
+    --home-pad: 4rem;
+  }
+  @media (min-width: 720px) {
+    :root {
+      --home-pad: 6rem;
+    }
+  }
+  .section {
+    padding-block: var(--home-pad);
+  }
+  .hero :global(.promo-banner) {
+    margin-top: var(--home-pad);
+  }
+  .photo-strip-wrap {
+    margin-top: var(--home-pad);
+  }
+
   /* ---- Section heading ---- */
   .section-head {
     margin-block: 0.4rem var(--space-lg);
@@ -1265,7 +1317,18 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
      the figure sitting above the label. A min-height keeps all four boxes
      equal even though the labels differ a lot in length — without it the
      shortest ("Audience members") made a visibly stubbier box. */
+  /* PINK ON HOVER (2026-09-23, PM request): the numbers boxes aren't
+     buttons, but they follow the same rule as every non-pink button
+     on the site — solid pink with white text while hovered. */
+  .stat:hover {
+    background: var(--accent);
+  }
+  .stat:hover .stat-figure,
+  .stat:hover .stat-label {
+    color: #fff;
+  }
   .stat {
+    transition: background 0.18s ease, color 0.18s ease;
     background: var(--surface-brand);   /* pale teal box (duotone) */
     /* Grid items default to min-width:auto, which means a track can
        never shrink below its longest UNBREAKABLE word. The longest
