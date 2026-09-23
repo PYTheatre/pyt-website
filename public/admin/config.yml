@@ -370,6 +370,7 @@ collections:
               - { name: "label", label: "Description", widget: "string" }
           - { name: "donate_heading", label: "Donation teaser — heading", widget: "string", required: false, hint: "The big line above the campaign graphic. LEAVE BLANK FOR NO HEADING (since 2026-09-23 — it used to fall back to 'Help us reach $[goal]'). Type wording to show one." }
           - { name: "donate_heading_case", label: "Donation teaser — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
+          - { name: "donate_text_align", label: "Donation teaser — text alignment", widget: "select", options: [{ label: "Centered", value: "center" }, { label: "Left-aligned", value: "left" }], default: "center", required: false, hint: "Where the heading and the paragraph above the campaign graphic sit. The graphic and Donate button stay centred either way." }
           - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
           - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
  
@@ -839,6 +840,18 @@ collections:
     files:
 
  
+      # --- Contact page (added 2026-09-23) ---
+      - name: "contact-page"
+        label: "Contact Page"
+        file: "src/content/settings/contact-page.json"
+        description: "The /contact page: title, open copy, and the headings on its two boxes. The address and EIN shown in the 'Get in touch' box come from the About Page settings."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Contact" }
+          - { name: "body", label: "Copy under the title", widget: "markdown", required: false, hint: "Open text — links, bold, lists all work. Leave blank to show nothing between the title and the two boxes." }
+          - { name: "contact_heading", label: "Contact box — heading", widget: "string", required: false, default: "Get in touch" }
+          - { name: "newsletter_heading", label: "Newsletter box — heading", widget: "string", required: false, default: "Newsletter signup" }
+          - { name: "newsletter_intro", label: "Newsletter box — short intro (optional)", widget: "text", required: false, hint: "One or two sentences under the newsletter heading. Leave blank to omit." }
+
       # --- About page ---
       - name: "about-page"
         label: "About Page"
