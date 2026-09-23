@@ -640,6 +640,37 @@ const recognitionGroups = (recognition.groups || []).filter(
     margin-top: var(--space-md);
   }
 
+  /* EMPLOYER-MATCH SEARCH WIDGET (2026-09-23, PM: "ugly and misaligned").
+     The Double the Donation plugin is pasted into the CMS "Employer
+     matching note" field and builds its search box inside #dd-container
+     at runtime, so it inherits nothing from the page and comes out
+     full-width and left-aligned in a 62ch text column. Double the
+     Donation's own support docs say to style it with rules starting
+     "#dd-container", which is what these are: the whole widget is
+     centred in a column no wider than 480px, and the note above it is
+     centred to match. :global() because the plugin's markup isn't in
+     this file. If the INSIDE of the widget still needs tuning (its
+     button colours, type size), the 360MatchPro portal has a "CSS
+     Overrides" field for exactly that — no code change needed. */
+  /* Whole selector is :global — Astro doesn't scope inside :has(), so
+     a :global() nested in there leaks into the built CSS as an invalid
+     selector and the rule silently drops (measured 2026-09-23). */
+  :global(.giving-matching:has(#dd-container)) {
+    max-width: none;
+    text-align: center;
+  }
+  .giving-matching :global(#dd-container) {
+    max-width: 480px;
+    margin: var(--space-sm) auto 0;
+    text-align: left;
+    font-size: 0.92rem;
+  }
+  .giving-matching :global(#dd-container img) {
+    display: inline-block;
+    max-width: 160px;
+    height: auto;
+  }
+
   @media (min-width: 640px) {
     .giving-row {
       /* Fixed amount column + generous gutter, so the figures line up on a
