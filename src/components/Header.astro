@@ -96,6 +96,14 @@ const navGroups = ((navMenu as any).items || [])
 // later doesn't mean hunting down every ternary across four render
 // branches (desktop dropdown-trigger, desktop plain-link, mobile
 // dropdown-trigger, mobile plain-link).
+// Where the phone bar's Tickets button goes (2026-09-23). It's the URL
+// of the menu group flagged "tickets" in Navigation → Full Menu (/shows
+// today), falling back to /shows if no group is flagged. On desktop that
+// group is a dropdown; on a phone there's no room for a dropdown in the
+// bar, so it's a plain link and the dropdown items stay in the hamburger.
+const ticketsHref =
+  navGroups.find((g: any) => g.special === "tickets")?.href || "/shows";
+
 function specialClass(group: any, variant: "desktop" | "mobile"): string {
   const map: Record<string, { desktop: string; mobile: string }> = {
     tickets: { desktop: "tickets-btn", mobile: "tickets-btn-mobile" },
@@ -136,6 +144,15 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     </nav>
  
     <div class="header-actions">
+      <!-- PHONE BAR (2026-09-23, PM request): on small screens the bar
+           shows Tickets + Donate, not Register + Donate. This Tickets
+           link exists only for the phone bar — it's hidden at the
+           desktop breakpoint, where the full menu's Tickets dropdown
+           takes over — and Register is hidden on phones in return (it
+           stays reachable in the hamburger menu via the Education group's
+           pages / the Classes & Camps page). Same height as Donate:
+           both read --nav-item-h. -->
+      <a href={ticketsHref} class="btn tickets-bar-btn">Tickets</a>
       <a href="https://campscui.active.com/orgs/PeninsulaYouthTheatre?orglink=camps-registration&e4q=ad16ecb8-2b37-477f-9cdc-8b959668e4df&e4p=22397909-9890-4b5f-8947-e4982093fc34&e4ts=1787101915&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=b318cf7ff23b5f8ebd7b7077a038eb52" class="btn btn-primary register-btn" target="_blank" rel="noopener">Register</a>
       <a href="https://pyt.secure.nonprofitsoapbox.com/donate" class="btn btn-primary donate-btn" target="_blank" rel="noopener">Donate</a>
 
@@ -305,9 +322,15 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     transition: background 0.16s ease, color 0.16s ease;
   }
  
-  .nav-wide .pill:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--nav-text);
+  /* PINK ON HOVER (2026-09-23, PM request: every button that isn't
+     pink shows pink only when hovered). Applies to the plain menu
+     pills and the dropdown triggers; Tickets, Calendar and Register
+     have their own rules below saying the same thing. Text goes white
+     on the pink for contrast (5.5:1). */
+  .nav-wide .pill:hover,
+  .nav-wide .pill:focus-visible {
+    background: var(--accent);
+    color: #fff;
   }
  
   /* ---- Dropdown groups (desktop) ---- */
@@ -450,10 +473,11 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     z-index: 1;
   }
 
-  .tickets-btn:hover {
-    background: var(--surface-deep) !important;
-    filter: brightness(1.35);
-    color: var(--on-surface-deep) !important;
+  .tickets-btn:hover,
+  .tickets-btn:focus-visible {
+    /* Pink on hover (2026-09-23); was deep teal + brightness(1.35). */
+    background: var(--accent) !important;
+    color: #fff !important;
   }
 
   .tickets-btn::before,
@@ -542,10 +566,11 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     margin-top: 0;
   }
 
-  .calendar-btn:hover {
-    background: var(--surface-deep) !important;
-    filter: brightness(1.35);
-    color: var(--on-surface-deep) !important;
+  .calendar-btn:hover,
+  .calendar-btn:focus-visible {
+    /* Pink on hover (2026-09-23); was deep teal + brightness(1.35). */
+    background: var(--accent) !important;
+    color: #fff !important;
   }
 
   .calendar-btn::before,
@@ -640,11 +665,41 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     color: var(--on-surface-deep);
   }
 
-  .register-btn:hover {
+  .register-btn:hover,
+  .register-btn:focus-visible {
+    /* Pink on hover (2026-09-23); was deep teal + brightness(1.35). */
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* Phone-bar Tickets button (2026-09-23). Deep teal like the desktop
+     Tickets stub, pink on hover, EXACTLY the same box as Donate: same
+     height token, same padding, same type size — the PM's one note on
+     the mockup was that it must not come out bigger. Hidden at the
+     desktop breakpoint (see the media query at the bottom). No ticket-
+     stub notches here: they'd need the bar colour behind them and this
+     button sits next to Donate, so a plain chip is cleaner. */
+  .tickets-bar-btn {
+    height: var(--nav-item-h);
+    padding: 0 0.85rem;
+    font-size: 0.8rem;
     background: var(--surface-deep);
     border-color: var(--surface-deep);
     color: var(--on-surface-deep);
-    filter: brightness(1.35);
+  }
+
+  .tickets-bar-btn:hover,
+  .tickets-bar-btn:focus-visible {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* Below the desktop breakpoint Register leaves the bar (PM request
+     2026-09-23: phones show Tickets + Donate). */
+  .register-btn {
+    display: none;
   }
 
   .donate-btn:hover {
@@ -749,10 +804,14 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     border: 2px solid var(--ink);
   }
 
-  .nav-mobile-pill:not(.tickets-btn-mobile):not(.calendar-btn-mobile):hover,
-  .nav-mobile-pill:not(.tickets-btn-mobile):not(.calendar-btn-mobile):focus-visible {
-    background: var(--neutral-soft);
-    color: var(--ink);
+  /* Pink on hover (2026-09-23) — same rule as the desktop bar, so the
+     hamburger menu's outlined pills AND its Tickets/Calendar chips all
+     fill pink with white text. */
+  .nav-mobile-pill:hover,
+  .nav-mobile-pill:focus-visible {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #fff !important;
   }
 
   /* An open accordion row gets the same soft fill as hover, so the
@@ -847,6 +906,14 @@ function specialClass(group: any, variant: "desktop" | "mobile"): string {
     }
     .nav-mobile {
       display: none !important;
+    }
+    /* Desktop bar: Register is back, the phone-only Tickets chip goes
+       (the full menu has the Tickets dropdown). */
+    .register-btn {
+      display: inline-flex;
+    }
+    .tickets-bar-btn {
+      display: none;
     }
   }
 </style>
