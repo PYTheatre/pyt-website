@@ -10,4 +10,5 @@ synopsis: A modern kid on a castle tour gets accidentally transported to the
   hero navigates courtly manners and medieval sensibilities to find her way back
   home.
 poster: /uploads/arthur.jpg
+public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=770
 ---
