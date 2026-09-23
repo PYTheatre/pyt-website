@@ -11,10 +11,10 @@ description: >-
   sing and dance to your heart’s content, we’ve got the class for you!
 
 
-  Classes are open for ages 5-12 and begin the week of September 14th. There are no classes the week of November 9th and November 23rd. All classes perform the week of December 7th.
+  Classes are open for ages 5-12. Fall classes are underway, but check back in Novemver for information about Winter/Spring classes that will start in January. 
 schedule: ""
-tuition: $385-420
+tuition: "Fall 2026: $385-420"
 registration_status: Closed
-registration_note: Registration full until Fall 2027
+registration_note: Fall Registration Closed
 scholarships_available: false
 ---
