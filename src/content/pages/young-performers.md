@@ -10,7 +10,7 @@ nav_parent: About
 nav_label: Young Performers (5-7yrs)
 draft: false
 ---
-The Young Performers Ensemble (YPs) is for children ages of 5-7, who participate in Center Stage Musicals. No audition is required to be a Young Performer, and everyone who registers will be able to participate provided they do not have more than 2 calendar conflict dates). Spots are limited, as we're only able to cast a maximum of 20 per shows (10 for each cast). 
+The Young Performers Ensemble (YPs) is for children ages of 5-7, who participate in Center Stage Musicals. No audition is required to be a Young Performer, and everyone who registers will be able to participate provided they do not have more than 2 calendar conflict dates and they can participate in the first rehearsal). Spots are limited, as we're only able to cast a maximum of 20 per shows (10 for each cast). 
 
 Young Performer rehearsals are Saturdays 10-11am, and studio rehearsals with the entire cast towards the back end of the rehearsal schedule. They perform all 4 shows for their cast, chaperoned backstage by parent volunteers.  
 
