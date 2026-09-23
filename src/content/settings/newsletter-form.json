@@ -1,0 +1,15 @@
+{
+  "interests_heading": "What do you want to hear about?",
+  "interests_hint": "Check everything that applies. We'll only send what's relevant to you.",
+  "interests": [
+    { "key": "auditions", "label": "Auditions", "show": true },
+    { "key": "classes", "label": "Camps and Classes at PYT", "show": true },
+    { "key": "performances", "label": "Upcoming Public Performances", "show": true },
+    { "key": "field_trips", "label": "Field Trip Opportunities", "show": true },
+    { "key": "alumni", "label": "Alumni News", "show": true },
+    { "key": "giving", "label": "Giving to PYT", "show": true },
+    { "key": "schools", "label": "Bringing PYT to Your School", "show": true }
+  ],
+  "submit_label": "Subscribe",
+  "submit_note": "You can unsubscribe at any time. We'll never share your email."
+}
