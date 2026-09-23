@@ -1,6 +1,6 @@
 ---
 title: Scholarships
-hero_image: /uploads/screenshot-2026-03-31-at-12.37.06.png
+hero_image: ""
 hero_focus: 40
 show_in_nav: true
 nav_parent: About
@@ -11,7 +11,3 @@ As a nonprofit organization, PYT offers a limited number of scholarships, based 
 Families should submit the scholarship application at least two weeks prior to auditions or the start of the class for which you're requesting a scholarship. As scholarships are allocated on a first-come/first-served basis, we encourage submitting requests as early as possible. 
 
 Scholarship families are asked to contribute what you can to help pay for tuition. In addition, we encourage additional volunteer hours if at all possible.
-
-[Class or Camp Scholarship Application.](https://pytnet.org/files/2015/06/scholarship_application_class_14.pdf)
-
-[Production Scholarship Applications.](https://pytnet.org/files/2015/06/scholarship_application_shows_14.pdf)
