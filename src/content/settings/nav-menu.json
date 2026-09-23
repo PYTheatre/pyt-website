@@ -16,6 +16,10 @@
         {
           "label": "School Tickets",
           "url": "/school-tickets"
+        },
+        {
+          "label": "Singin' In The Rain",
+          "url": "/shows/singin-in-the-rain/"
         }
       ]
     },
@@ -46,20 +50,20 @@
       "url": "/shows/",
       "children": [
         {
-          "label": "Center Stage Musicals",
-          "url": "/musicals/"
-        },
-        {
-          "label": "Stories on Stage",
-          "url": "/stories-on-stage/"
-        },
-        {
           "label": "All Shows",
           "url": "/shows/"
         },
         {
+          "label": "Center Stage Musicals",
+          "url": "/musicals/"
+        },
+        {
           "label": "Studio Shows",
           "url": "/studio-productions/"
+        },
+        {
+          "label": "Stories on Stage",
+          "url": "/stories-on-stage/"
         }
       ]
     },
