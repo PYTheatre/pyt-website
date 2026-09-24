@@ -165,5 +165,29 @@ if (a.email?.trim()) orgSchema.email = a.email.trim();
       })();
     </script>
     <Footer />
+
+    {/* EXTERNAL LINKS OPEN IN A NEW TAB (2026-09-24, PM request). Runs
+        once per page after the HTML is parsed: every <a> whose address is
+        on a different site gets target="_blank" and rel="noopener", so the
+        rule also covers links typed into the CMS. Same-site links, page
+        anchors, mailto: and tel: are left alone. Links that already set a
+        target keep it. */}
+    <script is:inline>
+      (function () {
+        var here = location.host;
+        var links = document.querySelectorAll('a[href]');
+        for (var i = 0; i < links.length; i++) {
+          var a = links[i];
+          var href = a.getAttribute('href') || '';
+          if (/^(mailto:|tel:|#|javascript:)/i.test(href)) continue;
+          if (a.host && a.host !== here && !a.hasAttribute('target')) {
+            a.setAttribute('target', '_blank');
+            var rel = (a.getAttribute('rel') || '').split(/\s+/).filter(Boolean);
+            if (rel.indexOf('noopener') === -1) rel.push('noopener');
+            a.setAttribute('rel', rel.join(' '));
+          }
+        }
+      })();
+    </script>
   </body>
 </html>
