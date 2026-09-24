@@ -14,7 +14,7 @@
       "image": "/uploads/pyt-newsies-punch.jpg"
     },
     {
-      "title": "**Stories on Stage** - books brought to life for young audiences",
+      "title": "**Stories on Stage** - books brought to life",
       "url": "/stories-on-stage",
       "image": "/uploads/sos-martina.jpg"
     },
@@ -26,10 +26,10 @@
     {
       "image": "/uploads/rules.jpg",
       "url": "https://pyt.secure.nonprofitsoapbox.com/donate",
-      "title": "**Studio Shows** - small-cast plays performed in the studio"
+      "title": "**Studio Shows** - small cast, in the studio"
     },
     {
-      "title": "**Teen Shows**",
+      "title": "**Teen Shows** - grades 8 and up",
       "url": "/shows/",
       "image": "/uploads/pyteens-six.jpeg"
     }
