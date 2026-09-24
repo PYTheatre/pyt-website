@@ -9,4 +9,5 @@ synopsis: Follow Alice down the rabbit hole and join her on her adventures with
   has been specially adapted for Stories on Stage, a fitting and magical close
   to another season of stories shared together.
 poster: /uploads/alice.jpg
+public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=773
 ---
