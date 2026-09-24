@@ -10,14 +10,14 @@
       "price": "$350, $750, $1,500",
       "title": "Center Stage Show Sponsor",
       "description": "Back a single production, and receive (optional) recognition, tickets*, and benefits for that title.\n\n\\*Ticket benefits have a fair market value of $36 per ticket.",
-      "button_label": "Sponsor a Center Stage Musical",
+      "button_label": "Sponsor a Show",
       "button_url": "https://pyt.secure.nonprofitsoapbox.com/component/donations/donate/id-6"
     },
     {
       "price": "$1,500, $2,500, $5,000",
       "title": "Center Stage Season Sponsor",
       "description": "Support a full season, with recognition across all material, tickets* and benefits.\n\n\\*Ticket benefits have a fair market value of $36 per ticket.",
-      "button_label": "Sponsor a Center Stage Season",
+      "button_label": "Sponsor a Season",
       "button_url": "https://pyt.secure.nonprofitsoapbox.com/component/donations/donate/id-8"
     },
     {
