@@ -7,6 +7,7 @@ start_date: 2027-03-13
 end_date: 2027-03-21
 date_display: March 13-21, 2027
 venue: Mountain View Center for the Performing Arts, Main Stage
+runtime_minutes: 1
 poster: /uploads/unnamed.png
 synopsis: >-
   Based on the “Greatest Movie Musical of All Time,” this Hollywood classic is
@@ -42,5 +43,5 @@ synopsis: >-
 audition_start: 2026-12-05
 audition_end: 2026-12-06
 audition_display: December 5 & 6, 2026
-double_cast: true
+double_cast: false
 ---
