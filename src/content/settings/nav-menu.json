@@ -14,12 +14,32 @@
           "url": "/shows/the-wizard-of-oz"
         },
         {
-          "label": "School Tickets",
-          "url": "/school-tickets"
-        },
-        {
           "label": "Singin' In The Rain",
           "url": "/shows/singin-in-the-rain/"
+        },
+        {
+          "label": "The Night Before Christmas",
+          "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
+        },
+        {
+          "label": "A Connecticut Yankee In King Arthur's Court",
+          "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=770"
+        },
+        {
+          "label": "Rumpelstiltskin's Daughter",
+          "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=771"
+        },
+        {
+          "label": " Lilly's Purple Plastic Purse",
+          "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=772"
+        },
+        {
+          "label": "Alice In Wonderland",
+          "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=773"
+        },
+        {
+          "label": "School Tickets",
+          "url": "/school-tickets"
         }
       ]
     },
