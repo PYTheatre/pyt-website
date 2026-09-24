@@ -10,5 +10,5 @@ synopsis: Lilly loves everything! School, dressing up, and even her stinky baby
   planned. A charming, funny, and heartfelt story based on the book by Kevin
   Henkes, perfect for the littlest members of our community.
 poster: /uploads/lilly.jpg
-public_ticketing_url: 650-903-6000 performingarts@mvcpa.com
+public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=772
 ---
