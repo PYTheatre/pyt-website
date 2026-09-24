@@ -7,7 +7,7 @@ draft: false
 ---
 We've spent some time polishing up our website. Take a look around and let us know what you think! The urls and pages you know (and love?) should all still be there, but clearer, and there are some new ones, including:
 
-A [Shows](/shows/) page - your one-stop-shop listing all PYT's current productions. [Center Stage Musicals](/musicals/), [Stories on Stage](/stories-on-stage/), [Studio Shows](/studio-productions/) and Teen Shows.
+A [Shows](/shows/) page - your one-stop-shop listing all PYT's current productions. [Center Stage Musicals](/musicals/), [Stories on Stage](/stories-on-stage/), and [Studio Shows](/studio-productions/).
 
 [School Tickets](/school-tickets/) - a new place for school to find which productions are currently offering group bookings and school tickets, and how to grab them.
 
