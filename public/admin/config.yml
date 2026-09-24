@@ -14,7 +14,7 @@ backend:
   name: github
   repo: PYTheatre/pyt-website
   branch: main
-  base_url: https://pyt-website.pages.dev
+  base_url: https://pytnet.org
   auth_endpoint: /api/auth
  
 # Where uploaded images & files are stored in the repo.
