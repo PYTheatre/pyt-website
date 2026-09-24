@@ -13,5 +13,5 @@ import { defineConfig } from "astro/config";
 // (https://pytnet.org) at launch.
 export default defineConfig({
   output: "static",
-  site: "https://pyt-website.pages.dev",
+  site: "https://pytnet.org",
 });
