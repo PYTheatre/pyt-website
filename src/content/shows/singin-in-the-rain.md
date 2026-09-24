@@ -1,7 +1,7 @@
 ---
 title: Singin' In The Rain
 production_type: Musical
-ticketing_url: /shows/singin-in-the-rain/
+ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=766
 eyebrow: ""
 start_date: 2027-03-13
 end_date: 2027-03-21
