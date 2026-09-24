@@ -1,6 +1,6 @@
 ---
 title: PYT's new website
-intro: September 2026
+intro: September 25, 2026
 closing_quote: "Take a look around and let us know what you think! "
 show_in_nav: false
 draft: false
