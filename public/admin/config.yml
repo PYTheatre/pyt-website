@@ -59,7 +59,7 @@ collections:
       # Hero photo lives HERE rather than in Page Hero Images, because
       # that list is a fixed dropdown of the hand-built pages and can't
       # offer a page that doesn't exist yet.
-      - { name: "hero_image", label: "Photo at the top (optional)", widget: "image", required: false, hint: "A wide landscape photo works best — it's shown as a banner under the title. Leave blank for no photo." }
+      - { name: "hero_image", label: "Photo at the top (optional)", widget: "image", required: false, hint: "A wide landscape photo works best — it's shown as a banner under the title. Leave blank for no photo. Photos: max 1800 px wide, JPEG, under 300 KB." }
       - { name: "hero_focus", label: "Photo — vertical focus (%)", widget: "number", required: false, value_type: "int", min: 0, max: 100, step: 5, hint: "Which part of the photo to keep when it's cropped to the banner shape. 0 = top, 50 = middle (the default), 100 = bottom. If a face is cut off at the top, lower this — 15-25 usually does it." }
       - { name: "hero_alt", label: "Photo description (optional)", widget: "string", required: false, hint: "For screen readers. Leave blank if the photo is decorative." }
       - name: "body"
@@ -114,7 +114,7 @@ collections:
       - { name: "venue", label: "Venue", widget: "string", default: "Mountain View Center for the Performing Arts" }
       - { name: "runtime_minutes", label: "Runtime (minutes)", widget: "number", value_type: "int", required: false, min: 1, max: 600, step: 1, pattern: ["^[0-9]*$", "Enter a whole number of minutes only (for example 90), or leave it blank."], hint: "Approximate, in minutes. Whole numbers only — for example 90. Leave blank if unknown." }
       - { name: "ages", label: "Recommended ages", widget: "string", required: false, hint: "Example: Ages 5 and up" }
-      - { name: "poster", label: "Show poster image", widget: "image", required: false, hint: "Tall portrait images work best — aim for a 3:4 shape (e.g. 1200 × 1600 pixels). Keep the title and key artwork centred, with comfortable empty margin around the edges: the image is cropped differently on different screens, and that margin is what stops anything important getting cut off. Avoid putting text near the very edges. If empty, a colored placeholder is used." }
+      - { name: "poster", label: "Show poster image", widget: "image", required: false, hint: "Tall portrait images work best — aim for a 3:4 shape (e.g. 1200 × 1600 pixels). Keep the title and key artwork centred, with comfortable empty margin around the edges: the image is cropped differently on different screens, and that margin is what stops anything important getting cut off. Avoid putting text near the very edges. If empty, a colored placeholder is used. Photos: max 1800 px wide, JPEG, under 300 KB." }
       - { name: "synopsis", label: "Synopsis", widget: "text", hint: "1–3 short paragraphs about the show." }
       - { name: "ticketing_url", label: "Buy Tickets link (external URL)", widget: "string", required: false, hint: "Where to buy tickets. Leave blank if tickets aren't on sale yet." }
       - { name: "audition_url", label: "Audition sign-up link (external URL)", widget: "string", required: false, hint: "Where people sign up to audition. Leave blank to hide the Auditions button entirely." }
@@ -211,7 +211,7 @@ collections:
       - { name: "date_display", label: "Date display text", widget: "string", hint: "How dates appear on the card. Example: October 10–25, 2026" }
       - { name: "venue", label: "Venue", widget: "string", default: "PYT Studio Theatre + touring" }
       - { name: "synopsis", label: "Short synopsis", widget: "text", hint: "2–3 sentences. Stories on Stage cards are smaller than Center Stage Musicals show cards." }
-      - { name: "poster", label: "Poster image", widget: "image", required: false, hint: "Upload an optional poster. If empty, a colored placeholder is used." }
+      - { name: "poster", label: "Poster image", widget: "image", required: false, hint: "Upload an optional poster. If empty, a colored placeholder is used. Photos: max 1800 px wide, JPEG, under 300 KB." }
       - { name: "public_ticketing_url", label: "Buy Tickets link (public performances)", widget: "string", required: false, hint: "Leave blank to hide the Buy Tickets button." }
       # "School Bookings link" field REMOVED from the CMS 2026-09-23 (PYT no longer takes school bookings;
       # every ticket goes through MVCPA). Old files may still carry the value; nothing shows it.
@@ -317,7 +317,7 @@ collections:
           - { name: "hero_heading_case", label: "Hero — headline capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed", required: false, hint: "'As typed' shows the headline exactly as written above. 'UPPERCASE' turns it all into capitals whatever you type." }
           - { name: "hero_heading_italic_word", label: "Hero — word to italicize", widget: "string", required: false, hint: "One word in the headline to show in italic accent style. Must exactly match a word in the headline, or leave blank for none." }
           - { name: "hero_lede", label: "Hero — intro paragraph", widget: "text", required: false, hint: "LEAVE BLANK FOR NO INTRO PARAGRAPH — the page then shows just the logo and (if set) the headline above, with no empty gap left behind. Independent of the headline: either, both, or neither can be shown." }
-          - { name: "hero_image", label: "Hero — banner photo (wide, under the intro) — NOT CURRENTLY SHOWN", widget: "image", required: false, hint: "Not currently used on the live page (replaced by the photo strip below). Left here in case you want a single wide banner again in future." }
+          - { name: "hero_image", label: "Hero — banner photo (wide, under the intro) — NOT CURRENTLY SHOWN", widget: "image", required: false, hint: "Not currently used on the live page (replaced by the photo strip below). Left here in case you want a single wide banner again in future. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - name: "photo_strip"
             label: "Hero — photo strip (scrollable cards under the intro)"
             widget: "list"
@@ -329,7 +329,7 @@ collections:
               # normal weight; select a word and press B (or type **word**) to bold it.
               - { name: "title", label: "Caption (shown under the photo)", widget: "markdown", buttons: ["bold"], editor_components: [], modes: ["rich_text", "raw"], minimal: true, hint: "Select a word and press B to make just that word bold. Everything else stays normal weight. Example: **Center Stage Shows** - professional scale musicals" }
               - { name: "url", label: "Link", widget: "string", hint: "Where this card goes. Example: /musicals" }
-              - { name: "image", label: "Photo", widget: "image", required: false, hint: "Wide-ish photo works best. Leave empty for a colored placeholder." }
+              - { name: "image", label: "Photo", widget: "image", required: false, hint: "Wide-ish photo works best. Leave empty for a colored placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "discovery_heading", label: "Discovery section — heading", widget: "string" }
           - { name: "discovery_heading_case", label: "Discovery section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           - name: "discovery_cards"
@@ -340,7 +340,7 @@ collections:
             fields:
               - { name: "title", label: "Title (large, overlaid on the photo)", widget: "string", hint: "Example: FALL CLASSES" }
               - { name: "subtitle", label: "Subtitle (smaller, under the title — optional)", widget: "string", required: false, hint: "Example: Grade K-8, or Tickets" }
-              - { name: "image", label: "Photo", widget: "image", required: false, hint: "Leave empty for a colored placeholder." }
+              - { name: "image", label: "Photo", widget: "image", required: false, hint: "Leave empty for a colored placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
               - { name: "url", label: "Link", widget: "string", hint: "Example: /shows, or a full https:// link" }
           - { name: "impact_heading", label: "Impact section — heading", widget: "string", required: false, hint: "Leave blank to hide just the heading. Remove all the numbers below to hide the whole section." }
           - { name: "impact_heading_case", label: "Impact section — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
@@ -528,7 +528,7 @@ collections:
         description: "The Casting page — text content plus the hero image."
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Casting" }
-          - { name: "hero_image", label: "Hero image", widget: "image", required: false, hint: "Upload a wide image for the top of the page. If empty, a colored placeholder is used." }
+          - { name: "hero_image", label: "Hero image", widget: "image", required: false, hint: "Upload a wide image for the top of the page. If empty, a colored placeholder is used. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "body", label: "Page body (Markdown supported)", widget: "markdown", hint: "Use blank lines between paragraphs. Bulleted lists with - work too." }
           - { name: "closing_quote", label: "Closing quote (large, pulled out)", widget: "string", required: false, hint: "The line shown in large type at the bottom of the page." }
           - { name: "cta_label", label: "Call-to-action button label", widget: "string", default: "See our shows" }
@@ -879,7 +879,7 @@ collections:
         file: "src/content/settings/about-page.json"
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "About Peninsula Youth Theatre" }
-          - { name: "banner_image", label: "Banner image (wide strip near top)", widget: "image", required: false, hint: "Optional. A wide landscape image works best — it's shown as a short banner under the title. Leave empty to hide." }
+          - { name: "banner_image", label: "Banner image (wide strip near top)", widget: "image", required: false, hint: "Optional. A wide landscape image works best — it's shown as a short banner under the title. Leave empty to hide. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "story", label: "Story (multiple paragraphs)", widget: "text", hint: "The org's story. Use blank lines to separate paragraphs." }
           - { name: "awards_link_lead", label: "Awards sentence — text before the link", widget: "string", required: false, hint: "Example: \"Learn about the\". The next field is the clickable part." }
           - { name: "awards_link_label", label: "Awards sentence — clickable link text", widget: "string", required: false, hint: "The clickable words linking to the Judy Robe & Spirit Awards page. Leave blank to hide this whole sentence." }
@@ -900,7 +900,7 @@ collections:
               - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
               - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Artistic Director" }
               - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line. Example: Joined PYT in 2015" }
-              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "artist_section_heading", label: "Artists section heading", widget: "string", required: false, default: "Artists" }
           - { name: "artist_section_blurb", label: "Artists section description (optional)", widget: "text", required: false, hint: "Optional short text under the Artists heading. Leave blank to omit." }
           - name: "artist_members"
@@ -912,7 +912,7 @@ collections:
               - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
               - { name: "pyt_title", label: "PYT title / role", widget: "string", hint: "Example: Resident Choreographer" }
               - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line." }
-              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
           # Starring Volunteers (added 2026-09-23): fourth personnel section, shown between Artists and the Board.
           - { name: "volunteer_section_heading", label: "Starring Volunteers section heading", widget: "string", required: false, default: "Starring Volunteers" }
           - { name: "volunteer_section_blurb", label: "Starring Volunteers section description (optional)", widget: "text", required: false, hint: "Optional short text under the heading. Leave blank to omit." }
@@ -926,7 +926,7 @@ collections:
               - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
               - { name: "pyt_title", label: "Volunteer role", widget: "string", hint: "Example: Costume Shop Lead" }
               - { name: "outside_title", label: "Extra detail (optional)", widget: "string", required: false, hint: "Optional second line. Example: Volunteering since 2019" }
-              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder." }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the person's initials are shown in a colored placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "board_section_heading", label: "Board section heading", widget: "string", required: false, default: "Board of Directors" }
           - { name: "board_section_blurb", label: "Board section description (optional)", widget: "text", required: false, hint: "Optional short text under the section heading. Leave blank to omit." }
           - name: "board_members"
@@ -938,7 +938,7 @@ collections:
               - { name: "name", label: "Name", widget: "string", hint: "Example: Jane Smith" }
               - { name: "pyt_title", label: "PYT title", widget: "string", hint: "Example: Board President, Board Member" }
               - { name: "outside_title", label: "Job title outside PYT", widget: "string", required: false, hint: "Example: Partner at Acme Law LLP" }
-              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the member's initials are shown in a colored placeholder." }
+              - { name: "photo", label: "Headshot photo (square, optional)", widget: "image", required: false, hint: "A square photo works best. If empty, the member's initials are shown in a colored placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
  
       # --- Casting page ---
 
@@ -1049,7 +1049,7 @@ collections:
             label_singular: "Photo"
             hint: "Each item is one photo in the 'A few favorites' row. Upload an image and add an optional caption. An item with no image shows a 'Photo coming soon' placeholder; remove items you don't want."
             fields:
-              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "Upload the photo. Leave blank to show a 'Photo coming soon' placeholder." }
+              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "Upload the photo. Leave blank to show a 'Photo coming soon' placeholder. Photos: max 1800 px wide, JPEG, under 300 KB." }
               - { name: "caption", label: "Caption (optional)", widget: "string", required: false }
           - { name: "cta_heading", label: "Find-your-photos — heading", widget: "string", required: false, default: "Find your photos" }
           - { name: "cta_blurb", label: "Find-your-photos — description", widget: "text", required: false }
@@ -1097,7 +1097,7 @@ collections:
             fields:
               - { name: "name", label: "Category name", widget: "string", hint: "Example: Costumes" }
               - { name: "description", label: "Description", widget: "text" }
-              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "A landscape (wide) photo works best — it's cropped to a 4:3 frame. If empty, a 'Photo coming soon' placeholder is shown." }
+              - { name: "photo", label: "Photo", widget: "image", required: false, hint: "A landscape (wide) photo works best — it's cropped to a 4:3 frame. If empty, a 'Photo coming soon' placeholder is shown. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "inquiry_heading", label: "Inquiry — section heading", widget: "string", default: "Request a rental" }
           - { name: "inquiry_blurb", label: "Inquiry — section description (optional)", widget: "text", required: false }
           - { name: "form_endpoint", label: "Inquiry form delivery URL (Formspree)", widget: "string", required: false, hint: "The Formspree endpoint that emails inquiries to PYT. Looks like https://formspree.io/f/xxxxxxx. If blank, the form is replaced by an email link." }
@@ -1124,7 +1124,7 @@ collections:
         fields:
           - { name: "title", label: "Page title", widget: "string", default: "Judy Robe & Spirits Awards" }
           - { name: "intro", label: "Description paragraph", widget: "text", hint: "A short description of the awards." }
-          - { name: "photo", label: "Photo (optional)", widget: "image", required: false, hint: "Optional. Shown as a banner under the description. Leave empty to hide." }
+          - { name: "photo", label: "Photo (optional)", widget: "image", required: false, hint: "Optional. Shown as a banner under the description. Leave empty to hide. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "winners_heading", label: "Winners — section heading", widget: "string", default: "Past winners" }
           - { name: "winners_blurb", label: "Winners — section description (optional)", widget: "text", required: false }
           - name: "years"
@@ -1192,7 +1192,7 @@ collections:
         fields:
           - { name: "site_name", label: "Site name", widget: "string", default: "Peninsula Youth Theatre" }
           - { name: "default_description", label: "Default description", widget: "text", hint: "Shown under the site name in Google and in link previews, for pages that don't set their own. One or two sentences, under ~160 characters." }
-          - { name: "share_image", label: "Default share image", widget: "image", required: false, hint: "1200 x 630 pixels, JPEG or PNG, under 300 KB. Keep anything important away from the edges. Leave blank to share links with no picture." }
+          - { name: "share_image", label: "Default share image", widget: "image", required: false, hint: "1200 x 630 pixels, JPEG or PNG, under 300 KB. Keep anything important away from the edges. Leave blank to share links with no picture. Photos: max 1800 px wide, JPEG, under 300 KB." }
           - { name: "org_phone", label: "Main phone number (optional)", widget: "string", required: false, hint: "For Google's business listing data only — it is NOT shown on the site. Example: +1 650 000 0000" }
           - { name: "org_founded", label: "Year founded (optional)", widget: "string", required: false, hint: "For Google's business listing data only. Example: 1991" }
 
@@ -1351,7 +1351,7 @@ collections:
                   - { label: "Stories on Stage (the list page)", value: "/stories-on-stage" }
                   - { label: "Studio Shows", value: "/studio-productions" }
                   - { label: "Ways to Support", value: "/ways-to-support" }
-              - { name: "image", label: "Photo", widget: "image", required: false, hint: "A wide landscape photo works best. To take a page's photo away, either remove the photo here or delete the whole row — both simply leave that page with no photo." }
+              - { name: "image", label: "Photo", widget: "image", required: false, hint: "A wide landscape photo works best. To take a page's photo away, either remove the photo here or delete the whole row — both simply leave that page with no photo. Photos: max 1800 px wide, JPEG, under 300 KB." }
               - { name: "focus", label: "Vertical focus (%)", widget: "number", required: false, default: 50, value_type: "int", min: 0, max: 100, step: 5, hint: "Which part of the photo to keep when it's cropped to the banner shape. 0 = top, 50 = middle (the default), 100 = bottom. If someone's face is being cut off at the top, lower this — around 15-25 usually does it. Leave blank for the middle." }
               - { name: "alt", label: "Photo description (optional)", widget: "string", required: false, hint: "For screen readers. Leave blank if the photo is purely decorative and the page text already says everything important." }
 
