@@ -6,7 +6,7 @@ eyebrow: ""
 start_date: 2027-03-13
 end_date: 2027-03-21
 date_display: March 13-21, 2027
-venue: Mountain View Center for the Performing Arts
+venue: Mountain View Center for the Performing Arts, Main Stage
 poster: /uploads/unnamed.png
 synopsis: >-
   Based on the “Greatest Movie Musical of All Time,” this Hollywood classic is
