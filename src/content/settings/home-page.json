@@ -45,26 +45,26 @@
     {
       "title": "The Wizard of Oz",
       "subtitle": "Tickets",
-      "image": "/uploads/wizard.jpg",
+      "image": "/uploads/copy-of-copy-of-untitled.jpg",
       "url": "/shows/the-wizard-of-oz"
     },
     {
       "title": "Singin' In The Rain",
       "subtitle": "Auditions",
-      "image": "/uploads/unnamed.png",
-      "url": "/shows/singin-in-the-rain/"
+      "image": "/uploads/copy-of-copy-of-copy-of-untitled.jpg",
+      "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=766"
     },
     {
       "title": "Creepy Carrots",
       "subtitle": "Tickets",
-      "image": "/uploads/untitled-1800-x-1200-px-logo-.png",
+      "image": "/uploads/carrot.jpg",
       "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767"
     },
     {
-      "title": "Movie Night!",
-      "subtitle": "Fundraiser",
-      "image": "/uploads/13668736373_39d525da45_b.jpg",
-      "url": "/calendar/"
+      "title": "The Night Before Christmas",
+      "subtitle": "Tickets",
+      "image": "/uploads/copy-of-untitled.jpg",
+      "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=769"
     }
   ],
   "hero_image": "",
