@@ -135,20 +135,20 @@
           "url": "/ways-to-support"
         },
         {
-          "label": "Young Performers (5-7yrs)",
-          "url": "/young-performers/"
-        },
-        {
-          "label": "Press",
-          "url": "/press"
-        },
-        {
           "label": "Contact",
           "url": "/contact"
         },
         {
+          "label": "Young Performers (5-7yrs)",
+          "url": "/young-performers/"
+        },
+        {
           "label": "Employment",
           "url": "/employment/"
+        },
+        {
+          "label": "Press",
+          "url": "/press"
         }
       ]
     }
