@@ -2,7 +2,7 @@
 title: Young Performers
 intro: ""
 hero_image: /uploads/e3775657-c3ae-41c0-9e49-4917ac4cc76d.jpg
-hero_focus: 30
+hero_focus: 20
 cta_label: YP opportunities
 cta_url: /musicals/
 show_in_nav: true
