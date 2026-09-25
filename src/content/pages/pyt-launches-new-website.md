@@ -15,7 +15,7 @@ A home for our beloved [Stories on Stage Youth Company (SOS)](https://pytnet.org
 
 An [Auditions page](https://pytnet.org/audition/), that lists all productions currently open for auditions, some tips and tricks for audition day, and good old FAQs. AND, a [Casting page](https://pytnet.org/casting/) that talks about PYT's approach, the whys and wherefores, what comes into the decisions, and PYT's philosophy on the whole thing.
 
-[School Tickets](https://pytnet.org/school-tickets/) - a new place for school to find which productions are currently offering group bookings and school tickets, and how to grab them.
+[School Tickets](https://pytnet.org/school-tickets/) - a new place for schools to find which productions are currently offering group bookings and school tickets, and how to grab them.
 
 Of course we couldn't leave out ways to [Support PYT](https://pytnet.org/ways-to-support/), especially as there are *so many cool new ones.* Please take a look 💖.
 
