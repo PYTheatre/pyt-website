@@ -1,7 +1,7 @@
 ---
 title: Young Performers
 intro: ""
-hero_image: /uploads/ype-frog-toad.jpg
+hero_image: /uploads/e3775657-c3ae-41c0-9e49-4917ac4cc76d.jpg
 hero_focus: 45
 cta_label: YP opportunities
 cta_url: /musicals/
