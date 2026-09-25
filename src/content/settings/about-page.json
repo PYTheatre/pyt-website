@@ -57,12 +57,14 @@
   "artist_members": [
     {
       "name": "Amy Heumann",
-      "pyt_title": "Vocal Director"
+      "pyt_title": "Vocal Director",
+      "photo": "/uploads/amy-heumann_3609.jpg"
     },
     {
       "name": "Holly Smolik",
       "pyt_title": "Vocal Director, Stories on Stage Director",
-      "outside_title": ""
+      "outside_title": "",
+      "photo": "/uploads/holly-vocals-1.jpg"
     },
     {
       "name": "Roma Olvera",
@@ -71,11 +73,13 @@
     },
     {
       "name": "Bill Olsen",
-      "pyt_title": "Stories on Stage Director"
+      "pyt_title": "Stories on Stage Director",
+      "photo": "/uploads/bill-director-213-copy.jpg"
     },
     {
       "name": "Stefan Fisher",
-      "pyt_title": "Stories on Stage Director, Teaching Artist"
+      "pyt_title": "Stories on Stage Director, Teaching Artist",
+      "photo": "/uploads/stefan-1.jpg"
     },
     {
       "name": "Lori Beth Foley",
@@ -83,15 +87,18 @@
     },
     {
       "name": "Annabel Gardiner",
-      "pyt_title": "Teaching Artist"
+      "pyt_title": "Teaching Artist",
+      "photo": "/uploads/annabel-gardiner-1.jpg"
     },
     {
       "name": "Ed Hunter",
-      "pyt_title": "Lighting Designer"
+      "pyt_title": "Lighting Designer",
+      "photo": "/uploads/ed-hunter_lighting-designer.jpg"
     },
     {
       "name": "Andrew Custer",
-      "pyt_title": "Lighting Designer"
+      "pyt_title": "Lighting Designer",
+      "photo": "/uploads/andrew-custer-lights.jpg"
     }
   ],
   "volunteer_members": [
