@@ -1,7 +1,7 @@
 {
   "eyebrow": "For schools",
   "title": "School Tickets",
-  "intro": "Discounted tickets for schools.",
+  "intro": "PYT offers discounted tickets for school group bookings to student matinee performances of Center Stage Musicals, and to Friday performances of Stories on Stage productions. Contact the MVCPA box office directly for all student tickets, using the links below.\n\nCenter Stage Musicals, Student Matinee performances: $10 per ticket (groups of 10+)\n\nStories on Stage, Student Matinee performances: $7 dollars per ticket (groups 10+)\n",
   "listings": [
     {
       "link_label": "Book tickets",
@@ -62,5 +62,5 @@
   ],
   "empty_state_text": "No school-discount shows are listed yet. Check back soon, or get in touch below.",
   "contact_email": "",
-  "body": "PYT offers discounted tickets for school group bookings to student matinee performances of Center Stage Musicals, and to Friday performances of Stories on Stage productions. Contac the MVCPA box office directly for all student tickets:\n\n500 Castro Street, Mountain View, CA 94041\n650-903-6000\n[performingarts@mvcpa.com](mailto:performingarts@mvcpa.com)"
+  "body": ""
 }
