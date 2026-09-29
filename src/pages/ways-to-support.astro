@@ -180,7 +180,15 @@ const recognitionGroups = (recognition.groups || []).filter(
            buttons line up on the same right edge down the page. -->
       <div class="campaign-head">
         <div class="campaign-head-text">
-          <h1>{donatePage.intro_heading}</h1>
+          {/* TITLE OPTIONAL (2026-09-29, PM request) — same pattern as the
+              home page headline. Clearing "Intro heading" in the CMS
+              hides it; a screen-reader-only title stays in the page so
+              it still has a heading for accessibility and search. */}
+          {txt(donatePage.intro_heading) ? (
+            <h1>{txt(donatePage.intro_heading)}</h1>
+          ) : (
+            <h1 class="sr-only">Support Peninsula Youth Theatre</h1>
+          )}
 
           {md(donatePage.intro_body) && (
             <div class="campaign-intro rich" set:html={md(donatePage.intro_body)} />
