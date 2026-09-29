@@ -1474,16 +1474,27 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
   /* Colours taken from the PM's reference picture. They are set here, on
      the donation section only, so nothing else on the site changes.
      The "200k" letters use the four PYT logo colours. */
+  /* SAME COLOURS, LOGO SHADES (2026-09-22, PM correction). Every part
+     keeps the colour it had in the original reference-picture version —
+     pink outline and lettering, blue fill, yellow star with a blue edge,
+     four-colour "200k" — but each is now the logo's OWN shade of that
+     colour instead of the picture's brighter one: magenta #cc00cc -> logo
+     pink, bright teal #00bbbb -> logo blue (blue, not teal), bright
+     yellow #f7e800 -> the logo's star gold, and the "200k" letters from
+     the logo's own pink / gold / green / blue. (An earlier pass on the
+     same day swapped the colours themselves to ink/teal — rejected; the
+     PM wanted shades, not a new scheme.) */
   .donate-teaser {
-    --thermo-outline: #cc00cc;  /* magenta: tube outline + title   */
-    --thermo-fill: #00bbbb;     /* bright teal: fill, bulb, star edge */
-    --thermo-star: #f7e800;     /* yellow star                        */
-    --thermo-tick: #e3a6e3;     /* pale magenta tick marks            */
-    --thermo-tick-text: #b068b6;/* muted magenta tick labels          */
-    --thermo-c1: #c1287b;       /* logo pink  */
-    --thermo-c2: #f2b705;       /* logo gold  */
-    --thermo-c3: #4f9a3a;       /* logo green */
-    --thermo-c4: #2f9fd0;       /* logo blue  */
+    --thermo-outline: var(--accent);      /* logo pink: tube outline, "for 2026!", GOAL text */
+    --thermo-fill: var(--brand-blue);     /* logo blue: fill + bulb + star outline */
+    --thermo-star: #f6cc46;               /* logo star gold (sampled from the logo file) */
+    --thermo-star-text: var(--accent);    /* GOAL lettering, logo pink */
+    --thermo-tick: #e6a9ca;               /* light tint of the logo pink: tick marks */
+    --thermo-tick-text: var(--accent);    /* tick labels, logo pink */
+    --thermo-c1: var(--accent);           /* "2"  logo pink  */
+    --thermo-c2: #f6cc46;                 /* "0"  logo gold  */
+    --thermo-c3: var(--brand-green);      /* "0"  logo green */
+    --thermo-c4: var(--brand-blue);       /* "k"  logo blue  */
   }
 
   /* Whole section centred, like the reference picture (it was left-
@@ -1506,6 +1517,14 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     text-align: left;
   }
 
+  /* LEFT-ALIGNED WITH THE THERMOMETER'S OWN LEFT EDGE (2026-09-22, PM
+     request). Previously centred within the full section width, which
+     is wider than the 620px-max thermometer drawing below it, so the
+     two didn't line up. Giving the title the SAME max-width + centred
+     margin as .thermo (below) means both boxes land on the identical
+     left edge once the drawing's own centring engages on wider screens;
+     the text then simply starts at THAT box's left edge instead of
+     being centred within it. */
   .thermo-title {
     /* Baloo 2 is already loaded site-wide (the Values band uses it). */
     font-family: "Baloo 2", var(--font-heading), sans-serif;
@@ -1513,8 +1532,9 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     font-size: clamp(2.2rem, 7vw, 3.6rem);
     line-height: 1.05;
     color: var(--thermo-outline);
-    text-align: center;
-    margin: var(--space-lg) 0 var(--space-md);
+    text-align: left;
+    max-width: 620px;
+    margin: var(--space-lg) auto var(--space-md);
   }
 
   /* The drawing: one SVG that scales as a unit. */
@@ -1546,7 +1566,7 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     font-family: "Baloo 2", var(--font-heading), sans-serif;
     font-weight: 700;
     font-size: 40px;   /* SVG units */
-    fill: var(--thermo-outline);
+    fill: var(--thermo-star-text);
   }
 
   /* Wrapper just for centering — the button itself is inline-flex
