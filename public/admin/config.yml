@@ -371,7 +371,7 @@ collections:
           - { name: "donate_heading", label: "Donation teaser — heading", widget: "string", required: false, hint: "The big line above the campaign graphic. LEAVE BLANK FOR NO HEADING (since 2026-09-23 — it used to fall back to 'Help us reach $[goal]'). Type wording to show one." }
           - { name: "donate_heading_case", label: "Donation teaser — heading capitalization", widget: "select", options: [{ label: "As typed", value: "as-typed" }, { label: "UPPERCASE", value: "uppercase" }], default: "as-typed" }
           - { name: "donate_text_align", label: "Donation teaser — text alignment", widget: "select", options: [{ label: "Centered", value: "center" }, { label: "Left-aligned", value: "left" }], default: "center", required: false, hint: "Where the heading and the paragraph above the campaign graphic sit. The graphic and Donate button stay centred either way." }
-          - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "text" }
+          - { name: "donate_lede", label: "Donation teaser — paragraph", widget: "markdown", buttons: ["bold", "italic", "link"], editor_components: [], modes: ["rich_text", "raw"], minimal: true, required: false, hint: "Use the toolbar for bold, italic and links (e.g. /ways-to-support#corporate). Leave a blank line between paragraphs. Leave empty for no paragraph." }
           - { name: "donate_button_label", label: "Donation teaser — button label", widget: "string", default: "Make a Gift" }
  
       # --- Support Buttons (Sponsorship + Scholarships) ---
@@ -687,7 +687,7 @@ collections:
         file: "src/content/settings/donate-page.json"
         description: "The top of the Support PYT page — heading and intro, the Soapbox donation link, the employer-matching note, and the Show & Season Sponsorship section. Paragraph fields accept links."
         fields:
-          - { name: "intro_heading", label: "Intro heading", widget: "string", default: "Every gift makes the next show possible." }
+          - { name: "intro_heading", label: "Intro heading", widget: "string", required: false, default: "Every gift makes the next show possible.", hint: "The page title. LEAVE BLANK FOR NO TITLE — the page then starts with the intro paragraph." }
           - { name: "intro_body", label: "Intro paragraph", widget: "markdown", required: false, hint: "Use the link button in the toolbar to link to another page or to a section of this one — e.g. /ways-to-support#corporate" }
           - { name: "soapbox_donate_url", label: "Soapbox donation page link", widget: "string", required: false, hint: "The web address of PYT's hosted Soapbox donation page that the Donate AND sponsorship buttons open. Defaults to https://pyt.secure.nonprofitsoapbox.com/donate if left blank." }
           - { name: "matching_note", label: "Employer matching note", widget: "markdown", required: false, hint: "Shown under the gift amounts list. Leave blank to hide it. A good place for a link to your employer-matching lookup." }
