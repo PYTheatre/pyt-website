@@ -104,6 +104,8 @@ const goalChars = [...goalShort].map((ch, i) => ({ ch, colour: titleColours[i % 
 // section's <h2> is skipped entirely when the field is empty, so no
 // empty gap is left behind.
 const donateHeading = home.donate_heading?.trim() || "";
+const donateLedeRaw = String((home as any).donate_lede || "").trim();
+const donateLedeHtml = donateLedeRaw ? (marked.parse(donateLedeRaw, { gfm: true }) as string) : "";
 
 // Alignment of the text above the campaign graphic (heading + lede):
 // CMS select, "center" (default, how it's always been) or "left"
@@ -635,7 +637,11 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
       {donateHeading && (
         <h2 class={`section-head ${donate_heading_case === "uppercase" ? "case-upper" : ""}`}>{donateHeading}</h2>
       )}
-      <p class="donate-lede">{home.donate_lede}</p>
+      {/* RICH TEXT (2026-09-29, PM request): the CMS box is now a
+          Markdown editor, so staff can add links, italics and bold.
+          Plain text typed before this change renders exactly as it
+          did. Blank = no paragraph at all. */}
+      {donateLedeHtml && <div class="donate-lede rich" set:html={donateLedeHtml} />}
  
       <!-- Campaign graphic (2026-09-22). The title is real text; the
            drawing below it is one SVG with a role="img" label, so screen
@@ -1387,6 +1393,28 @@ const loopedPhotoStrip = photoStrip.length > 0 ? [...photoStrip, ...photoStrip, 
     color: var(--ink);
     max-width: 60ch;
     margin-bottom: var(--space-lg);
+  }
+
+  /* Rich text inside the donation intro (2026-09-29). Links match the
+     style already used for the same kind of links on Ways to Support:
+     pink, semi-bold, underlined. */
+  .donate-lede :global(p) {
+    margin: 0 0 0.8rem;
+  }
+
+  .donate-lede :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .donate-lede :global(a) {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .donate-lede :global(a:hover) {
+    color: var(--accent-deep);
   }
  
   /* ---- Campaign progress thermometer ---- */
