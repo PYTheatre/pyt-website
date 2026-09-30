@@ -51,7 +51,7 @@ performances:
   - date_label: "Sun, Nov 22 "
     time_label: 1:00PM
     cast: Ruby
-    buy_url: https://pytnet.org/boxoffice/the-wizard-of-oz-2/#tickets
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2825
   - date_label: Thur, Nov 19
     time_label: 9:30AM
     cast: Student Matinee
