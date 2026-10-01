@@ -22,7 +22,8 @@
     },
     {
       "page": "/programs",
-      "image": "/uploads/pyt-summer-camp.jpg"
+      "image": "/uploads/pyt-summer-camp.jpg",
+      "focus": 50
     },
     {
       "page": "/school-play-in-a-box",
