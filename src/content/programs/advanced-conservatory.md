@@ -11,7 +11,7 @@ description: >-
   dance to your heart’s content, we’ve got the class for you!
 
 
-  Classes are open for ages 5-12. Fall classes are underway, but check back in Novemver for information about Winter/Spring classes that will start in January. 
+  Classes are open for ages 5-12. Fall classes are underway, but check back in November for information about Winter/Spring classes that will start in January. 
 schedule: ""
 tuition: "Fall 2026: $385-420"
 registration_status: Closed
