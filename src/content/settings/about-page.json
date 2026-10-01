@@ -12,7 +12,7 @@
     {
       "pyt_title": "Board President",
       "outside_title": "Strategic consultant",
-      "photo": "/uploads/14692256713_abd1b7e9bd_o.jpg",
+      "photo": "/uploads/beeker-northam-profile-headshot.jpg",
       "name": "Beeker Northam"
     },
     {
@@ -48,10 +48,6 @@
       "name": "Rachel Yuen",
       "pyt_title": "Board Member",
       "photo": "/uploads/rc-48e.jpg"
-    },
-    {
-      "name": "Vivek Sharma",
-      "pyt_title": "Board Member"
     }
   ],
   "artist_members": [
@@ -109,7 +105,8 @@
     },
     {
       "name": "Mike Cobb",
-      "pyt_title": "Lead Producer & Sound Designer"
+      "pyt_title": "Lead Producer & Sound Designer",
+      "photo": "/uploads/mike.jpeg"
     },
     {
       "name": "Laurie Pimentel",
@@ -117,11 +114,17 @@
     },
     {
       "name": "Alette Mahler",
-      "pyt_title": "Costume Designer"
+      "pyt_title": "Costume Designer",
+      "photo": "/uploads/screenshot-2026-06-26-at-12.45.52.png"
     },
     {
       "name": "Vered Zemer Gotlieb",
       "pyt_title": "Costume Designer"
+    },
+    {
+      "name": "Lyn Healy",
+      "pyt_title": "Photographer",
+      "photo": "/uploads/screenshot-2026-10-01-at-13.33.19.png"
     }
   ],
   "banner_image": "",
