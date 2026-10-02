@@ -1,5 +1,5 @@
 ---
-title: Creepy Carrots! Are Coming! 🎟🥕🐰
+title: Creepy Carrots! Oct 9 & 10 🎟🥕🐰
 intro: PERFORMANCES OCTOBER 9 & 10
 hero_image: /uploads/ccblog.png
 hero_alt: A Stories on Stage production.
