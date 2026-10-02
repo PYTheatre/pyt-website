@@ -1,7 +1,7 @@
 ---
 title: Creepy Carrots! Are Coming! Get your tickets now 🎟🥕🐰
 intro: PERFORMANCES OCTOBER 9 & 10
-hero_image: /uploads/creepy-carrots.png
+hero_image: /uploads/ccblog.png
 hero_alt: A Stories on Stage production.
 cta_label: Tickets
 cta_url: https://tickets.mvcpa.com/eventperformances.asp?evt=767
