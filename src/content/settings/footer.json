@@ -14,6 +14,10 @@
         {
           "label": "Classes & Camps",
           "url": "/programs"
+        },
+        {
+          "label": "Blog",
+          "url": "https://pytnet.org/blog/"
         }
       ]
     },
