@@ -1,6 +1,6 @@
 ---
 title: Blog
-intro: September 2026
+intro: ""
 show_in_nav: false
 draft: false
 ---
