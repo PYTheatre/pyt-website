@@ -108,14 +108,12 @@
       "shows": [
         {
           "show": "The SpongeBob Musical",
-          "judy_robe": "Audriana Berenberg – The SpongeBob Musical,"
+          "judy_robe": "Audriana Berenberg"
         },
         {
           "show": "Frozen Jr.",
-          "judy_robe": "Sivan Radwin – Frozen Jr., 2022",
-          "spirit_awards": [
-            null
-          ]
+          "judy_robe": "Sivan Radwin",
+          "spirit_awards": []
         },
         {
           "show": "Fiddler on the Roof Jr.",
@@ -132,7 +130,7 @@
       "shows": [
         {
           "show": "All Together Now!",
-          "judy_robe": "Avni Lochan – All Together Now!, 2021"
+          "judy_robe": "Avni Lochan"
         }
       ]
     },
