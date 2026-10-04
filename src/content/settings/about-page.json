@@ -60,30 +60,9 @@
       "photo": "/uploads/amy-heumann_3609-edited.jpg"
     },
     {
-      "name": "Holly Smolik",
-      "pyt_title": "Vocal Director, Stories on Stage Director",
-      "outside_title": "",
-      "photo": "/uploads/holly-vocals-1-edited.jpg"
-    },
-    {
-      "name": "Roma Olvera",
-      "pyt_title": "Vocal Director",
-      "photo": "/uploads/roma_o_headshot_pyt-edited.jpg"
-    },
-    {
-      "name": "Bill Olsen",
-      "pyt_title": "Stories on Stage Director",
-      "photo": "/uploads/bill-director-213-copy-edited.jpg"
-    },
-    {
-      "name": "Stefan Fisher",
-      "pyt_title": "Stories on Stage Director, Teaching Artist",
-      "photo": "/uploads/stefan-1-edited.jpg"
-    },
-    {
-      "name": "Lori Beth Foley",
-      "pyt_title": "Stories on Stage Director, Teaching Artist",
-      "photo": "/uploads/screenshot-2026-10-01-at-13.54.37.png"
+      "name": "Andrew Custer",
+      "pyt_title": "Lighting Designer",
+      "photo": "/uploads/andrew-custer-lights-edited.jpg"
     },
     {
       "name": "Annabel Gardiner",
@@ -91,21 +70,51 @@
       "photo": "/uploads/annabel-gardiner-1-edited.jpg"
     },
     {
+      "name": "Bill Olsen",
+      "pyt_title": "Stories on Stage Director",
+      "photo": "/uploads/bill-director-213-copy-edited.jpg"
+    },
+    {
       "name": "Ed Hunter",
       "pyt_title": "Lighting Designer",
       "photo": "/uploads/ed-hunter_lighting-designer-edited.jpg"
     },
     {
-      "name": "Andrew Custer",
-      "pyt_title": "Lighting Designer",
-      "photo": "/uploads/andrew-custer-lights-edited.jpg"
+      "name": "Holly Smolik",
+      "pyt_title": "Vocal Director, Stories on Stage Director",
+      "outside_title": "",
+      "photo": "/uploads/holly-vocals-1-edited.jpg"
+    },
+    {
+      "name": "Lori Beth Foley",
+      "pyt_title": "Stories on Stage Director, Teaching Artist",
+      "photo": "/uploads/screenshot-2026-10-01-at-13.54.37.png"
+    },
+    {
+      "name": "Roma Olvera",
+      "pyt_title": "Vocal Director",
+      "photo": "/uploads/roma_o_headshot_pyt-edited.jpg"
+    },
+    {
+      "name": "Stefan Fisher",
+      "pyt_title": "Stories on Stage Director, Teaching Artist",
+      "photo": "/uploads/stefan-1-edited.jpg"
     }
   ],
   "volunteer_members": [
     {
-      "name": "Rick Van Mell",
-      "pyt_title": "Technical Director",
-      "photo": ""
+      "name": "Alette Mahler",
+      "pyt_title": "Costume Designer",
+      "photo": "/uploads/screenshot-2026-06-26-at-12.45.52.png"
+    },
+    {
+      "name": "Laurie Pimentel",
+      "pyt_title": "Props Designer"
+    },
+    {
+      "name": "Lyn Healy",
+      "pyt_title": "Photographer",
+      "photo": "/uploads/screenshot-2026-10-01-at-13.33.19.png"
     },
     {
       "name": "Mike Cobb",
@@ -113,22 +122,14 @@
       "photo": "/uploads/screenshot-2026-10-01-at-13.57.24.png"
     },
     {
-      "name": "Laurie Pimentel",
-      "pyt_title": "Props Designer"
-    },
-    {
-      "name": "Alette Mahler",
-      "pyt_title": "Costume Designer",
-      "photo": "/uploads/screenshot-2026-06-26-at-12.45.52.png"
+      "name": "Rick Van Mell",
+      "pyt_title": "Technical Director",
+      "photo": "/uploads/screenshot-2026-10-03-at-19.35.30.png"
     },
     {
       "name": "Vered Zemer Gotlieb",
-      "pyt_title": "Costume Designer"
-    },
-    {
-      "name": "Lyn Healy",
-      "pyt_title": "Photographer",
-      "photo": "/uploads/screenshot-2026-10-01-at-13.33.19.png"
+      "pyt_title": "Costume Designer",
+      "photo": "/uploads/screenshot-2026-10-03-at-19.35.45.png"
     }
   ],
   "banner_image": "",
@@ -168,14 +169,14 @@
       "photo": "/uploads/screenshot-2026-06-26-at-12.44.36.png"
     },
     {
-      "name": "Shibby Thill",
-      "pyt_title": "Resident Stage Manager",
-      "photo": "/uploads/img_5303-edited.jpg"
-    },
-    {
       "name": "Candice Gasperik",
       "pyt_title": "Office Manager",
       "photo": "/uploads/candice.jpg"
+    },
+    {
+      "name": "Shibby Thill",
+      "pyt_title": "Resident Stage Manager",
+      "photo": "/uploads/img_5303-edited.jpg"
     }
   ],
   "email": "info@pytnet.org"
