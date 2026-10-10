@@ -6,10 +6,6 @@
       "style": "tickets",
       "children": [
         {
-          "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=767",
-          "label": "Creepy Carrots"
-        },
-        {
           "label": "The Wizard of Oz",
           "url": "/shows/the-wizard-of-oz"
         },
