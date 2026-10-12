@@ -49,16 +49,16 @@
       "url": "/shows/the-wizard-of-oz"
     },
     {
-      "title": "Singin' In The Rain",
-      "subtitle": "Auditions",
-      "image": "/uploads/copy-of-copy-of-copy-of-untitled.jpg",
-      "url": "https://pytnet.org/shows/singin-in-the-rain/"
-    },
-    {
       "title": "The Night Before Christmas",
       "subtitle": "Tickets",
       "image": "/uploads/copy-of-untitled.jpg",
       "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=769"
+    },
+    {
+      "title": "Singin' In The Rain",
+      "subtitle": "Auditions",
+      "image": "/uploads/copy-of-copy-of-copy-of-untitled.jpg",
+      "url": "https://pytnet.org/shows/singin-in-the-rain/"
     },
     {
       "title": "A Connecticut Yankee in King Arthur's Court",
