@@ -5,6 +5,12 @@
   "empty_message": "Coming soon.",
   "items": [
     {
+      "headline": "PYT performs ‘Creepy Carrots’ this weekend in Mountain View",
+      "source": "Los Altos Town Crier",
+      "url": "https://www.losaltosonline.com/community/pyt-performs-creepy-carrots-this-weekend-in-mountain-view/article_cf1295e1-93fe-45ac-9703-34a59171c562.html",
+      "date": "October 2026"
+    },
+    {
       "headline": "\"The critically acclaimed music and story will have everyone in the audience losing their heads. Six the Musical is true HER-story.\" SIX the musical.",
       "url": "https://www.metrosiliconvalley.com/six-the-musical-teen-edition-in-mountain-view/?utm_source=ActiveCampaign&utm_medium=email&utm_content=Metroactive%3A%20The%20Metro%20Silicon%20Valley%20Events%20Calendar&utm_campaign=Metroactive%3A%20The%20Silicon%20Valley%20Events%20Calendar%20%28Copy%29",
       "source": "Metro Silicon Valley",
@@ -26,12 +32,6 @@
       "date": "June 2026",
       "source": "Los Altos Town Crier",
       "headline": "PYT opens teen edition of musical ‘Six’ this week"
-    },
-    {
-      "headline": "PYT performs ‘Creepy Carrots’ this weekend in Mountain View",
-      "source": "Los Altos Town Crier",
-      "url": "https://www.losaltosonline.com/community/pyt-performs-creepy-carrots-this-weekend-in-mountain-view/article_cf1295e1-93fe-45ac-9703-34a59171c562.html",
-      "date": "October 2026"
     }
   ]
 }
