@@ -1,7 +1,9 @@
 ---
 /*
-  PROMO BANNER — optional full-width "news tape" under the hero.
-  (2026-09-16)
+  PROMO BANNER — optional full-width "news tape" at the top of the
+  home page, directly under the menu. (2026-09-16; moved to the top
+  and given bigger type 2026-10-16, mockup "Option I" — the
+  "Placement 3" note below is history.)
 
   A thin, bright, full-bleed bar carrying one line of editable text
   that is itself the link. Built to promote a single blog post or
@@ -91,18 +93,29 @@ const isExternal = /^https?:\/\//i.test(url);
        letter-spaced to give it the "tape" character at a thin height. */
     font-family: var(--font-heading);
     font-weight: 400;
-    font-size: 0.92rem;
+    /* BIGGER (2026-10-16, PM request "more impactful", mockup
+       "Option I"): 1.1rem on phones and 1.45rem from 720px up (rule
+       below) — was 0.92rem, and 0.85rem on small phones. */
+    font-size: 1.1rem;
     letter-spacing: 0.04em;
     line-height: 1.25;
     text-transform: uppercase;
 
-    /* Thin, but with enough padding to stay a comfortable tap target
-       on a phone once the 1.25 line-height is counted in. */
-    padding: 0.85rem 1.4rem;
+    padding: 0.95rem 1rem;
     text-align: center;
 
-    margin-top: 2rem;
+    /* 0 (2026-10-16): the banner now sits directly under the menu at
+       the top of the home page, with no gap. It is only used there. */
+    margin-top: 0;
     transition: background-color 0.15s ease;
+  }
+
+  @media (min-width: 720px) {
+    .promo-banner {
+      font-size: 1.45rem;
+      letter-spacing: 0.035em;
+      padding: 1.15rem 1.4rem;
+    }
   }
 
   .promo-banner:hover,
@@ -130,14 +143,4 @@ const isExternal = /^https?:\/\//i.test(url);
        arrow" on the end. */
   }
 
-  @media (max-width: 520px) {
-    .promo-banner {
-      /* On a narrow phone a longer line wraps to two or three rows.
-         Slightly smaller type and tighter side padding keeps that to
-         a sensible height instead of a green block. */
-      font-size: 0.85rem;
-      padding: 0.8rem 1rem;
-      letter-spacing: 0.03em;
-    }
-  }
 </style>
