@@ -8,4 +8,6 @@ rehearsal_sheet_url: https://docs.google.com/spreadsheets/d/e/2PACX-1vQXKvm7KboU
 resources:
   - url: https://drive.google.com/drive/folders/1uQDoJN7emXkQSTwGZMGzwPriipnrNdDH
     label: Rehearsal Resources
+  - label: E-flyer to help sell tickets!
+    url: https://drive.google.com/file/d/12mQ-Wk_gpQtlpCVF-Y8NUkjqBF2i6T8b/view?usp=sharing
 ---
