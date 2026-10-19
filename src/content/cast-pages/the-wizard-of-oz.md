@@ -8,6 +8,8 @@ rehearsal_sheet_url: https://docs.google.com/spreadsheets/d/e/2PACX-1vQXKvm7KboU
 resources:
   - url: https://drive.google.com/drive/folders/1uQDoJN7emXkQSTwGZMGzwPriipnrNdDH
     label: Resources
+  - url: https://drive.google.com/drive/folders/1p0ojJPHV59Ar3AZ05hRUPBS8A0uBcXKJ?usp=sharing
+    label: Hair and Makeup Resources
   - label: E-flyer to help sell tickets!
     url: https://drive.google.com/file/d/12mQ-Wk_gpQtlpCVF-Y8NUkjqBF2i6T8b/view?usp=sharing
 ---
