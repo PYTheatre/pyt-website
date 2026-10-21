@@ -145,6 +145,10 @@
         {
           "label": "Press",
           "url": "/press"
+        },
+        {
+          "label": "PYT Supporters",
+          "url": "https://pytnet.org/our-supporters/"
         }
       ]
     }
