@@ -1,0 +1,38 @@
+---
+/*
+  OUR SUPPORTERS PAGE  ( /our-supporters )  — added 2026-10-21.
+
+  A page of its own for the sponsor wall: corporate logos by tier and
+  individual sponsor names. The wall itself is the SAME component that
+  sits at the bottom of the Support PYT page (DonorRecognition.astro),
+  reading the same CMS record — so staff edit the list once, in
+  Support & Fundraising -> Donor Recognition, and both places update.
+
+  Only the page title and intro at the top are specific to this page
+  (fields "This page — title" and "This page — intro" in that same CMS
+  record). An optional hero photo can be added in Site-wide -> Page Hero
+  Images ("Our Supporters").
+
+  The old WordPress address /about/our-supporters redirects here
+  (public/_redirects). The page is listed in the sitemap automatically.
+  It is NOT in the menu unless staff add it in Site-wide -> Navigation
+  Menu.
+*/
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import DonorRecognition from "../components/DonorRecognition.astro";
+import { renderMarkdown } from "../lib/markdown";
+import recognition from "../content/settings/donor-recognition.json";
+
+const r = recognition as any;
+const title = (typeof r.page_title === "string" && r.page_title.trim()) || "Our Supporters";
+const introHtml = renderMarkdown(r.page_intro);
+---
+
+<BaseLayout
+  title={`${title} — Peninsula Youth Theatre`}
+  description="The companies and individuals whose sponsorship makes Peninsula Youth Theatre possible."
+>
+  <PageHero title={title} ledeHtml={introHtml} />
+  <DonorRecognition />
+</BaseLayout>
