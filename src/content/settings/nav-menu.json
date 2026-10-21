@@ -135,6 +135,10 @@
           "url": "/contact"
         },
         {
+          "label": "Our Supporters",
+          "url": "https://pytnet.org/our-supporters/"
+        },
+        {
           "label": "Young Performers (5-7yrs)",
           "url": "/young-performers/"
         },
@@ -145,10 +149,6 @@
         {
           "label": "Press",
           "url": "/press"
-        },
-        {
-          "label": "PYT Supporters",
-          "url": "https://pytnet.org/our-supporters/"
         }
       ]
     }
