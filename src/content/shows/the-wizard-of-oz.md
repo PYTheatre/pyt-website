@@ -39,7 +39,7 @@ performances:
   - date_label: Sun, Nov 15
     time_label: 1:00PM
     cast: Emerald
-    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2828
+    buy_url: https://tickets.mvcpa.com/orderticketsvenue.asp?p=2828&src=&_ga=GA1.1.493230370.1772476169&_gl=
   - date_label: Sat, Nov 21
     time_label: 2:00PM
     cast: Ruby
