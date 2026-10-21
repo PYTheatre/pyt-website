@@ -1,6 +1,6 @@
 {
   "eyebrow": "",
-  "heading": "Our Supporters",
+  "heading": "PYT Corporate Circle",
   "intro": "",
   "groups": [
     {
@@ -13,7 +13,9 @@
     },
     {
       "tier_name": "Limelights",
-      "names": []
+      "names": [
+        "Palo Alto Orthodontics"
+      ]
     },
     {
       "tier_name": "Marquee Lights"
