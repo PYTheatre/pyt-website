@@ -92,8 +92,8 @@
 # --- About Us sub-pages (NOT /about/ itself, which exists on the new site) ---
 /about/careers  /volunteer/  301
 /about/careers/  /volunteer/  301
-/about/our-supporters  /ways-to-support/  301
-/about/our-supporters/  /ways-to-support/  301
+/about/our-supporters  /our-supporters/  301
+/about/our-supporters/  /our-supporters/  301
 /about/videos  /photos/  301
 /about/videos/  /photos/  301
 /about/pyt-spotlight  /blog/  301
