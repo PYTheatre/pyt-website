@@ -8,16 +8,8 @@
       "description": "The cost of a scholarship for one actor for a Center Stage Musical."
     },
     {
-      "amount": "$950",
-      "description": "The cost of a scholarship for one actor to go to summer camp."
-    },
-    {
       "amount": "$12,000",
       "description": "The cost of royalties for a Center Stage Musical."
-    },
-    {
-      "amount": "$24,000",
-      "description": "The cost of one month's rent for studio and rehearsal space."
     },
     {
       "amount": "$30,000",
