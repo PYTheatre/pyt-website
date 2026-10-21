@@ -40,12 +40,6 @@
       ]
     },
     {
-      "label": "Calendar",
-      "url": "/calendar",
-      "style": "calendar",
-      "children": []
-    },
-    {
       "label": "Audition",
       "url": "/audition",
       "style": "none",
@@ -84,6 +78,41 @@
       ]
     },
     {
+      "label": "About",
+      "url": "/about/",
+      "style": "none",
+      "children": [
+        {
+          "label": "🤩 Support PYT! 💜",
+          "url": "/ways-to-support"
+        },
+        {
+          "label": "About PYT",
+          "url": "/about"
+        },
+        {
+          "label": "Contact",
+          "url": "/contact"
+        },
+        {
+          "label": "Our Supporters",
+          "url": "https://pytnet.org/our-supporters/"
+        },
+        {
+          "label": "Young Performers (5-7yrs)",
+          "url": "/young-performers/"
+        },
+        {
+          "label": "Employment",
+          "url": "/employment/"
+        },
+        {
+          "label": "Press",
+          "url": "/press"
+        }
+      ]
+    },
+    {
       "label": "Education",
       "url": "/programs",
       "style": "none",
@@ -118,39 +147,10 @@
       ]
     },
     {
-      "label": "About",
-      "url": "/about/",
-      "style": "none",
-      "children": [
-        {
-          "label": "🤩 Support PYT! 💜",
-          "url": "/ways-to-support"
-        },
-        {
-          "label": "About PYT",
-          "url": "/about"
-        },
-        {
-          "label": "Contact",
-          "url": "/contact"
-        },
-        {
-          "label": "Our Supporters",
-          "url": "https://pytnet.org/our-supporters/"
-        },
-        {
-          "label": "Young Performers (5-7yrs)",
-          "url": "/young-performers/"
-        },
-        {
-          "label": "Employment",
-          "url": "/employment/"
-        },
-        {
-          "label": "Press",
-          "url": "/press"
-        }
-      ]
+      "label": "Calendar",
+      "url": "/calendar",
+      "style": "calendar",
+      "children": []
     }
   ]
 }
