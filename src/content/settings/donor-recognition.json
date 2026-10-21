@@ -39,11 +39,25 @@
   "individual_sections": [
     {
       "heading": "Season Sponsors",
-      "names": []
+      "names": [
+        "The Cobb Family",
+        "The Ardelean Family",
+        "The Freeman Family",
+        "Rick & Sandy Van Mell",
+        "The Getz Family",
+        "Klein-Asato Family",
+        "The Swartz-Marek Family",
+        "The Humphrey Family"
+      ]
     },
     {
       "heading": "Show Sponsors",
-      "names": []
+      "names": [
+        "The Han Family",
+        "Jardin de Mariposas School",
+        "Beeker Northam",
+        "House of Chaos"
+      ]
     }
   ]
 }
