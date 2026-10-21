@@ -1,0 +1,281 @@
+---
+/*
+  DONOR RECOGNITION — the sponsor wall.  (Redesigned 2026-10-21, PM-approved
+  mockup "Option B".)
+
+  USED IN TWO PLACES, FROM ONE CMS RECORD:
+    - at the bottom of the Support PYT page  (/ways-to-support#recognition)
+    - as the body of its own page            (/our-supporters)
+  Both read src/content/settings/donor-recognition.json, edited in the CMS
+  at Support & Fundraising -> Donor Recognition. Change it once, both update.
+
+  TWO KINDS OF ENTRY:
+    1. CORPORATE TIERS — companies, shown as LOGOS in white cards.
+       Each tier has a "Logo size" chosen in the CMS (Large / Medium /
+       Small / Extra small). The size is a field on the tier, NOT worked
+       out from the tier's position, so renaming or reordering tiers in
+       the CMS can never give the wrong tier the big logos.
+         Columns per row:      phone  tablet  desktop
+           large                 2      3       3
+           medium                2      3       4
+           small                 3      4       5
+           xsmall                3      5       6
+       Every card is the same 3:2 shape within a tier and the logo is
+       scaled to FIT inside it (object-fit: contain) — wide, square and
+       tall logos all sit centred, never cropped or stretched.
+       A company with no logo uploaded yet shows its NAME in the card
+       instead, so nothing ever appears as a blank box.
+       A company with a website filled in becomes a link (opens in a new
+       tab — BaseLayout's external-link script does that for any http
+       link). The logo's alt text is the company name, which is what a
+       screen reader announces as the link text.
+    2. INDIVIDUAL SPONSOR SECTIONS — people, shown as NAMES flowing in
+       columns (2 on phones, 3 on tablets, 4 on desktop). Sized for 50+
+       names per section: 60 names is ~15 rows on desktop.
+
+  HIDDEN UNTIL FILLED: a tier with no companies, or a section with no
+  names, is not shown at all. If nothing is filled in anywhere, the
+  whole block renders nothing (on Support PYT the section disappears;
+  on /our-supporters only the page title and intro remain).
+
+  No props. The section heading is an h2 on both pages; on
+  /our-supporters the page title above it is the h1.
+*/
+import { marked } from "marked";
+import recognition from "../content/settings/donor-recognition.json";
+
+const r = recognition as any;
+const txt = (v?: string | null): string => (typeof v === "string" ? v.trim() : "");
+const md = (input?: string | null): string =>
+  input && input.trim()
+    ? (marked.parse(input.trim(), { breaks: true, gfm: true }) as string)
+    : "";
+
+/* A website typed without "https://" (e.g. "www.example.com") would be
+   treated as a page on pytnet.org. Add the scheme so it always goes to
+   the company's own site. */
+const href = (u?: string | null): string => {
+  const v = txt(u);
+  if (!v) return "";
+  return /^https?:\/\//i.test(v) ? v : `https://${v.replace(/^\/+/, "")}`;
+};
+
+const SIZES = new Set(["large", "medium", "small", "xsmall"]);
+
+const tiers = (r.corporate_tiers ?? [])
+  .map((t: any) => ({
+    name: txt(t?.tier_name),
+    size: SIZES.has(t?.logo_size) ? t.logo_size : "small",
+    companies: (t?.companies ?? [])
+      .filter((c: any) => c && (txt(c.name) || txt(c.logo)))
+      .map((c: any) => ({ name: txt(c.name), logo: txt(c.logo), url: href(c.url) })),
+  }))
+  .filter((t: any) => t.companies.length > 0);
+
+const sections = (r.individual_sections ?? [])
+  .map((s: any) => ({
+    heading: txt(s?.heading),
+    names: (s?.names ?? []).map((n: any) => txt(n)).filter(Boolean),
+  }))
+  .filter((s: any) => s.names.length > 0);
+
+const heading = txt(r.heading);
+const intro = txt(r.intro);
+const hasAny = tiers.length > 0 || sections.length > 0;
+---
+
+{hasAny && (
+  <section class="section recognition-section" id="recognition">
+    <div class="container">
+      {heading && <h2 class="section-head">{heading}</h2>}
+      {intro && <div class="recognition-intro rich" set:html={md(intro)} />}
+
+      {tiers.length > 0 && (
+        <div class="logo-tiers">
+          {tiers.map((tier: any) => (
+            <div class={`logo-tier logo-${tier.size}`}>
+              {tier.name && <h3 class="recognition-tier">{tier.name}</h3>}
+              <ul class="logo-grid">
+                {tier.companies.map((c: any) => {
+                  const inner = c.logo ? (
+                    <img src={c.logo} alt={c.name} loading="lazy" decoding="async" />
+                  ) : (
+                    <span class="logo-name">{c.name}</span>
+                  );
+                  return (
+                    <li class="logo-item">
+                      {c.url ? (
+                        <a class="logo-card" href={c.url} rel="noopener">{inner}</a>
+                      ) : (
+                        <div class="logo-card">{inner}</div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {sections.length > 0 && (
+        <div class="people-sections">
+          {sections.map((s: any) => (
+            <div class="people-section">
+              {s.heading && <h3 class="recognition-tier">{s.heading}</h3>}
+              <ul class="people-names">
+                {s.names.map((n: string) => <li>{n}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  /* Sits under the sticky header when linked to (#recognition) — same
+     offset as every other linkable section on Support PYT. */
+  .recognition-section {
+    scroll-margin-top: 6rem;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+  }
+
+  .recognition-intro {
+    color: var(--ink-soft);
+    max-width: 62ch;
+    font-size: 1.05rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Tier / section heading — unchanged from the previous design. */
+  .recognition-tier {
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* ---- Corporate logo tiers ---- */
+  .logo-tiers {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  /* Gap under the section heading / intro — only when one is shown.
+     With both blank (the PM's choice, 2026-10-21) the first tier name
+     starts at the section's normal top padding, with no extra space. */
+  .section-head + .logo-tiers,
+  .recognition-intro + .logo-tiers {
+    margin-top: var(--space-lg);
+  }
+
+  .logo-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  }
+
+  /* Columns per tier size — phone first, see the table in the header. */
+  .logo-large, .logo-medium { --cols: 2; }
+  .logo-small, .logo-xsmall { --cols: 3; }
+  @media (min-width: 720px) {
+    .logo-large, .logo-medium { --cols: 3; }
+    .logo-small  { --cols: 4; }
+    .logo-xsmall { --cols: 5; }
+  }
+  @media (min-width: 1024px) {
+    .logo-medium { --cols: 4; }
+    .logo-small  { --cols: 5; }
+    .logo-xsmall { --cols: 6; }
+  }
+
+  /* The card: the site's card look (white, hairline, soft shadow — the
+     same as the contact and newsletter boxes). Fixed 3:2 shape; the
+     padding is a percentage so the logo keeps the same breathing room
+     at every card size. */
+  .logo-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-soft);
+    aspect-ratio: 3 / 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14% 12%;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.18s ease;
+  }
+
+  /* Linked cards only: the border turns pink on hover/focus, the site's
+     "this is clickable" colour. Unlinked cards don't react. */
+  a.logo-card:hover,
+  a.logo-card:focus-visible {
+    border-color: var(--accent);
+  }
+  a.logo-card:focus-visible {
+    outline: 2px solid var(--accent-deep);
+    outline-offset: 2px;
+  }
+
+  /* width/height auto + max 100% = scale DOWN to fit, keep shape.
+     (Overrides global img { max-width:100% } squashing — see the trap
+     in HANDOVER-2026-09-23 §5.) */
+  .logo-card img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  /* No-logo fallback: the company name, in the heading face. */
+  .logo-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .logo-small .logo-name,
+  .logo-xsmall .logo-name {
+    font-size: 0.85rem;
+  }
+
+  /* ---- Individual sponsor names ---- */
+  .people-sections {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  /* Space between the last logo tier and the first names section,
+     only when both are present. */
+  .logo-tiers + .people-sections {
+    margin-top: var(--space-2xl);
+  }
+
+  .people-names {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 2rem;
+  }
+  @media (min-width: 720px) {
+    .people-names { columns: 3; }
+  }
+  @media (min-width: 1024px) {
+    .people-names { columns: 4; }
+  }
+  .people-names li {
+    break-inside: avoid;
+    padding: 0.22rem 0;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+</style>
