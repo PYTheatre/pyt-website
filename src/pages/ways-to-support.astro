@@ -29,7 +29,9 @@
        #giving-levels   — the gift amounts list
        #corporate       — corporate sponsorship
        #sponsor         — show & season sponsorship
-       #recognition     — donor recognition wall
+       #recognition     — donor recognition wall (rendered by the shared
+                          DonorRecognition component, 2026-10-21 — the same
+                          block is the body of /our-supporters)
      e.g. /ways-to-support#corporate. These are part of the public URL, so
      do not rename them casually.
 
@@ -53,7 +55,7 @@ import PageHeroImage from "../components/PageHeroImage.astro";
 import campaign from "../content/settings/donation-campaign.json";
 import donatePage from "../content/settings/donate-page.json";
 import corporate from "../content/settings/corporate-giving.json";
-import recognition from "../content/settings/donor-recognition.json";
+import DonorRecognition from "../components/DonorRecognition.astro";
 import giftFunds from "../content/settings/gift-funds.json";
 
 /* Block Markdown -> HTML. breaks: true so a single newline inside a CMS
@@ -161,11 +163,6 @@ const sponsorItems = ((donatePage as any).sponsor_items ?? []).filter(
   (s: any) => s && (txt(s.title) || txt(s.description) || txt(s.price))
 );
 const showSponsor = sponsorItems.length > 0 || !!sponsorHeading || !!sponsorIntro;
-
-/* ---------------- Recognition ---------------- */
-const recognitionGroups = (recognition.groups || []).filter(
-  (g: any) => Array.isArray(g.names) && g.names.filter((n: string) => n && n.trim()).length > 0
-);
 ---
 
 <BaseLayout
@@ -374,34 +371,11 @@ const recognitionGroups = (recognition.groups || []).filter(
     </section>
   )}
 
-  <!-- ============ DONOR & SPONSOR RECOGNITION ============ -->
-  {recognitionGroups.length > 0 && (
-    <section class="section recognition-section" id="recognition">
-      <div class="container">
-        {txt(recognition.heading) && (
-          <h2 class="section-head">{txt(recognition.heading)}</h2>
-        )}
-        {txt(recognition.intro) && (
-          <div class="recognition-intro rich" set:html={md(recognition.intro)} />
-        )}
-
-        <div class="recognition-groups">
-          {recognitionGroups.map((group: any) => (
-            <div class="recognition-group">
-              <h3 class="recognition-tier">{group.tier_name}</h3>
-              <ul class="recognition-names">
-                {group.names
-                  .filter((n: string) => n && n.trim())
-                  .map((name: string) => (
-                    <li>{name}</li>
-                  ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
+  <!-- ============ DONOR & SPONSOR RECOGNITION ============
+       Shared with /our-supporters (2026-10-21). Markup, styles, the
+       #recognition anchor and the hide-when-empty rule all live in
+       src/components/DonorRecognition.astro. -->
+  <DonorRecognition />
 
   <!-- The 501(c)(3) / EIN strip that used to sit here was removed
        2026-08-21: the same details are in the footer on every page. -->
@@ -413,10 +387,10 @@ const recognitionGroups = (recognition.groups || []).filter(
   .campaign-hero,
   .giving-section,
   .corporate-section,
-  .sponsor-section,
-  .recognition-section {
+  .sponsor-section {
     scroll-margin-top: 6rem;
   }
+  /* (#recognition's offset is set in DonorRecognition.astro.) */
 
   /* ---- Rich text rendered from CMS Markdown fields ---- */
   .rich :global(p) {
@@ -924,54 +898,6 @@ const recognitionGroups = (recognition.groups || []).filter(
     }
   }
 
-  /* ---- Donor & sponsor recognition ---- */
-  .recognition-section {
-    background: var(--paper);
-    border-top: 1px solid var(--line);
-  }
-
-  .recognition-intro {
-    color: var(--ink-soft);
-    max-width: 62ch;
-    font-size: 1.05rem;
-    margin-bottom: var(--space-lg);
-  }
-
-  .recognition-groups {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
-  }
-
-  .recognition-tier {
-    font-size: 1.15rem;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .recognition-names {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .recognition-names li {
-    font-size: 1rem;
-    color: var(--ink);
-    padding: 0.2rem 0;
-  }
-
-  @media (min-width: 720px) {
-    .recognition-groups {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .recognition-groups {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
+  /* (Donor & sponsor recognition styles moved to
+     src/components/DonorRecognition.astro, 2026-10-21.) */
 </style>
