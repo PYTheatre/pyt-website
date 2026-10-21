@@ -1,33 +1,49 @@
 {
-  "eyebrow": "",
-  "heading": "PYT Corporate Circle",
+  "heading": "",
   "intro": "",
-  "groups": [
+  "page_title": "Our Supporters",
+  "page_intro": "",
+  "corporate_tiers": [
     {
-      "tier_name": "Twinkle Lights",
-      "names": []
+      "tier_name": "Luminaries",
+      "logo_size": "large",
+      "companies": []
     },
     {
-      "tier_name": "Limelights",
-      "names": [
-        "Palo Alto Orthodontics"
-      ]
+      "tier_name": "Marquee Lights",
+      "logo_size": "medium",
+      "companies": []
     },
     {
       "tier_name": "Spotlights",
+      "logo_size": "small",
+      "companies": []
+    },
+    {
+      "tier_name": "Limelights",
+      "logo_size": "xsmall",
+      "companies": [
+        {
+          "name": "Palo Alto Orthodontics",
+          "logo": "",
+          "url": ""
+        }
+      ]
+    },
+    {
+      "tier_name": "Twinkle Lights",
+      "logo_size": "xsmall",
+      "companies": []
+    }
+  ],
+  "individual_sections": [
+    {
+      "heading": "Season Sponsors",
       "names": []
     },
     {
-      "tier_name": "Marquee Lights"
-    },
-    {
-      "tier_name": "Luminaries"
-    },
-    {
-      "tier_name": "Show Sponsors"
-    },
-    {
-      "tier_name": "Season Sponsors"
+      "heading": "Show Sponsors",
+      "names": []
     }
   ]
 }
