@@ -1,19 +1,6 @@
 {
-  "heading": "What your gift could fund",
+  "heading": "",
   "intro": "",
-  "button_label": "Donate",
-  "items": [
-    {
-      "amount": "$650",
-      "description": "The cost of a scholarship for one actor for a Center Stage Musical."
-    },
-    {
-      "amount": "$12,000",
-      "description": "The cost of royalties for a Center Stage Musical."
-    },
-    {
-      "amount": "$30,000",
-      "description": "The cost of theater rental for a Center Stage Musical."
-    }
-  ]
+  "button_label": "",
+  "items": []
 }
