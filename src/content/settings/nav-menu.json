@@ -123,12 +123,12 @@
       "style": "none",
       "children": [
         {
-          "label": "About PYT",
-          "url": "/about"
-        },
-        {
           "label": "🤩 Support PYT! 💜",
           "url": "/ways-to-support"
+        },
+        {
+          "label": "About PYT",
+          "url": "/about"
         },
         {
           "label": "Contact",
