@@ -40,21 +40,6 @@
       ]
     },
     {
-      "label": "Audition",
-      "url": "/audition",
-      "style": "none",
-      "children": [
-        {
-          "label": "Auditions",
-          "url": "/audition"
-        },
-        {
-          "label": "Casting",
-          "url": "/casting"
-        }
-      ]
-    },
-    {
       "style": "none",
       "label": "Shows",
       "url": "/shows/",
@@ -74,6 +59,21 @@
         {
           "label": "Stories on Stage",
           "url": "/stories-on-stage/"
+        }
+      ]
+    },
+    {
+      "label": "Audition",
+      "url": "/audition",
+      "style": "none",
+      "children": [
+        {
+          "label": "Auditions",
+          "url": "/audition"
+        },
+        {
+          "label": "Casting",
+          "url": "/casting"
         }
       ]
     },
