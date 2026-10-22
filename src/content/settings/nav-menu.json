@@ -133,7 +133,7 @@
     },
     {
       "label": "Shop",
-      "url": "/rentals",
+      "url": "https://shop.pytnet.org",
       "style": "none",
       "children": [
         {
@@ -143,6 +143,10 @@
         {
           "label": "Photos",
           "url": "/photos"
+        },
+        {
+          "label": "PYT Shop",
+          "url": "https://shop.pytnet.org"
         }
       ]
     },
