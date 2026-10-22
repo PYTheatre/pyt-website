@@ -137,16 +137,16 @@
       "style": "none",
       "children": [
         {
-          "label": "Rentals",
-          "url": "/rentals"
+          "label": "PYT Shop",
+          "url": "https://shop.pytnet.org"
         },
         {
           "label": "Photos",
           "url": "/photos"
         },
         {
-          "label": "PYT Shop",
-          "url": "https://shop.pytnet.org"
+          "label": "Rentals",
+          "url": "/rentals"
         }
       ]
     },
