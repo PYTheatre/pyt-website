@@ -5,22 +5,22 @@
   "page_intro": "",
   "corporate_tiers": [
     {
-      "tier_name": "Luminaries",
+      "tier_name": "Luminary sponsors",
       "logo_size": "large",
       "companies": []
     },
     {
-      "tier_name": "Marquee Lights",
+      "tier_name": "Marquee Light sponsors",
       "logo_size": "medium",
       "companies": []
     },
     {
-      "tier_name": "Spotlights",
+      "tier_name": "Spotlight sponsors",
       "logo_size": "small",
       "companies": []
     },
     {
-      "tier_name": "Limelights",
+      "tier_name": "Limelight sponsors",
       "logo_size": "large",
       "companies": [
         {
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "tier_name": "Twinkle Lights",
+      "tier_name": "Twinkle Light sponsors",
       "logo_size": "xsmall",
       "companies": []
     }
