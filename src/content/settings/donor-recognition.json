@@ -21,8 +21,14 @@
     },
     {
       "tier_name": "Limelights",
-      "logo_size": "xsmall",
-      "companies": []
+      "logo_size": "large",
+      "companies": [
+        {
+          "logo": "/uploads/pao_logo_final_small-2-1-.png",
+          "url": "https://paloaltoorthodontics.com/",
+          "name": "Palo Alto Orthodontics"
+        }
+      ]
     },
     {
       "tier_name": "Twinkle Lights",
