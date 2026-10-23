@@ -12,4 +12,6 @@ resources:
     label: Hair and Makeup Resources
   - label: E-flyer to help sell tickets!
     url: https://drive.google.com/file/d/12mQ-Wk_gpQtlpCVF-Y8NUkjqBF2i6T8b/view?usp=sharing
+  - label: PYT Store
+    url: https://shop.pytnet.org/collections/wizard-of-oz
 ---
