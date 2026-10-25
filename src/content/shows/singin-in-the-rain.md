@@ -7,7 +7,7 @@ start_date: 2027-03-13
 end_date: 2027-03-21
 date_display: March 13-21, 2027
 venue: Mountain View Center for the Performing Arts, Main Stage
-runtime_minutes: 1
+runtime_minutes: 120
 poster: /uploads/unnamed.png
 synopsis: >-
   Based on the “Greatest Movie Musical of All Time,” this Hollywood classic is
@@ -40,6 +40,7 @@ synopsis: >-
 
 
   Singin' In The Rain is presented through special arrangement with Music Theatre International (MTI). All authorized performance materials are also supplied by MTI. www.mtishows.com
+audition_url: https://campscui.active.com/orgs/PeninsulaYouthTheatre?mc_cid=ac9442e52c&mc_eid=d02e355d90&e4q=7cb19f4c-e6d6-4142-b82b-4402acf0c833&e4p=51a9ffb9-929c-434a-89cb-1197ee952c05&e4ts=1792942076&e4c=active&e4e=snlvcmpscui00001load&e4rt=Safetynet&e4h=d1f20373a56763a942d53d1b6329a71a#/selectSessions/3892842
 audition_start: 2026-12-05
 audition_end: 2026-12-06
 audition_display: December 5 & 6, 2026
