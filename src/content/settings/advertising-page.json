@@ -1,11 +1,10 @@
 {
-  "title": "Advertise in Our Programs",
+  "show_season": true,
+  "button_label": "Email us to book an ad",
+  "help_text": "Need help with your ad? Design help is availablefor a $50.",
   "intro": "Each Center Stage musical plays 6 public performances to more than 2,200 audience members at the Mountain View Center for the Performing Arts. Every guest receives a printed program, and families often keep them as a souvenir of their young performer's show.\n\nFor 35 years, Peninsula Youth Theatre has given young people a place to grow on stage and behind the scenes. Your ad reaches local families while supporting youth arts education in our community.",
-  "rates_heading": "Advertising Rates",
-  "offer": "Book both main stage musicals with the 2-show package and save 15%.",
-  "single_label": "Single show",
-  "package_label": "2-show package",
-  "save_label": "You save",
+  "button_email": "info@pytnet.org",
+  "order_heading": "How to Order",
   "sizes": [
     {
       "name": "Full Page",
@@ -32,9 +31,8 @@
       "shape": "quarter"
     }
   ],
-  "show_season": true,
-  "season_label": "2026–27 Center Stage musicals:",
-  "specs_heading": "Ad Specs and Deadlines",
+  "save_label": "You save",
+  "rates_heading": "Advertising Rates",
   "specs": [
     {
       "label": "Color",
@@ -42,11 +40,11 @@
     },
     {
       "label": "File format",
-      "text": ""
+      "text": "PDF or hi-resolution JPG"
     },
     {
       "label": "Resolution",
-      "text": ""
+      "text": "300 dpi at actual size"
     },
     {
       "label": "Ad and payment deadline, The Wizard of Oz",
@@ -57,11 +55,13 @@
       "text": ""
     }
   ],
+  "title": "Advertise in Our Programs",
+  "season_label": "2026–27 Center Stage musicals:",
   "specs_note": "Package advertisers may use the same ad for both shows or send a new one for the second show by its deadline.",
-  "order_heading": "How to Order",
-  "order_text": "Email [info@pytnet.org](mailto:info@pytnet.org) with your business name, ad size, and whether you'd like a single show or the 2-show package. We'll confirm your space and send payment details.",
-  "button_label": "Email us to book an ad",
-  "button_email": "info@pytnet.org",
-  "button_subject": "Program advertising",
-  "help_text": ""
+  "specs_heading": "Ad Specs and Deadlines",
+  "package_label": "2-show package",
+  "offer": "Book both main stage musicals with the 2-show package and save 10%.",
+  "single_label": "Single show",
+  "order_text": "Email with your business name, ad size, and whether you'd like a single show or the 2-show package. We'll confirm your space and send payment details.",
+  "button_subject": "Program advertising"
 }
