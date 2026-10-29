@@ -48,6 +48,10 @@
         {
           "label": "Contact",
           "url": "/contact"
+        },
+        {
+          "label": "Advertise in our Programs",
+          "url": "https://pytnet.org/advertise/"
         }
       ]
     }
