@@ -17,7 +17,7 @@
     {
       "name": "Half Page",
       "dimensions": "4.75\" × 3.875\"",
-      "single_price": "$200",
+      "single_price": "$250",
       "package_price": "$340",
       "savings": "$60",
       "shape": "half"
@@ -29,6 +29,13 @@
       "package_price": "$255",
       "savings": "$45",
       "shape": "quarter"
+    },
+    {
+      "shape": "eighth",
+      "name": "Eighth Page",
+      "single_price": "$90",
+      "package_price": "$160",
+      "savings": "$20"
     }
   ],
   "save_label": "You save",
@@ -60,7 +67,7 @@
   "specs_note": "Package advertisers may use the same ad for both shows or send a new one for the second show by its deadline.",
   "specs_heading": "Ad Specs and Deadlines",
   "package_label": "2-show package",
-  "offer": "Book both main stage musicals with the 2-show package and save 10%.",
+  "offer": "Book both main stage musicals with the 2-show package and save 10% (4,400+ guests, 12 performances).",
   "single_label": "Single show",
   "order_text": "Email with your business name, ad size, and whether you'd like a single show or the 2-show package. We'll confirm your space and send payment details.",
   "button_subject": "Program advertising"
