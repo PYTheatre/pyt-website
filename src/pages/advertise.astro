@@ -27,9 +27,12 @@
   the label in front of it ("2026–27 Center Stage musicals:") is typed,
   and the whole line can be switched off in the CMS.
 
-  The "Email us" button is a mailto: link built from the CMS email
-  address and subject line, so it opens the visitor's email program
-  with both filled in.
+  HOW TO ORDER is an enquiry FORM (2026-10-29, PM-approved mockup
+  "layout 4"), not an email button: heading on top, fields across the
+  full width of the box (3 columns on laptops, 2 on tablets, 1 on
+  phones), button, then the design-help line. It sends to info@pytnet.org
+  through the site's "general" Formspree route — see the note by the
+  form code below. No email address appears on the page.
 
   Optional hero photo: Site-wide -> Page Hero Images -> "Program
   Advertising". Not in the menu unless staff add it there.
@@ -40,6 +43,7 @@ import PageHero from "../components/PageHero.astro";
 import { renderMarkdown } from "../lib/markdown";
 import { marked } from "marked";
 import page from "../content/settings/advertising-page.json";
+import formEndpoints from "../content/settings/contact-forms.json";
 
 const p = page as any;
 const txt = (v?: unknown): string => (typeof v === "string" ? v.trim() : "");
@@ -91,12 +95,37 @@ const specsNoteHtml = renderMarkdown(p.specs_note);
 const orderHtml = renderMarkdown(p.order_text);
 const helpHtml = renderMarkdown(p.help_text);
 
-const buttonLabel = txt(p.button_label);
-const buttonEmail = txt(p.button_email);
-const buttonSubject = txt(p.button_subject);
-const buttonHref = buttonEmail
-  ? `mailto:${buttonEmail}${buttonSubject ? `?subject=${encodeURIComponent(buttonSubject)}` : ""}`
-  : "";
+/* ---- Enquiry form (2026-10-29, replaces the mailto: button) ----
+   PYT doesn't publish email addresses, and a mailto: button both
+   exposes the address and opens whatever mail app the visitor's
+   device defaults to. This form posts to the SAME Formspree endpoint
+   as the site's "general" contact route (Site-wide -> Contact Form
+   Endpoints), which delivers to info@pytnet.org. Only name, email and
+   business name are required; ad size and single/package are
+   optional so people can get in touch without choosing.
+   Every label and choice is CMS text. The size dropdown is built from
+   the "Ad sizes" cards above, so it always matches them. */
+const fe = formEndpoints as any;
+const formAction = txt(fe.general);
+const formUnavailable = txt(fe.unavailable_note) ||
+  "Our enquiry form is being set up. Please check back shortly.";
+const thankYouUrl = new URL("/thank-you/", Astro.site ?? "https://pytnet.org").href;
+const L = (k: string, fallback: string) => txt(p[k]) || fallback;
+const form = {
+  name: L("form_name_label", "Your name"),
+  email: L("form_email_label", "Email address"),
+  business: L("form_business_label", "Business name"),
+  size: L("form_size_label", "Ad size (optional)"),
+  sizePlaceholder: L("form_size_placeholder", "Choose a size…"),
+  pkg: L("form_package_label", "Single show or package? (optional)"),
+  single: L("form_single_option", "Single show"),
+  both: L("form_package_option", "2-show package"),
+  message: L("form_message_label", "Anything else? (optional)"),
+  messagePlaceholder: txt(p.form_message_placeholder),
+};
+const sizeNames = sizes.map((s: any) => s.name).filter(Boolean);
+const buttonLabel = txt(p.button_label) || "Send";
+const emailSubject = txt(p.button_subject) || "Program advertising enquiry";
 
 const ratesHeading = txt(p.rates_heading);
 const offerHtml = inline(p.offer);
@@ -105,7 +134,8 @@ const orderHeading = txt(p.order_heading);
 
 const showRates = !!ratesHeading || !!offerHtml || sizes.length > 0 || seasonShows.length > 0;
 const showSpecsCol = !!specsHeading || specs.length > 0 || !!specsNoteHtml;
-const showOrderCol = !!orderHeading || !!orderHtml || !!(buttonLabel && buttonHref) || !!helpHtml;
+/* The order box always shows (the form is the way to book). */
+const showOrderCol = true;
 ---
 
 <BaseLayout
@@ -196,12 +226,67 @@ const showOrderCol = !!orderHeading || !!orderHtml || !!(buttonLabel && buttonHr
             <div class="ad-order" id="order">
               {orderHeading && <h2 class="ad-order-head">{orderHeading}</h2>}
               {orderHtml && <div class="ad-order-text rich" set:html={orderHtml} />}
-              {buttonLabel && buttonHref && (
-                <p class="ad-order-btn">
-                  <a class="btn btn-primary" href={buttonHref}>{buttonLabel}</a>
-                </p>
+
+              {formAction ? (
+                <form class="ad-form" action={formAction} method="POST">
+                  <div class="fg">
+                    <label for="ad-name">{form.name} <span class="req" aria-label="required">*</span></label>
+                    <input type="text" id="ad-name" name="name" autocomplete="name" required />
+                  </div>
+                  <div class="fg">
+                    <label for="ad-email">{form.email} <span class="req" aria-label="required">*</span></label>
+                    <input type="email" id="ad-email" name="email" autocomplete="email" required />
+                  </div>
+                  <div class="fg">
+                    <label for="ad-business">{form.business} <span class="req" aria-label="required">*</span></label>
+                    <input type="text" id="ad-business" name="business" autocomplete="organization" required />
+                  </div>
+
+                  {sizeNames.length > 0 && (
+                    <div class="fg fg-size">
+                      <label for="ad-size">{form.size}</label>
+                      <select id="ad-size" name="ad_size">
+                        <option value="">{form.sizePlaceholder}</option>
+                        {sizeNames.map((n: string) => <option value={n}>{n}</option>)}
+                      </select>
+                    </div>
+                  )}
+
+                  <fieldset class="fg fg-package">
+                    <legend>{form.pkg}</legend>
+                    <div class="radios">
+                      <label class="radio"><input type="radio" name="package" value={form.single} /> {form.single}</label>
+                      <label class="radio"><input type="radio" name="package" value={form.both} /> {form.both}</label>
+                    </div>
+                  </fieldset>
+
+                  <div class="fg fg-wide">
+                    <label for="ad-message">{form.message}</label>
+                    <textarea id="ad-message" name="message" rows="4"
+                      placeholder={form.messagePlaceholder || undefined}></textarea>
+                  </div>
+
+                  {/* Arrives in the inbox with this subject line, labelled
+                      with the page it came from. */}
+                  <input type="hidden" name="_subject" value={emailSubject} />
+                  <input type="hidden" name="sent_from" value="Program Advertising page" />
+                  {/* Back to PYT's own thank-you page, not Formspree's. */}
+                  <input type="hidden" name="_next" value={thankYouUrl} />
+                  {/* Honeypot: bots fill it in, Formspree discards them. */}
+                  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                    style="position:absolute;left:-5000px;" aria-hidden="true" />
+
+                  <div class="fg-wide ad-form-submit">
+                    <button type="submit" class="btn btn-primary">{buttonLabel}</button>
+                  </div>
+                  {helpHtml && <div class="fg-wide ad-help rich" set:html={helpHtml} />}
+                </form>
+              ) : (
+                <>
+                  <p class="ad-unavailable">{formUnavailable}</p>
+                  {helpHtml && <div class="ad-help rich" set:html={helpHtml} />}
+                </>
               )}
-              {helpHtml && <div class="ad-help rich" set:html={helpHtml} />}
             </div>
           )}
         </div>
@@ -340,20 +425,14 @@ const showOrderCol = !!orderHeading || !!orderHtml || !!(buttonLabel && buttonHr
   .ad-specs {
     background: var(--paper-warm);
   }
+  /* Specs on top, then the order box full width beneath (2026-10-29,
+     "layout 4"). The specs keep a comfortable reading width. */
   .ad-specs-grid {
     display: grid;
     gap: var(--space-xl);
   }
-  @media (min-width: 1024px) {
-    .ad-specs-grid {
-      grid-template-columns: 1.1fr 1fr;
-      gap: var(--space-2xl);
-    }
-    /* If only one column has content, let it use the full width. */
-    .ad-specs-grid > :only-child {
-      grid-column: 1 / -1;
-      max-width: 68ch;
-    }
+  .ad-specs-grid > div:not(.ad-order) {
+    max-width: 68ch;
   }
   .ad-list {
     padding-left: 1.2rem;
@@ -372,19 +451,118 @@ const showOrderCol = !!orderHeading || !!orderHtml || !!(buttonLabel && buttonHr
     background: #fff;
     border: 1px solid var(--line);
     box-shadow: var(--shadow-soft);
-    padding: 2rem;
-    align-self: start;
+    padding: 1.6rem 1.25rem;
+  }
+  @media (min-width: 720px) {
+    .ad-order {
+      padding: 2.25rem 2.5rem;
+    }
   }
   .ad-order-head {
     font-size: clamp(1.6rem, 3vw, 2rem);
-    margin: 0 0 1rem;
+    margin: 0 0 1.25rem;
   }
-  .ad-order-btn {
-    margin: 1.25rem 0 0;
+  .ad-order-text {
+    margin-bottom: 1.25rem;
+  }
+
+  /* ---- Enquiry form. Field look matches ContactForm.astro exactly
+     (same border, radius, padding, focus ring) so every form on the
+     site looks alike. Columns: 1 on phones, 2 from 720px, 3 from
+     1024px — name / email / business on one row, then size beside
+     the single-or-package choice, then the message, button and
+     design-help line full width. ---- */
+  .ad-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 1.25rem;
+  }
+  @media (min-width: 720px) {
+    .ad-form { grid-template-columns: 1fr 1fr; }
+    .fg-package { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .ad-form { grid-template-columns: repeat(3, 1fr); }
+    .fg-size { grid-column: 1; }
+    .fg-package { grid-column: 2 / -1; }
+  }
+  .fg-wide { grid-column: 1 / -1; }
+
+  .fg {
+    margin: 0 0 1rem;
+    border: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .fg label,
+  .fg legend {
+    display: block;
+    margin-bottom: 0.35rem;
+    padding: 0;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .req {
+    color: var(--accent);
+  }
+  .fg input[type="text"],
+  .fg input[type="email"],
+  .fg select,
+  .fg textarea {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-btn);
+    font: inherit;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  .fg textarea {
+    resize: vertical;
+  }
+  .fg input:focus,
+  .fg select:focus,
+  .fg textarea:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+
+  /* Single show / package: radio buttons, side by side when there's
+     room, pink when chosen. Neither is pre-selected — it's optional. */
+  .radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.5rem;
+    padding-top: 0.6rem;
+  }
+  .fg .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    font-weight: 400;
+  }
+  .radio input {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: 0;
+    accent-color: var(--accent);
+  }
+
+  .ad-form-submit {
+    margin-top: 0.5rem;
   }
   .ad-help {
-    margin-top: var(--space-md);
+    margin-top: 1rem;
     font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .ad-help :global(p) {
+    margin: 0;
+  }
+  .ad-unavailable {
+    margin: 0;
     color: var(--ink-soft);
   }
 </style>
