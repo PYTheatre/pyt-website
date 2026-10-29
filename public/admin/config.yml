@@ -892,11 +892,20 @@ collections:
               - { name: "text", label: "Text", widget: "string", required: false, hint: "Example: PDF or high-resolution JPG. Leave blank to hide this bullet. Links work, written [like this](/contact)." }
           - { name: "specs_note", label: "Specs — note under the list", widget: "markdown", required: false }
           - { name: "order_heading", label: "How to order — heading", widget: "string", required: false, default: "How to Order" }
-          - { name: "order_text", label: "How to order — text", widget: "markdown", required: false, hint: "Accepts links, e.g. an email address linked with the link button." }
-          - { name: "button_label", label: "Button — label", widget: "string", required: false, default: "Email us to book an ad", hint: "The pink button. Leave blank to hide it." }
-          - { name: "button_email", label: "Button — email address", widget: "string", required: false, default: "info@pytnet.org", hint: "The button opens an email to this address." }
-          - { name: "button_subject", label: "Button — email subject", widget: "string", required: false, default: "Program advertising", hint: "Pre-filled subject line of that email. Leave blank for none." }
-          - { name: "help_text", label: "Design help line (small text)", widget: "markdown", required: false, hint: "Example: Need help with your ad? Design help is available at no charge. Leave blank to hide." }
+          - { name: "order_text", label: "How to order — text above the form (optional)", widget: "markdown", required: false, hint: "Leave blank for none (the form follows straight under the heading)." }
+          - { name: "form_name_label", label: "Form — name label", widget: "string", required: false, default: "Your name", hint: "Required field (marked *)." }
+          - { name: "form_email_label", label: "Form — email label", widget: "string", required: false, default: "Email address", hint: "Required field (marked *). Replies to an enquiry go to this address." }
+          - { name: "form_business_label", label: "Form — business name label", widget: "string", required: false, default: "Business name", hint: "Required field (marked *)." }
+          - { name: "form_size_label", label: "Form — ad size label", widget: "string", required: false, default: "Ad size (optional)", hint: "Optional dropdown. Its choices are the size names from the Ad sizes cards above — nothing to type." }
+          - { name: "form_size_placeholder", label: "Form — ad size, first (unchosen) line", widget: "string", required: false, default: "Choose a size…" }
+          - { name: "form_package_label", label: "Form — single or package label", widget: "string", required: false, default: "Single show or package? (optional)", hint: "Optional choice; neither option is pre-selected." }
+          - { name: "form_single_option", label: "Form — first choice", widget: "string", required: false, default: "Single show" }
+          - { name: "form_package_option", label: "Form — second choice", widget: "string", required: false, default: "2-show package" }
+          - { name: "form_message_label", label: "Form — message box label", widget: "string", required: false, default: "Anything else? (optional)" }
+          - { name: "form_message_placeholder", label: "Form — message box hint text", widget: "string", required: false, hint: "Grey example text inside the empty box. Leave blank for none." }
+          - { name: "button_label", label: "Form — button label", widget: "string", required: false, default: "Email us to book", hint: "The pink button that sends the enquiry. Enquiries go to info@pytnet.org (the 'General' address in Site-wide → Contact Form Endpoints) — no email address is shown on the page." }
+          - { name: "button_subject", label: "Form — subject of the enquiry email", widget: "string", required: false, default: "Program advertising", hint: "What the enquiry is titled when it arrives in the inbox." }
+          - { name: "help_text", label: "Design help line (small text under the button)", widget: "markdown", required: false, hint: "Example: Need help with your ad? Design help is available for $50. Leave blank to hide." }
 
       # --- About page ---
 
