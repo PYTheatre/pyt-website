@@ -1,9 +1,8 @@
 {
   "show_season": true,
-  "button_label": "Email us to book an ad",
-  "help_text": "Need help with your ad? Design help is availablefor a $50.",
+  "button_label": "Email us to book",
+  "help_text": "Need help with your ad? Design help is available for $50.",
   "intro": "Each Center Stage musical plays 6 public performances to more than 2,200 audience members at the Mountain View Center for the Performing Arts. Every guest receives a printed program, and families often keep them as a souvenir of their young performer's show.\n\nFor 35 years, Peninsula Youth Theatre has given young people a place to grow on stage and behind the scenes. Your ad reaches local families while supporting youth arts education in our community.",
-  "button_email": "info@pytnet.org",
   "order_heading": "How to Order",
   "sizes": [
     {
@@ -69,6 +68,16 @@
   "package_label": "2-show package",
   "offer": "Book both main stage musicals with the 2-show package and save 10% (4,400+ guests, 12 performances).",
   "single_label": "Single show",
-  "order_text": "Email with your business name, ad size, and whether you'd like a single show or the 2-show package. We'll confirm your space and send payment details.",
-  "button_subject": "Program advertising"
+  "order_text": "",
+  "button_subject": "Program advertising",
+  "form_name_label": "Your name",
+  "form_email_label": "Email address",
+  "form_business_label": "Business name",
+  "form_size_label": "Ad size (optional)",
+  "form_size_placeholder": "Choose a size…",
+  "form_package_label": "Single show or package? (optional)",
+  "form_single_option": "Single show",
+  "form_package_option": "2-show package",
+  "form_message_label": "Anything else? (optional)",
+  "form_message_placeholder": "Which show, questions about your artwork…"
 }
