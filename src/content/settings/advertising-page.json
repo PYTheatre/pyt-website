@@ -31,7 +31,7 @@
     },
     {
       "name": "Quarter Page",
-      "dimensions": "4.75\" × 1.875\"",
+      "dimensions": "4.75\" × 1.875\" or 2.375\" x 3.75\"",
       "single_price": "$150",
       "package_price": "$270",
       "savings": "$30",
@@ -42,7 +42,8 @@
       "name": "Eighth Page",
       "single_price": "$90",
       "package_price": "$160",
-      "savings": "$20"
+      "savings": "$20",
+      "dimensions": "3.75\" x 1.1875\""
     }
   ],
   "save_label": "You save",
