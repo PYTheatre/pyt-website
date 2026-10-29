@@ -2,6 +2,8 @@
 title: Scholarships
 hero_image: /uploads/i-1267.jpg
 hero_focus: 15
+cta_label: Apply here
+cta_url: https://drive.google.com/file/d/1v7rirXY7lM5D8hSWboCVP9fecp-623J_/view?usp=sharing
 show_in_nav: true
 nav_parent: About
 draft: false
