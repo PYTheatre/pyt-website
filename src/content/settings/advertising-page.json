@@ -1,9 +1,17 @@
 {
+  "form_message_placeholder": "Which show, questions about your artwork…",
+  "form_package_label": "Single show or package? (optional)",
+  "form_message_label": "Anything else? (optional)",
   "show_season": true,
   "button_label": "Email us to book",
+  "form_package_option": "2-show package",
   "help_text": "Need help with your ad? Design help is available for $50.",
   "intro": "Each Center Stage musical plays 6 public performances to more than 2,200 audience members at the Mountain View Center for the Performing Arts. Every guest receives a printed program, and families often keep them as a souvenir of their young performer's show.\n\nFor 35 years, Peninsula Youth Theatre has given young people a place to grow on stage and behind the scenes. Your ad reaches local families while supporting youth arts education in our community.",
+  "form_size_placeholder": "Choose a size…",
+  "form_business_label": "Business name",
+  "form_single_option": "Single show",
   "order_heading": "How to Order",
+  "form_size_label": "Ad size (optional)",
   "sizes": [
     {
       "name": "Full Page",
@@ -17,7 +25,7 @@
       "name": "Half Page",
       "dimensions": "4.75\" × 3.875\"",
       "single_price": "$250",
-      "package_price": "$340",
+      "package_price": "$440",
       "savings": "$60",
       "shape": "half"
     },
@@ -39,6 +47,7 @@
   ],
   "save_label": "You save",
   "rates_heading": "Advertising Rates",
+  "form_email_label": "Email address",
   "specs": [
     {
       "label": "Color",
@@ -66,18 +75,9 @@
   "specs_note": "Package advertisers may use the same ad for both shows or send a new one for the second show by its deadline.",
   "specs_heading": "Ad Specs and Deadlines",
   "package_label": "2-show package",
+  "form_name_label": "Your name",
   "offer": "Book both main stage musicals with the 2-show package and save 10% (4,400+ guests, 12 performances).",
   "single_label": "Single show",
   "order_text": "",
-  "button_subject": "Program advertising",
-  "form_name_label": "Your name",
-  "form_email_label": "Email address",
-  "form_business_label": "Business name",
-  "form_size_label": "Ad size (optional)",
-  "form_size_placeholder": "Choose a size…",
-  "form_package_label": "Single show or package? (optional)",
-  "form_single_option": "Single show",
-  "form_package_option": "2-show package",
-  "form_message_label": "Anything else? (optional)",
-  "form_message_placeholder": "Which show, questions about your artwork…"
+  "button_subject": "Program advertising"
 }
