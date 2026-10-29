@@ -841,6 +841,63 @@ collections:
               - { name: "heading", label: "Section heading", widget: "string", hint: "Example: Season Sponsors" }
               - { name: "names", label: "Names", widget: "list", required: false, field: { name: "name", label: "Name", widget: "string" }, hint: "One person (or family) per entry, exactly as they'd like to be credited — e.g. 'The Alvarez Family' or 'Anonymous'. Shown in the order listed here." }
  
+      # --- Program Advertising page (/advertise) — added 2026-10-29 ---
+      # Every word on the page is here. Any field left blank is hidden.
+      - name: "advertising-page"
+        label: "Program Advertising (page at /advertise)"
+        file: "src/content/settings/advertising-page.json"
+        description: "Everything on the Program Advertising page (pytnet.org/advertise). Any field you leave blank simply doesn't appear on the page, so unfinished details (deadlines, file format, design-help fee) can stay empty until you have them. The list of this season's musicals is filled in automatically from the show pages."
+        fields:
+          - { name: "title", label: "Page title", widget: "string", default: "Advertise in Our Programs" }
+          - { name: "intro", label: "Intro (under the title)", widget: "markdown", required: false, hint: "Leave a blank line between paragraphs. Accepts links and bold." }
+          - { name: "rates_heading", label: "Rates — heading", widget: "string", required: false, default: "Advertising Rates" }
+          - { name: "offer", label: "Rates — offer line (pink)", widget: "string", required: false, hint: "The pink call-out under the heading, e.g. the 2-show package discount. Leave blank to hide." }
+          - { name: "single_label", label: "Card label — single show price", widget: "string", required: false, default: "Single show", hint: "The words beside the first price on every card." }
+          - { name: "package_label", label: "Card label — package price", widget: "string", required: false, default: "2-show package", hint: "The words beside the second price on every card." }
+          - { name: "save_label", label: "Card label — savings", widget: "string", required: false, default: "You save", hint: "Shown in front of each card's savings amount, e.g. 'You save $105'." }
+          - name: "sizes"
+            label: "Ad sizes (one card each)"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}} — {{fields.single_price}} / {{fields.package_price}}"
+            hint: "One card per ad size, in the order shown. Drag to reorder."
+            fields:
+              - { name: "name", label: "Size name", widget: "string", hint: "Example: Full Page" }
+              - { name: "dimensions", label: "Dimensions", widget: "string", required: false, hint: "Example: 4.75\" × 7.5\"" }
+              - { name: "single_price", label: "Single show price", widget: "string", required: false, hint: "Example: $350" }
+              - { name: "package_price", label: "Package price", widget: "string", required: false, hint: "Example: $595" }
+              - { name: "savings", label: "Savings amount", widget: "string", required: false, hint: "Example: $105 — shown after the savings label. Leave blank to hide the line." }
+              - name: "shape"
+                label: "Page shape"
+                widget: "select"
+                default: "full"
+                hint: "The little program-page drawing on the card, with the ad's share shaded pink."
+                options:
+                  - { label: "Full page", value: "full" }
+                  - { label: "Half page", value: "half" }
+                  - { label: "Quarter page", value: "quarter" }
+                  - { label: "Eighth page", value: "eighth" }
+                  - { label: "No drawing", value: "none" }
+          - { name: "show_season", label: "Show this season's musicals under the cards", widget: "boolean", default: true, hint: "Lists every Center Stage musical that hasn't finished yet, with its dates, linked to its show page. Filled in automatically from the show pages — nothing to type." }
+          - { name: "season_label", label: "Season musicals — label", widget: "string", required: false, default: "2026–27 Center Stage musicals:", hint: "The words in front of the show list. Update the years each season." }
+          - { name: "specs_heading", label: "Specs — heading", widget: "string", required: false, default: "Ad Specs and Deadlines" }
+          - name: "specs"
+            label: "Specs and deadlines (bullet list)"
+            widget: "list"
+            required: false
+            summary: "{{fields.label}}: {{fields.text}}"
+            hint: "One bullet each. A bullet whose text is blank is HIDDEN — so you can keep a line here (e.g. a deadline) and fill it in later."
+            fields:
+              - { name: "label", label: "Label (bold)", widget: "string", required: false, hint: "Example: File format" }
+              - { name: "text", label: "Text", widget: "string", required: false, hint: "Example: PDF or high-resolution JPG. Leave blank to hide this bullet. Links work, written [like this](/contact)." }
+          - { name: "specs_note", label: "Specs — note under the list", widget: "markdown", required: false }
+          - { name: "order_heading", label: "How to order — heading", widget: "string", required: false, default: "How to Order" }
+          - { name: "order_text", label: "How to order — text", widget: "markdown", required: false, hint: "Accepts links, e.g. an email address linked with the link button." }
+          - { name: "button_label", label: "Button — label", widget: "string", required: false, default: "Email us to book an ad", hint: "The pink button. Leave blank to hide it." }
+          - { name: "button_email", label: "Button — email address", widget: "string", required: false, default: "info@pytnet.org", hint: "The button opens an email to this address." }
+          - { name: "button_subject", label: "Button — email subject", widget: "string", required: false, default: "Program advertising", hint: "Pre-filled subject line of that email. Leave blank for none." }
+          - { name: "help_text", label: "Design help line (small text)", widget: "markdown", required: false, hint: "Example: Need help with your ad? Design help is available at no charge. Leave blank to hide." }
+
       # --- About page ---
 
  
@@ -1373,6 +1430,7 @@ collections:
                   - { label: "Casting", value: "/casting" }
                   - { label: "Center Stage Musicals", value: "/musicals" }
                   - { label: "Judy Robe & Spirit Awards", value: "/judy-robe-spirits-awards" }
+                  - { label: "Program Advertising", value: "/advertise" }
                   - { label: "Our Supporters", value: "/our-supporters" }
                   - { label: "Newsletter signup", value: "/subscribe" }
                   - { label: "Volunteer", value: "/volunteer" }
