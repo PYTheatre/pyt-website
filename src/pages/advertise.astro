@@ -1,0 +1,390 @@
+---
+/*
+  PROGRAM ADVERTISING PAGE  ( /advertise )  — added 2026-10-29,
+  PM-approved mockup "Option B" (rate cards).
+
+  Every word on this page is editable in the CMS:
+    Support & Fundraising -> Program Advertising
+  (src/content/settings/advertising-page.json). Nothing below is
+  hard-coded copy except the screen-reader-only labels.
+
+  HIDE-WHEN-BLANK, everywhere: any field left empty simply doesn't
+  appear — a blank heading, an empty spec line, no button label, etc.
+  That is how the rate card's unfilled blanks (file format, deadlines,
+  design-help fee) stay off the page until staff fill them in.
+
+  THE RATE CARDS. One card per row of the CMS "Ad sizes" list. Each has
+  a small drawing of a program page with the ad's share shaded pink —
+  chosen per size in the CMS ("Page shape": full / half / quarter /
+  eighth / none). The drawing is decorative (aria-hidden); the size
+  name and dimensions carry the meaning in text.
+
+  THE SEASON LINE is NOT typed in: it lists every Center Stage musical
+  (show "Production type" = Musical) that hasn't finished yet, soonest
+  first, each linked to its show page, using the show's own "Dates as
+  displayed" text. So it updates itself — next season's shows appear and
+  past ones drop off whenever the site rebuilds (every CMS save). Only
+  the label in front of it ("2026–27 Center Stage musicals:") is typed,
+  and the whole line can be switched off in the CMS.
+
+  The "Email us" button is a mailto: link built from the CMS email
+  address and subject line, so it opens the visitor's email program
+  with both filled in.
+
+  Optional hero photo: Site-wide -> Page Hero Images -> "Program
+  Advertising". Not in the menu unless staff add it there.
+*/
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import { renderMarkdown } from "../lib/markdown";
+import { marked } from "marked";
+import page from "../content/settings/advertising-page.json";
+
+const p = page as any;
+const txt = (v?: unknown): string => (typeof v === "string" ? v.trim() : "");
+/* Inline Markdown (no wrapping <p>) for one-line fields that may hold a
+   link or bold text — the spec lines and the offer line. */
+const inline = (v?: unknown): string => {
+  const s = txt(v);
+  return s ? (marked.parseInline(s, { gfm: true }) as string) : "";
+};
+
+const title = txt(p.title) || "Advertise in Our Programs";
+const introHtml = renderMarkdown(p.intro);
+
+/* ---- Rate cards ---- */
+const SHAPES: Record<string, number> = { full: 1, half: 0.5, quarter: 0.25, eighth: 0.125 };
+const sizes = (p.sizes ?? [])
+  .map((s: any) => ({
+    name: txt(s?.name),
+    dimensions: txt(s?.dimensions),
+    single: txt(s?.single_price),
+    pkg: txt(s?.package_price),
+    savings: txt(s?.savings),
+    frac: SHAPES[s?.shape] ?? 0,
+  }))
+  .filter((s: any) => s.name || s.single || s.pkg);
+const singleLabel = txt(p.single_label);
+const packageLabel = txt(p.package_label);
+const saveLabel = txt(p.save_label);
+
+/* Program page drawing: 4.75 x 7.5 in, i.e. 60 x 94.7 units. */
+const PW = 60;
+const PH = 94.7;
+
+/* ---- Season line (automatic) ---- */
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const seasonShows = p.show_season === false
+  ? []
+  : (await getCollection("shows"))
+      .filter((s) => s.data.production_type === "Musical" && s.data.end_date >= today)
+      .sort((a, b) => a.data.start_date.getTime() - b.data.start_date.getTime());
+const seasonLabel = txt(p.season_label);
+
+/* ---- Specs, ordering ---- */
+const specs = (p.specs ?? [])
+  .map((s: any) => ({ label: txt(s?.label), html: inline(s?.text) }))
+  .filter((s: any) => s.html);
+const specsNoteHtml = renderMarkdown(p.specs_note);
+const orderHtml = renderMarkdown(p.order_text);
+const helpHtml = renderMarkdown(p.help_text);
+
+const buttonLabel = txt(p.button_label);
+const buttonEmail = txt(p.button_email);
+const buttonSubject = txt(p.button_subject);
+const buttonHref = buttonEmail
+  ? `mailto:${buttonEmail}${buttonSubject ? `?subject=${encodeURIComponent(buttonSubject)}` : ""}`
+  : "";
+
+const ratesHeading = txt(p.rates_heading);
+const offerHtml = inline(p.offer);
+const specsHeading = txt(p.specs_heading);
+const orderHeading = txt(p.order_heading);
+
+const showRates = !!ratesHeading || !!offerHtml || sizes.length > 0 || seasonShows.length > 0;
+const showSpecsCol = !!specsHeading || specs.length > 0 || !!specsNoteHtml;
+const showOrderCol = !!orderHeading || !!orderHtml || !!(buttonLabel && buttonHref) || !!helpHtml;
+---
+
+<BaseLayout
+  title={`${title} — Peninsula Youth Theatre`}
+  description="Advertise in Peninsula Youth Theatre's Center Stage musical programs — rates, ad sizes, specs and how to order."
+>
+  <PageHero title={title} ledeHtml={introHtml} />
+
+  {showRates && (
+    <section class="section ad-rates" id="rates">
+      <div class="container">
+        {ratesHeading && <h2 class="section-head">{ratesHeading}</h2>}
+        {offerHtml && <p class="ad-offer" set:html={offerHtml} />}
+
+        {sizes.length > 0 && (
+          <ul class="ad-cards">
+            {sizes.map((s: any) => (
+              <li class="ad-card">
+                {s.frac > 0 && (
+                  <svg class="ad-shape" viewBox={`-2 -2 ${PW + 4} ${PH + 4}`} aria-hidden="true">
+                    <rect x="0" y="0" width={PW} height={PH} class="ad-shape-page" />
+                    <rect x="0" y="0" width={PW} height={(PH * s.frac).toFixed(1)} class="ad-shape-ad" />
+                  </svg>
+                )}
+                {s.name && <h3 class="ad-card-name">{s.name}</h3>}
+                {s.dimensions && <p class="ad-card-dim">{s.dimensions}</p>}
+                {(s.single || s.pkg) && (
+                  <dl class="ad-card-prices">
+                    {s.single && (
+                      <div>
+                        <dt>{singleLabel}</dt>
+                        <dd>{s.single}</dd>
+                      </div>
+                    )}
+                    {s.pkg && (
+                      <div class="pkg">
+                        <dt>{packageLabel}</dt>
+                        <dd>{s.pkg}</dd>
+                      </div>
+                    )}
+                  </dl>
+                )}
+                {s.savings && (
+                  <p class="ad-card-save">{saveLabel ? `${saveLabel} ${s.savings}` : s.savings}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {seasonShows.length > 0 && (
+          <p class="ad-season">
+            {seasonLabel && <span class="ad-season-label">{seasonLabel} </span>}
+            {seasonShows.map((s, i) => (
+              <span class="ad-season-show">
+                {i > 0 && <span class="ad-season-sep" aria-hidden="true">·</span>}
+                <a href={`/shows/${s.id}/`}>{s.data.title}</a>
+                {s.data.date_display && <span class="ad-season-date"> {s.data.date_display}</span>}
+              </span>
+            ))}
+          </p>
+        )}
+      </div>
+    </section>
+  )}
+
+  {(showSpecsCol || showOrderCol) && (
+    <section class="section ad-specs" id="specs">
+      <div class="container">
+        <div class="ad-specs-grid">
+          {showSpecsCol && (
+            <div>
+              {specsHeading && <h2 class="section-head">{specsHeading}</h2>}
+              {specs.length > 0 && (
+                <ul class="ad-list">
+                  {specs.map((s: any) => (
+                    <li>
+                      {s.label && <strong>{s.label}:</strong>} <span set:html={s.html} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {specsNoteHtml && <div class="ad-note rich" set:html={specsNoteHtml} />}
+            </div>
+          )}
+
+          {showOrderCol && (
+            <div class="ad-order" id="order">
+              {orderHeading && <h2 class="ad-order-head">{orderHeading}</h2>}
+              {orderHtml && <div class="ad-order-text rich" set:html={orderHtml} />}
+              {buttonLabel && buttonHref && (
+                <p class="ad-order-btn">
+                  <a class="btn btn-primary" href={buttonHref}>{buttonLabel}</a>
+                </p>
+              )}
+              {helpHtml && <div class="ad-help rich" set:html={helpHtml} />}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .ad-rates,
+  .ad-specs {
+    scroll-margin-top: 6rem;
+  }
+
+  /* The 2-show offer: pink, in the heading face — the page's one call-out. */
+  .ad-offer {
+    font-family: var(--font-heading);
+    color: var(--accent-deep);
+    font-size: 1.15rem;
+    line-height: 1.35;
+    margin: 0 0 var(--space-lg);
+    max-width: 40ch;
+  }
+
+  /* ---- Rate cards: same card look as the sponsorship cards on
+     Support PYT (white, hairline, soft shadow). 1 column on phones,
+     3 across from 720px. ---- */
+  .ad-cards {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 720px) {
+    .ad-cards {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
+  .ad-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-soft);
+    padding: 1.6rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Program-page drawing. Width fixed so every card's drawing is the
+     same size — the shaded share is what differs. */
+  .ad-shape {
+    display: block;
+    width: 56px;
+    height: auto;
+    margin-bottom: 1rem;
+  }
+  .ad-shape-page {
+    fill: #fff;
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+  .ad-shape-ad {
+    fill: var(--accent);
+  }
+
+  .ad-card-name {
+    font-size: 1.45rem;
+    margin: 0;
+  }
+  .ad-card-dim {
+    color: var(--ink-soft);
+    margin: 0.2rem 0 1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .ad-card-prices {
+    margin: 0;
+    width: 100%;
+    border-top: 1px solid var(--line);
+  }
+  .ad-card-prices > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ad-card-prices dt {
+    font-size: 1rem;
+  }
+  .ad-card-prices dd {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    white-space: nowrap;
+  }
+  .ad-card-prices .pkg dd {
+    font-size: 1.45rem;
+  }
+  .ad-card-save {
+    margin: 0.75rem 0 0;
+    color: var(--accent-deep);
+    font-weight: 600;
+  }
+
+  /* ---- Season line ---- */
+  .ad-season {
+    margin: var(--space-lg) 0 0;
+    font-size: 1.05rem;
+  }
+  .ad-season-label {
+    font-weight: 600;
+  }
+  .ad-season-date {
+    color: var(--ink-soft);
+  }
+  .ad-season-sep {
+    margin: 0 0.5rem;
+    color: var(--ink-soft);
+  }
+  /* Links inside CMS text (rendered Markdown) — pink and underlined so
+     they read as links. :global() because Markdown output isn't scoped. */
+  .ad-season a,
+  .ad-list :global(a),
+  .ad-note :global(a),
+  .ad-order-text :global(a),
+  .ad-help :global(a) {
+    color: var(--accent-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* ---- Specs + order band (teal wash, like other panels) ---- */
+  .ad-specs {
+    background: var(--paper-warm);
+  }
+  .ad-specs-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  @media (min-width: 1024px) {
+    .ad-specs-grid {
+      grid-template-columns: 1.1fr 1fr;
+      gap: var(--space-2xl);
+    }
+    /* If only one column has content, let it use the full width. */
+    .ad-specs-grid > :only-child {
+      grid-column: 1 / -1;
+      max-width: 68ch;
+    }
+  }
+  .ad-list {
+    padding-left: 1.2rem;
+    margin: 0;
+  }
+  .ad-list li {
+    margin: 0.45rem 0;
+  }
+  .ad-note {
+    margin-top: var(--space-md);
+    color: var(--ink-soft);
+  }
+
+  /* Order box — the site's card look (contact/newsletter boxes). */
+  .ad-order {
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-soft);
+    padding: 2rem;
+    align-self: start;
+  }
+  .ad-order-head {
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    margin: 0 0 1rem;
+  }
+  .ad-order-btn {
+    margin: 1.25rem 0 0;
+  }
+  .ad-help {
+    margin-top: var(--space-md);
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+</style>
