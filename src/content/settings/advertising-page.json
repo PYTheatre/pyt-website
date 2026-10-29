@@ -17,32 +17,32 @@
       "name": "Full Page",
       "dimensions": "4.75\" × 7.5\"",
       "single_price": "$350",
-      "package_price": "$595",
-      "savings": "$105",
+      "package_price": "$630",
+      "savings": "$70",
       "shape": "full"
     },
     {
       "name": "Half Page",
       "dimensions": "4.75\" × 3.875\"",
       "single_price": "$250",
-      "package_price": "$440",
-      "savings": "$60",
+      "package_price": "$450",
+      "savings": "$50",
       "shape": "half"
     },
     {
       "name": "Quarter Page",
       "dimensions": "4.75\" × 1.875\"",
       "single_price": "$150",
-      "package_price": "$255",
-      "savings": "$45",
+      "package_price": "$270",
+      "savings": "$30",
       "shape": "quarter"
     },
     {
       "shape": "eighth",
       "name": "Eighth Page",
       "single_price": "$90",
-      "package_price": "$160",
-      "savings": "$20"
+      "package_price": "$162",
+      "savings": "$18"
     }
   ],
   "save_label": "You save",
