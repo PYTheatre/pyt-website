@@ -109,6 +109,10 @@
         {
           "label": "Press",
           "url": "/press"
+        },
+        {
+          "url": "https://pytnet.org/advertise/",
+          "label": "Advertise in our Programs"
         }
       ]
     },
