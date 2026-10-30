@@ -6,7 +6,7 @@ hero_focus: 20
 cta_label: YP opportunities
 cta_url: /musicals/
 show_in_nav: true
-nav_parent: Educators
+nav_parent: Classes & Camps
 nav_label: Young Performers (5-7yrs)
 draft: false
 ---
