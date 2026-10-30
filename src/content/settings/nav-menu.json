@@ -132,6 +132,14 @@
         {
           "label": "School Tickets",
           "url": "/school-tickets/"
+        },
+        {
+          "label": "Scholarships",
+          "url": "https://pytnet.org/scholarships/"
+        },
+        {
+          "label": "Young Performers (5-7)",
+          "url": "https://pytnet.org/young-performers/"
         }
       ]
     },
