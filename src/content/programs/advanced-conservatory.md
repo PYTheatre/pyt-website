@@ -1,5 +1,5 @@
 ---
-name: STUDIO CLASSES
+name: Studio Classes
 program_type: Class
 age_range: Ages 5-12
 season: Year-round
