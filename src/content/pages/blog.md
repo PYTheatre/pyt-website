@@ -4,8 +4,8 @@ intro: ""
 show_in_nav: false
 draft: false
 ---
-[PYT's new website.](/pyt-launches-new-website)
+[PYT's new website. 💅 👾](/pyt-launches-new-website)
 
-[Creepy Carrots! Tickets.](https://pytnet.org/creepy-carrots-are-coming-get-your-tickets-now-/)
+[Creepy Carrots! Tickets. 🥕🎟](https://pytnet.org/creepy-carrots-are-coming-get-your-tickets-now-/)
 
-[We're off to see the Wizard! Tickets.](https://pytnet.org/your-ticket-down-the-yellow-brick-road-/)
+[We're off to see the Wizard! Tickets. 🌈 🎟](https://pytnet.org/your-ticket-down-the-yellow-brick-road-/)
