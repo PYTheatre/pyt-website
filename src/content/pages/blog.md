@@ -8,4 +8,4 @@ draft: false
 
 [Creepy Carrots! Tickets.](https://pytnet.org/creepy-carrots-are-coming-get-your-tickets-now-/)
 
-[We're off to see the Wizard! Tickets.](pytnet.org/your-ticket-down-the-yellow-brick-road-🌪)
+[We're off to see the Wizard! Tickets.](pytnet.org/your-ticket-down-the-yellow-brick-road)
