@@ -25,6 +25,21 @@
         {
           "show": "Newsies",
           "judy_robe": "Amelia Knight"
+        },
+        {
+          "show": "The Wizard of Oz",
+          "judy_robe": "Sophia Ardelean",
+          "spirit_awards": [
+            "Nalini Bahn",
+            "Taylor Chao",
+            "Moon Chlala-Lubbe",
+            "Lean Chen",
+            "Shir Goldberg",
+            "Andy Kindler",
+            "Chloe Renz",
+            "Isaac Schroepfer",
+            "Cordelia Shieh"
+          ]
         }
       ]
     },
