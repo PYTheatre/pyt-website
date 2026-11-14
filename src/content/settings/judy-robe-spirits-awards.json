@@ -238,7 +238,15 @@
         },
         {
           "show": "Fiddler on the Roof Jr.",
-          "judy_robe": "Oliver LeBlanc"
+          "judy_robe": "Oliver LeBlanc",
+          "spirit_awards": [
+            "Ella Brutman",
+            "Daphne Emmert",
+            "Maya Garten",
+            "Eliza Lyon",
+            "Reina Subramanian",
+            "Leah Zeitzer"
+          ]
         },
         {
           "show": "Descendants: The Musical",
