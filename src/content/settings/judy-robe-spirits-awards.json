@@ -164,11 +164,31 @@
       "shows": [
         {
           "show": "Elf",
-          "judy_robe": "Ellie Saham"
+          "judy_robe": "Ellie Saham",
+          "spirit_awards": [
+            "Illyria Felicelli",
+            "Bella Gileno",
+            "Nayana Garg",
+            "Sophie Getz",
+            "Auspicious Lee-Paras",
+            "Alisa Martin",
+            "Shreyas Nayak",
+            "Macie Northam Schulze"
+          ]
         },
         {
           "show": "Matilda",
-          "judy_robe": "Chloe Culver "
+          "judy_robe": "Chloe Culver ",
+          "spirit_awards": [
+            "Nalini Bhan",
+            "Libby Einav",
+            "Brynn Faye",
+            "Amiya Garg",
+            "Avery Hartman",
+            "Mila Hermann",
+            "Serena Martin",
+            "Teddy Walsh"
+          ]
         },
         {
           "show": "The Lightning Thief",
