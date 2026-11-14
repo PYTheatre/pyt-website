@@ -97,7 +97,17 @@
         },
         {
           "show": "Tuck Everlasting",
-          "judy_robe": "Erin Grignon"
+          "judy_robe": "Erin Grignon",
+          "spirit_awards": [
+            "Aino Bach",
+            "Louise de Boisset",
+            "Phoebe Freeman",
+            "Syd Mendelson",
+            "Riya Puryear",
+            "Kaitlyn Shaeffer",
+            "Maddie Song",
+            "Ellie Saham"
+          ]
         },
         {
           "show": "Chicago",
