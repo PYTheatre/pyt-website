@@ -54,3 +54,11 @@ https://:project.pages.dev/*
 
 /wizard-of-oz-cast-page/
   X-Robots-Tag: noindex, nofollow
+# ---------------------------------------------------------------------------
+# DIGITAL PROGRAMS (2026-11-13). Static HTML files under public/program/,
+# one per show, shared by link and QR code at the theatre. Kept out of
+# search like the cast pages: a program lists children's names, and it's a
+# show-night document, not a landing page.
+# ---------------------------------------------------------------------------
+/program/*
+  X-Robots-Tag: noindex, nofollow
