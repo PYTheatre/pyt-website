@@ -122,3 +122,10 @@
 /for-educators/*  /school-play-in-a-box/  301
 /auditions/*  /audition/  301
 /get-involved/*  /ways-to-support/  301
+# ---------------------------------------------------------------------------
+# DIGITAL PROGRAMS (2026-11-13): static files under public/program/, one
+# per show. Cloudflare serves "wizard-of-oz.html" at /program/wizard-of-oz
+# on its own; these rules make the friendlier trailing-slash address work
+# too, so either form can go on a QR code or in the newsletter.
+# ---------------------------------------------------------------------------
+/program/wizard-of-oz/  /program/wizard-of-oz  301
