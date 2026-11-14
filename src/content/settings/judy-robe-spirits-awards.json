@@ -211,7 +211,17 @@
       "shows": [
         {
           "show": "The SpongeBob Musical",
-          "judy_robe": "Audriana Berenberg"
+          "judy_robe": "Audriana Berenberg",
+          "spirit_awards": [
+            "Ella Bergmann",
+            "Caitlyn Bowman",
+            "Ruby Culver",
+            "Chloe Fagan",
+            "Estela Figueroa-Piercy",
+            "Beatrice Melkoumian",
+            "Aeryn Taylor",
+            "Thomas Zorich"
+          ]
         },
         {
           "show": "Frozen Jr.",
