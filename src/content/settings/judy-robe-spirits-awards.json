@@ -49,7 +49,18 @@
         },
         {
           "show": "Newsies",
-          "judy_robe": "Amelia Knight"
+          "judy_robe": "Amelia Knight",
+          "spirit_awards": [
+            "Jack Breckenridge",
+            "Logan Chao",
+            "Lucas Deguara",
+            "Ela Gultekin",
+            "Greta Hausman",
+            "Shaarada Karthik",
+            "Shreyas Nayak",
+            "Maya Schuff",
+            "Lucy Wuellner"
+          ]
         }
       ]
     },
