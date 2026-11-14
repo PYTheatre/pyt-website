@@ -250,7 +250,13 @@
         },
         {
           "show": "Descendants: The Musical",
-          "judy_robe": "Nola Byrne"
+          "judy_robe": "Nola Byrne",
+          "spirit_awards": [
+            "Na’ama Gotlieb",
+            "Sydney Mendelson",
+            "Olivia Nelson",
+            "Teddy Walsh"
+          ]
         }
       ]
     },
@@ -259,7 +265,14 @@
       "shows": [
         {
           "show": "All Together Now!",
-          "judy_robe": "Avni Lochan"
+          "judy_robe": "Avni Lochan",
+          "spirit_awards": [
+            "Ella Brutman",
+            "Daphne Emmert",
+            "Julia Fung",
+            "Val Zvinyatskovsky",
+            "Erin Grignon"
+          ]
         }
       ]
     },
