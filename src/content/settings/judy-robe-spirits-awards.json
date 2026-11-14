@@ -144,7 +144,18 @@
         },
         {
           "show": "Seussical",
-          "judy_robe": "Julia Escober"
+          "judy_robe": "Julia Escober",
+          "spirit_awards": [
+            "Ella Bergmann",
+            "Abby Clark",
+            "Colleen Craig",
+            "Annabel Gardiner",
+            "Nayana Garg",
+            "Annie Kelly",
+            "Auspicious Lee-Paras",
+            "Daniel McKellar",
+            "Macie Northam Schulze"
+          ]
         }
       ]
     },
