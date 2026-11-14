@@ -6,7 +6,7 @@ start_date: 2026-11-14
 end_date: 2026-11-22
 date_display: November 14-22, 2026
 venue: Mountain View Center for the Performing Arts, Main Stage
-runtime_minutes: 90
+runtime_minutes: ""
 poster: /uploads/wizard.jpg
 synopsis: >-
   Follow the yellow brick road to join Dorothy’s adventures with her friends as
