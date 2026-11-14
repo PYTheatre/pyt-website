@@ -192,7 +192,17 @@
         },
         {
           "show": "The Lightning Thief",
-          "judy_robe": "Caitlyn Bowman "
+          "judy_robe": "Caitlyn Bowman ",
+          "spirit_awards": [
+            "Cameron Chao",
+            "Abi Friedland",
+            "Max Kelly",
+            "Syd Mendelson",
+            "Jacquelyn Packard",
+            "Jack Rosen",
+            "Aeryn Taylor",
+            "Alyssa Yee"
+          ]
         }
       ]
     },
