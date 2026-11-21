@@ -11,6 +11,9 @@ synopsis: >-
   record that she absolutely was stirring!
 
 
+  We will be giving away holiday books to winners at both Saturday shows, with a special draw at the end of the performance. 
+
+
   Adaptation by Karen Simpson and Loryn Hatten.
 poster: /uploads/xmas.jpg
 public_ticketing_url: https://tickets.mvcpa.com/eventperformances.asp?evt=769
