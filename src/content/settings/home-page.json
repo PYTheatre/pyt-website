@@ -43,12 +43,6 @@
   "discovery_heading": "What's next",
   "discovery_cards": [
     {
-      "title": "The Wizard of Oz",
-      "subtitle": "Tickets",
-      "image": "/uploads/copy-of-copy-of-untitled.jpg",
-      "url": "/shows/the-wizard-of-oz"
-    },
-    {
       "title": "The Night Before Christmas",
       "subtitle": "Tickets",
       "image": "/uploads/copy-of-untitled.jpg",
@@ -65,6 +59,12 @@
       "subtitle": "Tickets",
       "image": "/uploads/img_0518.png",
       "url": "https://www.eventbrite.com/e/pyteen-cabaret-fundraiser-tickets-2004833516015"
+    },
+    {
+      "title": "A Connecticut Yankee in King Arthur’s Court",
+      "subtitle": "Tickets",
+      "image": "/uploads/arthur.jpg",
+      "url": "https://tickets.mvcpa.com/eventperformances.asp?evt=770"
     }
   ],
   "hero_image": "",
